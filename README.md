@@ -1,2 +1,2 @@
 # java-projects
-backup of exlipse projects
+backup of eclipse projects
