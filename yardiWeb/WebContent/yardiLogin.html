@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Yardi Login</title>
+
+  <!-- Website Font style -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+		
+  <!-- Google Fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+  
+  <!-- Bootstrap -->
+  <link href="resources/styles/bootstrap.min.css" rel="stylesheet" />
+  
+  <!-- Login page styles -->
+  <link href="resources/styles/yardiLoginCSS.css" rel="stylesheet" />
+</head>
+<body>
+  <script src="resources/scripts/jquery-2.2.4.min.js"></script>
+  <script src="resources/scripts/bootstrap.min.js"></script>
+  <img  class="bg" alt="" src="resources/img/yardi_banner.jpg">
+  <div class="container">
+    <div class="main">
+      <form class="form-horizontal" role="form">
+        
+        <div class="form-group">
+          <label for="username" class="col-sm-2 control-label">Username</label>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <!-- using font-awesome -->
+              <span class="input-group-addon"><i class="fa fa-user fa-lg" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="username" id="username"  placeholder="User name"/>
+            </div>
+          </div>
+        </div>          
+        <div class="form-group">
+          <label for="password" class="col-sm-2 control-label">Password</label>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <!-- using font-awesome -->
+              <span class="input-group-addon"><i class="fa fa-key fa-lg" aria-hidden="true"></i></span>
+              <input type="password" class="form-control" name="password" id="password"  placeholder="Password"/>
+            </div>
+            <p></p>
+            <button type="button" class="btn btn-success" id="login">Login</button>
+          </div>
+        </div>          
+        <div class="form-group">
+		</div>
+      </form>
+    </div>
+  </div>
+  <script>
+    $(function () {
+      $('#login').click(function () {
+        var userName = $('#username').val();
+        var password = $('#password').val();
+        var formItems = {
+          "userName" : userName,
+          "password" : password
+        }
+
+        $.post('doLogin', 
+          {
+            formData : JSON.stringify(formItems)
+          }
+        );
+      });
+    })
+  </script>
+</body>
+</html>
