@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.persistence.Query;
 
 import com.yardi.ejb.UniqueToken;
 import com.yardi.ejb.UniqueTokensSesssionBean;
@@ -45,6 +46,26 @@ public class UserServices {
 		this.userName = userName;
 	}
 
+/**
+ * Support for changing password either on demand or when current password has expired.
+ * Table PP_PWD_POLICY has parameters that control password policy
+ * 
+ * Steps:
+ * 1 Authenticate with current credentials
+ * 2 Based on the password policy (table PP_PWD_POLICY):
+ *   2a Remove any extra rows in UNIQUE_TOKENS table if more tokens are being stored than are required
+ *   2b Determine whether the new password matches a previously used password
+ *   2c Store the tokenized new password in UNIQUE_TOKENS table
+ *   2d Store the tokenized new password in the USER_PROFILE table
+ *   2e Set the password expiration date and store it in the USER_PROFILE table
+ * 
+ * Instance variable feedback indicates the status of the change password process 
+ * 
+ * @param userName
+ * @param oldPassword
+ * @param newPassword
+ * @return Boolean
+ */
 	public boolean chgPwd(String userName, char [] oldPassword, char [] newPassword) {
 
 		if (authenticate(userName, oldPassword) == false) {
@@ -78,32 +99,53 @@ public class UserServices {
 		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
 		List<UniqueToken> userTokens = new ArrayList<UniqueToken>(50);
 		EntityManager emgr = uniqueTokensBean.getEntityManager();
-		TypedQuery<UniqueToken> qry = emgr.createQuery(
-			"SELECT u FROM u WHERE u.UP1_USER_NAME = :userName ORDER BY UP1_DATE_ADDED DESC", UniqueToken.class);
-		userTokens = qry.setParameter("userName", userName).getResultList();
+		Query qry = emgr.createNativeQuery(
+			"SELECT * FROM DB2ADMIN.UNIQUE_TOKENS WHERE UP1_USER_NAME = :userName ORDER BY UP1_DATE_ADDED, UP1_RRN", 
+			UniqueToken.class);
+		userTokens = (ArrayList<UniqueToken>)qry.setParameter("userName", userName).getResultList();
 		int nbrOfPwds = userTokens.size();
 		UniqueToken uniqueToken; //single element from userTokens which is an ArrayList of UniqueToken.class 
 		
 		if (userTokens.size() > pwdPolicy.getPpNbrUnique()) {
 			//there are more previous tokens stored than the current max. remove extra rows
-			int i = 0;
 			
-			if (pwdPolicy.getPpNbrUnique() > 1) {
-				// if the max number of previous stored tokens is at least 2 then start at max - 1 
-				i=pwdPolicy.getPpNbrUnique() - 1;
-			}
-						
-			for(;userTokens.size() > 0 && i<=userTokens.size(); i++) {
+			for(int i=0;userTokens.size() > 0 && i<userTokens.size(); i++) {
 				uniqueToken = userTokens.get(i);
-				long rrn = uniqueToken.getUp1Rrn();
-				uniqueToken = null;
-				uniqueToken = uniqueTokensBean.exists(rrn);
 				
-				if (uniqueToken != null) {
-					uniqueTokensBean.beginTransaction();
-					uniqueTokensBean.remove(uniqueToken); //delete
-					uniqueTokensBean.commitTransaction();
+				if (i >= pwdPolicy.getPpNbrUnique()) {
+					//extra rows
+					long rrn = uniqueToken.getUp1Rrn();
+					uniqueToken = null;
+					uniqueToken = uniqueTokensBean.exists(rrn);
+					
+					if (uniqueToken != null) {
+						uniqueTokensBean.beginTransaction();
+						uniqueTokensBean.remove(uniqueToken); //delete the extra row
+						uniqueTokensBean.commitTransaction();
+						userTokens.remove(i);
+					}
+				} else {
+					//passwordAuthentication set in authenticate()
+					if(passwordAuthentication.authenticate(newPassword, uniqueToken.getUp1Token())) {
+						feedback = com.yardi.rentSurvey.YardiConstants.YRD000A;
+						return false;
+					}
 				}
+			}
+		}
+		
+		if (userTokens.size() == pwdPolicy.getPpNbrUnique() ) {
+			//remove oldest stored token because a new token will be inserted
+			uniqueToken = userTokens.get(userTokens.size() - 1);
+			long rrn = uniqueToken.getUp1Rrn();
+			uniqueToken = null;
+			uniqueToken = uniqueTokensBean.exists(rrn);
+			
+			if (uniqueToken != null) {
+				uniqueTokensBean.beginTransaction();
+				uniqueTokensBean.remove(uniqueToken); //delete 
+				uniqueTokensBean.commitTransaction();
+				userTokens.remove(userTokens.size() - 1);
 			}
 		}
 		
@@ -115,25 +157,16 @@ public class UserServices {
 		gc.set(Calendar.HOUR_OF_DAY, 0);
 		long time = gc.getTimeInMillis();
 
-		if (pwdPolicy.getPpNbrUnique() != 0) {
-			uniqueToken = null;
-			qry = emgr.createQuery(
-				"SELECT u FROM u WHERE u.UP1_TOKEN = :userToken", UniqueToken.class);
-			uniqueToken = qry.setParameter("userToken", userToken).getSingleResult(); //should not be more than one token
-			
-			if (uniqueToken != null) {
-				feedback = com.yardi.rentSurvey.YardiConstants.YRD000A;
-				return false;
-			} else {
-				uniqueTokensBean.beginTransaction();		
-				uniqueToken = new UniqueToken(userName, userToken, new java.util.Date(gc.getTimeInMillis()));
-				uniqueTokensBean.persist(uniqueToken); //insert
-				uniqueTokensBean.commitTransaction();
-			}
+		if (pwdPolicy.getPpNbrUnique() > 0) {
+			uniqueTokensBean.beginTransaction();		
+			uniqueToken = new UniqueToken(userName, userToken, new java.util.Date(gc.getTimeInMillis()));
+			uniqueTokensBean.persist(uniqueToken); //insert
+			uniqueTokensBean.commitTransaction();
 		}
 		
 		gc.add(Calendar.DAY_OF_MONTH, pwdPolicy.getPpDays()); //new password expires date
 		userProfileBean.beginTransaction();
+		userProfile.setUptoken(userToken); //store new token in user profile
 		userProfile.setUpPwdexpd(new java.util.Date(gc.getTimeInMillis())); //set password expires date
 		userProfileBean.commitTransaction();
 		return true;
