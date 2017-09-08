@@ -109,7 +109,7 @@
                 ));
               }
           
-              if (data.msgID === 'YRD0003') {
+              if (data.msgID === 'YRD0003' || data.msgID === 'YRD0004') {
                 formValid = false;
                 var formGroup = $('[name="username"]').parent('.form-group');
                 var glyphIcon = formGroup.find('.glyph_icon');
@@ -119,10 +119,12 @@
                 // show x, remove check
                 glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
               }
-          
-              if (data.msgID === 'YRD0004') {
+                    
+              if (data.msgID === 'YRD0005' || data.msgID === 'YRD0006' 
+                  || data.msgID === 'YRD0007' || data.msgID === 'YRD0008' 
+                  || data.msgID === 'YRD0009' || data.msgID === 'YRD000A'  ) {
                 formValid = false;
-                var formGroup = $('[name="username"]').parent('.form-group');
+                var formGroup = $('[name="password"]').parent('.form-group');
                 var glyphIcon = formGroup.find('.glyph_icon');
                 var obj = $(this);
                 // show red, remove green
@@ -130,16 +132,18 @@
                 // show x, remove check
                 glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
               }
-          
-              if (data.msgID === 'YRD000C') {
-                formValid = false;
-                var formGroup = $('[name="username"]').parent('.form-group');
-                var glyphIcon = formGroup.find('.glyph_icon');
-                var obj = $(this);
-                formGroup.removeClass('has-error');
-                formGroup.removeClass('has-success');
-                glyphIcon.removeClass('glyphicon-ok');
-                glyphIcon.removeClass('glyphicon-remove');
+
+              if (data.msgID === 'YRD000B' || data.msgID === 'YRD000C') {
+                $('input').each(function () {
+                  formValid = false;
+                  var formGroup = $(this).parents('.form-group');
+                  var glyphIcon = formGroup.find('.glyph_icon');
+                  var obj = $(this);
+                  formGroup.removeClass('has-error');
+                  formGroup.removeClass('has-success');
+                  glyphIcon.removeClass('glyphicon-ok');
+                  glyphIcon.removeClass('glyphicon-remove');
+                });
               }
             });
           }
