@@ -1,97 +1,103 @@
+  function addAndRemoveClasses (
+    formGroupTarget, parentsTarget, glyphTarget,
+    formAddClass,  formRemoveClass, 
+    glyphAddClass, glyphRemoveClass) {
+	
+
+
 TEST CASES FOR CHANGE PWD
 
 1b
 2b
 3b
 4b
-ok
+
 
 1b
 2b
 3b
 4x
-ok
+
 
 1b
 2b
 3x
 4b
-ok
+
 
 1b
 2x
 3b
 4b
-ok
+
 
 1x
 2b
 3b
 4b
-ok
+
 ========
 1b
 2b
 3x
 4x
-ok
+
 
 1b
 2x
 3b
 4x
-ok
+
 
 1x
 2b
 3b
 4x
-ok
+
 ========
 1b
 2x
 3x
 4b
-ok
+
 
 1x
 2b
 3x
 4b
-ok
+
 =========
 1x
 2x
 3b
 4b
-ok
+
 =========
 1b
 2x
 3x
 4x
-ok
+
 
 1x
 2b
 3x
 4x
-ok
+
 
 1x
 2x
 3b
 4x
-ok
+
 
 1x
 2x
 3x
 4b
-ok
+
 ==========
 1x
 2x
 3x
 4x
-ok
