@@ -19,7 +19,7 @@ public class UserProfileSessionBean implements UserProfileSessionBeanRemote {
     }
 
     @Override
-    public UserProfile userNameExists(String userName) {
+    public UserProfile findUser(String userName) {
     	UserProfile userProfile = null;
     	userProfile = entityManager.find(UserProfile.class, userName);
     	return userProfile;

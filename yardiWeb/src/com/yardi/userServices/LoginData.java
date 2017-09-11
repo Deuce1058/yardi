@@ -1,5 +1,9 @@
 package com.yardi.userServices;
 
+import com.yardi.ejb.PasswordPolicySessionBeanRemote;
+import com.yardi.ejb.UniqueTokensSesssionBeanRemote;
+import com.yardi.ejb.UserProfileSessionBeanRemote;
+
 /**
  * Container for login credentials supplied by the user. Needed for mapping JSON 
  * @author Jim
@@ -14,6 +18,10 @@ public class LoginData {
 	private String msgDescription;
 	private String chgPwd;
 	private boolean changePwd;
+	private UserProfileSessionBeanRemote userProfileBean;
+	private PasswordPolicySessionBeanRemote passwordPolicyBean;
+	private UniqueTokensSesssionBeanRemote uniqueTokensBean;
+	
 	public String getUserName() {
 		return userName;
 	}
@@ -61,6 +69,31 @@ public class LoginData {
 		} else {
 			changePwd = false;
 		}
+	}	
+	
+	public UserProfileSessionBeanRemote getUserProfileBean() {
+		return userProfileBean;
+	}
+	
+	public void setUserProfileBean(UserProfileSessionBeanRemote userProfileBean) {
+		this.userProfileBean = userProfileBean;
+	}
+	
+	public PasswordPolicySessionBeanRemote getPasswordPolicyBean() {
+		return passwordPolicyBean;
+	}
+	
+	public void setPasswordPolicyBean(
+			PasswordPolicySessionBeanRemote passwordPolicyBean) {
+		this.passwordPolicyBean = passwordPolicyBean;
+	}
+	
+	public UniqueTokensSesssionBeanRemote getUniqueTokensBean() {
+		return uniqueTokensBean;
+	}
+	
+	public void setUniqueTokensBean(UniqueTokensSesssionBeanRemote uniqueTokensBean) {
+		this.uniqueTokensBean = uniqueTokensBean;
 	}
 	
 	@Override

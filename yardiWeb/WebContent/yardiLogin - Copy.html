@@ -48,8 +48,8 @@
             <button type="button" class="btn btn-success" id="login">Login</button>
           </div>
         </div>          
-        <div font color="red" id="form-feedback"></div>
       </form>
+      <div font color="red" id="form-feedback"></div>
     </div>
   </div>
   <script>
@@ -76,7 +76,15 @@
             //mark form invalid
             formValid = false;
           }
-          
+
+          /**
+           * wait until finished with each()
+           * wait until finished with each()
+           * wait until finished with each()
+           * wait until finished with each()
+           * wait until finished with each()
+           * wait until finished with each()
+           **/
           if (formValid) {
             var userName = $('#username').val();
             var password = $('#password').val();
@@ -97,7 +105,7 @@
               $('#form-feedback').text(data.msgDescription);
             
               if (data.msgID === 'YRD0001') {
-                $('input').each(function (
+                $('input').each(function () {
                   formValid = false;
                   var formGroup = $(this).parents('.form-group');
                   var glyphIcon = formGroup.find('.glyph_icon');
@@ -106,10 +114,10 @@
                   formGroup.addClass('has-error').removeClass('has-success');
                   // show x, remove check
                   glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
-                ));
+                });
               }
           
-              if (data.msgID === 'YRD0003') {
+              if (data.msgID === 'YRD0003' || data.msgID === 'YRD0004') {
                 formValid = false;
                 var formGroup = $('[name="username"]').parent('.form-group');
                 var glyphIcon = formGroup.find('.glyph_icon');
@@ -119,10 +127,12 @@
                 // show x, remove check
                 glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
               }
-          
-              if (data.msgID === 'YRD0004') {
+                    
+              if (data.msgID === 'YRD0005' || data.msgID === 'YRD0006' 
+                  || data.msgID === 'YRD0007' || data.msgID === 'YRD0008' 
+                  || data.msgID === 'YRD0009' || data.msgID === 'YRD000A'  ) {
                 formValid = false;
-                var formGroup = $('[name="username"]').parent('.form-group');
+                var formGroup = $('[name="password"]').parent('.form-group');
                 var glyphIcon = formGroup.find('.glyph_icon');
                 var obj = $(this);
                 // show red, remove green
@@ -130,20 +140,22 @@
                 // show x, remove check
                 glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
               }
-          
-              if (data.msgID === 'YRD000C') {
-                formValid = false;
-                var formGroup = $('[name="username"]').parent('.form-group');
-                var glyphIcon = formGroup.find('.glyph_icon');
-                var obj = $(this);
-                formGroup.removeClass('has-error');
-                formGroup.removeClass('has-success');
-                glyphIcon.removeClass('glyphicon-ok');
-                glyphIcon.removeClass('glyphicon-remove');
+
+              if (data.msgID === 'YRD000B' || data.msgID === 'YRD000C') {
+                $('input').each(function () {
+                  formValid = false;
+                  var formGroup = $(this).parents('.form-group');
+                  var glyphIcon = formGroup.find('.glyph_icon');
+                  var obj = $(this);
+                  formGroup.removeClass('has-error');
+                  formGroup.removeClass('has-success');
+                  glyphIcon.removeClass('glyphicon-ok');
+                  glyphIcon.removeClass('glyphicon-remove');
+                });
               }
-            });
+            });  //end of done
           }
-        });
+        }); //end of each
       });
     });
   </script>

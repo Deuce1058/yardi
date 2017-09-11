@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 public class UserProfile implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
 	@Column(name="UP_USERID")
 	private String upUserid;
 
@@ -90,7 +91,6 @@ public class UserProfile implements Serializable {
 	@Column(name="UP_PWD_ATTEMPTS")
 	private short upPwdAttempts;
 
-	@Id
 	@GeneratedValue
 	@Column(name="UPRRN")
 	private long uprrn;
@@ -282,4 +282,19 @@ public class UserProfile implements Serializable {
 		this.uptoken = uptoken;
 	}
 
+	@Override
+	public String toString() {
+		return "UserProfile [upUserid=" + upUserid + ", uptoken=" + uptoken
+				+ ", upHomeMarket=" + upHomeMarket + ", upFirstName="
+				+ upFirstName + ", upLastName=" + upLastName + ", upAddress1="
+				+ upAddress1 + ", upAddress2=" + upAddress2 + ", upCity="
+				+ upCity + ", upState=" + upState + ", upZip=" + upZip
+				+ ", upZip4=" + upZip4 + ", upPhone=" + upPhone + ", upFax="
+				+ upFax + ", upEmail=" + upEmail + ", upssn=" + upssn
+				+ ", updob=" + updob + ", upActiveYn=" + upActiveYn
+				+ ", upPwdexpd=" + upPwdexpd + ", upDisabledYn=" + upDisabledYn
+				+ ", upDisabledDate=" + upDisabledDate + ", upLastLoginDate="
+				+ upLastLoginDate + ", upPwdAttempts=" + upPwdAttempts
+				+ ", uprrn=" + uprrn + "]";
+	}
 }

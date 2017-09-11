@@ -41,15 +41,13 @@ public class UserServices {
 	private PpPwdPolicy pwdPolicy = null;
 	private UserProfile userProfile = null;
 	private LoginData loginData;
-	UserProfileSessionBeanRemote userProfileBean; //bean is thread safe unless marked reentrant in the deployment descriptor
-	PasswordPolicySessionBeanRemote passwordPolicyBean;
-	UniqueTokensSesssionBeanRemote uniqueTokensBean;
+
+	@EJB UserProfileSessionBeanRemote userProfileBean; //bean is thread safe unless marked reentrant in the deployment descriptor
+	@EJB PasswordPolicySessionBeanRemote passwordPolicyBean;
+	@EJB UniqueTokensSesssionBeanRemote uniqueTokensBean;
 
 	public UserServices(LoginData loginData) {
 		this.loginData = loginData;
-		passwordPolicyBean = loginData.getPasswordPolicyBean();
-		uniqueTokensBean = loginData.getUniqueTokensBean();
-		userProfileBean = loginData.getUserProfileBean();
 	}
 
 /**
@@ -376,14 +374,8 @@ public class UserServices {
 	}
 
 	private void setPwdPolicy() {
-		//passwordPolicyBean is null. Cant use @EJB in pojo. Has to be a servlet
-		//LoginService needs to store @EJB references in LoginData
-		//pwdPolicy = null;
-		//EntityManager emgr = passwordPolicyBean.getEmgr();
-		//pwdPolicy = (PpPwdPolicy) emgr.createNativeQuery("SELECT * FROM DB2ADMIN.PP_PWD_POLICY WHERE PP_RRN = :rrn", PpPwdPolicy.class)
-		//		.setParameter("rrn", 1L).getSingleResult();
-
-		pwdPolicy = passwordPolicyBean.findPwdPolicy(1L);
+		pwdPolicy = null;
+		pwdPolicy = passwordPolicyBean.pwdPolicyRowExists(1L);
 		
 		if (pwdPolicy == null) {
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD000B;
@@ -405,7 +397,7 @@ public class UserServices {
 
 	private UserProfile findUserProfile(String userName) {
 		UserProfile userProfile = null;
-		userProfile = userProfileBean.findUser(userName);
+		userProfile = userProfileBean.userNameExists(userName);
 		
 		if (userProfile == null) {
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0001;

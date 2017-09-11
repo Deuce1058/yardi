@@ -10,7 +10,10 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="PP_PWD_POLICY")
-@NamedQuery(name="PpPwdPolicy.findAll", query="SELECT p FROM PpPwdPolicy p")
+@NamedQueries({
+	@NamedQuery(name="PpPwdPolicy.findAll", query="SELECT p FROM PpPwdPolicy p"),
+	@NamedQuery(name="PpPwdPolicy.findRow", query="SELECT p FROM PpPwdPolicy p  WHERE p.ppRrn = :rrn")
+})
 public class PpPwdPolicy implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -118,4 +121,12 @@ public class PpPwdPolicy implements Serializable {
 		this.ppNbrUnique = ppNbrUnique;
 	}
 
+	@Override
+	public String toString() {
+		return "PpPwdPolicy [ppDays=" + ppDays + ", ppNbrUnique=" + ppNbrUnique
+				+ ", ppMaxSignonAttempts=" + ppMaxSignonAttempts
+				+ ", ppPwdMinLen=" + ppPwdMinLen + ", ppUpperRqd=" + ppUpperRqd
+				+ ", ppLowerRqd=" + ppLowerRqd + ", ppNumberRqd=" + ppNumberRqd
+				+ ", ppSpecialRqd=" + ppSpecialRqd + ", ppRrn=" + ppRrn + "]";
+	}
 }

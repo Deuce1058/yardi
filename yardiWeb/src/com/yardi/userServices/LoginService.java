@@ -12,16 +12,22 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.RequestDispatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yardi.ejb.PasswordPolicySessionBeanRemote;
+import com.yardi.ejb.UniqueTokensSesssionBeanRemote;
+import com.yardi.ejb.UserProfileSessionBeanRemote;
 import com.yardi.rentSurvey.YardiConstants;
 
 /**
  * Servlet implementation class LoginService
+ * http://localhost:8080/yardiWeb/yardiLogin.html
  */
 @WebServlet("/doLogin")
 public class LoginService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private UserServices userSvc;
-
+	@EJB UserProfileSessionBeanRemote userProfileBean; //bean is thread safe unless marked reentrant in the deployment descriptor
+	@EJB PasswordPolicySessionBeanRemote passwordPolicyBean;
+	@EJB UniqueTokensSesssionBeanRemote uniqueTokensBean;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -43,6 +49,9 @@ public class LoginService extends HttpServlet {
 
 		ObjectMapper mapper = new ObjectMapper();
 		LoginData loginData = mapper.readValue(formData, LoginData.class);
+		loginData.setPasswordPolicyBean(passwordPolicyBean);
+		loginData.setUniqueTokensBean(uniqueTokensBean);
+		loginData.setUserProfileBean(userProfileBean);
 		/*
 		 * Set boolean to indicate whether user is changing the password
 		 * 
@@ -76,8 +85,6 @@ public class LoginService extends HttpServlet {
 			 * dispatch to the html for password expired 
 			 *   get current pwd, new pwd and verified new pwd
 			 */
-			loginData.setChgPwd("true");
-			loginData.setChangePwd(loginData.getChgPwd()); 
 			loginData.setUserName("");
 			loginData.setPassword("");
 			loginData.setNewPassword("");
@@ -103,13 +110,13 @@ public class LoginService extends HttpServlet {
 		//YRD000C$Maximum signon attempts exceeded. The user profile has been disabled
 		
 		if (userSvc.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0000)==false) {
-			loginData.setChgPwd("false");
-			loginData.setChangePwd(loginData.getChgPwd()); 
 			loginData.setNewPassword("");
-			String msg [] = userSvc.getFeedback().split("$");
+			String msg [] = userSvc.getFeedback().split("=");
 			loginData.setMsgID(msg[0]);
 			loginData.setMsgDescription(msg[1]);
-			formData = mapper.writeValueAsString(LoginData.class); //convert the feedback to json 
+			
+			//fails to build JSON 
+			formData = mapper.writeValueAsString(loginData); //convert the feedback to json 
 			request.setAttribute("formData", formData);
 			RequestDispatcher rd = request.getRequestDispatcher("yardiLogin.html");
 			rd.forward(request, response);
