@@ -40,7 +40,7 @@ body, html{
     height: 100%;
  	background-repeat: no-repeat;
  	font-family: 'Oxygen', sans-serif;
-    color: white;
+    /* color: white; */
 }
 
 .main{
@@ -49,7 +49,7 @@ body, html{
 
 hr{
 	width: 10%;
-	color: #fff;
+	/*color: #fff; */
 }
 
 .form-group{
@@ -67,7 +67,7 @@ input::-webkit-input-placeholder {
 }
 
 .main-login{
- 	background-color: #fff;
+ 	/*background-color: #fff;*/
     /* shadows and rounded borders */
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;

@@ -2,6 +2,8 @@ package com.yardi.userServices;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.Enumeration;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -11,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.RequestDispatcher;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.PasswordPolicySessionBeanRemote;
 import com.yardi.ejb.UniqueTokensSesssionBeanRemote;
@@ -43,8 +47,10 @@ public class LoginService extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		/*
 		response.setContentType("text/plain");
 		PrintWriter out = response.getWriter();
+		*/
 		String formData = request.getParameter("formData");
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -114,12 +120,21 @@ public class LoginService extends HttpServlet {
 			String msg [] = userSvc.getFeedback().split("=");
 			loginData.setMsgID(msg[0]);
 			loginData.setMsgDescription(msg[1]);
-			
-			//fails to build JSON 
-			formData = mapper.writeValueAsString(loginData); //convert the feedback to json 
-			request.setAttribute("formData", formData);
-			RequestDispatcher rd = request.getRequestDispatcher("yardiLogin.html");
-			rd.forward(request, response);
+			LoginResponse loginResponse = new LoginResponse();
+			loginResponse.setUserName(loginData.getUserName());
+			loginResponse.setPassword(loginData.getPassword());
+			loginResponse.setNewPassword(loginData.getNewPassword());
+			loginResponse.setMsgID(loginData.getMsgID());
+			loginResponse.setMsgDescription(loginData.getMsgDescription());
+			response.reset();
+			response.setContentType("application/json");
+			PrintWriter out = response.getWriter();
+			formData = mapper.writeValueAsString(loginResponse); //convert the feedback to json 
+			out.print(formData);
+			out.flush();
+			//RequestDispatcher rd = request.getRequestDispatcher("yardiLogin.html");
+			//the client gets the entire HTML document never sees the JSON object. Can see the JSON in the response if debug
+			//rd.forward(request, response);
 		}		
 	}
 

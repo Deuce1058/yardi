@@ -10,7 +10,6 @@ import javax.persistence.PersistenceUnit;
  * Session Bean implementation class UserProfileSessionBean
  */
 @Stateless
-
 public class UserProfileSessionBean implements UserProfileSessionBeanRemote {
 	@PersistenceContext(name = "yardiEJB")	
 	private EntityManager entityManager;

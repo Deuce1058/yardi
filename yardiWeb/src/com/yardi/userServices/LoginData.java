@@ -1,5 +1,7 @@
 package com.yardi.userServices;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.yardi.ejb.PasswordPolicySessionBeanRemote;
 import com.yardi.ejb.UniqueTokensSesssionBeanRemote;
 import com.yardi.ejb.UserProfileSessionBeanRemote;
@@ -10,6 +12,7 @@ import com.yardi.ejb.UserProfileSessionBeanRemote;
  *
  */
 
+@JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class LoginData {
 	private String userName;
 	private String password;
@@ -99,6 +102,11 @@ public class LoginData {
 	@Override
 	public String toString() {
 		return "LoginData [userName=" + userName + ", password=" + password
+				+ ", newPassword=" + newPassword + ", msgID=" + msgID
+				+ ", msgDescription=" + msgDescription + ", chgPwd=" + chgPwd
+				+ ", changePwd=" + changePwd + ", userProfileBean="
+				+ userProfileBean + ", passwordPolicyBean="
+				+ passwordPolicyBean + ", uniqueTokensBean=" + uniqueTokensBean
 				+ "]";
 	}
 }
