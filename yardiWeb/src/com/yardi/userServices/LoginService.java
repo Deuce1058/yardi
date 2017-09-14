@@ -1,6 +1,8 @@
 package com.yardi.userServices;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -48,33 +50,39 @@ public class LoginService extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		/*
-		response.setContentType("text/plain");
-		PrintWriter out = response.getWriter();
-		*/
-		String formData = request.getParameter("formData");
-
+		 * When using .ajax jQuery does not put a named parm in the request, it just sends raw JSON like
+		 * {"userName":"z","password":"aaa","newPassword":"","msgID":"","msgDescription":"","chgPwd":"false"}
+		 * see: http://hmkcode.com/java-servlet-send-receive-json-using-jquery-ajax/
+		 */
+		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+		String formData = "";
+		
+        if(br != null){
+        	formData = br.readLine();
+        }
+        
 		ObjectMapper mapper = new ObjectMapper();
-		LoginData loginData = mapper.readValue(formData, LoginData.class);
-		loginData.setPasswordPolicyBean(passwordPolicyBean);
-		loginData.setUniqueTokensBean(uniqueTokensBean);
-		loginData.setUserProfileBean(userProfileBean);
+		LoginRequest loginRequest = mapper.readValue(formData, LoginRequest.class);
+		loginRequest.setPasswordPolicyBean(passwordPolicyBean);
+		loginRequest.setUniqueTokensBean(uniqueTokensBean);
+		loginRequest.setUserProfileBean(userProfileBean);
 		/*
 		 * Set boolean to indicate whether user is changing the password
 		 * 
 		 * In both the login page and the change password page a script sets the change password indicator and builds a JSON 
-		 * object that contains the change password indicator. The JSON is passed via POST and then parsed into LoginData. This
+		 * object containing the change password indicator. The JSON is passed via POST and then parsed into LoginRequest. This
 		 * allows methods know whether the login data originated from the regular login page or the change password page. 
          *
-		 * As a convenience, there is a boolean in LoginData which is the same as the change password indicator. 
+		 * As a convenience, there is a boolean in LoginRequest which is the same as the change password indicator. 
 		 */
-		loginData.setChangePwd(loginData.getChgPwd()); 
-		userSvc = new UserServices(loginData);
+		loginRequest.setChangePwd(loginRequest.getChgPwd()); 
+		userSvc = new UserServices(loginRequest);
 
-    	if (loginData.getChangePwd()==false) { //normal login
+    	if (loginRequest.getChangePwd()==false) { //normal login
         	userSvc.authenticate();
     	}
     	
-    	if (loginData.getChangePwd()) { //change password
+    	if (loginRequest.getChangePwd()) { //change password
         	userSvc.chgPwd();
     	}
     	
@@ -86,18 +94,18 @@ public class LoginService extends HttpServlet {
 			 */
 		}
 				
-		if (loginData.getChangePwd() ||	userSvc.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0002)) {
+		if (loginRequest.getChangePwd() ||	userSvc.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0002)) {
 			/*
 			 * dispatch to the html for password expired 
 			 *   get current pwd, new pwd and verified new pwd
 			 */
-			loginData.setUserName("");
-			loginData.setPassword("");
-			loginData.setNewPassword("");
+			loginRequest.setUserName("");
+			loginRequest.setPassword("");
+			loginRequest.setNewPassword("");
 			String msg [] = com.yardi.rentSurvey.YardiConstants.YRD0002.split("$");
-			loginData.setMsgID(msg[0]);
-			loginData.setMsgDescription(msg[1]);
-			formData = mapper.writeValueAsString(LoginData.class); //convert the feedback to json 
+			loginRequest.setMsgID(msg[0]);
+			loginRequest.setMsgDescription(msg[1]);
+			formData = mapper.writeValueAsString(LoginRequest.class); //convert the feedback to json 
 			request.setAttribute("formData", formData);
 			RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/views/changePwd.html");
 			rd.forward(request, response);
@@ -116,16 +124,14 @@ public class LoginService extends HttpServlet {
 		//YRD000C$Maximum signon attempts exceeded. The user profile has been disabled
 		
 		if (userSvc.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0000)==false) {
-			loginData.setNewPassword("");
 			String msg [] = userSvc.getFeedback().split("=");
-			loginData.setMsgID(msg[0]);
-			loginData.setMsgDescription(msg[1]);
-			LoginResponse loginResponse = new LoginResponse();
-			loginResponse.setUserName(loginData.getUserName());
-			loginResponse.setPassword(loginData.getPassword());
-			loginResponse.setNewPassword(loginData.getNewPassword());
-			loginResponse.setMsgID(loginData.getMsgID());
-			loginResponse.setMsgDescription(loginData.getMsgDescription());
+			LoginResponse loginResponse = new LoginResponse(
+				loginRequest.getUserName(),
+				loginRequest.getPassword(),
+				"",
+				msg[0],
+				msg[1]
+			);
 			response.reset();
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();

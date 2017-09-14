@@ -1,15 +1,23 @@
 package com.yardi.userServices;
 
-import com.yardi.ejb.PasswordPolicySessionBeanRemote;
-import com.yardi.ejb.UniqueTokensSesssionBeanRemote;
-import com.yardi.ejb.UserProfileSessionBeanRemote;
-
 public class LoginResponse {
 	private String userName;
 	private String password;
 	private String newPassword;
 	private String msgID;
 	private String msgDescription;
+
+	public LoginResponse(String userName, String password, String newPassword,
+			String msgID, String msgDescription) {
+		this.userName = userName;
+		this.password = password;
+		this.newPassword = newPassword;
+		this.msgID = msgID;
+		this.msgDescription = msgDescription;
+	}
+
+	public LoginResponse() {
+	}
 
 	public String getUserName() {
 		return userName;
@@ -49,5 +57,12 @@ public class LoginResponse {
 
 	public void setMsgDescription(String msgDescription) {
 		this.msgDescription = msgDescription;
+	}
+
+	@Override
+	public String toString() {
+		return "LoginResponse [userName=" + userName + ", password=" + password
+				+ ", newPassword=" + newPassword + ", msgID=" + msgID
+				+ ", msgDescription=" + msgDescription + "]";
 	}
 }

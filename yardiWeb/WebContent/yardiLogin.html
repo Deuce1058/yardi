@@ -51,7 +51,7 @@
           </div>
         </div>          
       </form>
-      <div style="color:red;" id="form-feedback"></div>
+      <div class="col-sm-offset-2" style="color:red;" id="form-feedback"></div>
     </div>
   </div>
   <script>
@@ -90,8 +90,65 @@
             "msgID"          : '',
             "msgDescription" : '',
             "chgPwd"         : 'false'
-          }
+          }          
+          var formData = JSON.stringify(formItems);
+          $.ajax({
+            type:     'POST',
+            url:      'doLogin',
+            data:     formData,
+            async:    false,
+            dataType: "json", 
+            success:  function(data) {
+              $('#form-feedback').text(data.msgDescription);
             
+              if (data.msgID === 'YRD0001') {
+                var x = '';
+                $('input').each(function () {
+                  formValid = false;
+                  var formGroup = $(this).parents('.form-group');
+                  var glyphIcon = formGroup.find('.glyph_icon');
+                  var obj = $(this);
+                  formGroup.addClass('has-error').removeClass('has-success');
+                  glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+                });
+              }
+          
+              if (data.msgID === 'YRD0003' || data.msgID === 'YRD0004') {
+                formValid = false;
+                var formGroup = $('[name="username"]').parent('.form-group');
+                var glyphIcon = formGroup.find('.glyph_icon');
+                var obj = $(this);
+                formGroup.addClass('has-error').removeClass('has-success');
+                glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+              }
+                    
+              if (data.msgID === 'YRD0005' || data.msgID === 'YRD0006' 
+                  || data.msgID === 'YRD0007' || data.msgID === 'YRD0008' 
+                  || data.msgID === 'YRD0009' || data.msgID === 'YRD000A') {
+                  formValid = false;
+                  var formGroup = $('[name="password"]').parent('.form-group');
+                  var glyphIcon = formGroup.find('.glyph_icon');
+                  var obj = $(this);
+                  formGroup.addClass('has-error').removeClass('has-success');
+                  glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+              }
+
+              if (data.msgID === 'YRD000B' || data.msgID === 'YRD000C') {
+                $('input').each(function () {
+                  formValid = false;
+                  var formGroup = $(this).parents('.form-group');
+                  var glyphIcon = formGroup.find('.glyph_icon');
+                  var obj = $(this);
+                  formGroup.removeClass('has-error');
+                  formGroup.removeClass('has-success');
+                  glyphIcon.removeClass('glyphicon-ok');
+                  glyphIcon.removeClass('glyphicon-remove');
+                });
+              }
+            } //end of function inside ajax
+          }); //end of ajax
+          
+          /*******
           $.post('doLogin', 
           {
               formData : JSON.stringify(formItems)
@@ -149,6 +206,7 @@
               });
             }
           });  //end of done
+          ********/
         } //end form is valid
       });
     });

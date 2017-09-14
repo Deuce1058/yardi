@@ -5,5 +5,5 @@ import javax.persistence.EntityManager;
 
 @Remote
 public interface PasswordPolicySessionBeanRemote {
-	PpPwdPolicy findPwdPolicy(Long rrn);
+	PpPwdPolicy find(Long rrn);
 }

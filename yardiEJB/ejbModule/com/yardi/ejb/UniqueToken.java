@@ -70,4 +70,11 @@ public class UniqueToken implements Serializable {
 	public void setUp1UserName(String up1UserName) {
 		this.up1UserName = up1UserName;
 	}
+
+	@Override
+	public String toString() {
+		return "UniqueToken [up1UserName=" + up1UserName + ", up1Token="
+				+ up1Token + ", up1DateAdded=" + up1DateAdded + ", up1Rrn="
+				+ up1Rrn + "]";
+	}
 }

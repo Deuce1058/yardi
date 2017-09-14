@@ -12,7 +12,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.Query;
 
 import com.yardi.ejb.UniqueToken;
-import com.yardi.ejb.UniqueTokensSesssionBean;
 import com.yardi.ejb.UniqueTokensSesssionBeanRemote;
 import com.yardi.ejb.UserProfileSessionBeanRemote;
 import com.yardi.ejb.PasswordPolicySessionBeanRemote;
@@ -40,16 +39,16 @@ public class UserServices {
 	private java.sql.Timestamp today = new java.sql.Timestamp(new java.util.Date().getTime());
 	private PpPwdPolicy pwdPolicy = null;
 	private UserProfile userProfile = null;
-	private LoginData loginData;
+	private LoginRequest loginRequest;
 	UserProfileSessionBeanRemote userProfileBean; //bean is thread safe unless marked reentrant in the deployment descriptor
 	PasswordPolicySessionBeanRemote passwordPolicyBean;
 	UniqueTokensSesssionBeanRemote uniqueTokensBean;
 
-	public UserServices(LoginData loginData) {
-		this.loginData = loginData;
-		passwordPolicyBean = loginData.getPasswordPolicyBean();
-		uniqueTokensBean = loginData.getUniqueTokensBean();
-		userProfileBean = loginData.getUserProfileBean();
+	public UserServices(LoginRequest loginRequest) {
+		this.loginRequest = loginRequest;
+		passwordPolicyBean = loginRequest.getPasswordPolicyBean();
+		uniqueTokensBean = loginRequest.getUniqueTokensBean();
+		userProfileBean = loginRequest.getUserProfileBean();
 	}
 
 /**
@@ -73,9 +72,9 @@ public class UserServices {
  * @return Boolean
  */
 	public boolean chgPwd() {
-		String userName = loginData.getUserName();
-		char [] oldPassword = loginData.getPassword().toCharArray();
-		char [] newPassword = loginData.getNewPassword().toCharArray();
+		String userName = loginRequest.getUserName();
+		char [] oldPassword = loginRequest.getPassword().toCharArray();
+		char [] newPassword = loginRequest.getNewPassword().toCharArray();
 		
 		if (authenticate() == false) {
 			return false;
@@ -108,31 +107,25 @@ public class UserServices {
 		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
 		short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
 		short pwdLifeInDays = pwdPolicy.getPpDays();
-		List<UniqueToken> userTokens = new ArrayList<UniqueToken>(50);
-		EntityManager emgr = uniqueTokensBean.getEntityManager();
-		Query qry = emgr.createNativeQuery(
-			"SELECT * FROM DB2ADMIN.UNIQUE_TOKENS WHERE UP1_USER_NAME = :userName ORDER BY UP1_DATE_ADDED, UP1_RRN", 
-			UniqueToken.class);
-		userTokens = (ArrayList<UniqueToken>)qry.setParameter("userName", userName).getResultList();
+		ArrayList<UniqueToken> userTokens = uniqueTokensBean.findTokens(userName);
 		int nbrOfPwds = userTokens.size();
 		UniqueToken uniqueToken; //single element from userTokens which is an ArrayList of UniqueToken.class 
 		
-		if (userTokens.size() > maxUniqueTokens) {
+		if (nbrOfPwds > maxUniqueTokens) {
 			//there are more previous tokens stored than the current max. remove extra rows
 			
-			for(int i=0;userTokens.size() > 0 && i<userTokens.size(); i++) {
+			for(int i=0;nbrOfPwds > 0 && i<nbrOfPwds; i++) {
 				uniqueToken = userTokens.get(i);
 				
 				if (i >= maxUniqueTokens) {
 					//extra rows
 					long rrn = uniqueToken.getUp1Rrn();
-					uniqueToken = null;
-					uniqueToken = uniqueTokensBean.exists(rrn);
+					uniqueToken = uniqueTokensBean.find(rrn);
 					
 					if (uniqueToken != null) {
-						uniqueTokensBean.beginTransaction();
+						//uniqueTokensBean.beginTransaction();
 						uniqueTokensBean.remove(uniqueToken); //delete the extra row
-						uniqueTokensBean.commitTransaction();
+						//uniqueTokensBean.commitTransaction();
 						userTokens.remove(i);
 					}
 				} else {
@@ -145,17 +138,16 @@ public class UserServices {
 			}
 		}
 		
-		if (userTokens.size() == maxUniqueTokens) {
+		if (nbrOfPwds == maxUniqueTokens) {
 			//remove oldest stored token because a new token will be inserted
 			uniqueToken = userTokens.get(userTokens.size() - 1);
 			long rrn = uniqueToken.getUp1Rrn();
-			uniqueToken = null;
-			uniqueToken = uniqueTokensBean.exists(rrn);
+			uniqueToken = uniqueTokensBean.find(rrn);
 			
 			if (uniqueToken != null) {
-				uniqueTokensBean.beginTransaction();
+				//uniqueTokensBean.beginTransaction();
 				uniqueTokensBean.remove(uniqueToken); //delete 
-				uniqueTokensBean.commitTransaction();
+				//uniqueTokensBean.commitTransaction();
 				userTokens.remove(userTokens.size() - 1);
 			}
 		}
@@ -169,17 +161,17 @@ public class UserServices {
 		long time = gc.getTimeInMillis();
 
 		if (maxUniqueTokens > 0) {
-			uniqueTokensBean.beginTransaction();		
+			//uniqueTokensBean.beginTransaction();		
 			uniqueToken = new UniqueToken(userName, userToken, new java.util.Date(gc.getTimeInMillis()));
 			uniqueTokensBean.persist(uniqueToken); //insert
-			uniqueTokensBean.commitTransaction();
+			//uniqueTokensBean.commitTransaction();
 		}
 		
 		gc.add(Calendar.DAY_OF_MONTH, pwdLifeInDays); //new password expiration date
-		userProfileBean.beginTransaction();
+		//userProfileBean.beginTransaction();
 		userProfile.setUptoken(userToken); //store new token in user profile
 		userProfile.setUpPwdexpd(new java.util.Date(gc.getTimeInMillis())); //set password expires date
-		userProfileBean.commitTransaction();
+		//userProfileBean.commitTransaction();
 		return true;
 	}
 	
@@ -203,9 +195,9 @@ public class UserServices {
 			return false;
 		}
 		
-		String userName = loginData.getUserName();
-		char [] password = loginData.getPassword().toCharArray();
-		boolean userIsChangingPassword = loginData.getChangePwd();
+		String userName = loginRequest.getUserName();
+		char [] password = loginRequest.getPassword().toCharArray();
+		boolean userIsChangingPassword = loginRequest.getChangePwd();
 		short signonAttempts = 0;
 		short maxSignonAttempts = pwdPolicy.getPpMaxSignonAttempts();
 		passwordAuthentication = getPasswordAuthentication(); //get an instance of PasswordAuthentication
@@ -230,7 +222,7 @@ public class UserServices {
 		long passwordExpiration = userProfile.getUpPwdexpd().getTime();
 		signonAttempts = userProfile.getUpPwdAttempts();
 		Boolean pwdValid = passwordAuthentication.authenticate(password, userProfile.getUptoken());
-		userProfileBean.beginTransaction();
+		//userProfileBean.beginTransaction();
 		
 		if (pwdValid == false) {
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0001;
@@ -268,7 +260,7 @@ public class UserServices {
 			}
 		}
 		
-		userProfileBean.commitTransaction();
+		//userProfileBean.commitTransaction();
 		return pwdValid;
 	}
 
@@ -377,13 +369,13 @@ public class UserServices {
 
 	private void setPwdPolicy() {
 		//passwordPolicyBean is null. Cant use @EJB in pojo. Has to be a servlet
-		//LoginService needs to store @EJB references in LoginData
+		//LoginService needs to store @EJB references in LoginRequest
 		//pwdPolicy = null;
 		//EntityManager emgr = passwordPolicyBean.getEmgr();
 		//pwdPolicy = (PpPwdPolicy) emgr.createNativeQuery("SELECT * FROM DB2ADMIN.PP_PWD_POLICY WHERE PP_RRN = :rrn", PpPwdPolicy.class)
 		//		.setParameter("rrn", 1L).getSingleResult();
 
-		pwdPolicy = passwordPolicyBean.findPwdPolicy(1L);
+		pwdPolicy = passwordPolicyBean.find(1L);
 		
 		if (pwdPolicy == null) {
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD000B;
@@ -404,13 +396,24 @@ public class UserServices {
 	}
 
 	private UserProfile findUserProfile(String userName) {
-		UserProfile userProfile = null;
-		userProfile = userProfileBean.findUser(userName);
+		userProfile = null;
+		userProfile = userProfileBean.find(userName);
 		
 		if (userProfile == null) {
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0001;
 		}
 		
 		return userProfile;
+	}
+
+	@Override
+	public String toString() {
+		return "UserServices [passwordAuthentication=" + passwordAuthentication
+				+ ", feedback=" + feedback + ", today=" + today
+				+ ", pwdPolicy=" + pwdPolicy + ", userProfile=" + userProfile
+				+ ", loginRequest=" + loginRequest + ", userProfileBean="
+				+ userProfileBean + ", passwordPolicyBean="
+				+ passwordPolicyBean + ", uniqueTokensBean=" + uniqueTokensBean
+				+ "]";
 	}
 }

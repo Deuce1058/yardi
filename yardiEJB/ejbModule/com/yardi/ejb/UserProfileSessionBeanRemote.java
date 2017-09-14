@@ -4,7 +4,5 @@ import javax.ejb.Remote;
 
 @Remote
 public interface UserProfileSessionBeanRemote {
-	UserProfile findUser(String userName);
-	void beginTransaction();
-	void commitTransaction();
+	UserProfile find(String userName);
 }

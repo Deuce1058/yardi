@@ -10,6 +10,11 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class PasswordPolicySessionBean implements PasswordPolicySessionBeanRemote {
+	/*
+	 * In the case of a RESOURCE_LOCAL, EntityManager.getTransaction().begin() and EntityManager.getTransaction().comit() 
+	 * are allowed. Here, the container is managing begin and commit and an attempt to begin will throw Cannot use an 
+	 * EntityTransaction while using JTA 
+	 */
 	@PersistenceContext(name="yardiEJB")
 	private EntityManager emgr;
 
@@ -20,7 +25,7 @@ public class PasswordPolicySessionBean implements PasswordPolicySessionBeanRemot
     }
 
 	@Override
-	public PpPwdPolicy findPwdPolicy(Long rrn) {
+	public PpPwdPolicy find(Long rrn) {
 		PpPwdPolicy pwdPolicy = null;
 		pwdPolicy = emgr.find(PpPwdPolicy.class, rrn);
 

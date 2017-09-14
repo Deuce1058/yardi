@@ -1,14 +1,14 @@
 package com.yardi.ejb;
 
+import java.util.ArrayList;
+
 import javax.ejb.Remote;
 import javax.persistence.EntityManager;
 
 @Remote
 public interface UniqueTokensSesssionBeanRemote {
-	UniqueToken exists(long rrn);
-	void beginTransaction ();
-	void commitTransaction();
+	UniqueToken find(long rrn);
 	void persist(UniqueToken uniqueToken);
 	void remove(UniqueToken uniqueToken);
-	EntityManager getEntityManager();
+	ArrayList<UniqueToken> findTokens(String userName);
 }
