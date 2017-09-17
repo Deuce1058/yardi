@@ -5,4 +5,8 @@ import javax.ejb.Remote;
 @Remote
 public interface UserProfileSessionBeanRemote {
 	UserProfile find(String userName);
+	int setUpPwdAttempts(String userName, short pwdAttempts);
+	int disable(String userName, java.sql.Timestamp disabledDate, short pwdAttempts);
+	int loginSuccess(String userName, java.sql.Timestamp disabledDate, 
+	    	short pwdAttempts, java.sql.Timestamp loginDate);
 }

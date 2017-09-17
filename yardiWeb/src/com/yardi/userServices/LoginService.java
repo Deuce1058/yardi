@@ -53,6 +53,9 @@ public class LoginService extends HttpServlet {
 		 * When using .ajax jQuery does not put a named parm in the request, it just sends raw JSON like
 		 * {"userName":"z","password":"aaa","newPassword":"","msgID":"","msgDescription":"","chgPwd":"false"}
 		 * see: http://hmkcode.com/java-servlet-send-receive-json-using-jquery-ajax/
+		 * 
+		 * Intro to java transaction API
+		 * https://www.java-tips.org/java-ee-tips-100042/17-enterprise-java-beans/1472-introduction-to-the-java-transaction-api.html
 		 */
 		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		String formData = "";

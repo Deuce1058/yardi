@@ -1,6 +1,7 @@
 package com.yardi.userServices;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -228,11 +229,23 @@ public class UserServices {
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0001;
 			signonAttempts++;
 			//userProfile was set by findUserProfile(userName) see above
-			userProfile.setUpPwdAttempts(signonAttempts);
+			//userProfile.setUpPwdAttempts(signonAttempts);
+			int rows = userProfileBean.setUpPwdAttempts(userName, signonAttempts);
 			
+			if (rows != 1) {
+				int z = rows;
+			}
+						
 			if (signonAttempts == maxSignonAttempts) {
-				userProfile.setUpDisabledDate(new java.util.Date());
-				userProfile.setUpPwdAttempts(maxSignonAttempts);
+				//userProfile.setUpDisabledDate(new java.util.Date());
+				//userProfile.setUpPwdAttempts(maxSignonAttempts);
+				rows = userProfileBean.disable(userName, new java.sql.Timestamp(new java.util.Date().getTime()), 
+					maxSignonAttempts);
+				
+				if (rows != 1) {
+					int z = rows;
+				}
+							
 				feedback = com.yardi.rentSurvey.YardiConstants.YRD000C;
 			}
 		} else {
@@ -254,9 +267,14 @@ public class UserServices {
 				 * They have successfully logged in at this point only if they are not changing the password so only set 
 				 * last login date when they are not changing the password 
 				 */
-				userProfile.setUpDisabledDate(null);
-				userProfile.setUpPwdAttempts((short) 0);
-				userProfile.setUpLastLoginDate(new java.util.Date());
+				//userProfile.setUpDisabledDate(null);
+				//userProfile.setUpPwdAttempts((short) 0);
+				//userProfile.setUpLastLoginDate(new java.util.Date());
+				int rows = userProfileBean.loginSuccess(userName, null, (short) 0, new java.sql.Timestamp(new java.util.Date().getTime()));
+				
+				if (rows != 1) {
+					int z = rows;
+				}
 			}
 		}
 		
@@ -287,6 +305,16 @@ public class UserServices {
 	 * @return Boolean
 	 */
 	public boolean passwordPolicy(String password ) {
+		/* implement these new rules:
+		 *   Minimum length
+		 *   Max length
+		 *   No more than N repeated char
+		 *   https://stackoverflow.com/questions/2622776/regex-to-match-four-repeated-letters-in-a-string-using-a-java-pattern
+		 *   No fewer than N digits
+		 *   No fewer than N upper/lower
+		 *   No fewer than N special
+		 *   Can not contain the user name (in any case)
+		 */
 		boolean hasUpper = false;
 		boolean hasLower = false;
 		boolean hasNumber = false;
