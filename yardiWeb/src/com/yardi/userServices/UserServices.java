@@ -109,29 +109,28 @@ public class UserServices {
 		short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
 		short pwdLifeInDays = pwdPolicy.getPpDays();
 		ArrayList<UniqueToken> userTokens = uniqueTokensBean.findTokens(userName);
-		int nbrOfPwds = userTokens.size();
+		int nbrOfStoredTokens = userTokens.size();
 		UniqueToken uniqueToken; //single element from userTokens which is an ArrayList of UniqueToken.class 
 		
-		if (nbrOfPwds > maxUniqueTokens) {
+		if (nbrOfStoredTokens > maxUniqueTokens) {
 			//there are more previous tokens stored than the current max. remove extra rows
 			
-			for(int i=0;nbrOfPwds > 0 && i<nbrOfPwds; i++) {
+			for(int i=0;nbrOfStoredTokens > 0 && i<nbrOfStoredTokens; i++) {
 				uniqueToken = userTokens.get(i);
 				
-				if (i >= maxUniqueTokens) {
+				if (i >= maxUniqueTokens && uniqueToken != null) {
 					//extra rows
 					long rrn = uniqueToken.getUp1Rrn();
-					uniqueToken = uniqueTokensBean.find(rrn);
-					
-					if (uniqueToken != null) {
-						//uniqueTokensBean.beginTransaction();
-						uniqueTokensBean.remove(uniqueToken); //delete the extra row
-						//uniqueTokensBean.commitTransaction();
-						userTokens.remove(i);
-					}
+					uniqueTokensBean.remove(rrn); //delete the extra row
+					userTokens.remove(i);
 				} else {
 					//passwordAuthentication set in authenticate()
-					if(passwordAuthentication.authenticate(newPassword, uniqueToken.getUp1Token())) {
+					if (maxUniqueTokens > 0 && 
+						passwordAuthentication.authenticate(newPassword, uniqueToken.getUp1Token())) {
+						/* 
+						 * Only check up to the maximum number of stored tokens established in password policy. If more tokens 
+						 * are stored than the current maximum then ignore the extra tokens
+						 */
 						feedback = com.yardi.rentSurvey.YardiConstants.YRD000A;
 						return false;
 					}
@@ -139,16 +138,13 @@ public class UserServices {
 			}
 		}
 		
-		if (nbrOfPwds == maxUniqueTokens) {
+		if (nbrOfStoredTokens == maxUniqueTokens && maxUniqueTokens > 0) {
 			//remove oldest stored token because a new token will be inserted
 			uniqueToken = userTokens.get(userTokens.size() - 1);
-			long rrn = uniqueToken.getUp1Rrn();
-			uniqueToken = uniqueTokensBean.find(rrn);
 			
 			if (uniqueToken != null) {
-				//uniqueTokensBean.beginTransaction();
-				uniqueTokensBean.remove(uniqueToken); //delete 
-				//uniqueTokensBean.commitTransaction();
+				long rrn = uniqueToken.getUp1Rrn();
+				uniqueTokensBean.remove(rrn); //delete 
 				userTokens.remove(userTokens.size() - 1);
 			}
 		}
@@ -162,17 +158,12 @@ public class UserServices {
 		long time = gc.getTimeInMillis();
 
 		if (maxUniqueTokens > 0) {
-			//uniqueTokensBean.beginTransaction();		
-			uniqueToken = new UniqueToken(userName, userToken, new java.util.Date(gc.getTimeInMillis()));
-			uniqueTokensBean.persist(uniqueToken); //insert
-			//uniqueTokensBean.commitTransaction();
+			uniqueTokensBean.persist(userName, userToken, new java.util.Date()); //insert
 		}
 		
 		gc.add(Calendar.DAY_OF_MONTH, pwdLifeInDays); //new password expiration date
-		//userProfileBean.beginTransaction();
-		userProfile.setUptoken(userToken); //store new token in user profile
-		userProfile.setUpPwdexpd(new java.util.Date(gc.getTimeInMillis())); //set password expires date
-		//userProfileBean.commitTransaction();
+		userProfileBean.changeUserToken(userToken, new java.util.Date(gc.getTimeInMillis())); //store new token in user profile
+		userProfileBean.loginSuccess(userName);
 		return true;
 	}
 	
@@ -205,17 +196,47 @@ public class UserServices {
 		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
 		//if there is a row in UserProfile for userName userProfile will have a reference to UserProfile.class
 		findUserProfile(userName); 
+		//debug
+		System.out.println("com.yardi.userServices UserServices authenticate() 200"
+				+ "\n " 
+				+ "  userName =" + userName 
+				+ "\n " 
+				+ "  password = " + password.toString()
+				+ "\n "
+				+ "  userIsChangingPassword =" + userIsChangingPassword
+				+ "\n "
+				+ "  signonAttempts =" + signonAttempts 
+				+ "\n "
+				+ "  maxSignonAttempts = " + maxSignonAttempts
+				+ "\n "
+				+ "  feedback =" + feedback
+				+ "\n " 
+				);
+		//debug 
 		
 		if (userProfile == null) {
+			//debug
+			System.out.println("com.yardi.userServices UserServices authenticate() 219 userProfile == null \n");
+			//debug
 			return false;
 		}
+
+		//debug
+		System.out.println("com.yardi.userServices UserServices authenticate() 225 userProfile =" + userProfile + "\n");
+		//debug
 		
 		if (userProfile.getUpDisabledDate() != null) {
+			//debug
+			System.out.println("com.yardi.userServices UserServices authenticate() 230 userProfile.getUpDisabledDate() != null\n");
+			//debug
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0003;
 			return false;
 		}
 		
 		if (userProfile.getUpActiveYn().equals("N")) {
+			//debug
+			System.out.println("com.yardi.userServices UserServices authenticate() 238 userProfile.getUpActiveYn().equals(N)\n");
+			//debug
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0004;
 			return false;
 		}
@@ -223,30 +244,65 @@ public class UserServices {
 		long passwordExpiration = userProfile.getUpPwdexpd().getTime();
 		signonAttempts = userProfile.getUpPwdAttempts();
 		Boolean pwdValid = passwordAuthentication.authenticate(password, userProfile.getUptoken());
-		//userProfileBean.beginTransaction();
+		//debug
+		System.out.println("com.yardi.userServices UserServices authenticate() 248 "
+				+ "\n "
+				+ "  passwordExpiration =" + passwordExpiration 
+				+ "\n "
+				+ "  signonAttempts = " + signonAttempts
+				+ "\n "
+				+ "  pwdValid =" + pwdValid
+				+ "\n "
+				+ "  password =" + password
+				+ "\n "
+				+ "  userProfile.getUptoken() =" + userProfile.getUptoken()
+				+ "\n "
+				);
+		//debug
 		
 		if (pwdValid == false) {
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0001;
 			signonAttempts++;
 			//userProfile was set by findUserProfile(userName) see above
-			//userProfile.setUpPwdAttempts(signonAttempts);
 			int rows = userProfileBean.setUpPwdAttempts(userName, signonAttempts);
+			//debug
+			System.out.println("com.yardi.userServices UserServices authenticate() 265 "
+					+ "\n "
+					+ "  feedback =" + feedback  
+					+ "\n "
+					+ "  signonAttempts = " + signonAttempts
+					+ "\n "
+					+ "  rows =" + rows
+					+ "\n"
+					);
+			//debug
 			
 			if (rows != 1) {
 				int z = rows;
 			}
 						
 			if (signonAttempts == maxSignonAttempts) {
-				//userProfile.setUpDisabledDate(new java.util.Date());
-				//userProfile.setUpPwdAttempts(maxSignonAttempts);
 				rows = userProfileBean.disable(userName, new java.sql.Timestamp(new java.util.Date().getTime()), 
 					maxSignonAttempts);
-				
+				//debug
+				System.out.println("com.yardi.userServices UserServices authenticate() 284 "
+						+ "\n "
+						+ "  signonAttempts == maxSignonAttempts"  
+						+ "\n "
+						+ "  rows =" + rows
+						+ "\n "
+						);
+				//debug
+
 				if (rows != 1) {
 					int z = rows;
 				}
 							
 				feedback = com.yardi.rentSurvey.YardiConstants.YRD000C;
+				//debug
+				System.out.println("com.yardi.userServices UserServices authenticate() 299 "
+						+ "feedback =" + feedback + "\n");
+				//debug
 			}
 		} else {
 
@@ -259,6 +315,17 @@ public class UserServices {
 				 * the password is not disabled) have been met. For this reason, the expired password test happens last. 
 				 */
 				feedback = com.yardi.rentSurvey.YardiConstants.YRD0002;
+				//debug
+				System.out.println("com.yardi.userServices UserServices authenticate() 315 "
+						+ "\n "
+						+ "userIsChangingPassword =" + userIsChangingPassword   
+						+ "\n "
+						+ "passwordExpiration =" + passwordExpiration
+						+ "\n "
+						+ "today =" + today
+						+ "\n "
+						);
+				//debug
 				return false;
 			}
 			
@@ -267,18 +334,23 @@ public class UserServices {
 				 * They have successfully logged in at this point only if they are not changing the password so only set 
 				 * last login date when they are not changing the password 
 				 */
-				//userProfile.setUpDisabledDate(null);
-				//userProfile.setUpPwdAttempts((short) 0);
-				//userProfile.setUpLastLoginDate(new java.util.Date());
-				int rows = userProfileBean.loginSuccess(userName, null, (short) 0, new java.sql.Timestamp(new java.util.Date().getTime()));
-				
+				int rows = userProfileBean.loginSuccess(userName);
+				//debug
+				System.out.println("com.yardi.userServices UserServices authenticate() 335 "
+						+ "\n "
+						+ "userIsChangingPassword == false"
+						+ "\n "
+						+ "rows =" + rows
+						+ "\n "
+						);   
+				//debug
+
 				if (rows != 1) {
 					int z = rows;
 				}
 			}
 		}
 		
-		//userProfileBean.commitTransaction();
 		return pwdValid;
 	}
 

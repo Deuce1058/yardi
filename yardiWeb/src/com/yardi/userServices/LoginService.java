@@ -82,10 +82,28 @@ public class LoginService extends HttpServlet {
 		userSvc = new UserServices(loginRequest);
 
     	if (loginRequest.getChangePwd()==false) { //normal login
+    		//debug
+    		System.out.println("com.yardi.userServices LoginService doGet() 86 "
+    				+ "\n "
+    				+ "  formData =" + formData
+    				+ "\n "
+    				+ "  loginRequest = " + loginRequest
+    				+ "\n "
+    				);
+    		//debug
         	userSvc.authenticate();
     	}
     	
     	if (loginRequest.getChangePwd()) { //change password
+    		//debug
+    		System.out.println("com.yardi.userServices LoginService doGet() 99 "
+    				+ "\n "
+    				+ "loginRequest.getChangePwd() =" + loginRequest.getChangePwd()
+    				+ "\n "
+    				+ "loginRequest = " + loginRequest
+    				+ "\n "
+    				);
+    		//debug
         	userSvc.chgPwd();
     	}
     	
@@ -97,21 +115,55 @@ public class LoginService extends HttpServlet {
 			 */
 		}
 				
-		if (loginRequest.getChangePwd() ||	userSvc.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0002)) {
-			/*
-			 * dispatch to the html for password expired 
-			 *   get current pwd, new pwd and verified new pwd
-			 */
-			loginRequest.setUserName("");
-			loginRequest.setPassword("");
-			loginRequest.setNewPassword("");
-			String msg [] = com.yardi.rentSurvey.YardiConstants.YRD0002.split("$");
-			loginRequest.setMsgID(msg[0]);
-			loginRequest.setMsgDescription(msg[1]);
-			formData = mapper.writeValueAsString(LoginRequest.class); //convert the feedback to json 
-			request.setAttribute("formData", formData);
-			RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/views/changePwd.html");
-			rd.forward(request, response);
+		if (loginRequest.getChangePwd() || userSvc.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0002)) {
+    		//debug
+    		System.out.println("com.yardi.userServices LoginService doGet() 120 "
+    				+ "\n "
+    				+ "loginRequest.getChangePwd() =" + loginRequest.getChangePwd()
+    				+ "\n "
+    				+ "loginRequest = " + loginRequest
+    				+ "\n "
+    				+ "userSvc.getFeedback() = " + userSvc.getFeedback()
+    				+ "\n "
+    				);
+    		//debug
+			
+			if (loginRequest.getChangePwd()==false) {
+	    		//debug
+	    		System.out.println("com.yardi.userServices LoginService doGet() 133 "
+	    				+ "\n "
+	    				+ "loginRequest.getChangePwd() == false"
+	    				+ "\n "
+	    				+ "loginRequest = " + loginRequest
+	    				+ "\n "
+	    				);
+	    		//debug
+				RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/views/changePwd.html");
+				rd.forward(request, response);
+			}
+
+			String msg [] = userSvc.getFeedback().split("=");
+			LoginResponse loginResponse = new LoginResponse( 
+				loginRequest.getUserName(),
+				loginRequest.getPassword(),
+				loginRequest.getNewPassword(),
+				msg[0],
+				msg[1]);
+			response.reset();
+			response.setContentType("application/json");
+			PrintWriter out = response.getWriter();
+			formData = mapper.writeValueAsString(loginResponse); //convert the feedback to json 
+			out.print(formData);
+    		//debug
+    		System.out.println("com.yardi.userServices LoginService doGet() 158 "
+    				+ "\n "
+    				+ "  loginResponse =" + loginResponse
+    				+ "\n "
+    				+ "  formData = " + formData
+    				+ "\n "
+    				);
+    		//debug
+			out.flush();
 		}
 		
 		//YRD0001$Invalid user name or pasword
@@ -140,6 +192,17 @@ public class LoginService extends HttpServlet {
 			PrintWriter out = response.getWriter();
 			formData = mapper.writeValueAsString(loginResponse); //convert the feedback to json 
 			out.print(formData);
+    		//debug
+    		System.out.println("com.yardi.userServices LoginService doGet() 196 "
+    				+ "\n "
+    				+ "  userSvc.getFeedback() =" + userSvc.getFeedback()
+    				+ "\n "
+    				+ "  loginResponse =" + loginResponse
+    				+ "\n "
+    				+ "  formData = " + formData
+    				+ "\n "
+    				);
+    		//debug
 			out.flush();
 			//RequestDispatcher rd = request.getRequestDispatcher("yardiLogin.html");
 			//the client gets the entire HTML document never sees the JSON object. Can see the JSON in the response if debug
@@ -153,5 +216,4 @@ public class LoginService extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-
 }

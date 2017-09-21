@@ -1,0 +1,36 @@
+LoginService
+  LoginRequest loginRequest = 11807
+    userProfileBean id=11212
+  UserServices userSvc 
+    userProfileBean id=11212
+    LoginRequest loginRequest = 11719
+    UserProfile userProfile id=11859
+  userProfileBean id=11212
+UserProfileSessionBean
+  UserProfile userProfile id=11846
+  entityManager id=11841
+[
+upUserid=aa, 
+uptoken=$31$16$QRQJkpmi0TJUnsrLwYqQd_7zxGeGr_sEn1FMSoRI4IA, 
+upHomeMarket=1, 
+upFirstName=AA, 
+upLastName=BB, 
+upAddress1=Eight Penn Center 7th Flr, 
+upAddress2=Suite 100, 
+upCity=Phila, 
+upState=PA, 
+upZip=19120, 
+upZip4=5555, 
+upPhone=770-423-5555, 
+upFax=302-111-2222, 
+upEmail=a@b.com, 
+upssn=111-22-3333, 
+updob=Tue Jan 01 00:00:00 EST 1980, 
+upActiveYn=Y, 
+upPwdexpd=2017-09-15, 
+upDisabledYn=N, 
+upDisabledDate=null, 
+upLastLoginDate=Fri Sep 01 01:00:00 EDT 2017, 
+upPwdAttempts=0, 
+uprrn=1
+]

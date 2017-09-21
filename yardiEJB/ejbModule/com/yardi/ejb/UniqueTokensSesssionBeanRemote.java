@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 @Remote
 public interface UniqueTokensSesssionBeanRemote {
 	UniqueToken find(long rrn);
-	void persist(UniqueToken uniqueToken);
-	void remove(UniqueToken uniqueToken);
+	int persist(String userName, String token, java.util.Date dateAdded);
+	int remove(long rrn);
 	ArrayList<UniqueToken> findTokens(String userName);
 }
