@@ -24,9 +24,6 @@ public class UniqueTokensSesssionBean implements UniqueTokensSesssionBeanRemote 
 	@PersistenceContext(name="yardiEJB")
 	private EntityManager emgr;
 
-	@PersistenceContext(name="yardiEJB")
-	private EntityManager emgrUpdate;
-
     /**
      * Default constructor. 
      */
@@ -41,7 +38,9 @@ public class UniqueTokensSesssionBean implements UniqueTokensSesssionBeanRemote 
 			+ "WHERE up1UserName = :userName "
 			+ "ORDER BY up1DateAdded, up1Rrn", 
 			UniqueToken.class);
-		userTokens = (ArrayList<UniqueToken>)qry.setParameter("userName", userName).getResultList();
+		userTokens = (ArrayList<UniqueToken>)qry
+			.setParameter("userName", userName)
+			.getResultList();
     	return (ArrayList<UniqueToken>) userTokens;
     }
 
@@ -66,10 +65,11 @@ public class UniqueTokensSesssionBean implements UniqueTokensSesssionBeanRemote 
 
     @Override
     public int remove(long rrn) {
-    	Query qry = emgrUpdate.createQuery("DELETE FROM UniqueToken "
+    	Query qry = emgr.createQuery("DELETE FROM UniqueToken "
     		+ "WHERE up1Rrn = :rrn");
-    	int rows = qry.setParameter("rrn", rrn)
-    	.executeUpdate();
+    	int rows = qry
+    		.setParameter("rrn", rrn)
+    		.executeUpdate();
     	return rows;
     }
 }

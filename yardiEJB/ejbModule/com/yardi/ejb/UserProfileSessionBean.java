@@ -21,10 +21,7 @@ public class UserProfileSessionBean implements UserProfileSessionBeanRemote {
 	@PersistenceContext(name = "yardiEJB")	
 	private EntityManager entityManager;
 
-	@PersistenceContext(name = "yardiEJB")	
-	private EntityManager updateEmgr;
-
-    public UserProfileSessionBean() {
+	public UserProfileSessionBean() {
     }
 
     public UserProfile find(String userName) {
@@ -35,42 +32,47 @@ public class UserProfileSessionBean implements UserProfileSessionBeanRemote {
     
     public int setUpPwdAttempts(String userName, short pwdAttempts) {
     	//upPwdAttempts
-    	Query qry = updateEmgr.createQuery("UPDATE UserProfile " 
+    	Query qry = entityManager.createQuery("UPDATE UserProfile " 
     		+ "SET upPwdAttempts = :pwdAttempts " 
     		+ "WHERE upUserid    = :userName");
-    	int rows = qry.setParameter("pwdAttempts", pwdAttempts).setParameter("userName", userName).executeUpdate();
+    	int rows = qry
+    			.setParameter("pwdAttempts", pwdAttempts)
+    			.setParameter("userName"   , userName)
+    			.executeUpdate();
     	return rows;
     }
     
     public int disable(String userName, java.sql.Timestamp disabledDate, short pwdAttempts) {
     	//upDisabledDate, upPwdAttempts
-    	Query qry = updateEmgr.createQuery("UPDATE UserProfile "  
+    	Query qry = entityManager.createQuery("UPDATE UserProfile "  
     	    + "SET upPwdAttempts = :pwdAttempts, "
     		+ "upDisabledDate    = :disabledDate "
     		+ "WHERE upUserid    = :userName");
-    	int rows = qry.setParameter("pwdAttempts", pwdAttempts)
+    	int rows = qry
+    		.setParameter("pwdAttempts" , pwdAttempts)
     		.setParameter("disabledDate", disabledDate)
-    		.setParameter("userName", userName).executeUpdate();
+    		.setParameter("userName"    , userName)
+    		.executeUpdate();
     	return rows;
     }
     
     public int loginSuccess(String userName) {
     	//upDisabledDate, upPwdAttempts, upLastLoginDate
     	java.sql.Timestamp loginDate = new java.sql.Timestamp(new java.util.Date().getTime());
-    	Query qry = updateEmgr.createQuery("UPDATE UserProfile " 
+    	Query qry = entityManager.createQuery("UPDATE UserProfile " 
     		+ "SET upPwdAttempts =  0, "
     		+ "upDisabledDate    =  null, "
     		+ "upLastLoginDate   = :loginDate "
     		+ "WHERE upUserid    = :userName");
     	int rows = qry
     		.setParameter("loginDate", loginDate)
-    		.setParameter("userName",  userName)
+    		.setParameter("userName" , userName)
     		.executeUpdate();
     	return rows;
     }
     
     public int changeUserToken(String token, java.util.Date pwdExpirationDate) {
-    	Query qry = updateEmgr.createQuery("UPDATE UserProfile " 
+    	Query qry = entityManager.createQuery("UPDATE UserProfile " 
         		+ "SET uptoken    = :token,"
         		+ "upPwdexpd      = :pwdExpirationDate "
         		+ "WHERE upUserid = :userName");

@@ -72,6 +72,7 @@
     </div>
   </div>
 <script>
+  var feedback = ${feedback};
   $(function () {
     $('#login').click(function () {
       $('#form-feedback').text('');
@@ -92,7 +93,7 @@
                               'glyphicon-remove', 'glyphicon-ok' );
           formValid = false;
         }
-      });
+      }); // input each
 
       var oldPwd = $('[name="oldPassword"]').val();
       var newPwd = $('[name="newPassword"]').val();
@@ -111,7 +112,7 @@
           $('#form-feedback').text('The new pasword is the same as the old password');
           var formValid = false;
         }
-      }
+      } //form valid
       
       if (formValid) {
         
@@ -125,7 +126,7 @@
           $('#form-feedback').text('New pasword and verify passwords do not match');
           var formValid = false;
         }
-      }
+      } //form valid
       
       if (formValid) {
         var userName = $('#username').val();
@@ -137,7 +138,7 @@
           "msgID"          : '',
           "msgDescription" : '',
           "chgPwd"         : 'true'
-        }
+        } // formItems =
             
         $.post('doLogin', 
         {
@@ -156,7 +157,7 @@
                                   'glyphicon-remove', 'glyphicon-ok');
               formValid = false;
             });
-          }
+          } //YRD0001
           
           if (   data.msgID === 'YRD0005' || data.msgID === 'YRD0006' 
               || data.msgID === 'YRD0007' || data.msgID === 'YRD0008' 
@@ -165,7 +166,7 @@
                                 'has-error', 'has-success', 
                                 'glyphicon-remove', 'glyphicon-ok');
             formValid = false;
-          }
+          } //YRD0005
 
           if (data.msgID === 'YRD000B' || data.msgID === 'YRD000C') {
             $('input').each(function () {
@@ -178,11 +179,11 @@
               glyphIcon.removeClass('glyphicon-ok');
               glyphIcon.removeClass('glyphicon-remove');
             });
-          }
-        });
-      }
-    });
-  });
+          } //YRD000B
+        }); //done
+      } //form valid
+    }); //#login click
+  }); //document ready
   
   function addAndRemoveClasses (
     formGroupTarget, parentsTarget, glyphTarget,

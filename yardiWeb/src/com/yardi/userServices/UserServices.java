@@ -197,11 +197,11 @@ public class UserServices {
 		//if there is a row in UserProfile for userName userProfile will have a reference to UserProfile.class
 		findUserProfile(userName); 
 		//debug
-		System.out.println("com.yardi.userServices UserServices authenticate() 200"
+		System.out.println("com.yardi.userServices UserServices authenticate() 0000"
 				+ "\n " 
 				+ "  userName =" + userName 
 				+ "\n " 
-				+ "  password = " + password.toString()
+				+ "  password = " + new String(password)
 				+ "\n "
 				+ "  userIsChangingPassword =" + userIsChangingPassword
 				+ "\n "
@@ -210,24 +210,23 @@ public class UserServices {
 				+ "  maxSignonAttempts = " + maxSignonAttempts
 				+ "\n "
 				+ "  feedback =" + feedback
-				+ "\n " 
 				);
 		//debug 
 		
 		if (userProfile == null) {
 			//debug
-			System.out.println("com.yardi.userServices UserServices authenticate() 219 userProfile == null \n");
+			System.out.println("com.yardi.userServices UserServices authenticate() 0001 userProfile == null \n");
 			//debug
 			return false;
 		}
 
 		//debug
-		System.out.println("com.yardi.userServices UserServices authenticate() 225 userProfile =" + userProfile + "\n");
+		System.out.println("com.yardi.userServices UserServices authenticate() 0002 userProfile =" + userProfile + "\n");
 		//debug
 		
 		if (userProfile.getUpDisabledDate() != null) {
 			//debug
-			System.out.println("com.yardi.userServices UserServices authenticate() 230 userProfile.getUpDisabledDate() != null\n");
+			System.out.println("com.yardi.userServices UserServices authenticate() 0003 userProfile.getUpDisabledDate() != null\n");
 			//debug
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0003;
 			return false;
@@ -235,7 +234,7 @@ public class UserServices {
 		
 		if (userProfile.getUpActiveYn().equals("N")) {
 			//debug
-			System.out.println("com.yardi.userServices UserServices authenticate() 238 userProfile.getUpActiveYn().equals(N)\n");
+			System.out.println("com.yardi.userServices UserServices authenticate() 0004 userProfile.getUpActiveYn().equals(N)\n");
 			//debug
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0004;
 			return false;
@@ -245,7 +244,7 @@ public class UserServices {
 		signonAttempts = userProfile.getUpPwdAttempts();
 		Boolean pwdValid = passwordAuthentication.authenticate(password, userProfile.getUptoken());
 		//debug
-		System.out.println("com.yardi.userServices UserServices authenticate() 248 "
+		System.out.println("com.yardi.userServices UserServices authenticate() 0005 "
 				+ "\n "
 				+ "  passwordExpiration =" + passwordExpiration 
 				+ "\n "
@@ -253,10 +252,9 @@ public class UserServices {
 				+ "\n "
 				+ "  pwdValid =" + pwdValid
 				+ "\n "
-				+ "  password =" + password
+				+ "  password =" + new String(password)
 				+ "\n "
 				+ "  userProfile.getUptoken() =" + userProfile.getUptoken()
-				+ "\n "
 				);
 		//debug
 		
@@ -266,14 +264,13 @@ public class UserServices {
 			//userProfile was set by findUserProfile(userName) see above
 			int rows = userProfileBean.setUpPwdAttempts(userName, signonAttempts);
 			//debug
-			System.out.println("com.yardi.userServices UserServices authenticate() 265 "
+			System.out.println("com.yardi.userServices UserServices authenticate() 0006 "
 					+ "\n "
 					+ "  feedback =" + feedback  
 					+ "\n "
 					+ "  signonAttempts = " + signonAttempts
 					+ "\n "
 					+ "  rows =" + rows
-					+ "\n"
 					);
 			//debug
 			
@@ -285,12 +282,11 @@ public class UserServices {
 				rows = userProfileBean.disable(userName, new java.sql.Timestamp(new java.util.Date().getTime()), 
 					maxSignonAttempts);
 				//debug
-				System.out.println("com.yardi.userServices UserServices authenticate() 284 "
+				System.out.println("com.yardi.userServices UserServices authenticate() 0007 "
 						+ "\n "
 						+ "  signonAttempts == maxSignonAttempts"  
 						+ "\n "
 						+ "  rows =" + rows
-						+ "\n "
 						);
 				//debug
 
@@ -300,7 +296,7 @@ public class UserServices {
 							
 				feedback = com.yardi.rentSurvey.YardiConstants.YRD000C;
 				//debug
-				System.out.println("com.yardi.userServices UserServices authenticate() 299 "
+				System.out.println("com.yardi.userServices UserServices authenticate() 0008 "
 						+ "feedback =" + feedback + "\n");
 				//debug
 			}
@@ -316,14 +312,15 @@ public class UserServices {
 				 */
 				feedback = com.yardi.rentSurvey.YardiConstants.YRD0002;
 				//debug
-				System.out.println("com.yardi.userServices UserServices authenticate() 315 "
+				System.out.println("com.yardi.userServices UserServices authenticate() 0009 "
 						+ "\n "
-						+ "userIsChangingPassword =" + userIsChangingPassword   
+						+ "  userIsChangingPassword =" + userIsChangingPassword   
 						+ "\n "
-						+ "passwordExpiration =" + passwordExpiration
+						+ "  passwordExpiration =" + passwordExpiration
 						+ "\n "
-						+ "today =" + today
+						+ "  today =" + today
 						+ "\n "
+						+ "  feedback =" + feedback
 						);
 				//debug
 				return false;
@@ -336,12 +333,11 @@ public class UserServices {
 				 */
 				int rows = userProfileBean.loginSuccess(userName);
 				//debug
-				System.out.println("com.yardi.userServices UserServices authenticate() 335 "
+				System.out.println("com.yardi.userServices UserServices authenticate() 000A "
 						+ "\n "
-						+ "userIsChangingPassword == false"
+						+ "  userIsChangingPassword == false"
 						+ "\n "
-						+ "rows =" + rows
-						+ "\n "
+						+ "  rows =" + rows
 						);   
 				//debug
 

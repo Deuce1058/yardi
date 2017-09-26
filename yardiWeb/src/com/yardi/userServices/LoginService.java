@@ -1,6 +1,8 @@
 package com.yardi.userServices;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -83,25 +85,30 @@ public class LoginService extends HttpServlet {
 
     	if (loginRequest.getChangePwd()==false) { //normal login
     		//debug
-    		System.out.println("com.yardi.userServices LoginService doGet() 86 "
+    		System.out.println("com.yardi.userServices LoginService doGet() 0000 "
     				+ "\n "
     				+ "  formData =" + formData
     				+ "\n "
     				+ "  loginRequest = " + loginRequest
-    				+ "\n "
     				);
     		//debug
         	userSvc.authenticate();
     	}
+
+    	//debug
+		System.out.println("com.yardi.userServices LoginService doGet() 0006 "
+				+ "\n "
+				+ "  loginRequest = " + loginRequest
+				);
+		//debug
     	
     	if (loginRequest.getChangePwd()) { //change password
     		//debug
-    		System.out.println("com.yardi.userServices LoginService doGet() 99 "
+    		System.out.println("com.yardi.userServices LoginService doGet() 0001 "
     				+ "\n "
-    				+ "loginRequest.getChangePwd() =" + loginRequest.getChangePwd()
+    				+ "  loginRequest.getChangePwd() =" + loginRequest.getChangePwd()
     				+ "\n "
-    				+ "loginRequest = " + loginRequest
-    				+ "\n "
+    				+ "  loginRequest = " + loginRequest
     				);
     		//debug
         	userSvc.chgPwd();
@@ -113,35 +120,58 @@ public class LoginService extends HttpServlet {
 			 *   servlet gets data for initial display
 			 *   servlet dispatches to html for main app
 			 */
+			return;
 		}
 				
 		if (loginRequest.getChangePwd() || userSvc.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0002)) {
     		//debug
-    		System.out.println("com.yardi.userServices LoginService doGet() 120 "
+    		System.out.println("com.yardi.userServices LoginService doGet() 0002 "
     				+ "\n "
-    				+ "loginRequest.getChangePwd() =" + loginRequest.getChangePwd()
+    				+ "  loginRequest.getChangePwd() =" + loginRequest.getChangePwd()
     				+ "\n "
-    				+ "loginRequest = " + loginRequest
+    				+ "  loginRequest = " + loginRequest
     				+ "\n "
-    				+ "userSvc.getFeedback() = " + userSvc.getFeedback()
-    				+ "\n "
+    				+ "  userSvc.getFeedback() = " + userSvc.getFeedback()
     				);
     		//debug
 			
 			if (loginRequest.getChangePwd()==false) {
 	    		//debug
-	    		System.out.println("com.yardi.userServices LoginService doGet() 133 "
+	    		System.out.println("com.yardi.userServices LoginService doGet() 0003 "
 	    				+ "\n "
-	    				+ "loginRequest.getChangePwd() == false"
+	    				+ "  loginRequest.getChangePwd() == false"
 	    				+ "\n "
-	    				+ "loginRequest = " + loginRequest
-	    				+ "\n "
+	    				+ "  loginRequest = " + loginRequest
 	    				);
 	    		//debug
-				RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/views/changePwd.html");
-				rd.forward(request, response);
-			}
+				//RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/changePwd.html");
+				//RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/xyzzy.html");
+				//rd.forward(request, response);
+	    		//response.sendRedirect("WEB-INF/views/changePwd.html");  http 404
+	    		//response.sendRedirect("/WEB-INF/views/changePwd.html"); http 404
+	    		StringBuilder sb = new StringBuilder();
+	    		String line = "";
+	    		BufferedReader in = new BufferedReader(new FileReader(
+	    			new File("D:/glassfish4/glassfish/domains/domain1/eclipseApps/yardiWeb/changePwd.html")));
 
+	    		while (!(line == null)) {
+	    			sb.append(line);
+		    		line = in.readLine();
+	    		}
+	    		
+	    		in.close();
+				String msg [] = userSvc.getFeedback().split("=");
+				LoginResponse loginResponse = new LoginResponse("", "", "", msg[0],	new String(sb));
+				response.reset();
+				response.setContentType("application/json");
+				PrintWriter out = response.getWriter();
+				formData = mapper.writeValueAsString(loginResponse); //convert the feedback to json 
+				out.print(formData);
+				out.flush();
+	    		//response.sendRedirect("changePwd.html");
+				return;
+			} 
+			
 			String msg [] = userSvc.getFeedback().split("=");
 			LoginResponse loginResponse = new LoginResponse( 
 				loginRequest.getUserName(),
@@ -155,15 +185,15 @@ public class LoginService extends HttpServlet {
 			formData = mapper.writeValueAsString(loginResponse); //convert the feedback to json 
 			out.print(formData);
     		//debug
-    		System.out.println("com.yardi.userServices LoginService doGet() 158 "
+    		System.out.println("com.yardi.userServices LoginService doGet() 0004 "
     				+ "\n "
     				+ "  loginResponse =" + loginResponse
     				+ "\n "
     				+ "  formData = " + formData
-    				+ "\n "
     				);
     		//debug
 			out.flush();
+			return;
 		}
 		
 		//YRD0001$Invalid user name or pasword
@@ -193,7 +223,7 @@ public class LoginService extends HttpServlet {
 			formData = mapper.writeValueAsString(loginResponse); //convert the feedback to json 
 			out.print(formData);
     		//debug
-    		System.out.println("com.yardi.userServices LoginService doGet() 196 "
+    		System.out.println("com.yardi.userServices LoginService doGet() 0005 "
     				+ "\n "
     				+ "  userSvc.getFeedback() =" + userSvc.getFeedback()
     				+ "\n "
@@ -204,9 +234,7 @@ public class LoginService extends HttpServlet {
     				);
     		//debug
 			out.flush();
-			//RequestDispatcher rd = request.getRequestDispatcher("yardiLogin.html");
-			//the client gets the entire HTML document never sees the JSON object. Can see the JSON in the response if debug
-			//rd.forward(request, response);
+			return;
 		}		
 	}
 

@@ -56,7 +56,7 @@
   </div>
   <script>
     $(function() {
-      $('#login').click(function () {
+      $('#login').click(function (e) {
         var formValid = true;
         
         //iterate over the input controls
@@ -113,6 +113,12 @@
                 });
               }
           
+              if (data.msgID === 'YRD0002') {
+                document.open();
+                document.write(data.msgDescription);
+                document.close();
+              }
+
               if (data.msgID === 'YRD0003' || data.msgID === 'YRD0004') {
                 formValid = false;
                 var formGroup = $('[name="username"]').parent('.form-group');
@@ -122,17 +128,6 @@
                 glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
               }
                     
-              if (data.msgID === 'YRD0005' || data.msgID === 'YRD0006' 
-                  || data.msgID === 'YRD0007' || data.msgID === 'YRD0008' 
-                  || data.msgID === 'YRD0009' || data.msgID === 'YRD000A') {
-                  formValid = false;
-                  var formGroup = $('[name="password"]').parent('.form-group');
-                  var glyphIcon = formGroup.find('.glyph_icon');
-                  var obj = $(this);
-                  formGroup.addClass('has-error').removeClass('has-success');
-                  glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
-              }
-
               if (data.msgID === 'YRD000B' || data.msgID === 'YRD000C') {
                 $('input').each(function () {
                   formValid = false;
@@ -147,7 +142,7 @@
               }
             } //end of function inside ajax
           }); //end of ajax
-          
+          var x = 1;
           /*******
           $.post('doLogin', 
           {
@@ -208,6 +203,7 @@
           });  //end of done
           ********/
         } //end form is valid
+        e.preventDefault();
       });
     });
   </script>
