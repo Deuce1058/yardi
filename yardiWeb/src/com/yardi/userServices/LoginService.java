@@ -136,39 +136,26 @@ public class LoginService extends HttpServlet {
     		//debug
 			
 			if (loginRequest.getChangePwd()==false) {
+				response.reset();
+				response.setContentType("application/json");
+				String msg[] = userSvc.getFeedback().split("=");
+				LoginResponse loginResponse = new LoginResponse("", "", "", msg[0], "views/changePwd.html");
+				PrintWriter out = response.getWriter();
+				formData = mapper.writeValueAsString(loginResponse); //convert the feedback to json 
+				out.print(formData);
+				out.flush();
 	    		//debug
 	    		System.out.println("com.yardi.userServices LoginService doGet() 0003 "
 	    				+ "\n "
 	    				+ "  loginRequest.getChangePwd() == false"
 	    				+ "\n "
-	    				+ "  loginRequest = " + loginRequest
-	    				);
+	    				+ "  loginRequest = " 
+	    				+ loginRequest
+	    				+ "\n "
+	    				+ "  formData = "
+	    				+ formData
+	    		);
 	    		//debug
-				//RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/changePwd.html");
-				//RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/xyzzy.html");
-				//rd.forward(request, response);
-	    		//response.sendRedirect("WEB-INF/views/changePwd.html");  http 404
-	    		//response.sendRedirect("/WEB-INF/views/changePwd.html"); http 404
-	    		StringBuilder sb = new StringBuilder();
-	    		String line = "";
-	    		BufferedReader in = new BufferedReader(new FileReader(
-	    			new File("D:/glassfish4/glassfish/domains/domain1/eclipseApps/yardiWeb/changePwd.html")));
-
-	    		while (!(line == null)) {
-	    			sb.append(line);
-		    		line = in.readLine();
-	    		}
-	    		
-	    		in.close();
-				String msg [] = userSvc.getFeedback().split("=");
-				LoginResponse loginResponse = new LoginResponse("", "", "", msg[0],	new String(sb));
-				response.reset();
-				response.setContentType("application/json");
-				PrintWriter out = response.getWriter();
-				formData = mapper.writeValueAsString(loginResponse); //convert the feedback to json 
-				out.print(formData);
-				out.flush();
-	    		//response.sendRedirect("changePwd.html");
 				return;
 			} 
 			
