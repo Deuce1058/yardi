@@ -2,19 +2,20 @@ package com.yardi.ejb;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.TemporalType;
 
 /**
  * Session Bean implementation class UniqueTokensSesssionBean
  */
 @Stateless
-@LocalBean
 public class UniqueTokensSesssionBean implements UniqueTokensSesssionBeanRemote {
 	/*
 	 * In the case of a RESOURCE_LOCAL, EntityManager.getTransaction().begin() and EntityManager.getTransaction().comit() 
@@ -30,30 +31,28 @@ public class UniqueTokensSesssionBean implements UniqueTokensSesssionBeanRemote 
     public UniqueTokensSesssionBean() {
     }
 
-    @Override
-    public ArrayList<UniqueToken> findTokens(String userName) {
-		List<UniqueToken> userTokens = new ArrayList<UniqueToken>(50);
-		Query qry = emgr.createQuery(
-			  "SELECT UniqueToken " 
-			+ "WHERE up1UserName = :userName "
-			+ "ORDER BY up1DateAdded, up1Rrn", 
+    public Vector<UniqueToken> findTokens(String userName) {
+    	Vector<UniqueToken> userTokens = new Vector<UniqueToken>();
+		TypedQuery<UniqueToken> qry = emgr.createQuery(
+			  "SELECT t from UniqueToken t " 
+			+ "WHERE t.up1UserName = :userName "
+			+ "ORDER BY t.up1DateAdded, t.up1Rrn", 
 			UniqueToken.class);
-		userTokens = (ArrayList<UniqueToken>)qry
+		userTokens = (Vector<UniqueToken>) qry
 			.setParameter("userName", userName)
 			.getResultList();
-    	return (ArrayList<UniqueToken>) userTokens;
+    	return userTokens;
     }
 
-    @Override
     public UniqueToken find(long rrn) {
     	UniqueToken uniqueToken = null;
     	uniqueToken = emgr.find(UniqueToken.class, rrn);
     	return uniqueToken;
     } 
     
-    @Override
     public int persist(String userName, String token, java.util.Date dateAdded) {
     	Query qry = emgr.createNativeQuery("INSERT INTO DB2ADMIN.UNIQUE_TOKENS "
+    		+ "(UP1_USER_NAME, UP1_TOKEN, UP1_DATE_ADDED) "
     		+ "VALUES(?, ?, ?)");
     	int rows = qry
     		.setParameter(1, userName)
@@ -63,7 +62,6 @@ public class UniqueTokensSesssionBean implements UniqueTokensSesssionBeanRemote 
     	return rows;
     }
 
-    @Override
     public int remove(long rrn) {
     	Query qry = emgr.createQuery("DELETE FROM UniqueToken "
     		+ "WHERE up1Rrn = :rrn");

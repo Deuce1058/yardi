@@ -8,5 +8,5 @@ public interface UserProfileSessionBeanRemote {
 	int setUpPwdAttempts(String userName, short pwdAttempts);
 	int disable(String userName, java.sql.Timestamp disabledDate, short pwdAttempts);
 	int loginSuccess(String userName);
-	int changeUserToken(String token, java.util.Date pwdExpirationDate);
+	int changeUserToken(String userName, String token, java.util.Date pwdExpirationDate);
 }

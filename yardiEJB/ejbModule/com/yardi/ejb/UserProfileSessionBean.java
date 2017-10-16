@@ -71,7 +71,7 @@ public class UserProfileSessionBean implements UserProfileSessionBeanRemote {
     	return rows;
     }
     
-    public int changeUserToken(String token, java.util.Date pwdExpirationDate) {
+    public int changeUserToken(String userName, String token, java.util.Date pwdExpirationDate) {
     	Query qry = entityManager.createQuery("UPDATE UserProfile " 
         		+ "SET uptoken    = :token,"
         		+ "upPwdexpd      = :pwdExpirationDate "
@@ -79,6 +79,7 @@ public class UserProfileSessionBean implements UserProfileSessionBeanRemote {
         int rows = qry
         	.setParameter("token", token)
         	.setParameter("pwdExpirationDate", pwdExpirationDate, TemporalType.DATE)
+        	.setParameter("userName", userName)
         	.executeUpdate();
         return rows;
     }
