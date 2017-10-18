@@ -77,12 +77,25 @@ public class UserServices {
 		String userName = loginRequest.getUserName();
 		char [] oldPassword = loginRequest.getPassword().toCharArray();
 		char [] newPassword = loginRequest.getNewPassword().toCharArray();
+		//debug
+		System.out.println("com.yardi.userServices UserServices chgPwd() 001A"
+			+ "\n "
+			+ "  userName ="
+			+ userName
+			+ "\n "
+			+ "  oldPassword ="
+			+ new String(oldPassword)
+			+ "\n "
+			+ "  newPassword ="
+			+ new String(newPassword)
+			);
+		//debug
 		
 		if (authenticate() == false) {
 			return false;
 		}
 		
-		if (passwordPolicy(newPassword.toString()) == false ) {
+		if (passwordPolicy(new String(newPassword)) == false ) {
 			//apply password policy to the new password
 			//debug
 			System.out.println("com.yardi.userServices UserServices chgPwd() 0010 "
@@ -130,6 +143,8 @@ public class UserServices {
 				+ "  pwdLifeInDays="
 				+ pwdLifeInDays 
 				+ "\n "
+				+ "  nbrOfStoredTokens="
+				+ nbrOfStoredTokens 
 				);  
 		System.out.println("com.yardi.userServices UserServices chgPwd() 0012 "
 				+ "\n "
@@ -137,9 +152,7 @@ public class UserServices {
 		for (UniqueToken t : userTokens) {
 
 			if (!(t==null)) {
-				System.out.println("\n   uniqueToken="
-						+ t
-						);  
+				System.out.println("\n   uniqueToken=" + t);
 			}
 		}
 		//debug
@@ -500,6 +513,9 @@ public class UserServices {
 		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
 		
 		if (getPwdPolicy() == null) {
+			//debug 
+			System.out.println("com.yardi.userServices UserServices passwordPolicy() 0019 getPwdPolicy() == null");
+			//debug
 			return false;
 		}
 		
@@ -521,6 +537,15 @@ public class UserServices {
 				+ "\n "
 				+ "  specialRqd="
 				+ specialRqd 
+				+ "\n "
+				+ "  password policy="
+				+ pwdPolicy.toString()
+				+ "\n "
+				+ "  password="
+				+ password
+				+ "\n "
+				+ "  password len="
+				+ password.length() 
 				);   
 		//debug
 		
