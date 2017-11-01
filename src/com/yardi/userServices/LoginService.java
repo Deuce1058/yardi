@@ -120,6 +120,12 @@ public class LoginService extends HttpServlet {
 			 *   servlet gets data for initial display
 			 *   servlet dispatches to html for main app
 			 */
+	    	//debug
+			System.out.println("com.yardi.userServices LoginService doGet() 0007 "
+					+ "\n "
+					+ "  loginRequest = " + loginRequest
+					);
+			//debug
 			return;
 		}
 				
