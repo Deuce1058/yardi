@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+  <meta HTTP-EQUIV="Expires" CONTENT="-1">
+  <title>User Profile CRUD</title>
+  <!-- 
+  https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=scrollspy
+  https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-affix.php
+  https://www.tutorialrepublic.com/css-reference/css-top-property.php
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="resources/styles/bootstrap.min.css" rel="stylesheet" />
+  <script src="resources/scripts/jquery-2.2.4.min.js"></script>
+  <script src="resources/scripts/bootstrap.min.js"></script>
+  -->
+  <link href="../../Boostrap/styles/bootstrap.min.css" rel="stylesheet">
+  <script src="../../jQueryLib/scripts/jquery-2.2.4.min.js"></script>
+  <script src="../../Boostrap/scripts/bootstrap.min.js"></script>
+  
+<style type="text/css">
+/* Custom Styles */
+  body{
+    padding-top: 70px;
+  }
+  .userProfileForm {
+    margin-left: 0px;
+  }
+  .formElementPadBottom {
+    padding-bottom: 10px;
+  }
+  .formElementPadLeft {
+    padding-left: 5px;
+  }
+  .formElementPadBottomLeft {
+    padding-bottom: 10px;
+    padding-left: 5px;
+  }
+</style>
+</head>
+<body>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Brand</a>
+      </div>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Action</a></li>
+              <li><a href="#">Another action</a></li>
+              <li><a href="#">Something else here</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="#">Separated link</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="#">One more separated link</a></li>
+            </ul>
+          </li>
+        </ul>
+        <form class="navbar-form navbar-left">
+          <label for="username" class="control-label">Username</label>
+          <div class="form-group">
+            <input type="text" class="form-control" name="username" id="username" required placeholder="User Name">
+          </div>
+          <button type="button" class="btn btn-success">Find</button>
+        </form>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+  <div class="container">
+    <div class="row">
+      <div style="height:700px; overflow-y:scroll;">
+        <div id="section1">
+          <h2>Contact Info</h2>
+          <div class="row userProfileForm">
+            <label for="firstName" class="control-label formElementPadBottom" >First name</label>
+            <input type="text" name="firstName" id="firstName" required placeholder="First name"/>
+            <label for="lastName" class="control-label formElementPadLeft">Last name</label>
+            <input type="text" name="lastName" id="lastName" required placeholder="Last name"/>
+          </div>
+          <div class="row userProfileForm">
+            <label for="address1" class="control-label formElementPadBottom">Address 1</label>
+            <input type="text" name="address1" id="address1" required placeholder="Address 1"/>
+          </div>
+          <div class="row userProfileForm">
+            <label for="address2" class="control-label formElementPadBottom">Address 2</label>
+            <input type="text" name="address2" id="address2" required placeholder="Address 2"/>
+          </div>
+          <div class="row userProfileForm">
+            <label for="city" class="control-label formElementPadBottom">City</label>
+            <input type="text" name="city" id="city" required placeholder="City"/>
+            <label for="state" class="control-label formElementPadBottomLeft">State</label>
+            <select>
+              <option value="AL">AL</option><option value="AK">AK</option><option value="AZ">AZ</option>
+              <option value="AR">AR</option><option value="CA">CA</option><option value="CO">CO</option>
+              <option value="CT">CT</option><option value="DE">DE</option><option value="FL">FL</option>
+              <option value="GA">GA</option><option value="HI">HI</option><option value="ID">ID</option>
+              <option value="IL">IL</option><option value="IN">IN</option><option value="IA">IA</option>
+              <option value="KS">KS</option><option value="KY">KY</option><option value="LA">LA</option>
+              <option value="ME">ME</option><option value="MD">MD</option><option value="MA">MA</option>
+              <option value="MI">MI</option><option value="MN">MN</option><option value="MS">MS</option>
+              <option value="MO">MO</option><option value="MT">MT</option><option value="NE">NE</option>
+              <option value="NV">NV</option><option value="NH">NH</option><option value="NJ">NJ</option>
+              <option value="NM">NM</option><option value="NY">NY</option><option value="NC">NC</option>
+              <option value="ND">ND</option><option value="OH">OH</option><option value="OK">OK</option>
+              <option value="OR">OR</option><option value="PA">PA</option><option value="RI">RI</option>
+              <option value="SC">SC</option><option value="SD">SD</option><option value="TN">TN</option>
+              <option value="TX">TX</option><option value="UT">UT</option><option value="VT">VT</option>
+              <option value="VA">VA</option><option value="WA">WA</option><option value="WV">WV</option>
+              <option value="WI">WI</option><option value="WY">WY</option><option value="AS">AS</option>
+              <option value="DC">DC</option><option value="FM">FM</option><option value="GU">GU</option>
+              <option value="MH">MH</option><option value="MP">MP</option><option value="PW">PW</option>
+              <option value="PR">PR</option><option value="VI">VI</option>
+            </select>
+            <label for="zip" class="control-label formElementPadLeft">Zip</label>
+            <input type="text" name="zip" id="zip" required placeholder="Zip"/>
+            <label for="zip4" class="control-label formElementPadLeft">Zip 4</label>
+            <input type="text" name="zip4" id="zip4" required placeholder="Zip 4"/>
+          </div>
+          <div class="row userProfileForm">
+            <label for="phone" class="control-label formElementPadBottom">Phone</label>
+            <input type="text" name="phone" id="phone" required placeholder="Phone"/>
+          </div>
+          <div class="row userProfileForm">
+            <label for="fax" class="control-label formElementPadBottom">Fax</label>
+            <input type="text" name="fax" id="fax" required placeholder="Fax"/>
+          </div>
+          <div class="row userProfileForm">
+            <label for="email" class="control-label formElementPadBottom">Email</label>
+            <input type="text" name="email" id="email" required placeholder="Email"/>
+          </div>
+        </div>
+        <hr>
+		<div id="section2">
+          <h2>Misc</h2>
+          <div class="row userProfileForm">
+            <label for="ssn" class="control-label formElementPadBottom">SSN</label>
+            <input type="text" name="ssn" id="ssn" required placeholder="SSN"/>
+          </div>
+          <div class="row userProfileForm">
+            <label for="dob" class="control-label formElementPadBottom">Birth date</label>
+            <input type="text" name="dob" id="dob" required placeholder="Birth date"/>
+          </div>
+          <div class="row userProfileForm">
+            <label for="homeMarket" class="control-label formElementPadBottom">Home market</label>
+            <input type="text" name="homeMarket" id="homeMarket" required placeholder="Home market"/>
+          </div>
+        </div>
+        <hr>
+        <div id="section3">
+          <h2>Login</h2>
+          <div class="row userProfileForm">
+            <label for="activeYN" class="control-label formElementPadBottom">User is active Y/N</label>
+            <input type="text" name="activeYN" id="activeYN" required placeholder="User is active Y/N"/>
+          </div>
+          <div class="row userProfileForm">
+            <label for="pwdExpDate" class="control-label formElementPadBottom">Password expiration date</label>
+            <input type="text" name="pwdExpDate" id="pwdExpDate" required placeholder="Password expiration date"/>
+          </div>
+          <div class="row userProfileForm">
+            <label for="disabledDate" class="control-label formElementPadBottom">Date disabled</label>
+            <input type="text" name="disabledDate" id="disabledDate" required placeholder="Date disabled"/>
+          </div>
+          <div class="row userProfileForm">
+            <label for="pwdAttempts" class="control-label formElementPadBottom">Pasword attempts</label>
+            <input type="text" name="pwdAttempts" id="pwdAttempts" required/>
+          </div>
+          <div class="row userProfileForm">
+            <label for="password" class="control-label formElementPadBottom">Pasword</label>
+            <input type="text" name="password" id="password" required placeholder="Password"/>
+            <button type="button" class="btn btn-success formElementPadBottomLeft" id="crtToken">Create token</button>
+          </div>
+          <div class="row userProfileForm">
+            <b>New token=</b>
+            <label id="newToken"  class="formElementPadBottom" style="color:green;">
+              $31$16$zBv5r6wXaLrlJ1iRF6-j79463_7AFER7LxMWxCzL4uY</label>
+          </div>
+          <div class="row userProfileForm">
+            <label for="currentToken" class="control-label formElementPadBottom">Current token</label>
+            <input type="text" name="currentToken" id="currentToken" required placeholder="Current token"/>
+          </div>
+          <div class="row userProfileForm">
+            <label for="lastLogin" class="control-label formElementPadBottom">Last login</label>
+            <input type="text" name="lastLogin" id="lastLogin" required placeholder="Last login"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p></p><p></p>
+    <div class="actionButtons" class="actionButtons">
+      <button type="button" class="btn btn-success" id="addButton" style="background-color: blue;">Add</button>
+      <button type="button" class="btn btn-success" id="updateButton" style="background-color: blue;">Update</button>
+      <button type="button" class="btn btn-success" id="deleteButton" style="background-color: blue;">Delete</button>
+      <button type="button" class="btn btn-success" id="cancelButon" style="background-color: red;">Cancel</button>
+    </div>
+</div> 
+<script>
+  $(function() {
+    
+  });
+</script>
+</body>
+</html>                            
