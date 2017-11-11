@@ -10,12 +10,18 @@
   https://www.tutorialrepublic.com/css-reference/css-top-property.php
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="resources/styles/bootstrap.min.css" rel="stylesheet" />
+  <link href="resources/css/font-awesome.min.css" rel="stylesheet">
   <script src="resources/scripts/jquery-2.2.4.min.js"></script>
+  <script src="resources/scripts/Moment/moment.min.js" type="text/javascript"></script>
+  <script src="resources/scripts/DatePicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
   <script src="resources/scripts/bootstrap.min.js"></script>
   -->
-  <link href="../../Boostrap/styles/bootstrap.min.css" rel="stylesheet">
-  <script src="../../jQueryLib/scripts/jquery-2.2.4.min.js"></script>
-  <script src="../../Boostrap/scripts/bootstrap.min.js"></script>
+  <link href="../../../../Boostrap/styles/bootstrap.min.css" rel="stylesheet">
+  <link href="../resources/css/font-awesome.min.css" rel="stylesheet">
+  <script src="../../../../jQueryLib/scripts/jquery-2.2.4.min.js"></script>
+  <script src="../resources/scripts/Moment/moment.min.js" type="text/javascript"></script>
+  <script src="../resources/scripts/DatePicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+  <script src="../../../../Boostrap/scripts/bootstrap.min.js"></script>
   
 <style type="text/css">
 /* Custom Styles */
@@ -34,6 +40,11 @@
   .formElementPadBottomLeft {
     padding-bottom: 10px;
     padding-left: 5px;
+  }
+  .roundedCorners {
+    -webkit-border-radius: 5px;
+       -moz-border-radius: 5px;
+            border-radius: 5px;
   }
 </style>
 </head>
@@ -83,21 +94,21 @@
           <h2>Contact Info</h2>
           <div class="row userProfileForm">
             <label for="firstName" class="control-label formElementPadBottom" >First name</label>
-            <input type="text" name="firstName" id="firstName" required placeholder="First name"/>
+            <input type="text" class="roundedCorners" name="firstName" id="firstName" required placeholder="First name"/>
             <label for="lastName" class="control-label formElementPadLeft">Last name</label>
-            <input type="text" name="lastName" id="lastName" required placeholder="Last name"/>
+            <input type="text" class="roundedCorners" name="lastName" id="lastName" required placeholder="Last name"/>
           </div>
           <div class="row userProfileForm">
             <label for="address1" class="control-label formElementPadBottom">Address 1</label>
-            <input type="text" name="address1" id="address1" required placeholder="Address 1"/>
+            <input type="text" class="roundedCorners" name="address1" id="address1" required placeholder="Address 1"/>
           </div>
           <div class="row userProfileForm">
             <label for="address2" class="control-label formElementPadBottom">Address 2</label>
-            <input type="text" name="address2" id="address2" required placeholder="Address 2"/>
+            <input type="text" class="roundedCorners" name="address2" id="address2" required placeholder="Address 2"/>
           </div>
           <div class="row userProfileForm">
             <label for="city" class="control-label formElementPadBottom">City</label>
-            <input type="text" name="city" id="city" required placeholder="City"/>
+            <input type="text" class="roundedCorners" name="city" id="city" required placeholder="City"/>
             <label for="state" class="control-label formElementPadBottomLeft">State</label>
             <select>
               <option value="AL">AL</option><option value="AK">AK</option><option value="AZ">AZ</option>
@@ -122,21 +133,22 @@
               <option value="PR">PR</option><option value="VI">VI</option>
             </select>
             <label for="zip" class="control-label formElementPadLeft">Zip</label>
-            <input type="text" name="zip" id="zip" required placeholder="Zip"/>
+            <input type="text" class="roundedCorners" name="zip" id="zip" required placeholder="Zip" maxlength="5" 
+                   style="width: 70px;"/>
             <label for="zip4" class="control-label formElementPadLeft">Zip 4</label>
-            <input type="text" name="zip4" id="zip4" required placeholder="Zip 4"/>
+            <input type="text" class="roundedCorners" name="zip4" id="zip4" required placeholder="Zip 4" maxlength="4" style="width: 60px;"/>
           </div>
           <div class="row userProfileForm">
             <label for="phone" class="control-label formElementPadBottom">Phone</label>
-            <input type="text" name="phone" id="phone" required placeholder="Phone"/>
+            <input type="text" class="roundedCorners" name="phone" id="phone" required placeholder="Phone"/>
           </div>
           <div class="row userProfileForm">
             <label for="fax" class="control-label formElementPadBottom">Fax</label>
-            <input type="text" name="fax" id="fax" required placeholder="Fax"/>
+            <input type="text" class="roundedCorners" name="fax" id="fax" required placeholder="Fax"/>
           </div>
           <div class="row userProfileForm">
             <label for="email" class="control-label formElementPadBottom">Email</label>
-            <input type="text" name="email" id="email" required placeholder="Email"/>
+            <input type="text" class="roundedCorners" name="email" id="email" required placeholder="Email"/>
           </div>
         </div>
         <hr>
@@ -144,15 +156,23 @@
           <h2>Misc</h2>
           <div class="row userProfileForm">
             <label for="ssn" class="control-label formElementPadBottom">SSN</label>
-            <input type="text" name="ssn" id="ssn" required placeholder="SSN"/>
+            <input type="text" class="roundedCorners" name="ssn" id="ssn" required placeholder="SSN"/>
           </div>
-          <div class="row userProfileForm">
-            <label for="dob" class="control-label formElementPadBottom">Birth date</label>
-            <input type="text" name="dob" id="dob" required placeholder="Birth date"/>
+          <div class="row date">
+            <label for="dob" class="control-label col-md-1">Birth date</label>
+            <div class="col-md-2 formElementPadBottom pull-left">
+              <div class="input-group date" id="datePicker">
+                <input type="text" class="form-control" name="dob" id="dob" required readonly 
+                       placeholder="click here==>"/>
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+              </div>
+            </div>
           </div>
           <div class="row userProfileForm">
             <label for="homeMarket" class="control-label formElementPadBottom">Home market</label>
-            <input type="text" name="homeMarket" id="homeMarket" required placeholder="Home market"/>
+            <input type="text" class="roundedCorners" name="homeMarket" id="homeMarket" required placeholder="Home market"/>
           </div>
         </div>
         <hr>
@@ -160,23 +180,39 @@
           <h2>Login</h2>
           <div class="row userProfileForm">
             <label for="activeYN" class="control-label formElementPadBottom">User is active Y/N</label>
-            <input type="text" name="activeYN" id="activeYN" required placeholder="User is active Y/N"/>
+            <input type="text" class="roundedCorners" name="activeYN" id="activeYN" required placeholder="User is active Y/N"/>
           </div>
           <div class="row userProfileForm">
             <label for="pwdExpDate" class="control-label formElementPadBottom">Password expiration date</label>
-            <input type="text" name="pwdExpDate" id="pwdExpDate" required placeholder="Password expiration date"/>
+            <input type="text" class="roundedCorners" name="pwdExpDate" id="pwdExpDate" required placeholder="Password expiration date"/>
           </div>
-          <div class="row userProfileForm">
-            <label for="disabledDate" class="control-label formElementPadBottom">Date disabled</label>
-            <input type="text" name="disabledDate" id="disabledDate" required placeholder="Date disabled"/>
+
+          
+          
+          
+          <div class="row date">
+            <label for="disabledDate" class="control-label col-md-1">Date disabled</label>
+            <div class="col-md-2 formElementPadBottom pull-left">
+              <div class="input-group date" id="datePicker2">
+                <input type="text" class="form-control" name="disabledDate" id="disabledDate" readonly
+                       placeholder="click here==>"/>
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+              </div>
+            </div>
           </div>
+          
+          
+          
+          
           <div class="row userProfileForm">
             <label for="pwdAttempts" class="control-label formElementPadBottom">Pasword attempts</label>
-            <input type="text" name="pwdAttempts" id="pwdAttempts" required/>
+            <input type="text" class="roundedCorners" name="pwdAttempts" id="pwdAttempts" required/>
           </div>
           <div class="row userProfileForm">
             <label for="password" class="control-label formElementPadBottom">Pasword</label>
-            <input type="text" name="password" id="password" required placeholder="Password"/>
+            <input type="text" class="roundedCorners" name="password" id="password" required placeholder="Password"/>
             <button type="button" class="btn btn-success formElementPadBottomLeft" id="crtToken">Create token</button>
           </div>
           <div class="row userProfileForm">
@@ -186,27 +222,74 @@
           </div>
           <div class="row userProfileForm">
             <label for="currentToken" class="control-label formElementPadBottom">Current token</label>
-            <input type="text" name="currentToken" id="currentToken" required placeholder="Current token"/>
+            <input type="text" class="roundedCorners" name="currentToken" id="currentToken" required placeholder="Current token"/>
           </div>
-          <div class="row userProfileForm">
-            <label for="lastLogin" class="control-label formElementPadBottom">Last login</label>
-            <input type="text" name="lastLogin" id="lastLogin" required placeholder="Last login"/>
+
+          
+          
+          
+          <div class="row date">
+            <label for="lastLogin" class="control-label col-md-1">Last login</label>
+            <div class="col-md-2 formElementPadBottom pull-left">
+              <div class="input-group date" id="datePicker3">
+                <input type="text" class="form-control" name="lastLogin" id="lastLogin" required readonly
+                       placeholder="click here==>"/>
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+              </div>
+            </div>            
           </div>
+
+        
+        
+        
         </div>
       </div>
     </div>
     <p></p><p></p>
     <div class="actionButtons" class="actionButtons">
-      <button type="button" class="btn btn-success" id="addButton" style="background-color: blue;">Add</button>
-      <button type="button" class="btn btn-success" id="updateButton" style="background-color: blue;">Update</button>
-      <button type="button" class="btn btn-success" id="deleteButton" style="background-color: blue;">Delete</button>
+      <button type="button" class="btn btn-success" id="addButton" style="background-color: darkturquoise;">Add</button>
+      <button type="button" class="btn btn-success" id="updateButton" style="background-color: darkturquoise;">Update</button>
+      <button type="button" class="btn btn-success" id="deleteButton" style="background-color: darkturquoise;">Delete</button>
       <button type="button" class="btn btn-success" id="cancelButon" style="background-color: red;">Cancel</button>
     </div>
 </div> 
 <script>
   $(function() {
-    
+      $('#datePicker').datetimepicker({
+        format: "MM/DD/YYYY",
+        ignoreReadonly: true,
+        icons: {
+          time: "fa fa-clock-o",
+          date: "fa fa-calendar",
+          up:   "fa fa-arrow-up",
+          down: "fa fa-arrow-down"
+        }
+      });
+
+      $('#datePicker2').datetimepicker({
+        format: "MM/DD/YYYY",
+        ignoreReadonly: true,
+        icons: {
+          time: "fa fa-clock-o",
+          date: "fa fa-calendar",
+          up:   "fa fa-arrow-up",
+          down: "fa fa-arrow-down"
+        }
+      });
+
+      $('#datePicker3').datetimepicker({
+        format: "MM/DD/YYYY",
+        ignoreReadonly: true,
+        icons: {
+          time: "fa fa-clock-o",
+          date: "fa fa-calendar",
+          up:   "fa fa-arrow-up",
+          down: "fa fa-arrow-down"
+        }
+      });
   });
 </script>
 </body>
-</html>                            
+</html>
