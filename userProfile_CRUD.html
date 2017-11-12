@@ -265,50 +265,60 @@
 <script>
   $(function() {
     $('#title-loginID').text('User Profile Maintenance   XXXXXXXXXXXXXXX');
-      $('#datePicker').datetimepicker({
-        format: "MM/DD/YYYY",
-        ignoreReadonly: true,
-        icons: {
-          time: "fa fa-clock-o",
-          date: "fa fa-calendar",
-          up:   "fa fa-arrow-up",
-          down: "fa fa-arrow-down"
-        }
-      });
+    
+    $('#findBtn').click(function() {
+      findButton();
+    });
+    
+    $('#datePicker').datetimepicker({
+      format: "MM/DD/YYYY",
+      ignoreReadonly: true,
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up:   "fa fa-arrow-up",
+        down: "fa fa-arrow-down"
+      }
+    });
 
-      $('#datePicker2').datetimepicker({
-        format: "MM/DD/YYYY",
-        ignoreReadonly: true,
-        icons: {
-          time: "fa fa-clock-o",
-          date: "fa fa-calendar",
-          up:   "fa fa-arrow-up",
-          down: "fa fa-arrow-down"
-        }
-      });
+    $('#datePicker2').datetimepicker({
+      format: "MM/DD/YYYY",
+      ignoreReadonly: true,
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up:   "fa fa-arrow-up",
+        down: "fa fa-arrow-down"
+      }
+    });
 
-      $('#datePicker3').datetimepicker({
-        format: "MM/DD/YYYY",
-        ignoreReadonly: true,
-        icons: {
-          time: "fa fa-clock-o",
-          date: "fa fa-calendar",
-          up:   "fa fa-arrow-up",
-          down: "fa fa-arrow-down"
-        }
-      });
+    $('#datePicker3').datetimepicker({
+      format: "MM/DD/YYYY",
+      ignoreReadonly: true,
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up:   "fa fa-arrow-up",
+        down: "fa fa-arrow-down"
+      }
+    });
 
-      $('#datePicker4').datetimepicker({
-        format: "MM/DD/YYYY",
-        ignoreReadonly: true,
-        icons: {
-          time: "fa fa-clock-o",
-          date: "fa fa-calendar",
-          up:   "fa fa-arrow-up",
-          down: "fa fa-arrow-down"
-        }
-      });
+    $('#datePicker4').datetimepicker({
+      format: "MM/DD/YYYY",
+      ignoreReadonly: true,
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up:   "fa fa-arrow-up",
+        down: "fa fa-arrow-down"
+      }
+    });  
   });
+
+  function findButton() {
+    $('#findBtn').addClass('disabled');
+    $('#username').attr("disabled", true);
+  }
 </script>
 </body>
 </html>
