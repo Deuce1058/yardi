@@ -46,6 +46,9 @@
        -moz-border-radius: 5px;
             border-radius: 5px;
   }
+  .preserveWhiteSpace {
+    white-space: pre;
+  }
 </style>
 </head>
 <body>
@@ -82,8 +85,10 @@
           <div class="form-group">
             <input type="text" class="form-control" name="username" id="username" required placeholder="User Name">
           </div>
-          <button type="button" class="btn btn-success">Find</button>
+          <button type="button" class="btn btn-success" id="findBtn">Find</button>
         </form>
+        <div id="title-loginID" class="formElementPadLeft preserveWhiteSpace"></div>
+        <div id="form-feedback" class="formElementPadLeft" style="color:red;">XXX</div> <!--90 char-->
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
@@ -104,13 +109,13 @@
           </div>
           <div class="row userProfileForm">
             <label for="address2" class="control-label formElementPadBottom">Address 2</label>
-            <input type="text" class="roundedCorners" name="address2" id="address2" required placeholder="Address 2"/>
+            <input type="text" class="roundedCorners" name="address2" id="address2" placeholder="Address 2"/>
           </div>
           <div class="row userProfileForm">
             <label for="city" class="control-label formElementPadBottom">City</label>
             <input type="text" class="roundedCorners" name="city" id="city" required placeholder="City"/>
             <label for="state" class="control-label formElementPadBottomLeft">State</label>
-            <select>
+            <select name="state" id="state">
               <option value="AL">AL</option><option value="AK">AK</option><option value="AZ">AZ</option>
               <option value="AR">AR</option><option value="CA">CA</option><option value="CO">CO</option>
               <option value="CT">CT</option><option value="DE">DE</option><option value="FL">FL</option>
@@ -136,7 +141,7 @@
             <input type="text" class="roundedCorners" name="zip" id="zip" required placeholder="Zip" maxlength="5" 
                    style="width: 70px;"/>
             <label for="zip4" class="control-label formElementPadLeft">Zip 4</label>
-            <input type="text" class="roundedCorners" name="zip4" id="zip4" required placeholder="Zip 4" maxlength="4" style="width: 60px;"/>
+            <input type="text" class="roundedCorners" name="zip4" id="zip4" placeholder="Zip 4" maxlength="4" style="width: 60px;"/>
           </div>
           <div class="row userProfileForm">
             <label for="phone" class="control-label formElementPadBottom">Phone</label>
@@ -144,11 +149,11 @@
           </div>
           <div class="row userProfileForm">
             <label for="fax" class="control-label formElementPadBottom">Fax</label>
-            <input type="text" class="roundedCorners" name="fax" id="fax" required placeholder="Fax"/>
+            <input type="text" class="roundedCorners" name="fax" id="fax" placeholder="Fax"/>
           </div>
           <div class="row userProfileForm">
             <label for="email" class="control-label formElementPadBottom">Email</label>
-            <input type="text" class="roundedCorners" name="email" id="email" required placeholder="Email"/>
+            <input type="text" class="roundedCorners" name="email" id="email" placeholder="Email"/>
           </div>
         </div>
         <hr>
@@ -180,16 +185,22 @@
           <h2>Login</h2>
           <div class="row userProfileForm">
             <label for="activeYN" class="control-label formElementPadBottom">User is active Y/N</label>
-            <input type="text" class="roundedCorners" name="activeYN" id="activeYN" required placeholder="User is active Y/N"/>
+            <select name="activeYN" id="activeYN">
+              <option value="Y">Y</option><option value="N">N</option>
+            </select>
           </div>
-          <div class="row userProfileForm">
-            <label for="pwdExpDate" class="control-label formElementPadBottom">Password expiration date</label>
-            <input type="text" class="roundedCorners" name="pwdExpDate" id="pwdExpDate" required placeholder="Password expiration date"/>
+          <div class="row date">
+            <label for="pwdExpDate" class="control-label col-md-2">Password expiration date</label>
+            <div class="col-md-2 formElementBottom pull-left">
+              <div class="input-group date" id="datePicker4">
+                <input type="text" class="form-control" name="pwdExpDate" id="pwdExpDate" required readonly
+                       placeholder="click here ==>"/>
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+              </div>
+            </div>
           </div>
-
-          
-          
-          
           <div class="row date">
             <label for="disabledDate" class="control-label col-md-1">Date disabled</label>
             <div class="col-md-2 formElementPadBottom pull-left">
@@ -202,32 +213,32 @@
               </div>
             </div>
           </div>
-          
-          
-          
-          
           <div class="row userProfileForm">
             <label for="pwdAttempts" class="control-label formElementPadBottom">Pasword attempts</label>
-            <input type="text" class="roundedCorners" name="pwdAttempts" id="pwdAttempts" required/>
+            <select name="pwdAttempts" id="pwdAttempts">
+              <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+              <option value="3">3</option><option value="4">4</option><option value="5">5</option>
+              <option value="6">6</option><option value="7">7</option><option value="8">8</option>
+              <option value="9">9</option><option value="10">10</option><option value="11">11</option>
+              <option value="12">12</option><option value="13">13</option><option value="14">14</option>
+              <option value="15">15</option><option value="16">16</option><option value="17">17</option>
+              <option value="18">18</option><option value="19">19</option><option value="20">20</option>
+            </select>
           </div>
           <div class="row userProfileForm">
             <label for="password" class="control-label formElementPadBottom">Pasword</label>
-            <input type="text" class="roundedCorners" name="password" id="password" required placeholder="Password"/>
+            <input type="text" class="roundedCorners" name="password" id="password" placeholder="Password"/>
             <button type="button" class="btn btn-success formElementPadBottomLeft" id="crtToken">Create token</button>
           </div>
           <div class="row userProfileForm">
             <b>New token=</b>
-            <label id="newToken"  class="formElementPadBottom" style="color:green;">
+            <label id="newToken" class="formElementPadBottom" style="color:green;">
               $31$16$zBv5r6wXaLrlJ1iRF6-j79463_7AFER7LxMWxCzL4uY</label>
           </div>
           <div class="row userProfileForm">
             <label for="currentToken" class="control-label formElementPadBottom">Current token</label>
             <input type="text" class="roundedCorners" name="currentToken" id="currentToken" required placeholder="Current token"/>
           </div>
-
-          
-          
-          
           <div class="row date">
             <label for="lastLogin" class="control-label col-md-1">Last login</label>
             <div class="col-md-2 formElementPadBottom pull-left">
@@ -240,10 +251,6 @@
               </div>
             </div>            
           </div>
-
-        
-        
-        
         </div>
       </div>
     </div>
@@ -257,6 +264,7 @@
 </div> 
 <script>
   $(function() {
+    $('#title-loginID').text('User Profile Maintenance   XXXXXXXXXXXXXXX');
       $('#datePicker').datetimepicker({
         format: "MM/DD/YYYY",
         ignoreReadonly: true,
@@ -280,6 +288,17 @@
       });
 
       $('#datePicker3').datetimepicker({
+        format: "MM/DD/YYYY",
+        ignoreReadonly: true,
+        icons: {
+          time: "fa fa-clock-o",
+          date: "fa fa-calendar",
+          up:   "fa fa-arrow-up",
+          down: "fa fa-arrow-down"
+        }
+      });
+
+      $('#datePicker4').datetimepicker({
         format: "MM/DD/YYYY",
         ignoreReadonly: true,
         icons: {
