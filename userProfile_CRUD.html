@@ -270,15 +270,10 @@
     var viewMode = false;
     $('#title-loginID').text('User Profile Maintenance   XXXXXXXXXXXXXXX');
     configureViewMode();
-    
-    if (viewMode) {
-      configureButtons(false, true, true, true, true, true);
-    } else {
-      configureButtons(false, false, false, false, false, false);
-    }
+    configureButtons(false, true, true, true, true, true);
     
     $('#findBtn').click(function() {
-      if (!=viewMode) {
+      if (!viewMode) {
         disableFind();
       }
       
@@ -332,7 +327,6 @@
         down: "fa fa-arrow-down"
       }
     });  
-  });
 
   function getAllUrlParams(url) {
     //see: https://www.sitepoint.com/get-url-parameters-with-javascript/
@@ -404,11 +398,11 @@
   function configureButtons(findBtn, crtTokenBtn, addBtn, updateBtn, deleteBtn, cancelBtn) {
     
       if (findBtn) {
-        $('#findBtn')   .attr('disabled', false);
-        $('#username')  .attr("disabled", false);    
-      } else {
         $('#findBtn')   .attr('disabled', true);
         $('#username')  .attr("disabled", true);    
+      } else {
+        $('#findBtn')   .attr('disabled', false);
+        $('#username')  .attr("disabled", false);    
       }                   
                           
       $('#crtToken')    .attr("disabled", crtTokenBtn);
@@ -422,7 +416,7 @@
     $('#newToken').css("color", "green");
     
     if (getAllUrlParams().mode === 'view') {
-      var viewMode = true;
+      viewMode = true;
       $('#title-loginID').text('User Profile Maintenance    VIEW MODE    XXXXXXXXXXXXXXX');
       $('[pwdFn]').css("display", "none"); //hide password functions in view mode
       //disable the rest of the input fields
@@ -559,6 +553,15 @@
   
   function actionBtnFunctionality() {
     /* determine which function buttons (add/delete/update) should be enabled/disabled based on feedback from ajax */
+    /**
+    configureButtons(findBtn, crtTokenBtn, addBtn, updateBtn, deleteBtn, cancelBtn)
+
+    YRD0000 view=t findBtn=t, crtTokenBtn=f, addBtn=f, updateBtn=f, deleteBtn=f, cancelBtn=f
+    YRD0000 view=f findBtn=f, crtTokenBtn=t, addBtn=f, updateBtn=t, deleteBtn=t, cancelBtn=t
+
+    YRD000D view=t findBtn=t, crtTokenBtn=f, addBtn=f, updateBtn=f, deleteBtn=f, cancelBtn=f
+    YRD000D view=f findBtn=f, crtTokenBtn=t, addBtn=t, updateBtn=f, deleteBtn=f, cancelBtn=t
+    **/
     if (formItems.msgID === 'YRD0000' && viewMode) {
       configureButtons(true, false, false, false, false, false);
     }
@@ -575,6 +578,7 @@
       configureButtons(false, true, true, false, false, true);
     }
   }
+  });
 </script>
 </body>
 </html>
