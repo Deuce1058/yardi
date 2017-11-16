@@ -42,9 +42,11 @@
     padding-left: 5px;
   }
   .roundedCorners {
-    -webkit-border-radius: 5px;
-       -moz-border-radius: 5px;
-            border-radius: 5px;
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
   }
   .preserveWhiteSpace {
     white-space: pre;
@@ -268,9 +270,10 @@
     var formItems;
     var ajaxData;
     var viewMode = false;
+    var findButtonDisabled = false;
     $('#title-loginID').text('User Profile Maintenance   XXXXXXXXXXXXXXX');
-    configureViewMode();
     configureButtons(false, true, true, true, true, true);
+    configureViewMode();
     
     $('#findBtn').click(function() {
       if (!viewMode) {
@@ -283,6 +286,8 @@
       /* determine which function buttons (add/delete/update) should be enabled/disabled based on feedback from ajax */
       actionBtnFunctionality();
     });
+    
+    handleActionButtonClick();
     
     $('#datePicker').datetimepicker({
       format: "MM/DD/YYYY",
@@ -393,16 +398,19 @@
   function disableFind() {
     $('#findBtn')   .attr('disabled', true);
     $('#username')  .attr("disabled", true);    
+    findButtonDisabled = true;
   }
   
   function configureButtons(findBtn, crtTokenBtn, addBtn, updateBtn, deleteBtn, cancelBtn) {
     
       if (findBtn) {
         $('#findBtn')   .attr('disabled', true);
-        $('#username')  .attr("disabled", true);    
+        $('#username')  .attr("disabled", true);
+        findButtonDisabled = true;
       } else {
         $('#findBtn')   .attr('disabled', false);
         $('#username')  .attr("disabled", false);    
+        findButtonDisabled = false;
       }                   
                           
       $('#crtToken')    .attr("disabled", crtTokenBtn);
@@ -415,6 +423,11 @@
   function configureViewMode() {
     $('#newToken').css("color", "green");
     
+    /**
+      Protect input fields when:
+        1. Its view mode 
+        2. Its not view mode and the find button is enabled
+    **/
     if (getAllUrlParams().mode === 'view') {
       viewMode = true;
       $('#title-loginID').text('User Profile Maintenance    VIEW MODE    XXXXXXXXXXXXXXX');
@@ -438,9 +451,40 @@
       $("#pwdExpDate")   .attr("disabled", true);
       $("#disabledDate") .attr("disabled", true);
       $("#pwdAttempts")  .attr("disabled", true);
+      $('#password')     .attr("disabled", true); 
       $("#currentToken") .attr("disabled", true);
       $("#lastLogin")    .attr("disabled", true);
       console.log('view mode');
+    }
+    
+    /**
+      Protect input fields when:
+        1. Its view mode 
+        2. Its not view mode and the find button is enabled
+    **/
+    if ((!viewMode) && (findButtonDisabled == false)) {
+      //disable the rest of the input fields
+      $("#firstName")    .attr("disabled", true);
+      $("#lastName")     .attr("disabled", true);
+      $("#address1")     .attr("disabled", true);
+      $("#address2")     .attr("disabled", true);
+      $("#city")         .attr("disabled", true);
+      $("#state")        .attr("disabled", true);
+      $("#zip")          .attr("disabled", true);
+      $("#zip4")         .attr("disabled", true);
+      $("#phone")        .attr("disabled", true);
+      $("#fax")          .attr("disabled", true);
+      $("#email")        .attr("disabled", true);
+      $("#ssn")          .attr("disabled", true);
+      $("#dob")          .attr("disabled", true);
+      $("#homeMarket")   .attr("disabled", true);
+      $("#activeYN")     .attr("disabled", true);
+      $("#pwdExpDate")   .attr("disabled", true);
+      $("#disabledDate") .attr("disabled", true);
+      $("#pwdAttempts")  .attr("disabled", true);
+      $('#password')     .attr("disabled", true); 
+      $("#currentToken") .attr("disabled", true);
+      $("#lastLogin")    .attr("disabled", true);
     }
   }
   
@@ -577,6 +621,49 @@
     if (formItems.msgID === 'YRD000D' && viewMode==false) {
       configureButtons(false, true, true, false, false, true);
     }
+  }
+    
+  function handleActionButtonClick() {
+    $('#addButton').click(function () {
+      
+    });
+    $('#updateButton').click(function () {
+      
+    });
+    $('#deleteButton').click(function () {
+      
+    });
+    $('#cancelButon').click(function () {
+      clearScreen();
+      configureButtons(false, true, true,  true,  true,  false);
+      configureViewMode();
+    });
+  }
+    
+  function clearScreen() {
+      $('#form-feedback').text('');
+      $('#username')     .val('');
+      $("#firstName")    .val('');
+      $("#lastName")     .val('');
+      $("#address1")     .val('');
+      $("#address2")     .val('');
+      $("#city")         .val('');
+      $("#state")        .val('AL');
+      $("#zip")          .val('');
+      $("#zip4")         .val('');
+      $("#phone")        .val('');
+      $("#fax")          .val('');
+      $("#email")        .val('');
+      $("#ssn")          .val('');
+      $("#dob")          .val('');
+      $("#homeMarket")   .val('');
+      $("#activeYN")     .val('Y');
+      $("#pwdExpDate")   .val('');
+      $("#disabledDate") .val('');
+      $("#pwdAttempts")  .val('0');
+      $('#password')     .val(''); 
+      $("#currentToken") .val('');
+      $("#lastLogin")    .val('');
   }
   });
 </script>
