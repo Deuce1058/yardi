@@ -276,19 +276,67 @@
     configureViewMode();
     
     $('#findBtn').click(function() {
-      if (!viewMode) {
-        disableFind();
-      }
-      
       setFormItems('find', ajaxData);
       setFormData();
       doPost();
-      /* determine which function buttons (add/delete/update) should be enabled/disabled based on feedback from ajax */
-      actionBtnFunctionality();
+      /* 
+        determine which function buttons (add/delete/update) should be enabled/disabled based on feedback from ajax 
+
+        findBtn,     
+        crtTokenBtn, 
+        addBtn,      
+        updateBtn,   
+        deleteBtn,   
+        cancelBtn    
+
+
+        USE       = F
+        DISABLE   = T
+        FOUND     = YRD0000
+        NOT FOUND = YRD000D      
+      */
+    
+      if (formItems.msgID === 'YRD0000' && viewMode==false) {
+        configureButtons(true, false, true,  false, false, false);
+      }
+
+      if (formItems.msgID === 'YRD000D' && viewMode==false) {
+        configureButtons(true, false, false, true,  true,  false);
+      }
+          
+      if (formItems.msgID === 'YRD0000' && viewMode) {
+        configureButtons(false, true, true, true, true, true);
+      }
+
+      if (formItems.msgID === 'YRD000D' && viewMode) {
+        configureButtons(false, true, true, true, true, true);
+      }    
     });
     
-    handleActionButtonClick();
+    $('#addButton').click(function () {
+      clearScreen();
+      configureButtons(false, true, true,  true,  true,  false);
+      configureViewMode();
+    });
     
+    $('#updateButton').click(function () {
+      clearScreen();
+      configureButtons(false, true, true,  true,  true,  false);
+      configureViewMode();
+    });
+    
+    $('#deleteButton').click(function () {
+      clearScreen();
+      configureButtons(false, true, true,  true,  true,  false);
+      configureViewMode();
+    });
+    
+    $('#cancelButon').click(function () {
+      clearScreen();
+      configureButtons(false, true, true,  true,  true,  false);
+      configureViewMode();
+    });
+
     $('#datePicker').datetimepicker({
       format: "MM/DD/YYYY",
       ignoreReadonly: true,
@@ -394,13 +442,7 @@
 
     return obj;
   }
-  
-  function disableFind() {
-    $('#findBtn')   .attr('disabled', true);
-    $('#username')  .attr("disabled", true);    
-    findButtonDisabled = true;
-  }
-  
+
   function configureButtons(findBtn, crtTokenBtn, addBtn, updateBtn, deleteBtn, cancelBtn) {
     
       if (findBtn) {
@@ -595,49 +637,7 @@
     }
   }
   
-  function actionBtnFunctionality() {
-    /* determine which function buttons (add/delete/update) should be enabled/disabled based on feedback from ajax */
-    /**
-    configureButtons(findBtn, crtTokenBtn, addBtn, updateBtn, deleteBtn, cancelBtn)
-
-    YRD0000 view=t findBtn=t, crtTokenBtn=f, addBtn=f, updateBtn=f, deleteBtn=f, cancelBtn=f
-    YRD0000 view=f findBtn=f, crtTokenBtn=t, addBtn=f, updateBtn=t, deleteBtn=t, cancelBtn=t
-
-    YRD000D view=t findBtn=t, crtTokenBtn=f, addBtn=f, updateBtn=f, deleteBtn=f, cancelBtn=f
-    YRD000D view=f findBtn=f, crtTokenBtn=t, addBtn=t, updateBtn=f, deleteBtn=f, cancelBtn=t
-    **/
-    if (formItems.msgID === 'YRD0000' && viewMode) {
-      configureButtons(true, false, false, false, false, false);
-    }
-    
-    if (formItems.msgID === 'YRD0000' && viewMode==false) {
-      configureButtons(false, true, false, true, true, true);
-    }
-    
-    if (formItems.msgID === 'YRD000D' && viewMode) {
-      configureButtons(true, false, false, false, false, false);
-    }
-    
-    if (formItems.msgID === 'YRD000D' && viewMode==false) {
-      configureButtons(false, true, true, false, false, true);
-    }
-  }
-    
   function handleActionButtonClick() {
-    $('#addButton').click(function () {
-      
-    });
-    $('#updateButton').click(function () {
-      
-    });
-    $('#deleteButton').click(function () {
-      
-    });
-    $('#cancelButon').click(function () {
-      clearScreen();
-      configureButtons(false, true, true,  true,  true,  false);
-      configureViewMode();
-    });
   }
     
   function clearScreen() {
