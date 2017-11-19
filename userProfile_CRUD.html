@@ -314,26 +314,35 @@
     });
     
     $('#addButton').click(function () {
+      setFormItems('add', ajaxData);
+      setFormData();
+      doPost();
       clearScreen();
-      configureButtons(false, true, true,  true,  true,  false);
+      configureButtons(false, true, true, true, true, true;
       configureViewMode();
     });
     
     $('#updateButton').click(function () {
+      setFormItems('update', ajaxData);
+      setFormData();
+      doPost();
       clearScreen();
-      configureButtons(false, true, true,  true,  true,  false);
+      configureButtons(false, true, true, true, true, true);
       configureViewMode();
     });
     
     $('#deleteButton').click(function () {
+      setFormItems('delete', ajaxData);
+      setFormData();
+      doPost();
       clearScreen();
-      configureButtons(false, true, true,  true,  true,  false);
+      configureButtons(false, true, true, true, true, true);
       configureViewMode();
     });
     
     $('#cancelButon').click(function () {
       clearScreen();
-      configureButtons(false, true, true,  true,  true,  false);
+      configureButtons(false, true, true, true, true, true);
       configureViewMode();
     });
 
