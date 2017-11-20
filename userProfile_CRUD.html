@@ -313,6 +313,10 @@
       }    
     });
     
+    $("crtToken").click(function () {
+      newToken();
+    });
+    
     $('#addButton').click(function () {
       setFormItems('add', ajaxData);
       setFormData();
@@ -540,62 +544,88 @@
   }
   
   function setFormItems(action, data) {
-    if (action === 'find') {
+    if (
+           action === 'find'
+        || action === 'add'
+        || action === 'update'
+        || action === 'delete'
+       ) {
       formItems = {
-        "action"       : action,
-        "findUser"     : $('#username')    .val(),
-        "msgID"        : '',
-        "msgDta"       : '',
-        "firstName"    : $("#firstName")   .val(),
-        "lastName"     : $("#lastName")    .val(),
-        "address1"     : $("#address1")    .val(),
-        "address2"     : $("#address2")    .val(),
-        "city"         : $("#city")        .val(),
-        "state"        : $("#state")       .val(),
-        "zip"          : $("#zip")         .val(),
-        "zip4"         : $("#zip4")        .val(),
-        "phone"        : $("#phone")       .val(),
-        "fax"          : $("#fax")         .val(),
-        "email"        : $("#email")       .val(),
-        "ssn"          : $("#ssn")         .val(),
-        "dob"          : $("#dob")         .val(),
-        "homeMarket"   : $("#homeMarket")  .val(),
-        "activeYN"     : $("#activeYN")    .val(),
-        "pwdExpDate"   : $("#pwdExpDate")  .val(),
-        "disabledDate" : $("#disabledDate").val(),
-        "pwdAttempts"  : $("#pwdAttempts") .val(),
-        "currentToken" : $("#currentToken").val(),
-        "lastLogin"    : $("#lastLogin")   .val()
+        "action"         : action,
+        "findUser"       : $('#username')    .val(),
+        "msgID"          : '',
+        "msgDescription" : '',
+        "firstName"      : $("#firstName")   .val(),
+        "lastName"       : $("#lastName")    .val(),
+        "address1"       : $("#address1")    .val(),
+        "address2"       : $("#address2")    .val(),
+        "city"           : $("#city")        .val(),
+        "state"          : $("#state")       .val(),
+        "zip"            : $("#zip")         .val(),
+        "zip4"           : $("#zip4")        .val(),
+        "phone"          : $("#phone")       .val(),
+        "fax"            : $("#fax")         .val(),
+        "email"          : $("#email")       .val(),
+        "ssn"            : $("#ssn")         .val(),
+        "dob"            : $("#dob")         .val(),
+        "homeMarket"     : $("#homeMarket")  .val(),
+        "activeYN"       : $("#activeYN")    .val(),
+        "pwdExpDate"     : $("#pwdExpDate")  .val(),
+        "disabledDate"   : $("#disabledDate").val(),
+        "pwdAttempts"    : $("#pwdAttempts") .val(),
+        "currentToken"   : $("#currentToken").val(),
+        "lastLogin"      : $("#lastLogin")   .val()
       }
     }
     
     if (action === 'ajaxSuccess') {
       formItems = {
-        "action"       : action,
-        "msgID"        : data.msgID,
-        "msgDta"       : data.msgDta,
-        "firstName"    : data.firstName,
-        "lastName"     : data.lastName,
-        "address1"     : data.address1,
-        "address2"     : data.address2,
-        "city"         : data.city,
-        "state"        : data.state,
-        "zip"          : data.zip,
-        "zip4"         : data.zip4,
-        "phone"        : data.phone,
-        "fax"          : data.fax,
-        "email"        : data.email,
-        "ssn"          : data.ssn,
-        "dob"          : data.dob,
-        "homeMarket"   : data.homeMarket,
-        "activeYN"     : data.activeYN,
-        "pwdExpDate"   : data.pwdExpDate,
-        "disabledDate" : data.disabledDate,
-        "pwdAttempts"  : data.pwdAttempts,
-        "currentToken" : data.currentToken,
-        "lastLogin"    : data.lastLogin
+        "action"         : action,
+        "msgID"          : data.msgID,
+        "msgDescription" : data.msgDescription,
+        "firstName"      : data.firstName,
+        "lastName"       : data.lastName,
+        "address1"       : data.address1,
+        "address2"       : data.address2,
+        "city"           : data.city,
+        "state"          : data.state,
+        "zip"            : data.zip,
+        "zip4"           : data.zip4,
+        "phone"          : data.phone,
+        "fax"            : data.fax,
+        "email"          : data.email,
+        "ssn"            : data.ssn,
+        "dob"            : data.dob,
+        "homeMarket"     : data.homeMarket,
+        "activeYN"       : data.activeYN,
+        "pwdExpDate"     : data.pwdExpDate,
+        "disabledDate"   : data.disabledDate,
+        "pwdAttempts"    : data.pwdAttempts,
+        "currentToken"   : data.currentToken,
+        "lastLogin"      : data.lastLogin
       }
     }
+  }
+  
+  function newToken() {
+    /*convert password to a token*/
+    var tokenRequest = {
+      "msgID"          : '',
+      "msgDescription" : '',
+      "password"       : $("#password").val()
+    }
+    var tokenRequestJSON = JSON.stringify(tokenRequest);
+    
+    $.ajax({
+      type:     'POST',
+      url:      '../newToken',
+      data:     tokenRequestJSON,
+      async:    false,
+      dataType: "json", 
+      success:  function (data) {
+                  $("newToken").text(data.password);
+                }
+    });
   }
   
   function setFormData() {
@@ -605,7 +635,7 @@
   function doPost() {
     $.ajax({
       type:     'POST',
-      url:      'editUserProfile',
+      url:      '../editUserProfile',
       data:     formData,
       async:    false,
       dataType: "json", 
@@ -619,7 +649,7 @@
   }
   
   function buildPage() {
-    $('#form-feedback').text(formItems.msgDta);
+    $('#form-feedback').text(formItems.msgDescription);
 
     if (formItems.msgID === 'YRD0000') {
       $('#form-feedback').text('');
