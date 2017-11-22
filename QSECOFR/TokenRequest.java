@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
- * Container which represents a request for a new token. 
+ * Represents a request for a new token. 
  * @author Jim
  *
  */
