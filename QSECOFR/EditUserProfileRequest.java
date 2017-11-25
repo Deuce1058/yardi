@@ -45,7 +45,7 @@ public class EditUserProfileRequest {
 	@JsonIgnore
 	private Date birthDate;
 	@JsonIgnore
-	private int homeMarketInt;
+	private int upHomeMarket;
 	@JsonIgnore
 	private Date passwordExpirationDate;
 	@JsonIgnore
@@ -86,14 +86,16 @@ public class EditUserProfileRequest {
 		this.pwdAttempts = pwdAttempts;
 		this.currentToken = currentToken;
 		this.lastLogin = lastLogin;
+		setUpHomeMarket(Integer.parseInt(homeMarket));
+		setBirthDate(toDate(dob));
+		setPasswordExpirationDate(toDate(pwdExpDate));
+		setProfileDisabledDate(toDate(disabledDate));
+		setLastLoginDate(toDate(lastLogin));
+		setPasswordAttempts(Integer.parseInt(pwdAttempts));
 	}
 
-	public void pwdAttemptsToPasswordAttempts() {
-		passwordAttempts = Integer.parseInt(pwdAttempts);
-	}
-	
-	public void lastLoginToLastLoginDate() {
-		String dateSplit[] = lastLogin.split("\\/");
+	public Date toDate(String dateString) {
+		String mmDdYyyy[] = dateString.split("\\/");
 		/* 
 		 * ^ marks the beginning of the pattern string
 		 * $ marks the ned of the pattern string
@@ -102,13 +104,13 @@ public class EditUserProfileRequest {
 		 */
 		String pattern = "^\\d{1,2}\\/\\d{1,2}\\/\\d{4}$";
 		Pattern n = Pattern.compile(pattern);
-		Matcher m = n.matcher(lastLogin);
+		Matcher m = n.matcher(dateString);
+		GregorianCalendar gc = new GregorianCalendar();
 		
 		if (m.find()) {
-			String month = dateSplit[0]; 
-			String day = dateSplit[1]; 
-			String year = dateSplit[2];
-			GregorianCalendar gc = new GregorianCalendar();
+			String month = mmDdYyyy[0]; 
+			String day = mmDdYyyy[1]; 
+			String year = mmDdYyyy[2];
 			gc.set(Calendar.HOUR, 0);
 			gc.set(Calendar.MINUTE, 0);
 			gc.set(Calendar.SECOND, 0);
@@ -116,126 +118,80 @@ public class EditUserProfileRequest {
 			gc.set(Calendar.YEAR, Integer.parseInt(year));
 			gc.set(Calendar.MONTH, Integer.parseInt(month));
 			gc.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
-			lastLoginDate = gc.getTime();
 		}	
+
+		return new Date(gc.getTimeInMillis());
 	}
 	
-	public void disabledDateToProfileDisabledDate() {
-		String dateSplit[] = disabledDate.split("\\/");
-		/* 
-		 * ^ marks the beginning of the pattern string
-		 * $ marks the ned of the pattern string
-		 * d{1,2} means digit occurs 1 or 2 times
-		 * d{4} means digit occurs 4 times
-		 */
-		String pattern = "^\\d{1,2}\\/\\d{1,2}\\/\\d{4}$";
-		Pattern n = Pattern.compile(pattern);
-		Matcher m = n.matcher(disabledDate);
+	public String stringify(Date date) {
+		//https://www.mkyong.com/java/java-enum-example/
+		String fields[] = date.toString().split(" ");
+		int mm = 99;
+		String month = fields[1];
+		int dd = Integer.parseInt(fields[2]);
+		int yyyy = Integer.parseInt(fields[5]);
 		
-		if (m.find()) {
-			String month = dateSplit[0]; 
-			String day = dateSplit[1]; 
-			String year = dateSplit[2];
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.set(Calendar.HOUR, 0);
-			gc.set(Calendar.MINUTE, 0);
-			gc.set(Calendar.SECOND, 0);
-			gc.set(Calendar.HOUR_OF_DAY, 0);
-			gc.set(Calendar.YEAR, Integer.parseInt(year));
-			gc.set(Calendar.MONTH, Integer.parseInt(month));
-			gc.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
-			profileDisabledDate = gc.getTime();
-		}	
+		for (MonthNameAbbr m : MonthNameAbbr.values()) {
+			if(m.toString().equalsIgnoreCase(month)) {
+				mm = m.getOrdinal();
+			};
+		}
+
+		return mm + "/" + dd + "/" + yyyy;
 	}
 	
-	public void pwdExpDateToPasswordExpirationDate() {
-		String dateSplit[] = pwdExpDate.split("\\/");
-		/* 
-		 * ^ marks the beginning of the pattern string
-		 * $ marks the ned of the pattern string
-		 * d{1,2} means digit occurs 1 or 2 times
-		 * d{4} means digit occurs 4 times
-		 */
-		String pattern = "^\\d{1,2}\\/\\d{1,2}\\/\\d{4}$";
-		Pattern n = Pattern.compile(pattern);
-		Matcher m = n.matcher(pwdExpDate);
-		
-		if (m.find()) {
-			String month = dateSplit[0]; 
-			String day = dateSplit[1]; 
-			String year = dateSplit[2];
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.set(Calendar.HOUR, 0);
-			gc.set(Calendar.MINUTE, 0);
-			gc.set(Calendar.SECOND, 0);
-			gc.set(Calendar.HOUR_OF_DAY, 0);
-			gc.set(Calendar.YEAR, Integer.parseInt(year));
-			gc.set(Calendar.MONTH, Integer.parseInt(month));
-			gc.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
-			passwordExpirationDate = gc.getTime();
-		}	
+	public int getUpHomeMarket() {
+		return upHomeMarket;
 	}
 
-	public void homeMarketToHomeMarketInt() {
-		homeMarketInt = Integer.parseInt(homeMarket);
-	}	
-	
-	public void dobToBirthDate() {
-		String dobArray[] = dob.split("\\/");
-		/* 
-		 * ^ marks the beginning of the pattern string
-		 * $ marks the ned of the pattern string
-		 * d{1,2} means digit occurs 1 or 2 times
-		 * d{4} means digit occurs 4 times
-		 */
-		String pattern = "^\\d{1,2}\\/\\d{1,2}\\/\\d{4}$";
-		Pattern n = Pattern.compile(pattern);
-		Matcher m = n.matcher(dob);
-		
-		if (m.find()) {
-			String month = dobArray[0]; 
-			String day = dobArray[1]; 
-			String year = dobArray[2];
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.set(Calendar.HOUR, 0);
-			gc.set(Calendar.MINUTE, 0);
-			gc.set(Calendar.SECOND, 0);
-			gc.set(Calendar.HOUR_OF_DAY, 0);
-			gc.set(Calendar.YEAR, Integer.parseInt(year));
-			gc.set(Calendar.MONTH, Integer.parseInt(month));
-			gc.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
-			birthDate = gc.getTime();
-		}	
-	}
-	
-	public int getHomeMarketInt() {
-		return homeMarketInt;
+	public void setUpHomeMarket(int upHomeMarket) {
+		this.upHomeMarket = upHomeMarket;
 	}
 
 	public Date getPasswordExpirationDate() {
 		return passwordExpirationDate;
 	}
 
+	public void setPasswordExpirationDate(Date passwordExpirationDate) {
+		this.passwordExpirationDate = passwordExpirationDate;
+	}
+
 	public Date getProfileDisabledDate() {
 		return profileDisabledDate;
+	}
+
+	public void setProfileDisabledDate(Date profileDisabledDate) {
+		this.profileDisabledDate = profileDisabledDate;
 	}
 
 	public Date getLastLoginDate() {
 		return lastLoginDate;
 	}
 
+	public void setLastLoginDate(Date lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
+	}
+
 	public int getPasswordAttempts() {
 		return passwordAttempts;
+	}
+
+	public void setPasswordAttempts(int passwordAttempts) {
+		this.passwordAttempts = passwordAttempts;
 	}
 
 	public Date getBirthDate() {
 		return birthDate;
 	}
 
+	public void setBirthDate(Date birthDate) {
+		this.birthDate = birthDate;
+	}
+
 	public String getAction() {
 		return action;
 	}
-
+	
 	public void setAction(String action) {
 		this.action = action;
 	}
@@ -431,6 +387,24 @@ public class EditUserProfileRequest {
 				+ zip + ", zip4=" + zip4 + ", phone=" + phone + ", fax=" + fax + ", email=" + email + ", ssn=" + ssn
 				+ ", dob=" + dob + ", homeMarket=" + homeMarket + ", activeYN=" + activeYN + ", pwdExpDate="
 				+ pwdExpDate + ", disabledDate=" + disabledDate + ", pwdAttempts=" + pwdAttempts + ", currentToken="
-				+ currentToken + ", lastLogin=" + lastLogin + "]";
+				+ currentToken + ", lastLogin=" + lastLogin + ", birthDate=" + birthDate + ", homeMarketInt="
+				+ homeMarketInt + ", passwordExpirationDate=" + passwordExpirationDate + ", profileDisabledDate="
+				+ profileDisabledDate + ", lastLoginDate=" + lastLoginDate + ", passwordAttempts=" + passwordAttempts
+				+ ", lastLoginToDate()=" + lastLoginToDate() + ", disabledDateToDate()=" + disabledDateToDate()
+				+ ", pwdExpDateToDate()=" + pwdExpDateToDate() + ", dobToDate()=" + dobToDate()
+				+ ", getHomeMarketInt()=" + getHomeMarketInt() + ", getPasswordExpirationDate()="
+				+ getPasswordExpirationDate() + ", getProfileDisabledDate()=" + getProfileDisabledDate()
+				+ ", getLastLoginDate()=" + getLastLoginDate() + ", getPasswordAttempts()=" + getPasswordAttempts()
+				+ ", getBirthDate()=" + getBirthDate() + ", getAction()=" + getAction() + ", getFindUser()="
+				+ getFindUser() + ", getMsgID()=" + getMsgID() + ", getMsgDescription()=" + getMsgDescription()
+				+ ", getFirstName()=" + getFirstName() + ", getLastName()=" + getLastName() + ", getAddress1()="
+				+ getAddress1() + ", getAddress2()=" + getAddress2() + ", getCity()=" + getCity() + ", getState()="
+				+ getState() + ", getZip()=" + getZip() + ", getZip4()=" + getZip4() + ", getPhone()=" + getPhone()
+				+ ", getFax()=" + getFax() + ", getEmail()=" + getEmail() + ", getSsn()=" + getSsn() + ", getDob()="
+				+ getDob() + ", getHomeMarket()=" + getHomeMarket() + ", getActiveYN()=" + getActiveYN()
+				+ ", getPwdExpDate()=" + getPwdExpDate() + ", getDisabledDate()=" + getDisabledDate()
+				+ ", getPwdAttempts()=" + getPwdAttempts() + ", getCurrentToken()=" + getCurrentToken()
+				+ ", getLastLogin()=" + getLastLogin() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
+				+ ", toString()=" + super.toString() + "]";
 	}
 }
