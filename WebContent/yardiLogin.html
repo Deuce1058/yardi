@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+  <meta HTTP-EQUIV="Expires" CONTENT="-1">
+  <title>Yardi Login</title>
+  <link rel="stylesheet" href="resources/css/font-awesome.min.css">
+  <link href="resources/styles/bootstrap.min.css" rel="stylesheet" />
+  
+  <!-- Login page styles -->
+  <link href="resources/styles/yardiLoginCSS.css" rel="stylesheet" />
+</head>
+<body>
+  <script src="resources/scripts/jquery-2.2.4.min.js"></script>
+  <script src="resources/scripts/bootstrap.min.js"></script>
+  <!--
+  <img  class="bg" alt="" src="resources/img/yardi_banner.jpg">
+  -->
+  <div class="container">
+    <div class="main">
+      <form class="form-horizontal" role="form">
+        
+        <div class="form-group has-feedback">
+          <label for="username" class="col-sm-2 control-label">Username</label>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <!-- using font-awesome -->
+              <span class="input-group-addon"><i class="fa fa-user fa-lg" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="username" id="username" required placeholder="User name"/>
+            </div>
+            <span class="glyphicon glyph_icon form-control-feedback"></span>
+          </div>
+        </div>          
+        <div class="form-group has-feedback">
+          <label for="password" class="col-sm-2 control-label">Password</label>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <!-- using font-awesome -->
+              <span class="input-group-addon"><i class="fa fa-key fa-lg" aria-hidden="true"></i></span>
+              <input type="password" class="form-control" name="password" id="password" required placeholder="Password"/>
+            </div>
+            <span class="glyphicon glyph_icon form-control-feedback"></span>
+            <p></p>
+            <button type="button" class="btn btn-success" id="login">Login</button>
+          </div>
+        </div>          
+      </form>
+      <div class="col-sm-offset-2" style="color:red;" id="form-feedback"></div>
+    </div>
+  </div>
+  <script>
+    $(function() {
+      window.parent.document.title = 'Yardi Login';
+      $('#login').click(function (e) {
+        var formValid = true;
+        
+        //iterate over the input controls
+        $('input').each(function () {
+          var formGroup = $(this).parents('.form-group');
+          var glyphIcon = formGroup.find('.glyph_icon');
+          var obj = $(this);
+          
+          if (this.checkValidity()) {
+            //show green, remove red
+            formGroup.addClass('has-success').removeClass('has-error');
+            //show check, remove X
+            glyphIcon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
+          } else {
+            // show red, remove green
+            formGroup.addClass('has-error').removeClass('has-success');
+            // show x, remove check
+            glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+            //mark form invalid
+            formValid = false;
+          }
+        }); //end of each
+        
+        if (formValid) {
+          var userName = $('#username').val();
+          var password = $('#password').val();
+          var formItems = {
+            "userName"       : userName,
+            "password"       : password,
+            "newPassword"    : '',
+            "msgID"          : '',
+            "msgDescription" : '',
+            "chgPwd"         : 'false'
+          }          
+          var formData = JSON.stringify(formItems);
+          $.ajax({
+            type:     'POST',
+            url:      'doLogin',
+            data:     formData,
+            async:    false,
+            dataType: "json", 
+            success:  function(data) {
+              $('#form-feedback').text(data.msgDescription);
+            
+              if (data.msgID === 'YRD0001') {
+                var x = '';
+                $('input').each(function () {
+                  formValid = false;
+                  var formGroup = $(this).parents('.form-group');
+                  var glyphIcon = formGroup.find('.glyph_icon');
+                  var obj = $(this);
+                  formGroup.addClass('has-error').removeClass('has-success');
+                  glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+                });
+              }
+          
+              if (data.msgID === 'YRD0002') {
+                $('html').html(data.msgDescription);
+                console.log('nextFrame ' + data.msgDescription);
+                parent.frame = data.msgDescription;
+                parent.nextFrame();
+              }
+
+              if (data.msgID === 'YRD0003' || data.msgID === 'YRD0004') {
+                formValid = false;
+                var formGroup = $('[name="username"]').parent('.form-group');
+                var glyphIcon = formGroup.find('.glyph_icon');
+                var obj = $(this);
+                formGroup.addClass('has-error').removeClass('has-success');
+                glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+              }
+                    
+              if (data.msgID === 'YRD000B' || data.msgID === 'YRD000C') {
+                $('input').each(function () {
+                  formValid = false;
+                  var formGroup = $(this).parents('.form-group');
+                  var glyphIcon = formGroup.find('.glyph_icon');
+                  var obj = $(this);
+                  formGroup.removeClass('has-error');
+                  formGroup.removeClass('has-success');
+                  glyphIcon.removeClass('glyphicon-ok');
+                  glyphIcon.removeClass('glyphicon-remove');
+                });
+              }
+            } //end of function inside ajax
+          }); //end of ajax
+          var x = 1;
+          /*******
+          $.post('doLogin', 
+          {
+              formData : JSON.stringify(formItems)
+          })
+          .done(function(data) {
+            $('#form-feedback').text(data.msgDescription);
+            
+            if (data.msgID === 'YRD0001') {
+              $('input').each(function () {
+                formValid = false;
+                var formGroup = $(this).parents('.form-group');
+                var glyphIcon = formGroup.find('.glyph_icon');
+                var obj = $(this);
+                // show red, remove green
+                formGroup.addClass('has-error').removeClass('has-success');
+                // show x, remove check
+                glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+              });
+            }
+          
+            if (data.msgID === 'YRD0003' || data.msgID === 'YRD0004') {
+              formValid = false;
+              var formGroup = $('[name="username"]').parent('.form-group');
+              var glyphIcon = formGroup.find('.glyph_icon');
+              var obj = $(this);
+              // show red, remove green
+              formGroup.addClass('has-error').removeClass('has-success');
+              // show x, remove check
+              glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+            }
+                    
+            if (data.msgID === 'YRD0005' || data.msgID === 'YRD0006' 
+                || data.msgID === 'YRD0007' || data.msgID === 'YRD0008' 
+                || data.msgID === 'YRD0009' || data.msgID === 'YRD000A'  ) {
+                formValid = false;
+                var formGroup = $('[name="password"]').parent('.form-group');
+                var glyphIcon = formGroup.find('.glyph_icon');
+                var obj = $(this);
+                // show red, remove green
+                formGroup.addClass('has-error').removeClass('has-success');
+                // show x, remove check
+                glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+            }
+
+            if (data.msgID === 'YRD000B' || data.msgID === 'YRD000C') {
+              $('input').each(function () {
+                formValid = false;
+                var formGroup = $(this).parents('.form-group');
+                var glyphIcon = formGroup.find('.glyph_icon');
+                var obj = $(this);
+                formGroup.removeClass('has-error');
+                formGroup.removeClass('has-success');
+                glyphIcon.removeClass('glyphicon-ok');
+                glyphIcon.removeClass('glyphicon-remove');
+              });
+            }
+          });  //end of done
+          ********/
+        } //end form is valid
+        e.preventDefault();
+      });
+    });
+  </script>
+</body>
+</html>
