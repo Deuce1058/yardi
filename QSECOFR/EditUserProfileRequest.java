@@ -43,17 +43,17 @@ public class EditUserProfileRequest {
 	private String currentToken;
 	private String lastLogin;
 	@JsonIgnore
-	private Date birthDate;
+	private java.util.Date birthDate;
 	@JsonIgnore
-	private int upHomeMarket;
+	private short upHomeMarket;
 	@JsonIgnore
-	private Date passwordExpirationDate;
+	private java.util.Date passwordExpirationDate;
 	@JsonIgnore
-	private Date profileDisabledDate;
+	private java.util.Date profileDisabledDate;
 	@JsonIgnore
-	private Date lastLoginDate;
+	private java.util.Date lastLoginDate;
 	@JsonIgnore
-	private int passwordAttempts;
+	private short passwordAttempts;
 	
 	public EditUserProfileRequest() {
 	}
@@ -86,12 +86,12 @@ public class EditUserProfileRequest {
 		this.pwdAttempts = pwdAttempts;
 		this.currentToken = currentToken;
 		this.lastLogin = lastLogin;
-		setUpHomeMarket(Integer.parseInt(homeMarket));
+		setUpHomeMarket(Short.parseShort(homeMarket));
 		setBirthDate(toDate(dob));
 		setPasswordExpirationDate(toDate(pwdExpDate));
 		setProfileDisabledDate(toDate(disabledDate));
 		setLastLoginDate(toDate(lastLogin));
-		setPasswordAttempts(Integer.parseInt(pwdAttempts));
+		setPasswordAttempts(Short.parseShort(pwdAttempts));
 	}
 
 	public Date toDate(String dateString) {
@@ -140,15 +140,15 @@ public class EditUserProfileRequest {
 		return mm + "/" + dd + "/" + yyyy;
 	}
 	
-	public int getUpHomeMarket() {
+	public short getUpHomeMarket() {
 		return upHomeMarket;
 	}
 
-	public void setUpHomeMarket(int upHomeMarket) {
+	public void setUpHomeMarket(short upHomeMarket) {
 		this.upHomeMarket = upHomeMarket;
 	}
 
-	public Date getPasswordExpirationDate() {
+	public java.util.Date getPasswordExpirationDate() {
 		return passwordExpirationDate;
 	}
 
@@ -156,7 +156,7 @@ public class EditUserProfileRequest {
 		this.passwordExpirationDate = passwordExpirationDate;
 	}
 
-	public Date getProfileDisabledDate() {
+	public java.util.Date getProfileDisabledDate() {
 		return profileDisabledDate;
 	}
 
@@ -164,7 +164,7 @@ public class EditUserProfileRequest {
 		this.profileDisabledDate = profileDisabledDate;
 	}
 
-	public Date getLastLoginDate() {
+	public java.util.Date getLastLoginDate() {
 		return lastLoginDate;
 	}
 
@@ -172,15 +172,15 @@ public class EditUserProfileRequest {
 		this.lastLoginDate = lastLoginDate;
 	}
 
-	public int getPasswordAttempts() {
+	public short getPasswordAttempts() {
 		return passwordAttempts;
 	}
 
-	public void setPasswordAttempts(int passwordAttempts) {
+	public void setPasswordAttempts(short passwordAttempts) {
 		this.passwordAttempts = passwordAttempts;
 	}
 
-	public Date getBirthDate() {
+	public java.util.Date getBirthDate() {
 		return birthDate;
 	}
 
@@ -387,24 +387,9 @@ public class EditUserProfileRequest {
 				+ zip + ", zip4=" + zip4 + ", phone=" + phone + ", fax=" + fax + ", email=" + email + ", ssn=" + ssn
 				+ ", dob=" + dob + ", homeMarket=" + homeMarket + ", activeYN=" + activeYN + ", pwdExpDate="
 				+ pwdExpDate + ", disabledDate=" + disabledDate + ", pwdAttempts=" + pwdAttempts + ", currentToken="
-				+ currentToken + ", lastLogin=" + lastLogin + ", birthDate=" + birthDate + ", homeMarketInt="
-				+ homeMarketInt + ", passwordExpirationDate=" + passwordExpirationDate + ", profileDisabledDate="
+				+ currentToken + ", lastLogin=" + lastLogin + ", birthDate=" + birthDate + ", upHomeMarket="
+				+ upHomeMarket + ", passwordExpirationDate=" + passwordExpirationDate + ", profileDisabledDate="
 				+ profileDisabledDate + ", lastLoginDate=" + lastLoginDate + ", passwordAttempts=" + passwordAttempts
-				+ ", lastLoginToDate()=" + lastLoginToDate() + ", disabledDateToDate()=" + disabledDateToDate()
-				+ ", pwdExpDateToDate()=" + pwdExpDateToDate() + ", dobToDate()=" + dobToDate()
-				+ ", getHomeMarketInt()=" + getHomeMarketInt() + ", getPasswordExpirationDate()="
-				+ getPasswordExpirationDate() + ", getProfileDisabledDate()=" + getProfileDisabledDate()
-				+ ", getLastLoginDate()=" + getLastLoginDate() + ", getPasswordAttempts()=" + getPasswordAttempts()
-				+ ", getBirthDate()=" + getBirthDate() + ", getAction()=" + getAction() + ", getFindUser()="
-				+ getFindUser() + ", getMsgID()=" + getMsgID() + ", getMsgDescription()=" + getMsgDescription()
-				+ ", getFirstName()=" + getFirstName() + ", getLastName()=" + getLastName() + ", getAddress1()="
-				+ getAddress1() + ", getAddress2()=" + getAddress2() + ", getCity()=" + getCity() + ", getState()="
-				+ getState() + ", getZip()=" + getZip() + ", getZip4()=" + getZip4() + ", getPhone()=" + getPhone()
-				+ ", getFax()=" + getFax() + ", getEmail()=" + getEmail() + ", getSsn()=" + getSsn() + ", getDob()="
-				+ getDob() + ", getHomeMarket()=" + getHomeMarket() + ", getActiveYN()=" + getActiveYN()
-				+ ", getPwdExpDate()=" + getPwdExpDate() + ", getDisabledDate()=" + getDisabledDate()
-				+ ", getPwdAttempts()=" + getPwdAttempts() + ", getCurrentToken()=" + getCurrentToken()
-				+ ", getLastLogin()=" + getLastLogin() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
-				+ ", toString()=" + super.toString() + "]";
+				+ "]";
 	}
 }
