@@ -51,6 +51,54 @@
   .preserveWhiteSpace {
     white-space: pre;
   }
+  
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu>a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu:hover>a:after {
+    border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
 </style>
 </head>
 <body>
@@ -70,15 +118,43 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="#">Action</a></li>
-              <li><a href="#">Another action</a></li>
-              <li><a href="#">Something else here</a></li>
-              <li role="separator" class="divider"></li>
-              <li><a href="#">Separated link</a></li>
-              <li role="separator" class="divider"></li>
-              <li><a href="#">One more separated link</a></li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Quick Links<span class="caret"></span></a>
+            <ul class="dropdown-menu  multi-level" role="menu" aria-labelledby="dropdownMenu">
+              <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">User Tables</a>
+                <ul class="dropdown-menu">
+                  <li id="UPView"><a href="#">View User Profile</a></li>
+                  <li id="UPChange"><a href="#">User Profile Maintenance</a></li>
+                  <li id="STView"><a href="#">View Sessions Table</a></li>
+                  <li id="STChange"><a href="#">Sessions Table Maintenance</a></li>
+                  <li id="UP1View"><a href="#">View Unique Tokens Table</a></li>
+                  <li id="UP1Change"><a href="#">Unique Tokens Table Maintenance</a></li>
+                  <li id="UGView"><a href="#">View User Groups Table</a></li>
+                  <li id="UGChange"><a href="#">User Groups Table Maintenance</a></li>
+                </ul>
+              </li>
+              
+              <li class="dropdown-submenu">
+                <a href="#">Permissions</a>
+                <ul class="dropdown-menu">
+                  <li id="PMView"><a href="#">View Permissions Master</a></li>
+                  <li id="PMChange"><a href="#">Permissions Master Maintenance</a></li>
+                  <li id="GPView"><a href="#">View Group Permissions</a></li>
+                  <li id="GPChange"><a href="#">Group Permissions Maintenance</a></li>
+                </ul>
+              </li>
+              
+              <li class="dropdown-submenu">
+                <a href="#">Misc.</a>
+                <ul class="dropdown-menu">
+                  <li id="GMView"><a href="#">View Group Master</a></li>
+                  <li id="GMChange"><a href="#">Group Master Maintenance</a></li>
+                  <li id="PPView"><a href="#">View Password Policy</a></li>
+                  <li id="PPChange"><a href="#">Password Policy Maintenance</a></li>
+                  <li id="STView"><a href="#">View Sessions Table</a></li>
+                  <li id="STChange"><a href="#">Sessions Table Maintenance</a></li>
+                </ul>
+              </li>
             </ul>
           </li>
         </ul>
@@ -94,8 +170,8 @@
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
-  <div class="container">
-    <div class="row">
+  <div class="container-fluid">
+    
       <div style="height:700px; overflow-y:scroll;">
         <div id="section1">
           <h2>Contact Info</h2>
@@ -255,7 +331,7 @@
           </div>
         </div>
       </div>
-    </div>
+    
     <p></p><p></p>
     <div class="actionButtons" class="actionButtons">
       <button type="button" class="btn btn-success" id="addButton" style="background-color: darkturquoise;">Add</button>
@@ -394,7 +470,56 @@
       }
     });  
 
-  function getAllUrlParams(url) {
+    $('#UPView').click(function() {
+      newFrame('views/userProfile_CRUD.html?mode=view');
+    });
+    $('#UPChange').click(function() {
+      newFrame('views/userProfile_CRUD.html');
+    });
+    $('#STView').click(function() {
+      newFrame('views/sessions_CRUD.html?mode=view');
+    });
+    $('#STChange').click(function() {
+      newFrame('views/sessions_CRUD.html');
+    });
+    $('#UP1View').click(function() {
+      newFrame('views/uniqueTokens_CRUD.html?mode=view');
+    });
+    $('#UP1Change').click(function() {
+      newFrame('views/uniqueTokens_CRUD.html');
+    });
+    $('#UGView').click(function() {
+      newFrame('views/userGroups_CRUD.html?mode=view');
+    });
+    $('#UGChange').click(function() {
+      newFrame('views/userGroups_CRUD.html');
+    });
+    $('#PMView').click(function() {
+      newFrame('views/permissionsMaster_CRUD.html?mode=view');
+    });
+    $('#PMChange').click(function() {
+      newFrame('views/permissionsMaster_CRUD.html');
+    });
+    $('#GPView').click(function() {
+      newFrame('views/groupPermissions_CRUD.html?mode=view');
+    });
+    $('#GPChange').click(function() {
+      newFrame('views/groupPermissions_CRUD.html');
+    });
+    $('#GMView').click(function() {
+      newFrame('views/groupMaster_CRUD.html?mode=view');
+    });
+    $('#GMChange').click(function() {
+      newFrame('views/groupMaster_CRUD.html');
+    });
+    $('#PPView').click(function() {
+      newFrame('views/passwordPolicy_CRUD.html?mode=view');
+    });
+    $('#PPChange').click(function() {
+      newFrame('views/passwordPolicy_CRUD.html');
+    });
+
+    function getAllUrlParams(url) {
     //see: https://www.sitepoint.com/get-url-parameters-with-javascript/
     // get query string from url (optional) or window
     var queryString = url ? url.split('?')[1] : window.location.search.slice(1);
@@ -676,9 +801,6 @@
     }
   }
   
-  function handleActionButtonClick() {
-  }
-    
   function clearScreen() {
       $('#form-feedback').text('');
       $('#username')     .val('');
@@ -705,6 +827,13 @@
       $("#lastLogin")    .val('');
   }
   });
+  
+  function newFrame(newFrame) {
+    $('html').html(newFrame);
+    console.log(' nextFrame=' + newFrame);
+    parent.frame = newFrame;
+    parent.nextFrame();
+  }
 </script>
 </body>
 </html>
