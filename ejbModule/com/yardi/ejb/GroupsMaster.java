@@ -1,12 +1,22 @@
 package com.yardi.ejb;
 
 import java.io.Serializable;
+import java.util.Vector;
+
 import javax.persistence.*;
 
 
 /**
  * The persistent class for the GROUPS_MASTER database table.
  * 
+ * Defining a relation between GroupsMaster and UserGroups see Example of a ManyToOne relationship annotations
+ * https://en.wikibooks.org/wiki/Java_Persistence/ManyToOne#Example_of_a_ManyToOne_relationship_database
+ * 
+ * Syntax for JPQL join 
+ * https://stackoverflow.com/questions/17698229/jpql-left-join-how-to-set-up-entity-relationship-in-entity-classes?rq=1
+ * 
+ * Inner join
+ * http://www.thejavageek.com/2014/03/24/jpa-inner-joins/
  */
 @Entity
 @Table(name="GROUPS_MASTER")
@@ -28,6 +38,12 @@ public class GroupsMaster implements Serializable {
 	@Column(name="GM_RRN")
 	private long gmRrn;
 
+	@OneToMany(mappedBy = "masterGroup")
+	private Vector<UserGroups> userGroups;
+	
+	
+	
+	
 	public GroupsMaster() {
 	}
 
