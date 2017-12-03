@@ -21,9 +21,12 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.PasswordPolicySessionBeanRemote;
+import com.yardi.ejb.SessionsTable;
+import com.yardi.ejb.SessionsTableSessionBeanRemote;
 import com.yardi.ejb.UniqueTokensSesssionBeanRemote;
 import com.yardi.ejb.UserProfileSessionBeanRemote;
 import com.yardi.rentSurvey.YardiConstants;
+import com.yardi.QSECOFR.TokenRequest;
 
 /**
  * Servlet implementation class LoginService
@@ -36,6 +39,7 @@ public class LoginService extends HttpServlet {
 	@EJB UserProfileSessionBeanRemote userProfileBean; //bean is thread safe unless marked reentrant in the deployment descriptor
 	@EJB PasswordPolicySessionBeanRemote passwordPolicyBean;
 	@EJB UniqueTokensSesssionBeanRemote uniqueTokensBean;
+	@EJB SessionsTableSessionBeanRemote sessionsBean;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -122,11 +126,50 @@ public class LoginService extends HttpServlet {
     	
 		if (userSvc.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0000)) {
 			/*
-			 * dispatch to the servlet that handles the main app
-			 *   servlet gets data for initial display
-			 *   servlet dispatches to html for main app
+			 * lookup initial page with join GroupsMaster and UserGroups
+			 * if user is in multiple groups set ST_LAST_REQUEST to the html select group page. User picks the initial page
+			 * if user is in only one group set ST_LAST_REQUEST to GM_INITIAL_PAGE
 			 */
-	    	//debug
+			request.getSession().setAttribute("userID", loginRequest.getUserName());
+			String sessionID = request.getSession().getId();
+			TokenRequest tokenRequest = new TokenRequest(sessionID, "", "");
+			response.reset();
+			response.setContentType("application/json");
+			PrintWriter out = response.getWriter();
+			formData = mapper.writeValueAsString(tokenRequest);  
+			out.print(formData);
+			out.flush();
+			RequestDispatcher rd = request.getRequestDispatcher("../QSECOFR/CreateTokenService");
+			rd.include(request, response); //get a token for the session ID
+			br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+			formData = "";
+			
+	        if(br != null){
+	        	formData = br.readLine();
+	        }
+	        
+			mapper = new ObjectMapper();
+			tokenRequest = mapper.readValue(formData, TokenRequest.class);
+			SessionsTable sessionsTable = null;
+			sessionsTable = sessionsBean.findSession(sessionID);
+			
+			if (sessionsTable == null) {
+				sessionsBean.persist(
+						loginRequest.getUserName(), 
+						sessionID, 
+						tokenRequest.getPassword(), 
+						"GM_INITIAL_PAGE from GROUPS_MASTER", 
+						new java.util.Date());
+			} else {
+				sessionsBean.update(
+						loginRequest.getUserName(), 
+						sessionID, 
+						tokenRequest.getPassword(), 
+						"GM_INITIAL_PAGE from GROUPS_MASTER", 
+						new java.util.Date());
+			}
+			
+	    	//debug xyzzy
 			System.out.println("com.yardi.userServices LoginService doGet() 0007 "
 					+ "\n "
 					+ "  loginRequest = " + loginRequest
