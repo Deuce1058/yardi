@@ -174,6 +174,9 @@
   $(function () {
     var viewMode = false;
     $('#title-loginID').text('Unique Tokens CRUD   XXXXXXXXXXXXXXX');
+    $('.navbar-brand').click(function() {
+      newFrame('views/QSECOFR_Main.html');
+    }); 
     $('#UPView').click(function() {
       newFrame('views/userProfile_CRUD.html?mode=view');
     });
