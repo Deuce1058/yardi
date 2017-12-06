@@ -17,6 +17,7 @@ public class YardiConstants {
 	public static final String YRD000B = "YRD000B=Password policy is missing";
 	public static final String YRD000C = "YRD000C=Maximum signon attempts exceeded. The user profile has been disabled";
 	public static final String YRD000D = "YRD000D=No such user name";
+	public static final String YRD000E = "YRD000E=User belongs to multiple groups";
 	public static final Pattern PATTERN_UPPER    = Pattern.compile(".*?\\p{Lu}");
 	public static final Pattern PATTERN_LOWER    = Pattern.compile(".*?[\\p{L}&&[^\\p{Lu}]]");
 	public static final Pattern PATTERN_NUMBER   = Pattern.compile(".*\\d.*");
@@ -25,6 +26,7 @@ public class YardiConstants {
 	public static final String EDIT_USER_PROFILE_REQUEST_ACTION_ADD = "add";
 	public static final String EDIT_USER_PROFILE_REQUEST_ACTION_UPDATE = "update";
 	public static final String EDIT_USER_PROFILE_REQUEST_ACTION_DELETE = "delete";
+	public static final String USER_SELECT_GROUP_PAGE = "views/selectGroup";
 	
 	public void testPassword(String pwd) {
 		// useful for testing password rules
