@@ -26,7 +26,6 @@ public class TokenRequest {
 	}
 
 	public TokenRequest(String password, String msgID, String msgDescription) {
-		super();
 		this.password = password;
 		this.msgID = msgID;
 		this.msgDescription = msgDescription;
