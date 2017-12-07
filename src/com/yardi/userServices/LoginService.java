@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Vector;
+import java.util.Hashtable;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -28,7 +29,6 @@ import com.yardi.ejb.UniqueTokensSesssionBeanRemote;
 import com.yardi.ejb.UserGroups;
 import com.yardi.ejb.UserGroupsSessionBeanRemote;
 import com.yardi.ejb.UserProfileSessionBeanRemote;
-import com.yardi.rentSurvey.YardiConstants;
 import com.yardi.QSECOFR.TokenRequest;
 
 /**
@@ -141,18 +141,18 @@ public class LoginService extends HttpServlet {
 			 *   3B CreateTokenService is used to create a token from the session ID
 			 * 4 Respond to yardiLogin.html/changePWD.html  
 			 */
-			Vector<UserGroups> userGroups = new Vector<UserGroups>();
-			//what groups is the user in and what is the initial page for the group?
-			userGroups = userGroupsBean.find(loginRequest.getUserName());
 			
 			//store the userID in the session
 			request.getSession().setAttribute("userID", loginRequest.getUserName()); 
+
+			//what groups is the user in and what is the initial page for the group?
+			Vector<UserGroups> userGroups = new Vector<UserGroups>();
+			userGroups = userGroupsBean.find(loginRequest.getUserName());
 
 			/* 
 			 * Setup the parms CreateTokenService needs for generating a token from the session ID. This token will be 
 			 * stored in the session table. CreateTokenService expects to get parms in a JSON object
 			 */
-			StringBuilder grouplist = new StringBuilder("");
 			String sessionID = request.getSession().getId();
 			TokenRequest tokenRequest = new TokenRequest(sessionID, "", "");
 			response.reset();
@@ -179,14 +179,6 @@ public class LoginService extends HttpServlet {
 			sessionsTable = sessionsBean.findSession(sessionID); 
 			userGroups.get(0);
 			String initialPage = userGroups.get(0).getMasterGroup().getGmInitialPage(); //GM_INITIAL_PAGE from GROUPS_MASTER
-			
-			if (userGroups.size()>1) {
-				// user is in multiple groups. Set ST_LAST_REQUEST to the html select group page. User picks the initial page
-				initialPage = com.yardi.rentSurvey.YardiConstants.USER_SELECT_GROUP_PAGE;
-				for (UserGroups g : userGroups) {
-					grouplist.append(g.getMasterGroup().getGmDescription() + ";"); //build a list of the groups
-				}
-			}
 
 			if (sessionsTable == null) {
 				sessionsBean.persist(
@@ -207,16 +199,25 @@ public class LoginService extends HttpServlet {
 			//Respond to yardiLogin.html. The page sees that the login request is successful (YRD0000) and looks at the 
 			//5th parm (initialPage) in loginResponse to get the next page to load. yardiLogin.html tells index.html to
 			//load the initialPage page.
+			Hashtable<String, String> grouplistHT = new Hashtable();
+
+			for (UserGroups g : userGroups) {
+				String n [] = g.getMasterGroup().getGmDescription().split(";");
+				grouplistHT.put(n[0], n[1]);
+			}
+
 			String msg [] = com.yardi.rentSurvey.YardiConstants.YRD0000.split("=");
 
 			if (userGroups.size()>1) {
+				// user is in multiple groups. Set ST_LAST_REQUEST to the html select group page. User picks the initial page
+				initialPage = com.yardi.rentSurvey.YardiConstants.USER_SELECT_GROUP_PAGE;
 				msg = com.yardi.rentSurvey.YardiConstants.YRD000E.split("=");
 			}
-			
+
 			LoginResponse loginResponse = new LoginResponse(
 				loginRequest.getUserName(),
 				"",  //Password
-				grouplist.toString(),  
+				mapper.writeValueAsString(grouplistHT), //new password
 				msg[0],
 				initialPage
 			);
