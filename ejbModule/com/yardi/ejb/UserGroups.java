@@ -36,10 +36,10 @@ public class UserGroups implements Serializable {
 	@Column(name="UG_RRN")
 	private long ugRrn;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="UG_GROUP")
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="UG_GROUP", updatable=false, insertable=false)
 	private GroupsMaster masterGroup;
-	
+	//This is the owner
 	
 	public UserGroups() {
 	}
@@ -68,4 +68,7 @@ public class UserGroups implements Serializable {
 		this.ugUserId = ugUserId;
 	}
 
+	public GroupsMaster getMasterGroup() {
+		return masterGroup;
+	}
 }

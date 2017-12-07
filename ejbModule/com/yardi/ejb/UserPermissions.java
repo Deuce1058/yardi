@@ -8,7 +8,7 @@ import javax.persistence.*;
  * Join of UserGroups and GroupPermissions
  *
  */
-@Entity
+
 
 public class UserPermissions implements Serializable {
 	private static final long serialVersionUID = 1L;

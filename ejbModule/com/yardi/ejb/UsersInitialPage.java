@@ -8,7 +8,7 @@ import javax.persistence.*;
  * Join USER_GROUPS and GROUPS_MASTER
  *
  */
-@Entity
+
 public class UsersInitialPage implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String userID;
@@ -20,7 +20,6 @@ public class UsersInitialPage implements Serializable {
 	}
 
 	public UsersInitialPage(String userID, int userGroup, String groupDescription, String initialPage) {
-		super();
 		this.userID = userID;
 		this.userGroup = userGroup;
 		this.groupDescription = groupDescription;
