@@ -129,16 +129,37 @@
   
   <div class="container" id="pageLinks">
     <h2>Select your initial menu from the following</h2>
-    <button type="button" class="btn btn-success" id="testBtn">Test</button>
+    <!-- 
+    <button type="button" class="btn btn-success pageBtn" id="testBtn" url="views/testUrl">Test</button>
+    -->
   </div>
-  
-  
 <script>
   $(function () {
     var viewMode = false;
+    var initialPageList = parent.initialPageList;
     $('#title-loginID').text('Initial Menu Selection   XXXXXXXXXXXXXXX');
+    $.each(JSON.parse(initialPageList), function(key, value) {
+      console.log('key:' + key + ' | page:' + value.page + ' | url:' + value.url);
+      var s = value.page.split(';');
+      var btnShortDescription = s[0];
+      var btnLabel = s[1];
+      $('#pageLinks').append(
+          '<div>' 
+        +   '<button type="button" class="btn btn-success pageBtn" ' 
+        +   'id="' + btnShortDescription + '" url="' + value.url + '">' + btnShortDescription + '</button>'
+        +   '<label for="' + btnShortDescription + '" class="formElementPadLeft">' + btnLabel + '</label>'
+        + '</div>'
+      );
+    });
+    /**
     $('#testBtn').click(function() {
       doPost();
+    });
+    **/
+    $(document).on('click', '.pageBtn', function() {
+      var url = $(this).attr('url');
+      console.log("url=" + url);
+      newFrame(url);
     });
   });
   
@@ -242,10 +263,11 @@
       dataType: "json", 
       success:  function(data) {
                   $.each(JSON.parse(data.newPassword), function(key, value) {
-                    console.log('page:' + value.page + ' | url:' + value.url);
+                    console.log('key:' + key + ' | page:' + value.page + ' | url:' + value.url);
                     $('#pageLinks').append(
                         '<div>' 
-                      +   '<a href="' + value.url + '" class="btn btn-success" id="' + value.page + '">' + value.page + '</a>' 
+                      +   '<button type="button" class="btn btn-success pageBtn" ' 
+                      +   'id="' + value.page + '" url="' + value.url + '">' + value.page + '</button>'
                       +   '<label for="' + value.page + '" class="formElementPadLeft">Link for ' + value.page + '</label>'
                       + '</div>'
                     );
