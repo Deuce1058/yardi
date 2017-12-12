@@ -185,8 +185,25 @@
                 formGroup.removeClass('has-success');
                 glyphIcon.removeClass('glyphicon-ok');
                 glyphIcon.removeClass('glyphicon-remove');
-              });
+              });              
             } //YRD000B
+            
+            if (data.msgID === 'YRD000E' || data.msgID === 'YRD000') {
+              
+              if (data.msgID === 'YRD000E') {
+                /**
+                  if user is a member of multiple groups newPassword contains the list of initial pages for each group they
+                  are a member of. This will be used by selectGroup.html to build a list of pages the user uses to decide
+                  which initial page to view
+                **/
+                parent.initialPageList = data.newPassword;
+              }
+              
+              $('html').html(data.msgDescription);
+              console.log('nextFrame ' + data.msgDescription);
+              parent.frame = data.msgDescription;
+              parent.nextFrame();
+            }             
           } //end of function inside ajax
         }); //end of ajax
         
