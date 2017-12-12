@@ -3,8 +3,8 @@ package com.yardi.userServices;
 
 /**
  * Key/value representation of the list of the users initial pages based on the group(s) that the user belongs to. 
- * This will be stored in a Vector so that when converted to JSON it becomes an array object with this structure:
- * [ {"page":"key1", "url":"value1"}, {"page":"key2", "url":"value2"}, {"page":"key3", "url":"value3"} ]
+ * This will be stored in a Vector so that when converted to JSON it becomes an of array objects with this structure:
+ * [ {"page":"page1", "url":"url1"}, {"page":"page2", "url":"url2"}, {"page":"page3", "url":"url3"} ]
  *
  * @author Jim 	
  */
