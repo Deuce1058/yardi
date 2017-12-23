@@ -46,7 +46,7 @@ public class Test extends HttpServlet {
 					"",  //Password
 					mapper.writeValueAsString(initialPageList), //new password
 					"YRD000E",
-					"initialPage"
+					"views/selectGroup.html"
 			);
 
 			formData = mapper.writeValueAsString(loginResponse); 

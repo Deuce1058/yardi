@@ -10,26 +10,23 @@
 	</persistence-unit>
 	<persistence-unit name="uniqueToken">
 		<jta-data-source>jdbc/yardiDatasource</jta-data-source>
-		<class>com.yardi.ejb.UniqueToken</class>
+		<class>com.yardi.ejb.UniqueTokens</class>
+	</persistence-unit>
+	<persistence-unit name="groupsMaster">
+		<jta-data-source>jdbc/yardiDatasource</jta-data-source>
+		<class>com.yardi.ejb.GroupsMaster</class>
+		<class>com.yardi.ejb.UserGroups</class>
+	</persistence-unit>
+	<persistence-unit name="groupPermissions">
+		<jta-data-source>jdbc/yardiDatasource</jta-data-source>
+		<class>com.yardi.ejb.GroupPermissions</class>
 	</persistence-unit>
 	<persistence-unit name="permissionsMaster">  
 		<jta-data-source>jdbc/yardiDatasource</jta-data-source>
 		<class>com.yardi.ejb.PermissionsMaster</class>
 	</persistence-unit>
-	<persistence-unit name="userGroups">
-		<jta-data-source>jdbc/yardiDatasource</jta-data-source>
-		<class>com.yardi.ejb.UserGroups</class>
-	</persistence-unit>
-	<persistence-unit name="sessionsTable">
+	<persistence-unit name="sessionsTable" transaction-type="JTA">
 		<jta-data-source>jdbc/yardiDatasource</jta-data-source>
 		<class>com.yardi.ejb.SessionsTable</class>
-	</persistence-unit>
-	<persistence-unit name="groupsMaster">
-		<jta-data-source>jdbc/yardiDatasource</jta-data-source>
-		<class>com.yardi.ejb.GroupsMaster</class>
-	</persistence-unit>
-	<persistence-unit name="userPermissions">
-		<jta-data-source>jdbc/yardiDatasource</jta-data-source>
-		<class>com.yardi.ejb.UserPermissions</class>
 	</persistence-unit>
 </persistence>

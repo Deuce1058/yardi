@@ -1,22 +1,15 @@
 package com.yardi.ejb;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.SynchronizationType;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
-
-import com.sun.javafx.collections.MappingChange.Map;
 
 /**
  * Session Bean implementation class UserProfileSessionBean
@@ -39,7 +32,7 @@ public class UserProfileSessionBean implements UserProfileSessionBeanRemote {
 	@PersistenceContext(unitName = "userProfile")	
 	private EntityManager entityManager;
 
-	public UserProfileSessionBean() {
+    public UserProfileSessionBean() {
     }
 
     public UserProfile find(String userName) {

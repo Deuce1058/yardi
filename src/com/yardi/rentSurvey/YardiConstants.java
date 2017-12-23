@@ -26,7 +26,7 @@ public class YardiConstants {
 	public static final String EDIT_USER_PROFILE_REQUEST_ACTION_ADD = "add";
 	public static final String EDIT_USER_PROFILE_REQUEST_ACTION_UPDATE = "update";
 	public static final String EDIT_USER_PROFILE_REQUEST_ACTION_DELETE = "delete";
-	public static final String USER_SELECT_GROUP_PAGE = "views/selectGroup";
+	public static final String USER_SELECT_GROUP_PAGE = "views/selectGroup.html";
 	
 	public void testPassword(String pwd) {
 		// useful for testing password rules

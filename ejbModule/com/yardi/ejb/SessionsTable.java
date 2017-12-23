@@ -6,11 +6,11 @@ import java.sql.Timestamp;
 
 
 /**
- * The persistent class for the SESSION_TABLE database table.
+ * The persistent class for the SESSIONS_TABLE database table.
  * 
  */
 @Entity
-@Table(name="SESSION_TABLE")
+@Table(name="SESSIONS_TABLE")
 @NamedQuery(name="SessionsTable.findAll", query="SELECT s FROM SessionsTable s")
 public class SessionsTable implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -85,5 +85,4 @@ public class SessionsTable implements Serializable {
 	public void setStUserId(String stUserId) {
 		this.stUserId = stUserId;
 	}
-
 }

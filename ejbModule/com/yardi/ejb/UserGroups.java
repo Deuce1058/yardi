@@ -6,18 +6,7 @@ import javax.persistence.*;
 
 /**
  * The persistent class for the USER_GROUPS database table.
- * USER_GROUPS
-     UG_USER_ID VARCHAR 15
-     UG_GROUP   INT
-     UG_RRN     LONG
-
-   GROUPS_MASTER
-     GM_TYPE         INT
-     GM_DESCRIPTION  VARCHAR 256
-     GM_INITIAL_PAGE VARCHAR 256
-     GM_RRN          LONG
-
-   many UG_GROUP to GM_TYPE 
+ * 
  */
 @Entity
 @Table(name="USER_GROUPS")
@@ -32,15 +21,10 @@ public class UserGroups implements Serializable {
 	private int ugGroup;
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="UG_RRN")
 	private long ugRrn;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="UG_GROUP", updatable=false, insertable=false)
-	private GroupsMaster masterGroup;
-	//This is the owner
-	
+
 	public UserGroups() {
 	}
 
@@ -66,9 +50,5 @@ public class UserGroups implements Serializable {
 
 	public void setUgUserId(String ugUserId) {
 		this.ugUserId = ugUserId;
-	}
-
-	public GroupsMaster getMasterGroup() {
-		return masterGroup;
 	}
 }

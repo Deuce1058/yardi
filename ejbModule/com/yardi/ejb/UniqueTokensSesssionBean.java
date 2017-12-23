@@ -1,7 +1,5 @@
 package com.yardi.ejb;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 import javax.ejb.LocalBean;
@@ -9,13 +7,14 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.persistence.TemporalType;
+import javax.persistence.TypedQuery;
 
 /**
  * Session Bean implementation class UniqueTokensSesssionBean
  */
 @Stateless
+@LocalBean
 public class UniqueTokensSesssionBean implements UniqueTokensSesssionBeanRemote {
 	/*
 	 * In the case of a RESOURCE_LOCAL, EntityManager.getTransaction().begin() and EntityManager.getTransaction().comit() 
@@ -31,14 +30,14 @@ public class UniqueTokensSesssionBean implements UniqueTokensSesssionBeanRemote 
     public UniqueTokensSesssionBean() {
     }
 
-    public Vector<UniqueToken> findTokens(String userName) {
-    	Vector<UniqueToken> userTokens = new Vector<UniqueToken>();
-		TypedQuery<UniqueToken> qry = emgr.createQuery(
-			  "SELECT t from UniqueToken t " 
+    public Vector<UniqueTokens> findTokens(String userName) {
+    	Vector<UniqueTokens> userTokens = new Vector<UniqueTokens>();
+		TypedQuery<UniqueTokens> qry = emgr.createQuery(
+			  "SELECT t from UniqueTokens t " 
 			+ "WHERE t.up1UserName = :userName "
 			+ "ORDER BY t.up1DateAdded, t.up1Rrn", 
-			UniqueToken.class);
-		userTokens = (Vector<UniqueToken>) qry
+			UniqueTokens.class);
+		userTokens = (Vector<UniqueTokens>) qry
 			.setParameter("userName", userName)
 			.getResultList();
 		//debug
@@ -47,7 +46,7 @@ public class UniqueTokensSesssionBean implements UniqueTokensSesssionBeanRemote 
 				+ "  userName=" + userName
 				+ "\n "
 				);
-		for (UniqueToken t : userTokens) {
+		for (UniqueTokens t : userTokens) {
 			System.out.println(
 				  "\n "
 				+ "  uniqueToken=" 
@@ -58,13 +57,13 @@ public class UniqueTokensSesssionBean implements UniqueTokensSesssionBeanRemote 
     	return userTokens;
     }
 
-    public UniqueToken find(long rrn) {
-    	UniqueToken uniqueToken = null;
-    	//uniqueToken = emgr.find(UniqueToken.class, rrn);
-    	TypedQuery<UniqueToken> qry = emgr.createQuery(
-    		  "SELECT t from UniqueToken "
+    public UniqueTokens find(long rrn) {
+    	UniqueTokens uniqueToken = null;
+    	//uniqueToken = emgr.find(UniqueTokens.class, rrn);
+    	TypedQuery<UniqueTokens> qry = emgr.createQuery(
+    		  "SELECT t from UniqueTokens "
     		+ "WHERE t.up1Rrn = :rrn",
-    		UniqueToken.class
+    		UniqueTokens.class
     		);
     	uniqueToken = qry
     		.setParameter("rrn", rrn)
@@ -105,7 +104,7 @@ public class UniqueTokensSesssionBean implements UniqueTokensSesssionBeanRemote 
     }
 
     public int remove(long rrn) {
-    	Query qry = emgr.createQuery("DELETE FROM UniqueToken "
+    	Query qry = emgr.createQuery("DELETE FROM UniqueTokens "
     		+ "WHERE up1Rrn = :rrn");
     	int rows = qry
     		.setParameter("rrn", rrn)

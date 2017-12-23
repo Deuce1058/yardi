@@ -34,6 +34,7 @@ public class CreateTokenService extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		boolean useAttribute = false;
 		passwordAuthentication = new PasswordAuthentication();
 		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		String formData = "";
@@ -42,6 +43,12 @@ public class CreateTokenService extends HttpServlet {
         	formData = br.readLine();
         }
         
+        if (formData == null) {
+        	formData = (String) request.getAttribute("formData");
+        	useAttribute = true;
+        }
+                
+		System.out.println("com.yardi.QSECOFR CreateTokenService doGet() 0000 formData=" + formData);
 		ObjectMapper mapper = new ObjectMapper();
 		TokenRequest tokenRequest = mapper.readValue(formData, TokenRequest.class);
 		tokenRequest.setPasswordSave(tokenRequest.getPassword());
@@ -61,8 +68,21 @@ public class CreateTokenService extends HttpServlet {
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
 		formData = mapper.writeValueAsString(tokenRequest); //convert the feedback to json 
-		out.print(formData);
-		out.flush();
+		
+		if (useAttribute) {
+			/*
+			 * called by a servlet. Send the response as a session attribute. Do not write to the input stream because 
+			 * the servlet needs to respond with a LoginResponse object containing a list of initial pages for the groups
+			 * that the user belongs to. Writing to the input stream here causes the servlet to append a LoginResponse to
+			 * what this servlet already put in the in the buffer       
+			 */
+			request.setAttribute("formData", formData);
+		} else {
+			//called by html. send the response to the input stream.
+			out.print(formData);
+			out.flush();
+		}
+		
 		return;
 	}
 

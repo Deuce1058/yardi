@@ -39,11 +39,11 @@ import com.yardi.userServices.InitialPage;
 public class LoginService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private UserServices userSvc;
+	@EJB UserGroupsSessionBeanRemote userGroupsBean;
 	@EJB UserProfileSessionBeanRemote userProfileBean; //bean is thread safe unless marked reentrant in the deployment descriptor
 	@EJB PasswordPolicySessionBeanRemote passwordPolicyBean;
 	@EJB UniqueTokensSesssionBeanRemote uniqueTokensBean;
 	@EJB SessionsTableSessionBeanRemote sessionsBean;
-	@EJB UserGroupsSessionBeanRemote userGroupsBean;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -146,7 +146,7 @@ public class LoginService extends HttpServlet {
 			request.getSession().setAttribute("userID", loginRequest.getUserName()); 
 
 			//what groups is the user in and what is the initial page for the group?
-			Vector<UserGroups> userGroups = new Vector<UserGroups>();
+			Vector<UserGroupsGraph> userGroups = new Vector<UserGroupsGraph>();
 			userGroups = userGroupsBean.find(loginRequest.getUserName());
 
 			/* 
@@ -155,29 +155,25 @@ public class LoginService extends HttpServlet {
 			 */
 			String sessionID = request.getSession().getId();
 			TokenRequest tokenRequest = new TokenRequest(sessionID, "", "");
-			response.reset();
-			response.setContentType("application/json");
-			PrintWriter out = response.getWriter();
-			formData = mapper.writeValueAsString(tokenRequest);  
-			out.print(formData);
-			out.flush();
-			RequestDispatcher rd = request.getRequestDispatcher("../QSECOFR/CreateTokenService");
+			formData = mapper.writeValueAsString(tokenRequest);
+			request.setAttribute("formData", formData);
+			System.out.println("com.yardi.userServices LoginService doGet() 000A formData=" + formData);
+			//need to setContentType() here before include() commits the response otherwise content type will be undefined 
+			response.setContentType("application/json"); 
+			RequestDispatcher rd = request.getRequestDispatcher("newToken");
 			rd.include(request, response); //the token for the session is the tokenized session ID
-			// CreateTokenService sends back the requested token in the input stream 
-			br = new BufferedReader(new InputStreamReader(request.getInputStream()));
-			formData = "";
-			
-	        if(br != null){
-	        	formData = br.readLine();
-	        }
-	        
+        	formData = (String) request.getAttribute("formData");
+			System.out.println("com.yardi.userServices LoginService doGet() 000B formData=" + formData);
+			request.setAttribute("formData", null); //dont leave it hanging around
 	        mapper = new ObjectMapper();
 			tokenRequest = mapper.readValue(formData, TokenRequest.class);
+			formData = "";
 			
 			//fetch the session table row for the session
 			SessionsTable sessionsTable = null;
 			sessionsTable = sessionsBean.findSession(sessionID); 
-			String initialPage = userGroups.get(0).getMasterGroup().getGmInitialPage(); //GM_INITIAL_PAGE from GROUPS_MASTER
+			//String initialPage = userGroups.get(0).getMasterGroup().getGmInitialPage(); //GM_INITIAL_PAGE from GROUPS_MASTER
+			String initialPage = userGroups.get(0).getGmInitialPage(); //GM_INITIAL_PAGE from GROUPS_MASTER
 
 			//need initialPage for the sessions table and in the response to yardiLogin.html/changePwd.html so set it here
 			//msg is needed for the response to yardiLogin.html/changePwd.html but depends on userGroups.size() 
@@ -213,11 +209,11 @@ public class LoginService extends HttpServlet {
 			 */
 			Vector<InitialPage> initialPageList = new Vector<InitialPage>();
 
-			for (UserGroups g : userGroups) {
+			for (UserGroupsGraph g : userGroups) {
 				//getGmDescription returns a string containing the short description for the button and a label for the button
 				//getGmInitialPage() returns the url value for url= attribute
-				initialPageList.add(new InitialPage(g.getMasterGroup().getGmDescription(),
-					g.getMasterGroup().getGmInitialPage()));
+				initialPageList.add(new InitialPage(g.getGmDescription(),
+					g.getGmInitialPage()));
 			}
 
 			LoginResponse loginResponse = new LoginResponse(
@@ -227,9 +223,9 @@ public class LoginService extends HttpServlet {
 				msg[0],
 				initialPage
 			);
-			response.reset();
-			response.setContentType("application/json");
-			out = response.getWriter();
+			//cant reset because of previous .include() response is committed 
+			//response.reset(); 
+			PrintWriter out = response.getWriter();
 			formData = mapper.writeValueAsString(loginResponse); //convert the feedback to json 
 			out.print(formData);
 			out.flush();

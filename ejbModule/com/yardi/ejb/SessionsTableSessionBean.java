@@ -1,22 +1,22 @@
 package com.yardi.ejb;
 
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import javax.persistence.SynchronizationType;
-import javax.persistence.TypedQuery;
 import javax.persistence.TemporalType;
-
+import javax.persistence.TypedQuery;
 
 /**
  * Session Bean implementation class SessionsTableSessionBean
  */
-@Stateful
+@Stateless
 public class SessionsTableSessionBean implements SessionsTableSessionBeanRemote {
+	@PersistenceContext(unitName="sessionsTable")
+	private EntityManager em;
 
     public SessionsTableSessionBean() {
     }
@@ -61,15 +61,23 @@ public class SessionsTableSessionBean implements SessionsTableSessionBeanRemote 
 	}
 	
 	public SessionsTable findSession(String sessionID) {
+		/*
     	EntityManagerFactory emf = Persistence.createEntityManagerFactory("sessionsTable");
-    	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
+    	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED);
+    	*/ 
 		SessionsTable sessionsTable = null;
-		TypedQuery<SessionsTable> qry = em.createQuery("SELECT s from SessionsTable "
+		TypedQuery<SessionsTable> qry = em.createQuery("SELECT s from SessionsTable s "
 			+ "WHERE s.stSesssionId = :sessionID",
 			SessionsTable.class);
-		sessionsTable = qry
-			.setParameter("sessionID", sessionID)
-			.getSingleResult();
+		try {
+			sessionsTable = qry
+				.setParameter("sessionID", sessionID)
+				.getSingleResult();
+		} catch (Exception e) {
+			//getSingleResult() may not find anything
+			System.out.println("com.yardi.ejb.SessionsTableSessionBean findSession() 0000 exception");
+			e.printStackTrace();
+		}
 		return sessionsTable;
 	}
 	
@@ -77,7 +85,7 @@ public class SessionsTableSessionBean implements SessionsTableSessionBeanRemote 
     	EntityManagerFactory emf = Persistence.createEntityManagerFactory("sessionsTable");
     	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
 		SessionsTable sessionsTable = null;
-		TypedQuery<SessionsTable> qry = em.createQuery("SELECT s from SessionsTable "
+		TypedQuery<SessionsTable> qry = em.createQuery("SELECT s from SessionsTable s "
 			+ "WHERE s.stUserId = :userID",
 			SessionsTable.class);
 		sessionsTable = qry

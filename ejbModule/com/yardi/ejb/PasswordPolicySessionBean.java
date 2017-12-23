@@ -25,7 +25,6 @@ public class PasswordPolicySessionBean implements PasswordPolicySessionBeanRemot
     public PasswordPolicySessionBean() {
     }
 
-	@Override
 	public PpPwdPolicy find(Long rrn) {
 		PpPwdPolicy pwdPolicy = null;
 		//pwdPolicy = emgr.find(PpPwdPolicy.class, rrn);

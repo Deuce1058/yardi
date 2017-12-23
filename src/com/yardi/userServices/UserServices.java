@@ -13,7 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.Query;
 
-import com.yardi.ejb.UniqueToken;
+import com.yardi.ejb.UniqueTokens;
 import com.yardi.ejb.UniqueTokensSesssionBeanRemote;
 import com.yardi.ejb.UserProfileSessionBeanRemote;
 import com.yardi.ejb.PasswordPolicySessionBeanRemote;
@@ -134,9 +134,9 @@ public class UserServices {
 		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
 		short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
 		short pwdLifeInDays = pwdPolicy.getPpDays();
-		Vector<UniqueToken> userTokens = uniqueTokensBean.findTokens(userName);
+		Vector<UniqueTokens> userTokens = uniqueTokensBean.findTokens(userName);
 		int nbrOfStoredTokens = userTokens.size();
-		UniqueToken uniqueToken; //single element from userTokens which is an ArrayList of UniqueToken.class 
+		UniqueTokens uniqueToken; //single element from userTokens which is an ArrayList of UniqueToken.class 
 		//debug
 		System.out.println("com.yardi.userServices UserServices chgPwd() 0011 "
 				+ "\n "
@@ -155,7 +155,7 @@ public class UserServices {
 		System.out.println("com.yardi.userServices UserServices chgPwd() 0012 "
 				+ "\n "
 				);
-		for (UniqueToken t : userTokens) {
+		for (UniqueTokens t : userTokens) {
 
 			if (!(t==null)) {
 				System.out.println("\n   uniqueToken=" + t);
@@ -188,7 +188,7 @@ public class UserServices {
 					System.out.println("com.yardi.userServices UserServices chgPwd() 0014 "
 							+ "\n "
 							);
-					for (UniqueToken t : userTokens) {
+					for (UniqueTokens t : userTokens) {
 
 						if (!(t==null)) {
 							System.out.println("\n   uniqueToken="
@@ -232,7 +232,7 @@ public class UserServices {
 			System.out.println("com.yardi.userServices UserServices chgPwd() 0016 "
 					+ "\n "
 					);
-			for (UniqueToken t : userTokens) {
+			for (UniqueTokens t : userTokens) {
 
 				if (!(t==null)) {
 					System.out.println("\n   uniqueToken="
@@ -250,7 +250,7 @@ public class UserServices {
 				System.out.println("com.yardi.userServices UserServices chgPwd() 0017 "
 						+ "\n "
 						);
-				for (UniqueToken t : userTokens) {
+				for (UniqueTokens t : userTokens) {
 
 					if (!(t==null)) {
 						System.out.println("\n   uniqueToken="

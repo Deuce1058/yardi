@@ -10,10 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="PP_PWD_POLICY")
-@NamedQueries({
-	@NamedQuery(name="PpPwdPolicy.findAll", query="SELECT p FROM PpPwdPolicy p"),
-	@NamedQuery(name="PpPwdPolicy.findRow", query="SELECT p FROM PpPwdPolicy p  WHERE p.ppRrn = :rrn")
-})
+@NamedQuery(name="PpPwdPolicy.findAll", query="SELECT p FROM PpPwdPolicy p")
 public class PpPwdPolicy implements Serializable {
 	private static final long serialVersionUID = 1L;
 
