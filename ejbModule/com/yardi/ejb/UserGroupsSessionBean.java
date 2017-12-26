@@ -25,7 +25,8 @@ public class UserGroupsSessionBean implements UserGroupsSessionBeanRemote {
 		List userGroupsList;
     	TypedQuery<UserGroups> qry = em.createQuery(
     			  "SELECT g from UserGroups g " 
-    			+ "WHERE g.ugUserId = :userID ",
+    			+ "WHERE g.ugUserId = :userID AND "
+    			+ "g.ugGroupsMaster.gmType = g.ugGroup ",
     			UserGroups.class);
     	userGroupsList = qry
     			.setParameter("userID", userID)
@@ -37,13 +38,14 @@ public class UserGroupsSessionBean implements UserGroupsSessionBeanRemote {
     			userGroup.getUgUserId(), 
     			userGroup.getUgGroup(), 
     			userGroup.getUgRrn(), 
-    			0, 
-    			"", 
-    			"", 
-    			0)
+    			userGroup.getUgGroupsMaster().getGmType(), 
+    			userGroup.getUgGroupsMaster().getGmDescription(), 
+    			userGroup.getUgGroupsMaster().getGmInitialPage(), 
+    			userGroup.getUgGroupsMaster().getGmRrn())
     		);
     	}
     	
+    	/*
     	for (UserGroupsGraph graph : userGroupsVector) {
     		int groupType = graph.getUgGroup();
         	TypedQuery<GroupsMaster> q = em.createQuery(
@@ -65,7 +67,7 @@ public class UserGroupsSessionBean implements UserGroupsSessionBeanRemote {
         		}
         	}
     	}
-    	
+    	*/
     	Collections.sort(userGroupsVector);
     	return userGroupsVector;
 	}

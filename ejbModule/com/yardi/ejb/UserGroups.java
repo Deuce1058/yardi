@@ -25,6 +25,11 @@ public class UserGroups implements Serializable {
 	@Column(name="UG_RRN")
 	private long ugRrn;
 
+	@ManyToOne
+	@JoinColumn(name = "UG_GROUP", referencedColumnName = "GM_TYPE", nullable=false, updatable=false, insertable=false)
+	private GroupsMaster ugGroupsMaster;
+	
+	
 	public UserGroups() {
 	}
 
@@ -50,5 +55,19 @@ public class UserGroups implements Serializable {
 
 	public void setUgUserId(String ugUserId) {
 		this.ugUserId = ugUserId;
+	}
+
+	public GroupsMaster getUgGroupsMaster() {
+		return ugGroupsMaster;
+	}
+
+	public void setUgGroupsMaster(GroupsMaster ugGroupsMaster) {
+		this.ugGroupsMaster = ugGroupsMaster;
+	}
+
+	@Override
+	public String toString() {
+		return "UserGroups [ugUserId=" + ugUserId + ", ugGroup=" + ugGroup + ", ugRrn=" + ugRrn + ", ugGroupsMaster="
+				+ ugGroupsMaster + "]";
 	}
 }

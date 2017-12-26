@@ -47,7 +47,7 @@ public class SessionsTableSessionBean implements SessionsTableSessionBeanRemote 
        		.setParameter(2, sessionID)
        		.setParameter(3, sessionToken)
        		.setParameter(4, lastRequest)
-       		.setParameter(5, lastActive, TemporalType.DATE)
+       		.setParameter(5, lastActive, TemporalType.TIMESTAMP)
        		.executeUpdate();
     	return rows;
 	}
@@ -116,7 +116,7 @@ public class SessionsTableSessionBean implements SessionsTableSessionBeanRemote 
        		.setParameter("userID", userID)
        		.setParameter("sessionToken", sessionToken)
        		.setParameter("lastRequest", lastRequest)
-       		.setParameter("lastActive", lastActive, TemporalType.DATE)
+       		.setParameter("lastActive", lastActive, TemporalType.TIMESTAMP)
        		.setParameter("sessionID", sessionID)
        		.executeUpdate();
     	return rows;

@@ -44,9 +44,15 @@ public class UserProfileSessionBean implements UserProfileSessionBeanRemote {
     		  "SELECT u from UserProfile u "
     		+ "WHERE u.upUserid = :userName ",
     		UserProfile.class);
-    	userProfile = qry
-    		.setParameter("userName", userName)
-    		.getSingleResult();
+    	try {
+			userProfile = qry
+				.setParameter("userName", userName)
+				.getSingleResult();
+		} catch (Exception e) {
+			System.out.println("com.yardi.ejb UserProfileSessionBean find() 0005 exception");
+	    	userProfile = null;
+			e.printStackTrace();
+		}
 		//debug
 		System.out.println("com.yardi.ejb UserProfileSessionBean find() 0000 "
 				+ "\n "

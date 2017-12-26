@@ -1,6 +1,8 @@
 package com.yardi.ejb;
 
 import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.*;
 
 
@@ -26,6 +28,9 @@ public class GroupsMaster implements Serializable {
 
 	@Column(name="GM_RRN")
 	private long gmRrn;
+	
+	@OneToMany(mappedBy = "ugGroupsMaster")
+	private List<UserGroups> gmUserGroups;
 
 	public GroupsMaster() {
 	}
@@ -60,5 +65,19 @@ public class GroupsMaster implements Serializable {
 
 	public void setGmRrn(long gmRrn) {
 		this.gmRrn = gmRrn;
+	}
+
+	public List<UserGroups> getGmUserGroups() {
+		return gmUserGroups;
+	}
+
+	public void setGmUserGroups(List<UserGroups> gmUserGroups) {
+		this.gmUserGroups = gmUserGroups;
+	}
+
+	@Override
+	public String toString() {
+		return "GroupsMaster [gmType=" + gmType + ", gmDescription=" + gmDescription + ", gmInitialPage="
+				+ gmInitialPage + ", gmRrn=" + gmRrn + ", gmUserGroups=" + gmUserGroups + "]";
 	}
 }
