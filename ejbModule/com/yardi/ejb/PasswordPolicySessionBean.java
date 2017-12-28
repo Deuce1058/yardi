@@ -16,7 +16,7 @@ public class PasswordPolicySessionBean implements PasswordPolicySessionBeanRemot
 	 * are allowed. Here, the container is managing begin and commit and an attempt to begin will throw Cannot use an 
 	 * EntityTransaction while using JTA 
 	 */
-	@PersistenceContext(unitName="pwdPolicy")
+	@PersistenceContext(unitName="yardi")
 	private EntityManager emgr;
 
     /**

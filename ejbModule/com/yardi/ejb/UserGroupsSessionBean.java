@@ -16,7 +16,7 @@ import com.yardi.userServices.UserGroupsGraph;
  */
 @Stateless
 public class UserGroupsSessionBean implements UserGroupsSessionBeanRemote {
-	@PersistenceContext(unitName="groupsMaster")
+	@PersistenceContext(unitName="yardi")
 	private EntityManager em;
 
 	public Vector<UserGroupsGraph> find(String userID) {

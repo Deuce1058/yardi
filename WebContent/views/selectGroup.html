@@ -137,14 +137,15 @@
   $(function () {
     var viewMode = false;
     var initialPageList = parent.initialPageList;
-    $('#title-loginID').text('Initial Menu Selection   XXXXXXXXXXXXXXX');
+    var userID = ' ';
+    getSessionInfo();
     $.each(JSON.parse(initialPageList), function(key, value) {
       console.log('key:' + key + ' | page:' + value.page + ' | url:' + value.url);
       var s = value.page.split(';');
       var btnShortDescription = s[0];
       var btnLabel = s[1];
       $('#pageLinks').append(
-          '<div>' 
+          '<div class="formElementPadBottom">'
         +   '<button type="button" class="btn btn-success pageBtn" ' 
         +   'id="' + btnShortDescription + '" url="' + value.url + '">' + btnShortDescription + '</button>'
         +   '<label for="' + btnShortDescription + '" class="formElementPadLeft">' + btnLabel + '</label>'
@@ -273,6 +274,20 @@
                     );
                   });
                 }
+    });
+  }
+  
+  function getSessionInfo() {
+    var z = 1;
+    $.ajax({
+      type:     'POST',
+      url:      '../SessionInfo',
+      data:     ' ',
+      dataType: "json",
+      success:  function(data) {
+        document.getElementById('title-loginID').innerHTML='Initial Menu Selection   ' + data.userID;
+        console.log("data.userID=" + data.userID);
+      }
     });
   }
 </script>

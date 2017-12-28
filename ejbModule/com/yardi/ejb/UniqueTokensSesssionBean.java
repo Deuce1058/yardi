@@ -21,7 +21,7 @@ public class UniqueTokensSesssionBean implements UniqueTokensSesssionBeanRemote 
 	 * are allowed. Here, the container is managing begin and commit and an attempt to begin will throw Cannot use an 
 	 * EntityTransaction while using JTA 
 	 */
-	@PersistenceContext(unitName="uniqueToken")
+	@PersistenceContext(unitName="yardi")
 	private EntityManager emgr;
 
     /**
@@ -65,9 +65,14 @@ public class UniqueTokensSesssionBean implements UniqueTokensSesssionBeanRemote 
     		+ "WHERE t.up1Rrn = :rrn",
     		UniqueTokens.class
     		);
-    	uniqueToken = qry
-    		.setParameter("rrn", rrn)
-    		.getSingleResult();
+    	try {
+			uniqueToken = qry
+				.setParameter("rrn", rrn)
+				.getSingleResult();
+		} catch (Exception e) {
+			System.out.println("com.yardi.ejb UniqueTokenSessionBean find() 0004 exception");
+			e.printStackTrace();
+		}
 		//debug
 		System.out.println("com.yardi.ejb UniqueTokenSessionBean find() 0001 "
 			+ "\n "

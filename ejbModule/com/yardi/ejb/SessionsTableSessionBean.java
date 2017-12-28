@@ -15,7 +15,7 @@ import javax.persistence.TypedQuery;
  */
 @Stateless
 public class SessionsTableSessionBean implements SessionsTableSessionBeanRemote {
-	@PersistenceContext(unitName="sessionsTable")
+	@PersistenceContext(unitName="yardi")
 	private EntityManager em;
 
     public SessionsTableSessionBean() {
@@ -29,7 +29,7 @@ public class SessionsTableSessionBean implements SessionsTableSessionBeanRemote 
 			java.util.Date lastActive
 			) {
 		
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("sessionsTable");
+    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
     	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
     	Query qry = em.createNativeQuery("INSERT INTO DB2ADMIN.SESSIONS_TABLE "
     		+ "("
@@ -53,7 +53,7 @@ public class SessionsTableSessionBean implements SessionsTableSessionBeanRemote 
 	}
 	
 	public int clear() {
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("sessionsTable");
+    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
     	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
     	Query qry = em.createQuery("DELETE FROM SessionsTable");
     	int rows = qry.executeUpdate();
@@ -62,7 +62,7 @@ public class SessionsTableSessionBean implements SessionsTableSessionBeanRemote 
 	
 	public SessionsTable findSession(String sessionID) {
 		/*
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("sessionsTable");
+    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
     	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED);
     	*/ 
 		SessionsTable sessionsTable = null;
@@ -82,15 +82,20 @@ public class SessionsTableSessionBean implements SessionsTableSessionBeanRemote 
 	}
 	
 	public SessionsTable findUser(String userID) {
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("sessionsTable");
+    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
     	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
 		SessionsTable sessionsTable = null;
 		TypedQuery<SessionsTable> qry = em.createQuery("SELECT s from SessionsTable s "
 			+ "WHERE s.stUserId = :userID",
 			SessionsTable.class);
-		sessionsTable = qry
-			.setParameter("userID", userID)
-			.getSingleResult();
+		try {
+			sessionsTable = qry
+				.setParameter("userID", userID)
+				.getSingleResult();
+		} catch (Exception e) {
+			System.out.println("com.yardi.ejb.SessionsTableSessionBean findUser() 0001  exception"); 
+			e.printStackTrace();
+		}
 		return sessionsTable;
 	}
 
@@ -102,7 +107,7 @@ public class SessionsTableSessionBean implements SessionsTableSessionBeanRemote 
 			java.util.Date lastActive
 			) {
 		
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("sessionsTable");
+    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
     	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
     	Query qry = em.createQuery("UPDATE SessionsTable "
     		+ "SET stUserId = :userID, "
