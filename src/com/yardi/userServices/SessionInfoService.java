@@ -1,6 +1,8 @@
 package com.yardi.userServices;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
@@ -31,15 +33,49 @@ public class SessionInfoService extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		boolean useAttribute = false;
+		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		String formData = "";
-		ObjectMapper mapper = new ObjectMapper();
-		SessionInfo sessionInfo = new SessionInfo((String) request.getSession().getAttribute("userID")); 
+		
+        if(br != null){
+        	formData = br.readLine();
+        }
+        
+        if (formData == null) {
+        	formData = (String) request.getAttribute("formData"); //"formData" needs to be a stringified SessionInfo object  
+        	useAttribute = true;
+        }
+                
+        System.out.println("com.yardi.userServices SessionInfoService doGet() 0000 " 
+           	+ "\n"
+        	+ "  formData=" 
+        	+ formData
+        	+ "\n"
+        	+ "  useAttribute=" 
+        	+ useAttribute);
+        ObjectMapper mapper = new ObjectMapper();
+		SessionInfo sessionInfo = new SessionInfo();
+		sessionInfo = mapper.readValue(formData, SessionInfo.class);
+		
+		if (sessionInfo.getRequest().equals(com.yardi.rentSurvey.YardiConstants.REQUEST_SESSION_INFO)) {
+			sessionInfo.setUserID((String) request.getSession().getAttribute("userID"));
+		}
+		
 		formData = mapper.writeValueAsString(sessionInfo);
+        System.out.println("com.yardi.userServices SessionInfoService doGet() 0001 " 
+            	+ "\n"
+            	+ "  formData=" 
+        		+ formData);
 		response.reset(); 
 		response.setContentType("application/json"); 
 		PrintWriter out = response.getWriter();
-		out.print(formData);
-		out.flush();
+
+		if (useAttribute) {
+			request.setAttribute("formData", formData);
+		} else {
+			out.print(formData);
+			out.flush();
+		}
 	}
 
 	/**

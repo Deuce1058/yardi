@@ -222,8 +222,8 @@ public class UserProfileSessionBean implements UserProfileSessionBeanRemote {
 		java.util.Date birthdate,
 		String activeYN,
 		java.util.Date passwordExpirationDate,
-		java.util.Date disabledDate,
-		java.util.Date lastLoginDate,
+		java.sql.Timestamp disabledDate,
+		java.sql.Timestamp lastLoginDate,
 		short pwdAttempts
 		) {
 		String disabledYN = "N";
@@ -315,8 +315,8 @@ public class UserProfileSessionBean implements UserProfileSessionBeanRemote {
 		java.util.Date birthdate,
 		String activeYN,
 		java.util.Date passwordExpirationDate,
-		java.util.Date disabledDate,
-		java.util.Date lastLoginDate,
+		java.sql.Timestamp disabledDate,
+		java.sql.Timestamp lastLoginDate,
 		short pwdAttempts
 		) {
 		String disabledYN = "N";

@@ -222,53 +222,55 @@
     </div>
   </div>
 <script>
+  var userID = ' ';
   $(function () {
-    $('#UPView').click(function() {
+    getSessionInfo('sessionInfo', '', '', '', ''); //request session info
+    $('li#UPView').click(function() {
       newFrame('views/userProfile_CRUD.html?mode=view');
     });
-    $('#UPChange').click(function() {
+    $('li#UPChange').click(function() {
       newFrame('views/userProfile_CRUD.html');
     });
-    $('#STView').click(function() {
+    $('li#STView').click(function() {
       newFrame('views/sessions_CRUD.html?mode=view');
     });
-    $('#STChange').click(function() {
+    $('li#STChange').click(function() {
       newFrame('views/sessions_CRUD.html');
     });
-    $('#UP1View').click(function() {
+    $('li#UP1View').click(function() {
       newFrame('views/uniqueTokens_CRUD.html?mode=view');
     });
-    $('#UP1Change').click(function() {
+    $('li#UP1Change').click(function() {
       newFrame('views/uniqueTokens_CRUD.html');
     });
-    $('#UGView').click(function() {
+    $('li#UGView').click(function() {
       newFrame('views/userGroups_CRUD.html?mode=view');
     });
-    $('#UGChange').click(function() {
+    $('li#UGChange').click(function() {
       newFrame('views/userGroups_CRUD.html');
     });
-    $('#PMView').click(function() {
+    $('li#PMView').click(function() {
       newFrame('views/permissionsMaster_CRUD.html?mode=view');
     });
-    $('#PMChange').click(function() {
+    $('li#PMChange').click(function() {
       newFrame('views/permissionsMaster_CRUD.html');
     });
-    $('#GPView').click(function() {
+    $('li#GPView').click(function() {
       newFrame('views/groupPermissions_CRUD.html?mode=view');
     });
-    $('#GPChange').click(function() {
+    $('li#GPChange').click(function() {
       newFrame('views/groupPermissions_CRUD.html');
     });
-    $('#GMView').click(function() {
+    $('li#GMView').click(function() {
       newFrame('views/groupMaster_CRUD.html?mode=view');
     });
-    $('#GMChange').click(function() {
+    $('li#GMChange').click(function() {
       newFrame('views/groupMaster_CRUD.html');
     });
-    $('#PPView').click(function() {
+    $('li#PPView').click(function() {
       newFrame('views/passwordPolicy_CRUD.html?mode=view');
     });
-    $('#PPChange').click(function() {
+    $('li#PPChange').click(function() {
       newFrame('views/passwordPolicy_CRUD.html');
     });
   });
@@ -278,6 +280,30 @@
     console.log(' nextFrame=' + newFrame);
     parent.frame = newFrame;
     parent.nextFrame();
+  }
+
+  function getSessionInfo(requestType, user, session, token, requestURL) {
+    var sessionInfo = {
+      request      : requestType,
+      userID       : user,
+      sessionID    : session,
+      sessionToken : token,
+      lastRequest  : requestURL,
+      lastActive   : Date.now()
+    }
+    var parms = JSON.stringify(sessionInfo);
+    $.ajax({
+      type:     'POST',
+      url:      '../SessionInfo',
+      data:     parms,
+      dataType: "json",
+      success:  function(data) {
+        document.getElementById('title-loginID').innerHTML=data.userID;
+        console.log("data.userID=" + data.userID);
+        userID = data.userID;
+        console.log('userID=' + userID);
+      }
+    });
   }
 </script>
 </body>

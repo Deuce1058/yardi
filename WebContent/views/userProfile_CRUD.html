@@ -245,7 +245,7 @@
           <div class="row date">
             <label for="dob" class="control-label col-md-1">Birth date</label>
             <div class="col-md-2 formElementPadBottom pull-left">
-              <div class="input-group date" id="datePicker">
+              <div class="input-group date" id="datePicker" style="left: -58px;">
                 <input type="text" class="form-control" name="dob" id="dob" required readonly 
                        placeholder="click here==>"/>
                 <span class="input-group-addon">
@@ -271,7 +271,7 @@
           <div class="row date">
             <label for="pwdExpDate" class="control-label col-md-2">Password expiration date</label>
             <div class="col-md-2 formElementBottom pull-left">
-              <div class="input-group date" id="datePicker4">
+              <div class="input-group date formElementBottom" id="datePicker4" style="left: -75px; padding-bottom: 10px;">
                 <input type="text" class="form-control" name="pwdExpDate" id="pwdExpDate" required readonly
                        placeholder="click here ==>"/>
                 <span class="input-group-addon">
@@ -281,15 +281,74 @@
             </div>
           </div>
           <div class="row date">
-            <label for="disabledDate" class="control-label col-md-1">Date disabled</label>
+            <label for="disabledDate" class="control-label col-md-2">Date disabled</label>
             <div class="col-md-2 formElementPadBottom pull-left">
-              <div class="input-group date" id="datePicker2">
+              <div class="input-group date" id="datePicker2" style="left: -160px;">
                 <input type="text" class="form-control" name="disabledDate" id="disabledDate" readonly
                        placeholder="click here==>"/>
                 <span class="input-group-addon">
                   <span class="glyphicon glyphicon-calendar"></span>
                 </span>
               </div>
+            </div>
+            <div class="col-md-3" style="left: -165px;">
+              <label>Time disabled</label>
+              <select class="disabledHour" id="disabledHour" name="disabledHour">
+              <option value="00">00</option><option value="01">01</option><option alue="02">02</option>
+              <option value="03">03</option><option value="04">04</option><option value="05">05</option>
+              <option value="06">06</option><option value="07">07</option><option value="08">08</option>
+              <option value="09">09</option><option value="10">10</option><option value="11">11</option>
+              <option value="12">12</option><option value="13">13</option><option value="14">14</option>
+              <option value="15">15</option><option value="16">16</option><option value="17">17</option>
+              <option value="18">18</option><option value="19">19</option><option value="20">20</option>
+              <option value="21">21</option><option value="22">22</option><option value="23">23</option>
+            </select>
+              :
+              <select class="disabledMin" id="disabledMin" name="disabledMin">
+              <option value="00">00</option><option value="01">01</option><option alue="02">02</option>
+              <option value="03">03</option><option value="04">04</option><option value="05">05</option>
+              <option value="06">06</option><option value="07">07</option><option value="08">08</option>
+              <option value="09">09</option><option value="10">10</option><option value="11">11</option>
+              <option value="12">12</option><option value="13">13</option><option value="14">14</option>
+              <option value="15">15</option><option value="16">16</option><option value="17">17</option>
+              <option value="18">18</option><option value="19">19</option><option value="20">20</option>
+              <option value="21">21</option><option value="22">22</option><option value="23">23</option>
+              <option value="24">24</option><option value="25">25</option><option value="26">26</option>
+              <option value="27">27</option><option value="28">28</option><option value="29">29</option>
+              <option value="30">30</option><option value="31">31</option><option value="32">32</option>
+              <option value="33">33</option><option value="34">34</option><option value="35">35</option>
+              <option value="36">36</option><option value="37">37</option><option value="38">38</option>
+              <option value="39">39</option><option value="40">40</option><option value="41">41</option>
+              <option value="42">42</option><option value="43">43</option><option value="44">44</option>
+              <option value="45">45</option><option value="46">46</option><option value="47">47</option>
+              <option value="48">48</option><option value="49">49</option><option value="50">50</option>
+              <option value="51">51</option><option value="52">52</option><option value="53">53</option>
+              <option value="54">54</option><option value="55">55</option><option value="56">56</option>
+              <option value="57">57</option><option value="58">58</option><option value="59">59</option>
+            </select>
+              :
+              <select class="disabledSec" id="disabledSec" name="disabledSec">
+              <option value="00">00</option><option value="01">01</option><option value="02">02</option>
+              <option value="03">03</option><option value="04">04</option><option value="05">05</option>
+              <option value="06">06</option><option value="07">07</option><option value="08">08</option>
+              <option value="09">09</option><option value="10">10</option><option value="11">11</option>
+              <option value="12">12</option><option value="13">13</option><option value="14">14</option>
+              <option value="15">15</option><option value="16">16</option><option value="17">17</option>
+              <option value="18">18</option><option value="19">19</option><option value="20">20</option>
+              <option value="21">21</option><option value="22">22</option><option value="23">23</option>
+              <option value="24">24</option><option value="25">25</option><option value="26">26</option>
+              <option value="27">27</option><option value="28">28</option><option value="29">29</option>
+              <option value="30">30</option><option value="31">31</option><option value="32">32</option>
+              <option value="33">33</option><option value="34">34</option><option value="35">35</option>
+              <option value="36">36</option><option value="37">37</option><option value="38">38</option>
+              <option value="39">39</option><option value="40">40</option><option value="41">41</option>
+              <option value="42">42</option><option value="43">43</option><option value="44">44</option>
+              <option value="45">45</option><option value="46">46</option><option value="47">47</option>
+              <option value="48">48</option><option value="49">49</option><option value="50">50</option>
+              <option value="51">51</option><option value="52">52</option><option value="53">53</option>
+              <option value="54">54</option><option value="55">55</option><option value="56">56</option>
+              <option value="57">57</option><option value="58">58</option><option value="59">59</option>
+            </select>
             </div>
           </div>
           <div class="row userProfileForm">
@@ -316,12 +375,12 @@
           </div>
           <div class="row userProfileForm">
             <label for="currentToken" class="control-label formElementPadBottom">Current token</label>
-            <input type="text" class="roundedCorners" name="currentToken" id="currentToken" required placeholder="Current token"/>
+            <input type="text" class="roundedCorners" name="currentToken" id="currentToken" required placeholder="Current token"  maxlen="50"/>
           </div>
           <div class="row date">
             <label for="lastLogin" class="control-label col-md-1">Last login</label>
             <div class="col-md-2 formElementPadBottom pull-left">
-              <div class="input-group date" id="datePicker3">
+              <div class="input-group date" id="datePicker3" style="left: -57px;">
                 <input type="text" class="form-control" name="lastLogin" id="lastLogin" required readonly
                        placeholder="click here==>"/>
                 <span class="input-group-addon">
@@ -329,6 +388,65 @@
                 </span>
               </div>
             </div>            
+            <div class="col-md-2 formElementPadBottom pull-left" style="left: -65px;">
+              <label>Login time</label>
+              <select class="loginHour" id="loginHour" name="loginHour">
+              <option value="00">00</option><option value="01">01</option><option alue="02">02</option>
+              <option value="03">03</option><option value="04">04</option><option value="05">05</option>
+              <option value="06">06</option><option value="07">07</option><option value="08">08</option>
+              <option value="09">09</option><option value="10">10</option><option value="11">11</option>
+              <option value="12">12</option><option value="13">13</option><option value="14">14</option>
+              <option value="15">15</option><option value="16">16</option><option value="17">17</option>
+              <option value="18">18</option><option value="19">19</option><option value="20">20</option>
+              <option value="21">21</option><option value="22">22</option><option value="23">23</option>
+            </select>
+              :
+              <select class="loginMin" id="loginMin" name="loginMin">
+              <option value="00">00</option><option value="01">01</option><option alue="02">02</option>
+              <option value="03">03</option><option value="04">04</option><option value="05">05</option>
+              <option value="06">06</option><option value="07">07</option><option value="08">08</option>
+              <option value="09">09</option><option value="10">10</option><option value="11">11</option>
+              <option value="12">12</option><option value="13">13</option><option value="14">14</option>
+              <option value="15">15</option><option value="16">16</option><option value="17">17</option>
+              <option value="18">18</option><option value="19">19</option><option value="20">20</option>
+              <option value="21">21</option><option value="22">22</option><option value="23">23</option>
+              <option value="24">24</option><option value="25">25</option><option value="26">26</option>
+              <option value="27">27</option><option value="28">28</option><option value="29">29</option>
+              <option value="30">30</option><option value="31">31</option><option value="32">32</option>
+              <option value="33">33</option><option value="34">34</option><option value="35">35</option>
+              <option value="36">36</option><option value="37">37</option><option value="38">38</option>
+              <option value="39">39</option><option value="40">40</option><option value="41">41</option>
+              <option value="42">42</option><option value="43">43</option><option value="44">44</option>
+              <option value="45">45</option><option value="46">46</option><option value="47">47</option>
+              <option value="48">48</option><option value="49">49</option><option value="50">50</option>
+              <option value="51">51</option><option value="52">52</option><option value="53">53</option>
+              <option value="54">54</option><option value="55">55</option><option value="56">56</option>
+              <option value="57">57</option><option value="58">58</option><option value="59">59</option>
+            </select>
+              :
+              <select class="loginSec" id="loginSec" name="loginSec">
+              <option value="00">00</option><option value="01">01</option><option value="02">02</option>
+              <option value="03">03</option><option value="04">04</option><option value="05">05</option>
+              <option value="06">06</option><option value="07">07</option><option value="08">08</option>
+              <option value="09">09</option><option value="10">10</option><option value="11">11</option>
+              <option value="12">12</option><option value="13">13</option><option value="14">14</option>
+              <option value="15">15</option><option value="16">16</option><option value="17">17</option>
+              <option value="18">18</option><option value="19">19</option><option value="20">20</option>
+              <option value="21">21</option><option value="22">22</option><option value="23">23</option>
+              <option value="24">24</option><option value="25">25</option><option value="26">26</option>
+              <option value="27">27</option><option value="28">28</option><option value="29">29</option>
+              <option value="30">30</option><option value="31">31</option><option value="32">32</option>
+              <option value="33">33</option><option value="34">34</option><option value="35">35</option>
+              <option value="36">36</option><option value="37">37</option><option value="38">38</option>
+              <option value="39">39</option><option value="40">40</option><option value="41">41</option>
+              <option value="42">42</option><option value="43">43</option><option value="44">44</option>
+              <option value="45">45</option><option value="46">46</option><option value="47">47</option>
+              <option value="48">48</option><option value="49">49</option><option value="50">50</option>
+              <option value="51">51</option><option value="52">52</option><option value="53">53</option>
+              <option value="54">54</option><option value="55">55</option><option value="56">56</option>
+              <option value="57">57</option><option value="58">58</option><option value="59">59</option>
+            </select>
+            </div>
           </div>
         </div>
       </div>
@@ -342,13 +460,14 @@
     </div>
 </div> 
 <script>
+  var userID = ' ';
   $(function() {
+    getSessionInfo('sessionInfo', '', '', '', ''); //request session info
     var formData;
     var formItems;
     var ajaxData;
     var viewMode = false;
     var findButtonDisabled = false;
-    $('#title-loginID').text('User Profile Maintenance   XXXXXXXXXXXXXXX');
     configureButtons(false, true, true, true, true, true);
     configureViewMode();
     
@@ -523,7 +642,7 @@
       newFrame('views/passwordPolicy_CRUD.html');
     });
 
-    function getAllUrlParams(url) {
+  function getAllUrlParams(url) {
     //see: https://www.sitepoint.com/get-url-parameters-with-javascript/
     // get query string from url (optional) or window
     var queryString = url ? url.split('?')[1] : window.location.search.slice(1);
@@ -614,7 +733,6 @@
     **/
     if (getAllUrlParams().mode === 'view') {
       viewMode = true;
-      $('#title-loginID').text('User Profile Maintenance    VIEW MODE    XXXXXXXXXXXXXXX');
       $('[pwdFn]').css("display", "none"); //hide password functions in view mode
       //disable the rest of the input fields
       $("#firstName")    .attr("disabled", true);
@@ -634,10 +752,16 @@
       $("#activeYN")     .attr("disabled", true);
       $("#pwdExpDate")   .attr("disabled", true);
       $("#disabledDate") .attr("disabled", true);
+      $('#disabledHour') .attr("disabled", true);
+      $('#disabledMin')  .attr("disabled", true);
+      $('#disabledSec')  .attr("disabled", true);
       $("#pwdAttempts")  .attr("disabled", true);
       $('#password')     .attr("disabled", true); 
       $("#currentToken") .attr("disabled", true);
       $("#lastLogin")    .attr("disabled", true);
+      $('#loginHour')    .attr("disabled", true);
+      $('#loginMin')     .attr("disabled", true);
+      $('#loginSec')     .attr("disabled", true);
       console.log('view mode');
     }
     
@@ -665,10 +789,16 @@
       $("#activeYN")     .attr("disabled", true);
       $("#pwdExpDate")   .attr("disabled", true);
       $("#disabledDate") .attr("disabled", true);
+      $('#disabledHour') .attr("disabled", true);
+      $('#disabledMin')  .attr("disabled", true);
+      $('#disabledSec')  .attr("disabled", true);
       $("#pwdAttempts")  .attr("disabled", true);
       $('#password')     .attr("disabled", true); 
       $("#currentToken") .attr("disabled", true);
       $("#lastLogin")    .attr("disabled", true);
+      $('#loginHour')    .attr("disabled", true);
+      $('#loginMin')     .attr("disabled", true);
+      $('#loginSec')     .attr("disabled", true);
     }
   }
   
@@ -681,29 +811,45 @@
        ) {
       formItems = {
         "action"         : action,
-        "findUser"       : $('#username')    .val(),
+        "findUser"       : $('#username')       .val(),
         "msgID"          : '',
         "msgDescription" : '',
-        "firstName"      : $("#firstName")   .val(),
-        "lastName"       : $("#lastName")    .val(),
-        "address1"       : $("#address1")    .val(),
-        "address2"       : $("#address2")    .val(),
-        "city"           : $("#city")        .val(),
-        "state"          : $("#state")       .val(),
-        "zip"            : $("#zip")         .val(),
-        "zip4"           : $("#zip4")        .val(),
-        "phone"          : $("#phone")       .val(),
-        "fax"            : $("#fax")         .val(),
-        "email"          : $("#email")       .val(),
-        "ssn"            : $("#ssn")         .val(),
-        "dob"            : $("#dob")         .val(),
-        "homeMarket"     : $("#homeMarket")  .val(),
-        "activeYN"       : $("#activeYN")    .val(),
-        "pwdExpDate"     : $("#pwdExpDate")  .val(),
-        "disabledDate"   : $("#disabledDate").val(),
-        "pwdAttempts"    : $("#pwdAttempts") .val(),
-        "currentToken"   : $("#currentToken").val(),
-        "lastLogin"      : $("#lastLogin")   .val()
+        "firstName"      : $("#firstName")      .val(),
+        "lastName"       : $("#lastName")       .val(),
+        "address1"       : $("#address1")       .val(),
+        "address2"       : $("#address2")       .val(),
+        "city"           : $("#city")           .val(),
+        "state"          : $("#state")          .val(),
+        "zip"            : $("#zip")            .val(),
+        "zip4"           : $("#zip4")           .val(),
+        "phone"          : $("#phone")          .val(),
+        "fax"            : $("#fax")            .val(),
+        "email"          : $("#email")          .val(),
+        "ssn"            : $("#ssn")            .val(),
+        "dob"            : $("#dob")            .val(),
+        "homeMarket"     : $("#homeMarket")     .val(),
+        "activeYN"       : $("#activeYN")       .val(),
+        "pwdExpDate"     : $("#pwdExpDate")     .val(),
+        "disabledDate"   : $("#disabledDate")   .val(),
+        "disabledTime"   : $('#disabledHour    option:selected')
+                                                .val() 
+                             + ':'                
+                             + $('#disabledMin option:selected')
+                                                .val()
+                             + ':'                   
+                             + $('#disabledSec option:selected')
+                                                .val(),
+        "pwdAttempts"    : $("#pwdAttempts")    .val(),
+        "currentToken"   : $("#currentToken")   .val(),
+        "lastLogin"      : $("#lastLogin")      .val(),
+        "lastLoginTime"  : $('#loginHour    option:selected')
+                                                .val()
+                             + ':'                    
+                             + $('#loginMin option:selected')
+                                                .val()
+                             + ':'                 
+                             + $('#loginSec option:selected')
+                                                .val()
       }
     }
     
@@ -729,9 +875,11 @@
         "activeYN"       : data.activeYN,
         "pwdExpDate"     : data.pwdExpDate,
         "disabledDate"   : data.disabledDate,
+        "disabledTime"   : data.disabledTime,
         "pwdAttempts"    : data.pwdAttempts,
         "currentToken"   : data.currentToken,
-        "lastLogin"      : data.lastLogin
+        "lastLogin"      : data.lastLogin,
+        "lastLoginTime"  : data.lastLoginTime
       }
     }
   }
@@ -758,7 +906,7 @@
   }
   
   function setFormData() {
-     var formData = JSON.stringify(formItems);
+     formData = JSON.stringify(formItems);
   }
   
   function doPost() {
@@ -766,9 +914,10 @@
       type:     'POST',
       url:      '../editUserProfile',
       data:     formData,
-      async:    false,
       dataType: "json", 
-      success:  ajaxSuccess(ajaxData)
+      success:  function (ajaxData) {
+        ajaxSuccess(ajaxData);
+      } 
     });
   }
   
@@ -781,6 +930,8 @@
     $('#form-feedback').text(formItems.msgDescription);
 
     if (formItems.msgID === 'YRD0000') {
+      disabledHMS = formItems.disabledTime .split(':');
+      loginHMS    = formItems.lastLoginTime.split(':');
       $('#form-feedback').text('');
       $("#firstName")    .val(formItems.firstName);
       $("#lastName")     .val(formItems.lastName);
@@ -799,9 +950,15 @@
       $("#activeYN")     .val(formItems.activeYN);
       $("#pwdExpDate")   .val(formItems.pwdExpDate);
       $("#disabledDate") .val(formItems.disabledDate);
+      $("#disabledHour") .val(disabledHMS[0]);
+      $("#disabledMin")  .val(disabledHMS[1]);
+      $("#disabledSec")  .val(disabledHMS[2]);
       $("#pwdAttempts")  .val(formItems.pwdAttempts);
       $("#currentToken") .val(formItems.currentToken);
       $("#lastLogin")    .val(formItems.lastLogin);
+      $("#loginHour")    .val(loginHMS[0]);
+      $("#loginMin")     .val(loginHMS[1]);
+      $("#loginSec")     .val(loginHMS[2]);
     }
   }
   
@@ -813,7 +970,7 @@
       $("#address1")     .val('');
       $("#address2")     .val('');
       $("#city")         .val('');
-      $("#state")        .val('AL');
+      $("#state")        .val('');
       $("#zip")          .val('');
       $("#zip4")         .val('');
       $("#phone")        .val('');
@@ -825,12 +982,17 @@
       $("#activeYN")     .val('Y');
       $("#pwdExpDate")   .val('');
       $("#disabledDate") .val('');
+      $('#disabledHour') .val('0');
+      $('#disabledMin')  .val('0');
+      $('#disabledSec')  .val('0');
       $("#pwdAttempts")  .val('0');
       $('#password')     .val(''); 
       $("#currentToken") .val('');
       $("#lastLogin")    .val('');
+      $('#loginHour')    .val('0');
+      $('#loginMin')     .val('0');
+      $('#loginSec')     .val('0');
   }
-  });
   
   function newFrame(newFrame) {
     $('html').html(newFrame);
@@ -838,6 +1000,34 @@
     parent.frame = newFrame;
     parent.nextFrame();
   }
+  
+  function getSessionInfo(requestType, user, session, token, requestURL) {
+    var sessionInfo = {
+      request      : requestType,
+      userID       : user,
+      sessionID    : session,
+      sessionToken : token,
+      lastRequest  : requestURL,
+      lastActive   : Date.now()
+    }
+    var parms = JSON.stringify(sessionInfo);
+    $.ajax({
+      type:     'POST',
+      url:      '../SessionInfo',
+      data:     parms,
+      dataType: "json",
+      success:  function(data) {
+        document.getElementById('title-loginID').innerHTML='User Profile Maintenance    ' + data.userID;
+        if (getAllUrlParams().mode === 'view') {
+          document.getElementById('title-loginID').innerHTML='User Profile Maintenance VIEW MODE    ' + data.userID;
+        }
+        console.log("data.userID=" + data.userID);
+        userID = data.userID;
+        console.log('userID=' + userID);
+      }
+    });
+  }
+  });
 </script>
 </body>
 </html>

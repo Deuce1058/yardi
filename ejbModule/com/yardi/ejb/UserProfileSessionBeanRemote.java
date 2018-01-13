@@ -28,8 +28,8 @@ public interface UserProfileSessionBeanRemote {
 			java.util.Date birthdate,
 			String activeYN,
 			java.util.Date passwordExpirationDate,
-			java.util.Date disabledDate,
-			java.util.Date lastLoginDate,
+			java.sql.Timestamp disabledDate,
+			java.sql.Timestamp lastLoginDate,
 			short pwdAttempts
 			);
 	int remove(String userID);
@@ -52,8 +52,8 @@ public interface UserProfileSessionBeanRemote {
 			java.util.Date birthdate,
 			String activeYN,
 			java.util.Date passwordExpirationDate,
-			java.util.Date disabledDate,
-			java.util.Date lastLoginDate,
+			java.sql.Timestamp disabledDate,
+			java.sql.Timestamp lastLoginDate,
 			short pwdAttempts
 			);
 	String stringify();

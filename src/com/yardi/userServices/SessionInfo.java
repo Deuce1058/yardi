@@ -7,13 +7,14 @@ package com.yardi.userServices;
  *
  */
 public class SessionInfo {
+	private String request;
 	private String userID;
-	
+	private String sessionID;
+	private String sessionToken;
+	private String lastRequest;
+	private java.util.Date lastActive;
+		
 	public SessionInfo() {
-	}
-
-	public SessionInfo(String userID) {
-		this.userID = userID;
 	}
 
 	public String getUserID() {
@@ -22,5 +23,50 @@ public class SessionInfo {
 
 	public void setUserID(String userID) {
 		this.userID = userID;
+	}
+
+	public String getSessionID() {
+		return sessionID;
+	}
+
+	public void setSessionID(String sessionID) {
+		this.sessionID = sessionID;
+	}
+
+	public String getSessionToken() {
+		return sessionToken;
+	}
+
+	public void setSessionToken(String sessionToken) {
+		this.sessionToken = sessionToken;
+	}
+
+	public String getLastRequest() {
+		return lastRequest;
+	}
+
+	public void setLastRequest(String lastRequest) {
+		this.lastRequest = lastRequest;
+	}
+
+	public java.util.Date getLastActive() {
+		return lastActive;
+	}
+
+	public void setLastActive(java.util.Date lastActive) {
+		this.lastActive = lastActive;
+	}
+
+	public String getRequest() {
+		return request;
+	}
+
+	public void setRequest(String request) {
+		this.request = request;
+	}
+
+	public String toString() {
+		return "SessionInfo [request=" + request + ", userID=" + userID + ", sessionID=" + sessionID + ", sessionToken="
+				+ sessionToken + ", lastRequest=" + lastRequest + ", lastActive=" + lastActive + "]";
 	}
 }

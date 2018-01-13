@@ -50,7 +50,8 @@ public class CreateTokenService extends HttpServlet {
                 
 		System.out.println("com.yardi.QSECOFR CreateTokenService doGet() 0000 formData=" + formData);
 		ObjectMapper mapper = new ObjectMapper();
-		TokenRequest tokenRequest = mapper.readValue(formData, TokenRequest.class);
+		TokenRequest tokenRequest = new TokenRequest();
+		tokenRequest = mapper.readValue(formData, TokenRequest.class);
 		tokenRequest.setPasswordSave(tokenRequest.getPassword());
 		String userToken = passwordAuthentication.hash(tokenRequest.passwordToChar());
 		tokenRequest.setMsgID("");

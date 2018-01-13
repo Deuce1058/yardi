@@ -79,14 +79,12 @@ public class UserProfile implements Serializable {
 	private String upDisabledYn;
 
 	// TemporalType.TIMESTAMP maps a java.util.Date to a java.sql.Timestamp 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="UP_DISABLED_DATE")
-	private java.util.Date upDisabledDate;
+	private java.sql.Timestamp upDisabledDate;
 
 	// TemporalType.TIMESTAMP maps a java.util.Date to a java.sql.Timestamp 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="UP_LAST_LOGIN_DATE")
-	private java.util.Date upLastLoginDate;
+	private java.sql.Timestamp upLastLoginDate;
 
 	@Column(name="UP_PWD_ATTEMPTS")
 	private short upPwdAttempts;
@@ -138,12 +136,12 @@ public class UserProfile implements Serializable {
 		this.upCity = upCity;
 	}
 
-	public java.util.Date getUpDisabledDate() {
+	public java.sql.Timestamp getUpDisabledDate() {
 		return this.upDisabledDate;
 	}
 
 	public void setUpDisabledDate(java.util.Date upDisabledDate) {
-		this.upDisabledDate = upDisabledDate;
+		this.upDisabledDate.setTime(upDisabledDate.getTime()); 
 	}
 
 	public String getUpDisabledYn() {
@@ -186,12 +184,12 @@ public class UserProfile implements Serializable {
 		this.upHomeMarket = upHomeMarket;
 	}
 
-	public java.util.Date getUpLastLoginDate() {
+	public java.sql.Timestamp getUpLastLoginDate() {
 		return this.upLastLoginDate;
 	}
 
 	public void setUpLastLoginDate(java.util.Date upLastLoginDate) {
-		this.upLastLoginDate = upLastLoginDate;
+		this.upLastLoginDate.setTime(upLastLoginDate.getTime()); 
 	}
 
 	public String getUpLastName() {

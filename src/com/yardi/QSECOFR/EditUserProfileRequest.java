@@ -38,10 +38,12 @@ public class EditUserProfileRequest {
 	private String homeMarket;
 	private String activeYN;
 	private String pwdExpDate;
+	private String disabledTime;
 	private String disabledDate;
 	private String pwdAttempts;
 	private String currentToken;
 	private String lastLogin;
+	private String lastLoginTime;
 	@JsonIgnore
 	private java.util.Date birthDate;
 	@JsonIgnore
@@ -49,9 +51,9 @@ public class EditUserProfileRequest {
 	@JsonIgnore
 	private java.util.Date passwordExpirationDate;
 	@JsonIgnore
-	private java.util.Date profileDisabledDate;
+	private java.sql.Timestamp profileDisabledDate;
 	@JsonIgnore
-	private java.util.Date lastLoginDate;
+	private java.sql.Timestamp lastLoginDate;
 	@JsonIgnore
 	private short passwordAttempts;
 	
@@ -61,7 +63,8 @@ public class EditUserProfileRequest {
 	public EditUserProfileRequest(String action, String findUser, String msgID, String msgDescription, String firstName,
 			String lastName, String address1, String address2, String city, String state, String zip, String zip4,
 			String phone, String fax, String email, String ssn, String dob, String homeMarket, String activeYN,
-			String pwdExpDate, String disabledDate, String pwdAttempts, String currentToken, String lastLogin) {
+			String pwdExpDate, String disabledDate, String disabledTime, String pwdAttempts, String currentToken, 
+			String lastLogin, String lastLoginTime) {
 		this.action = action;
 		this.findUser = findUser;
 		this.msgID = msgID;
@@ -83,20 +86,23 @@ public class EditUserProfileRequest {
 		this.activeYN = activeYN;
 		this.pwdExpDate = pwdExpDate;
 		this.disabledDate = disabledDate;
+		this.disabledTime = disabledTime;
 		this.pwdAttempts = pwdAttempts;
 		this.currentToken = currentToken;
 		this.lastLogin = lastLogin;
+		this.lastLoginTime = lastLoginTime;
 		setUpHomeMarket(Short.parseShort(homeMarket));
-		setBirthDate(toDate(dob));
-		setPasswordExpirationDate(toDate(pwdExpDate));
-		setProfileDisabledDate(toDate(disabledDate));
-		setLastLoginDate(toDate(lastLogin));
+		setBirthDate(toDate(dob, "", false));
+		setPasswordExpirationDate(toDate(pwdExpDate, "", false));
+		setProfileDisabledDate(toDate(disabledDate, disabledTime, true));
+		setLastLoginDate(toDate(lastLogin, lastLoginTime, true));
 		setPasswordAttempts(Short.parseShort(pwdAttempts));
 	}
 
-	public Date toDate(String dateString) {
+	public Date toDate(String dateString, String timeString, boolean withTime) {
 		String mmDdYyyy[] = dateString.split("\\/");
 		/* 
+		 * date=Mon Jan 08 23:03:27 EST 2018
 		 * ^ marks the beginning of the pattern string
 		 * $ marks the ned of the pattern string
 		 * d{1,2} means digit occurs 1 or 2 times
@@ -111,10 +117,21 @@ public class EditUserProfileRequest {
 			String month = mmDdYyyy[0]; 
 			String day = mmDdYyyy[1]; 
 			String year = mmDdYyyy[2];
-			gc.set(Calendar.HOUR, 0);
-			gc.set(Calendar.MINUTE, 0);
-			gc.set(Calendar.SECOND, 0);
-			gc.set(Calendar.HOUR_OF_DAY, 0);
+			
+			if (withTime) {
+				String hms [] = new String [3];
+				hms = timeString.split(":"); 
+				gc.set(Calendar.HOUR, Integer.parseInt(hms[0]));
+				gc.set(Calendar.MINUTE, Integer.parseInt(hms[1]));
+				gc.set(Calendar.SECOND, Integer.parseInt(hms[2]));
+				gc.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hms[0]));
+			} else {
+				gc.set(Calendar.HOUR, 0);
+				gc.set(Calendar.MINUTE, 0);
+				gc.set(Calendar.SECOND, 0);
+				gc.set(Calendar.HOUR_OF_DAY, 0);
+			}
+
 			gc.set(Calendar.YEAR, Integer.parseInt(year));
 			gc.set(Calendar.MONTH, Integer.parseInt(month));
 			gc.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
@@ -123,8 +140,9 @@ public class EditUserProfileRequest {
 		return new Date(gc.getTimeInMillis());
 	}
 	
-	public String stringify(Date date) {
+	public String stringify(java.util.Date date) {
 		//https://www.mkyong.com/java/java-enum-example/
+		//date=Mon Jan 08 23:03:27 EST 2018
 		String fields[] = date.toString().split(" ");
 		int mm = 99;
 		String month = fields[1];
@@ -138,6 +156,25 @@ public class EditUserProfileRequest {
 		}
 
 		return mm + "/" + dd + "/" + yyyy;
+	}
+	
+	public String [] stringify(java.sql.Timestamp date) {
+		//https://www.mkyong.com/java/java-enum-example/
+		//timestamp=2018-01-08 23:03:27.007
+		String fields[] = date.toString().split("-");
+		int mm = Integer.parseInt(fields[1]);
+		int dd = Integer.parseInt(fields[2]);
+		int yyyy = Integer.parseInt(fields[0]);
+		String fields1[] = date.toString().split(":");
+		int hrs = Integer.parseInt(fields1[0]);
+		int min = Integer.parseInt(fields1[1]);
+		int sec = Integer.parseInt(fields1[2]);
+		String fields2[] = date.toString().split(".");
+		int mils = Integer.parseInt(fields1[0]);
+		String dateTime[] = new String[2];
+		dateTime[0] = mm + "/" + dd + "/" + yyyy;
+		dateTime[1] = hrs + ":" + min + ":" + sec + "." + mils;
+		return dateTime;
 	}
 	
 	public short getUpHomeMarket() {
@@ -156,20 +193,20 @@ public class EditUserProfileRequest {
 		this.passwordExpirationDate = passwordExpirationDate;
 	}
 
-	public java.util.Date getProfileDisabledDate() {
+	public java.sql.Timestamp getProfileDisabledDate() {
 		return profileDisabledDate;
 	}
 
 	public void setProfileDisabledDate(Date profileDisabledDate) {
-		this.profileDisabledDate = profileDisabledDate;
+		this.profileDisabledDate.setTime(profileDisabledDate.getTime()); 
 	}
 
-	public java.util.Date getLastLoginDate() {
+	public java.sql.Timestamp getLastLoginDate() {
 		return lastLoginDate;
 	}
 
 	public void setLastLoginDate(Date lastLoginDate) {
-		this.lastLoginDate = lastLoginDate;
+		this.lastLoginDate.setTime(lastLoginDate.getTime());
 	}
 
 	public short getPasswordAttempts() {
@@ -380,16 +417,32 @@ public class EditUserProfileRequest {
 		this.lastLogin = lastLogin;
 	}
 
+	public String getDisabledTime() {
+		return disabledTime;
+	}
+
+	public void setDisabledTime(String disabledTime) {
+		this.disabledTime = disabledTime;
+	}
+
+	public String getLastLoginTime() {
+		return lastLoginTime;
+	}
+
+	public void setLastLoginTime(String lastLoginTime) {
+		this.lastLoginTime = lastLoginTime;
+	}
+
 	public String toString() {
 		return "EditUserProfileRequest [action=" + action + ", findUser=" + findUser + ", msgID=" + msgID
 				+ ", msgDescription=" + msgDescription + ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", address1=" + address1 + ", address2=" + address2 + ", city=" + city + ", state=" + state + ", zip="
 				+ zip + ", zip4=" + zip4 + ", phone=" + phone + ", fax=" + fax + ", email=" + email + ", ssn=" + ssn
 				+ ", dob=" + dob + ", homeMarket=" + homeMarket + ", activeYN=" + activeYN + ", pwdExpDate="
-				+ pwdExpDate + ", disabledDate=" + disabledDate + ", pwdAttempts=" + pwdAttempts + ", currentToken="
-				+ currentToken + ", lastLogin=" + lastLogin + ", birthDate=" + birthDate + ", upHomeMarket="
-				+ upHomeMarket + ", passwordExpirationDate=" + passwordExpirationDate + ", profileDisabledDate="
-				+ profileDisabledDate + ", lastLoginDate=" + lastLoginDate + ", passwordAttempts=" + passwordAttempts
-				+ "]";
+				+ pwdExpDate + ", disabledTime=" + disabledTime + ", disabledDate=" + disabledDate + ", pwdAttempts="
+				+ pwdAttempts + ", currentToken=" + currentToken + ", lastLogin=" + lastLogin + ", lastLoginTime="
+				+ lastLoginTime + ", birthDate=" + birthDate + ", upHomeMarket=" + upHomeMarket
+				+ ", passwordExpirationDate=" + passwordExpirationDate + ", profileDisabledDate=" + profileDisabledDate
+				+ ", lastLoginDate=" + lastLoginDate + ", passwordAttempts=" + passwordAttempts + "]";
 	}
 }

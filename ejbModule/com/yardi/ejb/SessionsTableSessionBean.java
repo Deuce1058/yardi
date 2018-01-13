@@ -111,11 +111,11 @@ public class SessionsTableSessionBean implements SessionsTableSessionBeanRemote 
     	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
     	Query qry = em.createQuery("UPDATE SessionsTable "
     		+ "SET stUserId = :userID, "
-    		+ "s.stSessionToken = :sessionToken, "
+    		+ "stSessionToken = :sessionToken, "
     		+ "stLastRequest = :lastRequest, "
-    		+ "stLastActive = :stLastActive "
+    		+ "stLastActive = :lastActive "
     		+ "WHERE "
-    		+ "s.stSesssionId = :sessionID"
+    		+ "stSesssionId = :sessionID"
     		);
     	int rows = qry
        		.setParameter("userID", userID)

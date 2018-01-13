@@ -173,9 +173,10 @@
     </div><!-- /.container-fluid -->
   </nav>
 <script>
+  var userID = ' ';
   $(function () {
+    getSessionInfo('sessionInfo', '', '', '', ''); //request session info
     var viewMode = false;
-    $('#title-loginID').text('Group Permissions CRUD   XXXXXXXXXXXXXXX');
     $('.navbar-brand').click(function() {
       newFrame('views/QSECOFR_Main.html');
     }); 
@@ -244,7 +245,6 @@
     **/
     if (getAllUrlParams().mode === 'view') {
       viewMode = true;
-      $('#title-loginID').text('Group Permissions CRUD    VIEW MODE    XXXXXXXXXXXXXXX');
       console.log('view mode');
     }
     
@@ -319,7 +319,33 @@
 
     return obj;
   }
-
+  
+  function getSessionInfo(requestType, user, session, token, requestURL) {
+    var sessionInfo = {
+      request      : requestType,
+      userID       : user,
+      sessionID    : session,
+      sessionToken : token,
+      lastRequest  : requestURL,
+      lastActive   : Date.now()
+    }
+    var parms = JSON.stringify(sessionInfo);
+    $.ajax({
+      type:     'POST',
+      url:      '../SessionInfo',
+      data:     parms,
+      dataType: "json",
+      success:  function(data) {
+        document.getElementById('title-loginID').innerHTML='Group Permissions CRUD    ' + data.userID;
+        if (getAllUrlParams().mode === 'view') {
+          document.getElementById('title-loginID').innerHTML='User Profile Maintenance VIEW MODE    ' + data.userID;
+        }
+        console.log("data.userID=" + data.userID);
+        userID = data.userID;
+        console.log('userID=' + userID);
+      }
+    });
+  }
 </script>
 </body>
 </html>
