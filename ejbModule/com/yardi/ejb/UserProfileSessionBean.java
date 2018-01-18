@@ -109,7 +109,7 @@ public class UserProfileSessionBean implements UserProfileSessionBeanRemote {
     		+ "WHERE upUserid    = :userName");
     	int rows = qry
     		.setParameter("pwdAttempts" , pwdAttempts)
-    		.setParameter("disabledDate", disabledDate)
+    		.setParameter("disabledDate", disabledDate, TemporalType.TIMESTAMP)
     		.setParameter("userName"    , userName)
     		.executeUpdate();
 		//debug
@@ -144,7 +144,7 @@ public class UserProfileSessionBean implements UserProfileSessionBeanRemote {
     		+ "upLastLoginDate   = :loginDate "
     		+ "WHERE upUserid    = :userName");
     	int rows = qry
-    		.setParameter("loginDate", loginDate)
+    		.setParameter("loginDate", loginDate, TemporalType.TIMESTAMP)
     		.setParameter("userName" , userName)
     		.executeUpdate();
 		//debug

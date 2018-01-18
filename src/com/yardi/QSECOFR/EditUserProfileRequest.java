@@ -1,5 +1,7 @@
 package com.yardi.QSECOFR;
 
+import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -104,23 +106,56 @@ public class EditUserProfileRequest {
 		/* 
 		 * date=Mon Jan 08 23:03:27 EST 2018
 		 * ^ marks the beginning of the pattern string
-		 * $ marks the ned of the pattern string
+		 * $ marks the end of the pattern string
 		 * d{1,2} means digit occurs 1 or 2 times
 		 * d{4} means digit occurs 4 times
 		 */
 		String pattern = "^\\d{1,2}\\/\\d{1,2}\\/\\d{4}$";
 		Pattern n = Pattern.compile(pattern);
 		Matcher m = n.matcher(dateString);
+		System.out.println("com.yardi.QSECOFR.EditUserProfileRequest toDate() 0003"
+			+ "\n"
+			+ "   dateString="
+			+ dateString
+			+ "\n"
+			+ "   timeString="
+			+ timeString
+			+ "\n"
+			+ "   withTime="
+			+ withTime
+			);
 		GregorianCalendar gc = new GregorianCalendar();
 		
 		if (m.find()) {
 			String month = mmDdYyyy[0]; 
 			String day = mmDdYyyy[1]; 
 			String year = mmDdYyyy[2];
+			System.out.println("com.yardi.QSECOFR.EditUserProfileRequest toDate() 0004"
+					+ "\n"
+					+ "   mmDdYyyy="
+					+ Arrays.toString(mmDdYyyy)
+					+ "\n"
+					+ "   month="
+					+ month
+					+ "\n"
+					+ "   day="
+					+ day
+					+ "\n"
+					+ "   year="
+					+ year
+					);
 			
 			if (withTime) {
 				String hms [] = new String [3];
 				hms = timeString.split(":"); 
+				System.out.println("com.yardi.QSECOFR.EditUserProfileRequest toDate() 0005"
+						+ "\n"
+						+ "   hms="
+						+ Arrays.toString(hms)
+						+ "\n"
+						+ "   timeString="
+						+ timeString
+						);
 				gc.set(Calendar.HOUR, Integer.parseInt(hms[0]));
 				gc.set(Calendar.MINUTE, Integer.parseInt(hms[1]));
 				gc.set(Calendar.SECOND, Integer.parseInt(hms[2]));
@@ -161,19 +196,29 @@ public class EditUserProfileRequest {
 	public String [] stringify(java.sql.Timestamp date) {
 		//https://www.mkyong.com/java/java-enum-example/
 		//timestamp=2018-01-08 23:03:27.007
-		String fields[] = date.toString().split("-");
-		int mm = Integer.parseInt(fields[1]);
-		int dd = Integer.parseInt(fields[2]);
-		int yyyy = Integer.parseInt(fields[0]);
-		String fields1[] = date.toString().split(":");
-		int hrs = Integer.parseInt(fields1[0]);
-		int min = Integer.parseInt(fields1[1]);
-		int sec = Integer.parseInt(fields1[2]);
-		String fields2[] = date.toString().split(".");
-		int mils = Integer.parseInt(fields1[0]);
-		String dateTime[] = new String[2];
-		dateTime[0] = mm + "/" + dd + "/" + yyyy;
-		dateTime[1] = hrs + ":" + min + ":" + sec + "." + mils;
+		String cymdHmsMils[] = date.toString().split(" ");
+		System.out.println("com.yardi.QSECOFR.EditUserProfileRequest stringify(java.sql.Timestamp) 0000"
+			    + "\n"
+			    + "   date="
+			    + date
+			    + "\n"
+			    + "   cymdHmsMils="
+			    + Arrays.toString(cymdHmsMils)
+			    );
+		String cymd[] = cymdHmsMils[0].split("-");
+		System.out.println("com.yardi.QSECOFR.EditUserProfileRequest stringify(java.sql.Timestamp) 0001"
+			    + "\n"
+			    + "   cymd="
+			    + Arrays.toString(cymd)
+			    );
+		String dateTime[] = new String [2];
+		dateTime[0] = cymd[1] + "/" + cymd[2] + "/" + cymd[0]; 
+		dateTime[1] = cymdHmsMils[1];
+		System.out.println("com.yardi.QSECOFR.EditUserProfileRequest stringify(java.sql.Timestamp) 0009"
+			    + "\n"
+			    + "   dateTime="
+			    + Arrays.toString(dateTime)
+			    );
 		return dateTime;
 	}
 	
@@ -433,6 +478,49 @@ public class EditUserProfileRequest {
 		this.lastLoginTime = lastLoginTime;
 	}
 
+	public void specialInzsr() {
+		if (	action.equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_FIND) 
+			|| 	action.equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_DELETE)) {
+			/*
+			 * The web page is giving us more than we need. We just need a user name for find and delete so
+			 * clear out the other fields. Also, for find and delete, the other fields we dont need will have 
+			 * garbage left over from the previous request.    
+			 */
+			System.out.println("com.yardi.QSECOFR.EditUserProfileRequest specialInzsr() 0006");
+			msgID 				   = "";
+			msgDescription 		   = "";
+			firstName 			   = "";
+			lastName 			   = "";
+			address1 			   = "";
+			address2 			   = "";
+			city 				   = "";
+			state 				   = "";
+			zip 				   = "";
+			zip4 				   = "";
+			phone 				   = "";
+			fax 				   = "";
+			email 				   = "";
+			ssn 				   = "";
+			dob 				   = "";
+			birthDate              = new java.util.Date(0L); 
+			homeMarket 			   = "";
+			upHomeMarket 		   = 0;
+			activeYN 			   = "";
+			pwdExpDate 			   = "";
+			passwordExpirationDate = new java.util.Date(0L);
+			disabledDate 		   = "";
+			profileDisabledDate    = new java.sql.Timestamp(0L);
+			disabledTime 		   = "";
+			pwdAttempts 		   = "";
+			passwordAttempts 	   = 0;
+			currentToken 		   = "";
+			lastLogin 			   = "";
+			lastLoginDate          = new java.sql.Timestamp(0L);
+			lastLoginTime 		   = "";
+		} 
+	}
+	
+	@Override
 	public String toString() {
 		return "EditUserProfileRequest [action=" + action + ", findUser=" + findUser + ", msgID=" + msgID
 				+ ", msgDescription=" + msgDescription + ", firstName=" + firstName + ", lastName=" + lastName

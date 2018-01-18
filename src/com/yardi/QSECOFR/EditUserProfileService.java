@@ -37,7 +37,8 @@ public class EditUserProfileService extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
-		String formData = "";
+		String formData = new String();
+		formData = "";
 		
         if(br != null){
         	formData = br.readLine();
@@ -49,6 +50,18 @@ public class EditUserProfileService extends HttpServlet {
         ObjectMapper mapper = new ObjectMapper();
 		EditUserProfileRequest editRequest = new EditUserProfileRequest();
 		editRequest = mapper.readValue(formData, EditUserProfileRequest.class);
+		
+		if (   editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_FIND)
+			|| editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_DELETE)) {
+			/*
+			 * The web page is giving us more than we need. We just need a user name for find and delete so
+			 * clear out the other fields. Also, for find and delete, the other fields we dont need will have 
+			 * garbage left over from the previous request.    
+			 */
+			System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0010");
+			editRequest.specialInzsr();
+		}
+		
 		String feedback [] = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
 		editRequest.setMsgID(feedback[0]);
 		editRequest.setMsgDescription(feedback[1]);
