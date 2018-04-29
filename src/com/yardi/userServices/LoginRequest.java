@@ -2,9 +2,6 @@ package com.yardi.userServices;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.yardi.ejb.PasswordPolicySessionBeanRemote;
-import com.yardi.ejb.UniqueTokensSesssionBeanRemote;
-import com.yardi.ejb.UserProfileSessionBeanRemote;
 
 /**
  * Container for login credentials supplied by the user. Needed for mapping JSON 
@@ -21,9 +18,6 @@ public class LoginRequest {
 	private String msgDescription;
 	private String chgPwd;
 	private boolean changePwd;
-	private UserProfileSessionBeanRemote userProfileBean;
-	private PasswordPolicySessionBeanRemote passwordPolicyBean;
-	private UniqueTokensSesssionBeanRemote uniqueTokensBean;
 	
 	public LoginRequest() {
 	}
@@ -64,7 +58,7 @@ public class LoginRequest {
 	public void setChgPwd(String chgPwd) {
 		this.chgPwd = chgPwd;
 	}
-	Boolean getChangePwd() {
+	public Boolean getChangePwd() {
 		return changePwd;
 	}
 	
@@ -77,45 +71,15 @@ public class LoginRequest {
 		}
 	}	
 	
-	public UserProfileSessionBeanRemote getUserProfileBean() {
-		return userProfileBean;
-	}
-	
-	public void setUserProfileBean(UserProfileSessionBeanRemote userProfileBean) {
-		this.userProfileBean = userProfileBean;
-	}
-	
-	public PasswordPolicySessionBeanRemote getPasswordPolicyBean() {
-		return passwordPolicyBean;
-	}
-	
-	public void setPasswordPolicyBean(
-			PasswordPolicySessionBeanRemote passwordPolicyBean) {
-		this.passwordPolicyBean = passwordPolicyBean;
-	}
-	
-	public UniqueTokensSesssionBeanRemote getUniqueTokensBean() {
-		return uniqueTokensBean;
-	}
-	
-	public void setUniqueTokensBean(UniqueTokensSesssionBeanRemote uniqueTokensBean) {
-		this.uniqueTokensBean = uniqueTokensBean;
-	}
-	
 	@Override
 	public String toString() {
-		return "LoginRequest [userName=" + userName + ", password=" + password
-				+ ", newPassword=" + newPassword + ", msgID=" + msgID
-				+ ", msgDescription=" + msgDescription + ", chgPwd=" + chgPwd
-				+ ", changePwd=" + changePwd + ", userProfileBean="
-				+ userProfileBean + ", passwordPolicyBean="
-				+ passwordPolicyBean + ", uniqueTokensBean=" + uniqueTokensBean
-				+ "]"
-				+ "\n  "
-				+ userProfileBean.stringify()
-				+ "\n  "
-				+ uniqueTokensBean.stringify()
-				+ "\n  "
-				+ passwordPolicyBean.stringify();
+		return "LoginRequest [userName=" + userName 
+				+ ", password=" + password
+				+ ", newPassword=" + newPassword 
+				+ ", msgID=" + msgID
+				+ ", msgDescription=" + msgDescription 
+				+ ", chgPwd=" + chgPwd
+				+ ", changePwd=" + changePwd 
+				+ "]";
 	}
 }

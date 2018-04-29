@@ -168,10 +168,18 @@ public class EditUserProfileRequest {
 			}
 
 			gc.set(Calendar.YEAR, Integer.parseInt(year));
-			gc.set(Calendar.MONTH, Integer.parseInt(month));
+			gc.set(Calendar.MONTH, Integer.parseInt(month) - 1);
 			gc.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
 		}	
 
+		System.out.println("com.yardi.QSECOFR.EditUserProfileRequest toDate() 0007"
+				+ "\n"
+				+ "   gc="
+				+ gc
+				+ "\n"
+				+ "   new Date="
+				+ new Date(gc.getTimeInMillis())
+				);
 		return new Date(gc.getTimeInMillis());
 	}
 	
@@ -243,7 +251,12 @@ public class EditUserProfileRequest {
 	}
 
 	public void setProfileDisabledDate(Date profileDisabledDate) {
-		this.profileDisabledDate.setTime(profileDisabledDate.getTime()); 
+		System.out.println("com.yardi.QSECOFR.EditUserProfileRequest setProfileDisabledDate() 0002"
+			+ "\n"
+			+ "   profileDisabledDate="
+			+ profileDisabledDate
+			);
+		this.profileDisabledDate = new java.sql.Timestamp(profileDisabledDate.getTime()); 
 	}
 
 	public java.sql.Timestamp getLastLoginDate() {
@@ -251,7 +264,7 @@ public class EditUserProfileRequest {
 	}
 
 	public void setLastLoginDate(Date lastLoginDate) {
-		this.lastLoginDate.setTime(lastLoginDate.getTime());
+		this.lastLoginDate = new java.sql.Timestamp(lastLoginDate.getTime());
 	}
 
 	public short getPasswordAttempts() {

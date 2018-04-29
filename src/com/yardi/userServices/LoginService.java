@@ -20,13 +20,11 @@ import javax.servlet.RequestDispatcher;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yardi.ejb.PasswordPolicySessionBeanRemote;
 import com.yardi.ejb.SessionsTable;
 import com.yardi.ejb.SessionsTableSessionBeanRemote;
-import com.yardi.ejb.UniqueTokensSesssionBeanRemote;
 import com.yardi.ejb.UserGroups;
 import com.yardi.ejb.UserGroupsSessionBeanRemote;
-import com.yardi.ejb.UserProfileSessionBeanRemote;
+import com.yardi.ejb.UserServicesRemote;
 import com.yardi.QSECOFR.TokenRequest;
 import com.yardi.userServices.InitialPage;
 
@@ -38,11 +36,8 @@ import com.yardi.userServices.InitialPage;
 @WebServlet("/doLogin")
 public class LoginService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private UserServices userSvc;
+	@EJB UserServicesRemote userSvc;
 	@EJB UserGroupsSessionBeanRemote userGroupsBean;
-	@EJB UserProfileSessionBeanRemote userProfileBean; //bean is thread safe unless marked reentrant in the deployment descriptor
-	@EJB PasswordPolicySessionBeanRemote passwordPolicyBean;
-	@EJB UniqueTokensSesssionBeanRemote uniqueTokensBean;
 	@EJB SessionsTableSessionBeanRemote sessionsBean;
        
     /**
@@ -79,9 +74,6 @@ public class LoginService extends HttpServlet {
         
 		ObjectMapper mapper = new ObjectMapper();
 		LoginRequest loginRequest = mapper.readValue(formData, LoginRequest.class);
-		loginRequest.setPasswordPolicyBean(passwordPolicyBean);
-		loginRequest.setUniqueTokensBean(uniqueTokensBean);
-		loginRequest.setUserProfileBean(userProfileBean);
 		/*
 		 * Set boolean to indicate whether user is changing the password
 		 * 
@@ -95,7 +87,6 @@ public class LoginService extends HttpServlet {
 		//debug
 		System.out.println("com.yardi.userServices LoginService doGet() 0009 " + loginRequest.toString());
 		//debug
-		userSvc = new UserServices(loginRequest);
 
     	if (loginRequest.getChangePwd()==false) { //normal login
     		//debug
@@ -347,14 +338,4 @@ public class LoginService extends HttpServlet {
 		doGet(request, response);
 	}
 
-	public String toString() {
-		return "LoginService [userProfileBean=" + userProfileBean + ", passwordPolicyBean="
-				+ passwordPolicyBean + ", uniqueTokensBean=" + uniqueTokensBean + "]"
-				+ "\n  "
-				+ userProfileBean.stringify() 
-				+ "\n  "
-				+ passwordPolicyBean.stringify() 
-				+ "\n  "
-				+ uniqueTokensBean.stringify();
-	}
 }

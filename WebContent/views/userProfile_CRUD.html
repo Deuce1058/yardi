@@ -294,7 +294,7 @@
             <div class="col-md-3" style="left: -165px;">
               <label>Time disabled</label>
               <select class="disabledHour" id="disabledHour" name="disabledHour">
-              <option value="00">00</option><option value="01">01</option><option alue="02">02</option>
+              <option value="00">00</option><option value="01">01</option><option value="02">02</option>
               <option value="03">03</option><option value="04">04</option><option value="05">05</option>
               <option value="06">06</option><option value="07">07</option><option value="08">08</option>
               <option value="09">09</option><option value="10">10</option><option value="11">11</option>
@@ -305,7 +305,7 @@
             </select>
               :
               <select class="disabledMin" id="disabledMin" name="disabledMin">
-              <option value="00">00</option><option value="01">01</option><option alue="02">02</option>
+              <option value="00">00</option><option value="01">01</option><option value="02">02</option>
               <option value="03">03</option><option value="04">04</option><option value="05">05</option>
               <option value="06">06</option><option value="07">07</option><option value="08">08</option>
               <option value="09">09</option><option value="10">10</option><option value="11">11</option>
@@ -352,7 +352,7 @@
             </div>
           </div>
           <div class="row userProfileForm">
-            <label for="pwdAttempts" class="control-label formElementPadBottom">Pasword attempts</label>
+            <label for="pwdAttempts" class="control-label formElementPadBottom">Password attempts</label>
             <select name="pwdAttempts" id="pwdAttempts">
               <option value="0">0</option><option value="1">1</option><option value="2">2</option>
               <option value="3">3</option><option value="4">4</option><option value="5">5</option>
@@ -364,7 +364,7 @@
             </select>
           </div>
           <div class="row userProfileForm">
-            <label for="password" class="control-label formElementPadBottom" pwdFn>Pasword</label>
+            <label for="password" class="control-label formElementPadBottom" pwdFn>Password</label>
             <input type="text" class="roundedCorners" name="password" id="password" placeholder="Password" pwdFn/>
             <button type="button" class="btn btn-success formElementPadBottomLeft" id="crtToken" pwdFn>Create token</button>
           </div>
@@ -391,7 +391,7 @@
             <div class="col-md-2 formElementPadBottom pull-left" style="left: -65px;">
               <label>Login time</label>
               <select class="loginHour" id="loginHour" name="loginHour">
-              <option value="00">00</option><option value="01">01</option><option alue="02">02</option>
+              <option value="00">00</option><option value="01">01</option><option value="02">02</option>
               <option value="03">03</option><option value="04">04</option><option value="05">05</option>
               <option value="06">06</option><option value="07">07</option><option value="08">08</option>
               <option value="09">09</option><option value="10">10</option><option value="11">11</option>
@@ -402,7 +402,7 @@
             </select>
               :
               <select class="loginMin" id="loginMin" name="loginMin">
-              <option value="00">00</option><option value="01">01</option><option alue="02">02</option>
+              <option value="00">00</option><option value="01">01</option><option value="02">02</option>
               <option value="03">03</option><option value="04">04</option><option value="05">05</option>
               <option value="06">06</option><option value="07">07</option><option value="08">08</option>
               <option value="09">09</option><option value="10">10</option><option value="11">11</option>
@@ -468,52 +468,24 @@
     var ajaxData;
     var viewMode = false;
     var findButtonDisabled = false;
+    var addUpdateDeleteCancelClick = false;
     configureButtons(false, true, true, true, true, true);
     configureViewMode();
     
     $('#findBtn').click(function() {
+      addUpdateDeleteCancelClick = false;
       setFormItems('find', ajaxData);
       setFormData();
       doPost();
-      /* 
-        determine which function buttons (add/delete/update) should be enabled/disabled based on feedback from ajax 
-
-        findBtn,     
-        crtTokenBtn, 
-        addBtn,      
-        updateBtn,   
-        deleteBtn,   
-        cancelBtn    
-
-
-        USE       = F
-        DISABLE   = T
-        FOUND     = YRD0000
-        NOT FOUND = YRD000D      
-      */
-    
-      if (formItems.msgID === 'YRD0000' && viewMode==false) {
-        configureButtons(true, false, true,  false, false, false);
-      }
-
-      if (formItems.msgID === 'YRD000D' && viewMode==false) {
-        configureButtons(true, false, false, true,  true,  false);
-      }
-          
-      if (formItems.msgID === 'YRD0000' && viewMode) {
-        configureButtons(false, true, true, true, true, true);
-      }
-
-      if (formItems.msgID === 'YRD000D' && viewMode) {
-        configureButtons(false, true, true, true, true, true);
-      }    
     });
     
-    $("crtToken").click(function () {
+    $('#crtToken').click(function () {
+      addUpdateDeleteCancelClick = false;
       newToken();
     });
     
     $('#addButton').click(function () {
+      addUpdateDeleteCancelClick = true;
       setFormItems('add', ajaxData);
       setFormData();
       doPost();
@@ -523,6 +495,7 @@
     });
     
     $('#updateButton').click(function () {
+      addUpdateDeleteCancelClick = true;
       setFormItems('update', ajaxData);
       setFormData();
       doPost();
@@ -532,6 +505,7 @@
     });
     
     $('#deleteButton').click(function () {
+      addUpdateDeleteCancelClick = true;
       setFormItems('delete', ajaxData);
       setFormData();
       doPost();
@@ -541,6 +515,7 @@
     });
     
     $('#cancelButon').click(function () {
+      addUpdateDeleteCancelClick = true;
       clearScreen();
       configureButtons(false, true, true, true, true, true);
       configureViewMode();
@@ -800,6 +775,41 @@
       $('#loginMin')     .attr("disabled", true);
       $('#loginSec')     .attr("disabled", true);
     }
+    
+    /*
+     * If its not view mode and the find button is disabled then remove the disabled attribute from the 
+     * input elements (enable the input elements). 
+     */
+    if ((viewMode == false) && (findButtonDisabled)) {
+      //disable the rest of the input fields
+      $("#firstName")    .attr("disabled", false);
+      $("#lastName")     .attr("disabled", false);
+      $("#address1")     .attr("disabled", false);
+      $("#address2")     .attr("disabled", false);
+      $("#city")         .attr("disabled", false);
+      $("#state")        .attr("disabled", false);
+      $("#zip")          .attr("disabled", false);
+      $("#zip4")         .attr("disabled", false);
+      $("#phone")        .attr("disabled", false);
+      $("#fax")          .attr("disabled", false);
+      $("#email")        .attr("disabled", false);
+      $("#ssn")          .attr("disabled", false);
+      $("#dob")          .attr("disabled", false);
+      $("#homeMarket")   .attr("disabled", false);
+      $("#activeYN")     .attr("disabled", false);
+      $("#pwdExpDate")   .attr("disabled", false);
+      $("#disabledDate") .attr("disabled", false);
+      $('#disabledHour') .attr("disabled", false);
+      $('#disabledMin')  .attr("disabled", false);
+      $('#disabledSec')  .attr("disabled", false);
+      $("#pwdAttempts")  .attr("disabled", false);
+      $('#password')     .attr("disabled", false); 
+      $("#currentToken") .attr("disabled", false);
+      $("#lastLogin")    .attr("disabled", false);
+      $('#loginHour')    .attr("disabled", false);
+      $('#loginMin')     .attr("disabled", false);
+      $('#loginSec')     .attr("disabled", false);
+    }
   }
   
   function setFormItems(action, data) {
@@ -810,49 +820,49 @@
         || action === 'delete'
        ) {
       formItems = {
+        /*
+         * To simplify the logic just use the the current screen values as is to construct formItems. For find and delete 
+         * operations we will send the server more than it needs and also send garbage left from the previous search. We
+         * just need a user name for find and delete. The server will take care of clearing the uneeded values from the 
+         * request object for find and delete.
+         */
         "action"         : action,
-        "findUser"       : $('#username')       .val(),
-        "msgID"          : '',
-        "msgDescription" : '',
-        "firstName"      : $("#firstName")      .val(),
-        "lastName"       : $("#lastName")       .val(),
-        "address1"       : $("#address1")       .val(),
-        "address2"       : $("#address2")       .val(),
-        "city"           : $("#city")           .val(),
-        "state"          : $("#state")          .val(),
-        "zip"            : $("#zip")            .val(),
-        "zip4"           : $("#zip4")           .val(),
-        "phone"          : $("#phone")          .val(),
-        "fax"            : $("#fax")            .val(),
-        "email"          : $("#email")          .val(),
-        "ssn"            : $("#ssn")            .val(),
-        "dob"            : $("#dob")            .val(),
-        "homeMarket"     : $("#homeMarket")     .val(),
-        "activeYN"       : $("#activeYN")       .val(),
-        "pwdExpDate"     : $("#pwdExpDate")     .val(),
-        "disabledDate"   : $("#disabledDate")   .val(),
-        "disabledTime"   : $('#disabledHour    option:selected')
-                                                .val() 
-                             + ':'                
-                             + $('#disabledMin option:selected')
-                                                .val()
-                             + ':'                   
-                             + $('#disabledSec option:selected')
-                                                .val(),
-        "pwdAttempts"    : $("#pwdAttempts")    .val(),
-        "currentToken"   : $("#currentToken")   .val(),
-        "lastLogin"      : $("#lastLogin")      .val(),
-        "lastLoginTime"  : $('#loginHour    option:selected')
-                                                .val()
-                             + ':'                    
-                             + $('#loginMin option:selected')
-                                                .val()
-                             + ':'                 
-                             + $('#loginSec option:selected')
-                                                .val()
+        "findUser"       : $('#username')     .val(),
+        "msgID"          : '',                      
+        "msgDescription" : '',                       
+        "firstName"      : $("#firstName")    .val(),
+        "lastName"       : $("#lastName")     .val(),
+        "address1"       : $("#address1")     .val(),
+        "address2"       : $("#address2")     .val(),
+        "city"           : $("#city")         .val(),
+        "state"          : $('#state')        .val(),
+        "zip"            : $("#zip")          .val(),
+        "zip4"           : $("#zip4")         .val(),
+        "phone"          : $("#phone")        .val(),
+        "fax"            : $("#fax")          .val(),
+        "email"          : $("#email")        .val(),
+        "ssn"            : $("#ssn")          .val(),
+        "dob"            : $("#dob")          .val(),
+        "homeMarket"     : $("#homeMarket")   .val(),
+        "activeYN"       : $('#activeYN')     .val(),
+        "pwdExpDate"     : $("#pwdExpDate")   .val(),
+        "disabledDate"   : $("#disabledDate") .val(),
+        "disabledTime"   : $('#disabledHour') .val()
+                         + ':'                
+                         + $('#disabledMin')  .val()
+                         + ':'                   
+                         + $('#disabledSec')  .val(),
+        "pwdAttempts"    : $('#pwdAttempts')  .val(),
+        "currentToken"   : $("#currentToken") .val(),
+        "lastLogin"      : $("#lastLogin")    .val(),
+        "lastLoginTime"  : $('#loginHour')    .val()
+                         + ':'                    
+                         + $('#loginMin')     .val()
+                         + ':'                 
+                         + $('#loginSec')     .val()
       }
     }
-    
+
     if (action === 'ajaxSuccess') {
       formItems = {
         "action"         : action,
@@ -900,7 +910,7 @@
       async:    false,
       dataType: "json", 
       success:  function (data) {
-                  $("newToken").text(data.password);
+                  $('#newToken').text(data.password);
                 }
     });
   }
@@ -923,42 +933,113 @@
   
   function ajaxSuccess(data) {
     setFormItems('ajaxSuccess', data);
-    buildPage();
+    /* 
+      determine which function buttons (add/delete/update) should be enabled/disabled based on feedback from ajax 
+            
+        findBtn,     
+        crtTokenBtn, 
+        addBtn,      
+        updateBtn,   
+        deleteBtn,   
+        cancelBtn    
+                
+                
+        USE       = F
+        DISABLE   = T
+        FOUND     = YRD0000
+        NOT FOUND = YRD000D      
+    */
+
+    if (addUpdateDeleteCancelClick == false) {
+      /*
+       * If the add, update, cancel, or delete button was not clicked then the configuation of the input elements on the screen 
+       * and the configureation of the add, update, cancel and delete buttons depend on whether its view mode and the feedback
+       * from the server
+       *
+       * If the add, cancel, update or delete button was clicked then the configruation of the input elements on the screen
+       * and the configureation of the add, update, cancel and delete buttons depend on the click event.
+       * 
+       * Since the ajax call happens asynchronously, the click events for the add, cancel, update or delete button happen before
+       * the ajax success event. Without knowing whether there was also a click event, this logic will undo the changes that 
+       * were just made in the click event. 
+       */
+        
+      if (formItems.msgID === 'YRD0000' && viewMode==false) {
+        configureButtons(true, false, true,  false, false, false);
+      }
+      
+      if (formItems.msgID === 'YRD000D' && viewMode==false) {
+        configureButtons(true, false, false, true,  true,  false);
+      }
+          
+      if (formItems.msgID === 'YRD0000' && viewMode) {
+        configureButtons(false, true, true, true, true, true);
+      }
+      
+      if (formItems.msgID === 'YRD000D' && viewMode) {
+        configureButtons(false, true, true, true, true, true);
+      }    
+        
+      configureViewMode();
+      buildPage();
+    }
   }
   
   function buildPage() {
     $('#form-feedback').text(formItems.msgDescription);
 
     if (formItems.msgID === 'YRD0000') {
-      disabledHMS = formItems.disabledTime .split(':');
-      loginHMS    = formItems.lastLoginTime.split(':');
-      $('#form-feedback').text('');
-      $("#firstName")    .val(formItems.firstName);
-      $("#lastName")     .val(formItems.lastName);
-      $("#address1")     .val(formItems.address1);
-      $("#address2")     .val(formItems.address2);
-      $("#city")         .val(formItems.city);
-      $("#state")        .val(formItems.state);
-      $("#zip")          .val(formItems.zip);
-      $("#zip4")         .val(formItems.zip4);
-      $("#phone")        .val(formItems.phone);
-      $("#fax")          .val(formItems.fax);
-      $("#email")        .val(formItems.email);
-      $("#ssn")          .val(formItems.ssn);
-      $("#dob")          .val(formItems.dob);
-      $("#homeMarket")   .val(formItems.homeMarket);
-      $("#activeYN")     .val(formItems.activeYN);
-      $("#pwdExpDate")   .val(formItems.pwdExpDate);
-      $("#disabledDate") .val(formItems.disabledDate);
-      $("#disabledHour") .val(disabledHMS[0]);
-      $("#disabledMin")  .val(disabledHMS[1]);
-      $("#disabledSec")  .val(disabledHMS[2]);
-      $("#pwdAttempts")  .val(formItems.pwdAttempts);
-      $("#currentToken") .val(formItems.currentToken);
-      $("#lastLogin")    .val(formItems.lastLogin);
-      $("#loginHour")    .val(loginHMS[0]);
-      $("#loginMin")     .val(loginHMS[1]);
-      $("#loginSec")     .val(loginHMS[2]);
+      
+      if (formItems.disabledTime === '') {
+        /* 
+         * In the event that the profile is not disabled, the disabled date is null. The server sets disabledDate and the 
+         * disabledTime to '' so set #disabledHour, #disabledMin and #disabledSec to '00'. 
+         */
+        $("#disabledHour").val('00');
+        $("#disabledMin") .val('00');
+        $("#disabledSec") .val('00');
+      } else {                    
+        /* 
+         * In the event that the profile is disabled, the server sets disabledDate to the date on which the profile was
+         * disabled. The server sets disabledTime to the time when the profile was disabled. disabledTime has the format
+         * HH:MM:SS.mils. mils are ignored. Obtain the hour and minute and second by splitting disabledTime on '.' and taking 
+         * the hour, minute and second from element 0 of the resulting array. Set disabled hour, minute and second by splitting
+         * element 0 (from splitting disabledTime on '.') on ':' and taking element 0, 1 and 2 of the resulting array,
+         * respectivly. 
+         */
+        disabledHMSmils    = formItems.disabledTime.split('.');
+        disabledHMS        = disabledHMSmils[0]    .split(':');
+        $("#disabledHour").val(disabledHMS[0]);
+        $("#disabledMin") .val(disabledHMS[1]);
+        $("#disabledSec") .val(disabledHMS[2]);
+      }                     
+                           
+      $('#form-feedback') .text('');
+      $("#firstName")     .val(formItems.firstName);
+      $("#lastName")      .val(formItems.lastName);
+      $("#address1")      .val(formItems.address1);
+      $("#address2")      .val(formItems.address2);
+      $("#city")          .val(formItems.city);
+      $("#state")         .val(formItems.state);
+      $("#zip")           .val(formItems.zip);
+      $("#zip4")          .val(formItems.zip4);
+      $("#phone")         .val(formItems.phone);
+      $("#fax")           .val(formItems.fax);
+      $("#email")         .val(formItems.email);
+      $("#ssn")           .val(formItems.ssn);
+      $("#dob")           .val(formItems.dob);
+      $("#homeMarket")    .val(formItems.homeMarket);
+      $("#activeYN")      .val(formItems.activeYN);
+      $("#pwdExpDate")    .val(formItems.pwdExpDate);
+      $("#disabledDate")  .val(formItems.disabledDate);
+      $("#pwdAttempts")   .val(formItems.pwdAttempts);
+      $("#currentToken")  .val(formItems.currentToken);
+      $("#lastLogin")     .val(formItems.lastLogin);
+      loginHMSmils         = formItems.lastLoginTime.split('.');
+      loginHMS             = loginHMSmils[0]        .split(':');
+      $("#loginHour")     .val(loginHMS[0]);
+      $("#loginMin")      .val(loginHMS[1]);
+      $("#loginSec")      .val(loginHMS[2]);
     }
   }
   
@@ -982,16 +1063,16 @@
       $("#activeYN")     .val('Y');
       $("#pwdExpDate")   .val('');
       $("#disabledDate") .val('');
-      $('#disabledHour') .val('0');
-      $('#disabledMin')  .val('0');
-      $('#disabledSec')  .val('0');
+      $('#disabledHour') .val('00');
+      $('#disabledMin')  .val('00');
+      $('#disabledSec')  .val('00');
       $("#pwdAttempts")  .val('0');
       $('#password')     .val(''); 
       $("#currentToken") .val('');
       $("#lastLogin")    .val('');
-      $('#loginHour')    .val('0');
-      $('#loginMin')     .val('0');
-      $('#loginSec')     .val('0');
+      $('#loginHour')    .val('00');
+      $('#loginMin')     .val('00');
+      $('#loginSec')     .val('00');
   }
   
   function newFrame(newFrame) {
