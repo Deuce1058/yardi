@@ -15,17 +15,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.RequestDispatcher;
+//import javax.servlet.RequestDispatcher;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yardi.ejb.SessionsTable;
-import com.yardi.ejb.SessionsTableSessionBeanRemote;
-import com.yardi.ejb.UserGroups;
-import com.yardi.ejb.UserGroupsSessionBeanRemote;
+//import com.yardi.ejb.SessionsTable;
+//import com.yardi.ejb.SessionsTableSessionBeanRemote;
+//import com.yardi.ejb.UserGroups;
+//import com.yardi.ejb.UserGroupsSessionBeanRemote;
 import com.yardi.ejb.UserServicesRemote;
-import com.yardi.QSECOFR.TokenRequest;
+//import com.yardi.QSECOFR.TokenRequest;
 import com.yardi.userServices.InitialPage;
 
 
@@ -37,8 +37,6 @@ import com.yardi.userServices.InitialPage;
 public class LoginService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	@EJB UserServicesRemote userSvc;
-	@EJB UserGroupsSessionBeanRemote userGroupsBean;
-	@EJB SessionsTableSessionBeanRemote sessionsBean;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -84,9 +82,11 @@ public class LoginService extends HttpServlet {
 		 * As a convenience, there is a boolean in LoginRequest which is the same as the change password indicator. 
 		 */
 		loginRequest.setChangePwd(loginRequest.getChgPwd()); 
+		loginRequest.setSessionID(request.getSession().getId());
 		//debug
 		System.out.println("com.yardi.userServices LoginService doGet() 0009 " + loginRequest.toString());
 		//debug
+		userSvc.setLoginRequest(loginRequest);
 
     	if (loginRequest.getChangePwd()==false) { //normal login
     		//debug
@@ -135,89 +135,16 @@ public class LoginService extends HttpServlet {
 			
 			//store the userID in the session
 			request.getSession().setAttribute("userID", loginRequest.getUserName()); 
-
-			//what groups is the user in and what is the initial page for the group?
-			Vector<UserGroupsGraph> userGroups = new Vector<UserGroupsGraph>();
-			userGroups = userGroupsBean.find(loginRequest.getUserName());
-
-			/* 
-			 * Setup the parms CreateTokenService needs for generating a token from the session ID. This token will be 
-			 * stored in the session table. CreateTokenService expects to get parms in a JSON object
-			 */
-			String sessionID = request.getSession().getId();
-			TokenRequest tokenRequest = new TokenRequest(sessionID, "", "");
-			formData = mapper.writeValueAsString(tokenRequest);
-			request.setAttribute("formData", formData);
-			System.out.println("com.yardi.userServices LoginService doGet() 000A formData=" + formData);
-			//need to setContentType() here before include() commits the response otherwise content type will be undefined 
-			response.setContentType("application/json"); 
-			RequestDispatcher rd = request.getRequestDispatcher("newToken");
-			rd.include(request, response); //the token for the session is the tokenized session ID
-        	formData = (String) request.getAttribute("formData");
-			System.out.println("com.yardi.userServices LoginService doGet() 000B formData=" + formData);
-			request.setAttribute("formData", null); //dont leave it hanging around
-	        mapper = new ObjectMapper();
-			tokenRequest = mapper.readValue(formData, TokenRequest.class);
-			formData = "";
+			userSvc.loginSuccess();
 			
-			//fetch the session table row for the session
-			SessionsTable sessionsTable = null;
-			sessionsTable = sessionsBean.findSession(sessionID); 
-			//String initialPage = userGroups.get(0).getMasterGroup().getGmInitialPage(); //GM_INITIAL_PAGE from GROUPS_MASTER
-			String initialPage = userGroups.get(0).getGmInitialPage(); //GM_INITIAL_PAGE from GROUPS_MASTER
-
-			//need initialPage for the sessions table and in the response to yardiLogin.html/changePwd.html so set it here
-			//msg is needed for the response to yardiLogin.html/changePwd.html but depends on userGroups.size() 
-			String msg [] = com.yardi.rentSurvey.YardiConstants.YRD0000.split("=");
-
-			if (userGroups.size()>1) {
-				// user is in multiple groups. Set ST_LAST_REQUEST to the html select group page. User picks the initial page
-				initialPage = com.yardi.rentSurvey.YardiConstants.USER_SELECT_GROUP_PAGE;
-				msg = com.yardi.rentSurvey.YardiConstants.YRD000E.split("=");
-			}
-
-			if (sessionsTable == null) {
-				sessionsBean.persist(
-						loginRequest.getUserName(), 
-						sessionID, 
-						tokenRequest.getPassword(), 
-						initialPage, 
-						new java.util.Date());
-			} else {
-				sessionsBean.update(
-						loginRequest.getUserName(), 
-						sessionID, 
-						tokenRequest.getPassword(), 
-						initialPage, 
-						new java.util.Date());
-			}
-			
-			/**
-			 * xyzzy
+		    /*
 			 * Respond to yardiLogin.html/changePwd.html. The page sees that the login request is successful (YRD0000) or 
 			 * that the user is in multiple groups (YRD000E) and looks at the 5th parm (initialPage) in loginResponse to 
 			 * get the next page to load. yardiLogin.html/changePwd.html tells index.html to load the initialPage page.
 			 */
-			Vector<InitialPage> initialPageList = new Vector<InitialPage>();
-
-			for (UserGroupsGraph g : userGroups) {
-				//getGmDescription returns a string containing the short description for the button and a label for the button
-				//getGmInitialPage() returns the url value for url= attribute
-				initialPageList.add(new InitialPage(g.getGmDescription(),
-					g.getGmInitialPage()));
-			}
-
-			LoginResponse loginResponse = new LoginResponse(
-				loginRequest.getUserName(),
-				"",  //Password
-				mapper.writeValueAsString(initialPageList), //new password
-				msg[0],
-				initialPage
-			);
-			//cant reset because of previous .include() response is committed 
-			//response.reset(); 
+			response.reset(); 
 			PrintWriter out = response.getWriter();
-			formData = mapper.writeValueAsString(loginResponse); //convert the feedback to json 
+			formData = mapper.writeValueAsString(userSvc.getLoginResponse()); //convert the feedback to json 
 			out.print(formData);
 			out.flush();
 	    	//debug xyzzy

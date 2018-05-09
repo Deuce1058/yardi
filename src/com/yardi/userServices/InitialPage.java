@@ -29,4 +29,9 @@ public class InitialPage {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
+	@Override
+	public String toString() {
+		return "InitialPage [page=" + page + ", url=" + url + "]";
+	}
 }

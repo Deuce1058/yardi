@@ -35,7 +35,7 @@ public class UniqueTokensSesssionBean implements UniqueTokensSesssionBeanRemote 
 		TypedQuery<UniqueTokens> qry = emgr.createQuery(
 			  "SELECT t from UniqueTokens t " 
 			+ "WHERE t.up1UserName = :userName "
-			+ "ORDER BY t.up1DateAdded, t.up1Rrn", 
+			+ "ORDER BY t.up1DateAdded DESC, t.up1Rrn DESC", 
 			UniqueTokens.class);
 		userTokens = (Vector<UniqueTokens>) qry
 			.setParameter("userName", userName)
@@ -46,6 +46,7 @@ public class UniqueTokensSesssionBean implements UniqueTokensSesssionBeanRemote 
 				+ "  userName=" + userName
 				+ "\n "
 				);
+		System.out.println("com.yardi.ejb UniqueTokenSessionBean findTokens() 0005");
 		for (UniqueTokens t : userTokens) {
 			System.out.println(
 				  "\n "

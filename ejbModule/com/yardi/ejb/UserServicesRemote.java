@@ -4,6 +4,10 @@ import java.util.Vector;
 
 import javax.ejb.Remote;
 
+import com.yardi.userServices.InitialPage;
+import com.yardi.userServices.LoginRequest;
+import com.yardi.userServices.LoginResponse;
+
 /**
  * Specifies methods implemented by UserServices.
  * 
@@ -15,5 +19,11 @@ public interface UserServicesRemote {
 	boolean authenticate();
 	boolean chgPwd();
 	String getFeedback();
-	boolean passwordPolicy(String password);	
+	boolean passwordPolicy(String password);
+	void setLoginRequest(LoginRequest loginRequest);
+	LoginRequest getLoginRequest();
+	Vector<InitialPage> getInitialPageList();
+	String getInitialPage();
+	void loginSuccess();
+	LoginResponse getLoginResponse();
 }

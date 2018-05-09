@@ -21,5 +21,4 @@ public interface SessionsTableSessionBeanRemote {
 			String lastRequest, 
 			java.util.Date lastActive
 			);
-
 }

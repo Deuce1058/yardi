@@ -120,10 +120,9 @@ public class PpPwdPolicy implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PpPwdPolicy [ppDays=" + ppDays + ", ppNbrUnique=" + ppNbrUnique
-				+ ", ppMaxSignonAttempts=" + ppMaxSignonAttempts
-				+ ", ppPwdMinLen=" + ppPwdMinLen + ", ppUpperRqd=" + ppUpperRqd
-				+ ", ppLowerRqd=" + ppLowerRqd + ", ppNumberRqd=" + ppNumberRqd
-				+ ", ppSpecialRqd=" + ppSpecialRqd + ", ppRrn=" + ppRrn + "]";
-		}
+		return "PpPwdPolicy [ppDays=" + ppDays + ", ppNbrUnique=" + ppNbrUnique + ", ppMaxSignonAttempts="
+				+ ppMaxSignonAttempts + ", ppPwdMinLen=" + ppPwdMinLen + ", ppUpperRqd=" + ppUpperRqd + ", ppLowerRqd="
+				+ ppLowerRqd + ", ppNumberRqd=" + ppNumberRqd + ", ppSpecialRqd=" + ppSpecialRqd + ", ppRrn=" + ppRrn
+				+ "]";
+	}
 }

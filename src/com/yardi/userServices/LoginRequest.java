@@ -18,6 +18,7 @@ public class LoginRequest {
 	private String msgDescription;
 	private String chgPwd;
 	private boolean changePwd;
+	private String sessionID;
 	
 	public LoginRequest() {
 	}
@@ -71,6 +72,14 @@ public class LoginRequest {
 		}
 	}	
 	
+	public String getSessionID() {
+		return sessionID;
+	}
+
+	public void setSessionID(String sessionID) {
+		this.sessionID = sessionID;
+	}
+
 	@Override
 	public String toString() {
 		return "LoginRequest [userName=" + userName 

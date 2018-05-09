@@ -102,6 +102,16 @@ public class PasswordAuthentication {
 		 *     decrypt key comes from SecretKeyFactory
 		 * Store the entire token in the database  
 		 */
+		//debug
+		System.out.println("com.yardi.userServices PasswordAuthentication authenticate() 0000"
+			+ "\n"
+			+ "   password="
+			+ new String(password)
+			+ "\n"
+			+ "   token="
+			+ token
+			);
+		//debug
 	    Matcher m = LAYOUT.matcher(token);
 	    if (!m.matches())
 	      throw new IllegalArgumentException("Invalid token format");

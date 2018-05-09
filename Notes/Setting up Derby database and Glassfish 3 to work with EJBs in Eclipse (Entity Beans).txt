@@ -1,0 +1,123 @@
+Setting up Derby database & Glassfish to work with EJBs in Eclipse (Entity Beans) 
+https://www.youtube.com/watch?v=xBNB8L49ZQ4
+
+SUCCESS!!
+http://localhost:8080/ejb2_2/SnifferMasterServlet?hash=874826106
+
+RUNTIME EXCEPTION
+.find expects a primary key. Attempted to use hash which is long. @Entity class expected a long as a primary key because @Id was declared on rrn column. 
+Attempting to use EntityManager .createNamedQuery, .createNativeQuery, .createNamedStoredProcedureQuery, or .createQuery
+
+
+Google EntityManager createNamedQuery example
+http://www.java2s.com/Code/Java/JPA/CreateNamedQueryWithEntity.htm
+
+
+
+ 1:05 start database manager using asadmin. 
+      asadmin used because derby is the db. 
+      use db2start
+ 1:08 Click Data Source Explorer tab on bottom
+      New
+      Connection Profile type is Derby
+      Choose a name: DerbyTest2
+      Next
+      General tab 
+      Database specify the name 
+      specify user name
+      specify password
+      *+*+*+* NOTHING CONFIGURED FOR POOLING YET *+*+*+*
+ 2:24 Right click the new Database Connection in Datasource Explorer tab
+      Open SQL Scrapbook
+      Created a table in Derby
+ 3:45 Insert rows in the new table
+ 4:47 create new JDBC connection pool
+      Pool name: NewDerbyPool
+      Resource Type: javax.sql.DataSource
+      Database Driver Vendor: Derby
+      set properties
+ 6:58 create new JDBC Resource
+      JNDI Name: jdbc/__NewDerby
+      Pool Name: NewDerbyPool
+        ties the JDBC Resource and the connection pool
+ 7:56 create a new EJB Project
+      on final tab check off Generate ejb-jar.xml deployment descriptor
+ 8:27 right click project and edit properties/Project Facets
+      add JPA
+      Click further configuration available at bottom of dialog box
+        choose platform Eclipse 2.0.x
+        JPA implementation
+        Connection: DerbyTest2
+          the connection name comes from the name selected for the new Data Source @ 1:08
+          Try adding a driver library to the build path at this point
+          the connection name is not tied to the driver for pooling but when configuring JPA 
+            JTA data source points to a JNDI name which is tied to a connection pool and
+            that connection pool does use a diver for pooling
+ 9:01 edit JPA Content/persistence.xml
+      Connection tab
+        POOL CONFIGURED was NewDerbyPool 
+	JNDI name=jdbc/__NewDerby
+        set JTA data source to jdbc/__NewDerby  ******From JDBC Resource*****
+        this appears to be what makes connections from the pool available to applications
+ 9:29 create session bean
+      created remote session bean called TestSessionBean. 
+      Eclipse automatically created a TestSessionBeanRemote as an interface 
+ 9:57 edit TestSessionBean
+10:04 edit TestSessionBeanRemote add a method
+10:25 edit TestSessionBean 
+      implement method added in TestSessionBeanRemote
+      add @persistenceContext(name="") annotation
+        grab persistence-unit name from persistence.xml
+        use this value for the @persistenceContext name="" annotation
+11:20 create custom entities from table
+      right click ejb project
+      JPA Tools
+      Generate Entites from Tables
+      select a table
+      Accept the defaults
+      Finish
+      Eclipse creates a new class with the name of the table selected to represent the table
+11:43 review the class that represents the table
+11:54 edit TestSessionBean
+      finish implementing userNameExists method
+      appears to do a db query at this point
+13:23 create a new Dynamic Web Project
+13:50 add a servlet
+14:21 edit servlet
+      add @EJB annotation TestSessionBeanRemote testSession
+14:35 edit properties of dynamic web project 
+      Deployment Assembly
+      Add Project TestEJB
+15:05 edit doGet method of servlet
+      testSession.userNameExists()
+16:48 click dynamic web proj/Java Resources/Libraries
+      click servlet source tab
+      click Servers tab on bottom pane
+      click run button on tool bar at top
+17:01 blows up with HTTP 500
+      fix URL (was missing parm)
+
+
+DB    FILESIZE
+TABLE SNIFFER_MASTER
+COL   SM_REPORT_DATE
+COL   SM_FSO_PATH
+COL   SM_FSO_NAME
+COL   SM_FSO_SIZE
+COL   SM_FSO_DATE_CREATED
+COL   SM_FSO_DATE_MODIFIED
+COL   SM_FSO_DATE_DELETED
+COL   SM_HASH
+COL   SM_RRN
+
+SM_HASH = 874826106
+
+Getting a connection using the DataSource Interface 
+See JNDI_test JNDItestApp and JDBCdataSource3
+1 set properties for DB2ConnectionPoolDataSource
+2 set properties for DB2PooledConnection
+    DB2PooledConnection = 
+        DB2ConnectionPoolDataSource.getDB2PooledConnection("db2admin", "mudshark",                                                                         java.util.Properties.properties);
+3 get the connection
+    java.sql.Connection = DB2PooledConnection.getConnection();
+4 no URL, no driver name

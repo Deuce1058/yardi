@@ -1,0 +1,28 @@
+E:\"Eclipse Projects"\yardiEjb\ejbModule\
+  com\yardi\ejb\
+  META-INF\
+E:\"Eclipse Projects"\yardiWeb\
+  src\com\yardi\
+    QSECOFR\
+    rentSurvey\
+    system\
+    userServices\
+  WebContent\
+    views\
+    WEB-INF\
+
+D:\"GitHub repo"\yardi\
+  ejbModule\
+    com\yardi\ejb\
+    META-INF\
+  src\com\yardi\
+    QSECOFR\
+    rentSurvey\
+    system\
+    userServices\
+  WebContent\
+    views\
+    WEB-INF\
+
+
+fc /l /n /w file1 file2

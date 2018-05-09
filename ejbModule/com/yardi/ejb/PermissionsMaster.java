@@ -51,5 +51,4 @@ public class PermissionsMaster implements Serializable {
 	public void setPmRrn(long pmRrn) {
 		this.pmRrn = pmRrn;
 	}
-
 }

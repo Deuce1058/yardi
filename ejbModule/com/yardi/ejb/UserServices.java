@@ -15,8 +15,13 @@ import com.yardi.ejb.UniqueTokens;
 import com.yardi.ejb.UniqueTokensSesssionBeanRemote;
 import com.yardi.ejb.UserProfileSessionBeanRemote;
 import com.yardi.ejb.UserServicesRemote;
+import com.yardi.userServices.InitialPage;
 import com.yardi.userServices.LoginRequest;
+import com.yardi.userServices.LoginResponse;
 import com.yardi.userServices.PasswordAuthentication;
+import com.yardi.userServices.UserGroupsGraph;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.PasswordPolicySessionBeanRemote;
 import com.yardi.ejb.PpPwdPolicy;
 import com.yardi.ejb.UserProfile;
@@ -44,20 +49,124 @@ public class UserServices implements UserServicesRemote {
 	private PpPwdPolicy pwdPolicy = null;
 	private UserProfile userProfile = null;
 	private LoginRequest loginRequest;
+	private LoginResponse loginResponse;
+	private Vector<InitialPage> initialPageList;
+	private String initialPage = "";
 	@EJB UserProfileSessionBeanRemote userProfileBean; //bean is thread safe unless marked reentrant in the deployment descriptor
 	@EJB UniqueTokensSesssionBeanRemote uniqueTokensBean;
 	@EJB PasswordPolicySessionBeanRemote passwordPolicyBean;
-	
+	@EJB UserGroupsSessionBeanRemote userGroupsBean;
+	@EJB SessionsTableSessionBeanRemote sessionsBean;
+
 	public UserServices() {
 	}
-	
-	public UserServices(LoginRequest loginRequest) {
-		this.loginRequest = loginRequest;
-		//debug
-		System.out.println("com.yardi.userServices UserServices com.yardi.userServices() 001B " + toString());
-		//debug
-	}
 
+	public void loginSuccess() {
+		/*
+		 * Successful login.
+		 * 1 lookup initial page with join GroupsMaster and UserGroups
+		 *   1A if user is in multiple groups set ST_LAST_REQUEST to the html select group page. User picks the initial page
+		 *   1B if user is in only one group set ST_LAST_REQUEST to GM_INITIAL_PAGE
+		 * 2 Set user ID as session attribute  
+		 * 3 Write/update session table
+		 *   3A tokenize session ID. This serves as a password for the session to login. It is not enough for the session 
+		 *      to be in the session table, the session must also login in order for the session to be considered authentic.
+		 *   3B CreateTokenService is used to create a token from the session ID
+		 * 4 Respond to yardiLogin.html/changePwd.html  
+		 */
+
+		//msg is needed for the response to yardiLogin.html/changePwd.html but depends on userGroups.size() 
+		String msg [] = com.yardi.rentSurvey.YardiConstants.YRD0000.split("=");
+		//what groups is the user in and what is the initial page for the group?
+		Vector<UserGroupsGraph> userGroups = userGroupsBean.find(loginRequest.getUserName());
+		//need initialPage for the sessions table and in the response to yardiLogin.html/changePwd.html so set it here
+		initialPage = userGroups.get(0).getGmInitialPage(); //GM_INITIAL_PAGE from GROUPS_MASTER
+		//debug
+		System.out.println("com.yardi.ejb UserServices loginSuccess 0012" 
+				+ "\n"
+				+ "   initialPage="
+				+ initialPage
+				);
+		System.out.println("com.yardi.ejb UserServices loginSuccess 0013");
+		for (UserGroupsGraph u : userGroups) {
+			System.out.println(
+				  "\n"
+				+ "   UserGroupsGraph=" 
+				+ u.toString()
+				);
+		}
+		//debug
+
+		if (userGroups.size()>1) {
+			// user is in multiple groups. Set ST_LAST_REQUEST to the html select group page. User picks the initial page
+			initialPage = com.yardi.rentSurvey.YardiConstants.USER_SELECT_GROUP_PAGE;
+			msg = com.yardi.rentSurvey.YardiConstants.YRD000E.split("=");
+			//debug
+			System.out.println("com.yardi.ejb UserServices loginSuccess 001C" 
+					+ "\n"
+					+ "   initialPage="
+					+ initialPage
+					);
+			//debug
+		}
+		
+		feedback = msg[0];
+		//tokenize the session ID
+		passwordAuthentication = new PasswordAuthentication();
+		String sessionToken = passwordAuthentication.hash(loginRequest.getSessionID().toCharArray());
+		//fetch the session table row for the session
+		SessionsTable sessionsTable = null;
+		sessionsTable = sessionsBean.findSession(loginRequest.getSessionID()); 
+
+		if (sessionsTable == null) {
+			sessionsBean.persist(
+					loginRequest.getUserName(), 
+					loginRequest.getSessionID(), 
+					sessionToken,
+					initialPage, 
+					new java.util.Date());
+			//debug
+			System.out.println("com.yardi.ejb UserServices loginSuccess 001D"
+				+ "\n"
+				+ "  SessionsTable="
+				+ sessionsTable);
+			//debug
+		} else {
+			sessionsBean.update(
+					loginRequest.getUserName(), 
+					loginRequest.getSessionID(), 
+					sessionToken,
+					initialPage, 
+					new java.util.Date());
+			//debug
+			System.out.println("com.yardi.ejb UserServices loginSuccess 001E"
+				+ "\n"
+				+ "  SessionsTable="
+				+ sessionsTable);
+			//debug
+		}
+
+		initialPageList = new Vector<InitialPage>();
+
+		for (UserGroupsGraph g : userGroups) {
+			//getGmDescription returns a string containing the short description for the button and a label for the button
+			//getGmInitialPage() returns the url value for url= attribute
+			initialPageList.add(new InitialPage(g.getGmDescription(),
+				g.getGmInitialPage()));
+		}
+		
+		//debug
+		System.out.println("com.yardi.ejb UserServices loginSuccess 0016");
+		for (InitialPage i : initialPageList) {
+			System.out.println(
+				  "\n"
+				+ "   initialPageList="
+				+ i
+			);
+		}
+		//debug
+		setLoginResponse();
+	}
 /**
  * Support for changing password either on demand or when current password has expired.
  * Table PP_PWD_POLICY has parameters that control password policy
@@ -82,8 +191,12 @@ public class UserServices implements UserServicesRemote {
 		String userName = loginRequest.getUserName();
 		char [] oldPassword = loginRequest.getPassword().toCharArray();
 		char [] newPassword = loginRequest.getNewPassword().toCharArray();
+		short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
+		short pwdLifeInDays = pwdPolicy.getPpDays();
+		UniqueTokens uniqueToken; //single element from userTokens which is an ArrayList of UniqueToken.class 
+		Vector<UniqueTokens> userTokens = null;
 		//debug
-		System.out.println("com.yardi.userServices UserServices chgPwd() 001A"
+		System.out.println("com.yardi.ejb UserServices chgPwd() 001A"
 			+ "\n "
 			+ "  userName ="
 			+ userName
@@ -93,21 +206,16 @@ public class UserServices implements UserServicesRemote {
 			+ "\n "
 			+ "  newPassword ="
 			+ new String(newPassword)
+			+ "\n "
+			+ "  maxUniqueTokens="
+			+ maxUniqueTokens 
+			+ "\n "
+			+ "  pwdLifeInDays="
+			+ pwdLifeInDays 
 			);
 		//debug
 		
 		if (authenticate() == false) {
-			return false;
-		}
-		
-		if (passwordPolicy(new String(newPassword)) == false ) {
-			//apply password policy to the new password
-			//debug
-			System.out.println("com.yardi.userServices UserServices chgPwd() 0010 "
-					+ "\n "
-					+ "  passwordPolicy() == false"
-					);   
-			//debug
 			return false;
 		}
 		
@@ -130,137 +238,86 @@ public class UserServices implements UserServicesRemote {
                 0       nothing then insert
 		 */
 		
-		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
-		short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
-		short pwdLifeInDays = pwdPolicy.getPpDays();
-		Vector<UniqueTokens> userTokens = uniqueTokensBean.findTokens(userName);
-		int nbrOfStoredTokens = userTokens.size();
-		UniqueTokens uniqueToken; //single element from userTokens which is an ArrayList of UniqueToken.class 
-		//debug
-		System.out.println("com.yardi.userServices UserServices chgPwd() 0011 "
-				+ "\n "
-				+ "  feedback="
-				+ feedback
-				+ "\n "
-				+ "  maxUniqueTokens="
-				+ maxUniqueTokens 
-				+ "\n "
-				+ "  pwdLifeInDays="
-				+ pwdLifeInDays 
-				+ "\n "
-				+ "  nbrOfStoredTokens="
-				+ nbrOfStoredTokens 
-				);  
-		System.out.println("com.yardi.userServices UserServices chgPwd() 0012 "
-				+ "\n "
-				);
-		for (UniqueTokens t : userTokens) {
-
-			if (!(t==null)) {
-				System.out.println("\n   uniqueToken=" + t);
-			}
-		}
-		//debug
-		
-		if (nbrOfStoredTokens > maxUniqueTokens) {
-			//there are more previous tokens stored than the current max. remove extra rows
-			//debug
-			System.out.println("com.yardi.userServices UserServices chgPwd() 0013 "
-					+ "\n "
-					+ "  nbrOfStoredTokens="
-					+ nbrOfStoredTokens
-					+ "\n "
-					+ "  maxUniqueTokens="
-					+ maxUniqueTokens
-					);
-			//debug
-	
-			for(int i=0;nbrOfStoredTokens > 0 && i<nbrOfStoredTokens; i++) {
-				uniqueToken = userTokens.get(i);
-				
-				if (i >= maxUniqueTokens && uniqueToken != null) {
-					//extra rows
-					long rrn = uniqueToken.getUp1Rrn();
-					uniqueTokensBean.remove(rrn); //delete the extra row
-					userTokens.remove(i);
-					//debug
-					System.out.println("com.yardi.userServices UserServices chgPwd() 0014 "
-							+ "\n "
-							);
-					for (UniqueTokens t : userTokens) {
-
-						if (!(t==null)) {
-							System.out.println("\n   uniqueToken="
-									+ t
-									);  
-						}
-					}
-					//debug
-				} else {
-					//passwordAuthentication set in authenticate()
-					if (maxUniqueTokens > 0 && 
-						passwordAuthentication.authenticate(newPassword, uniqueToken.getUp1Token())) {
-						/* 
-						 * Only check up to the maximum number of stored tokens established in password policy. If more tokens 
-						 * are stored than the current maximum then ignore the extra tokens
-						 */
-						feedback = com.yardi.rentSurvey.YardiConstants.YRD000A;
-						//debug
-						System.out.println("com.yardi.userServices UserServices chgPwd() 0015 "
-								+ "\n "
-								+ "  newPassword="
-								+ newPassword
-								+ "\n "
-								+ "  uniqueToken.getUp1Token()="
-								+ uniqueToken.getUp1Token()
-								+ "\n "
-								+ "  feedback="
-								+ feedback
-								);
-						//debug  
-						return false;
-					}
-				}
-			}
-		}
-		
-		if (nbrOfStoredTokens == maxUniqueTokens && maxUniqueTokens > 0) {
-			//remove oldest stored token because a new token will be inserted
-			uniqueToken = userTokens.get(userTokens.size() - 1);
-			//debug
-			System.out.println("com.yardi.userServices UserServices chgPwd() 0016 "
-					+ "\n "
-					);
-			for (UniqueTokens t : userTokens) {
-
-				if (!(t==null)) {
-					System.out.println("\n   uniqueToken="
-							+ t
-							);  
-				}
-			}
-			//debug
+		if (maxUniqueTokens > 0) { // is unique passwords being enforced? 
+			userTokens = uniqueTokensBean.findTokens(userName);
+			int nbrOfStoredTokens = 0;
 			
-			if (uniqueToken != null) {
-				long rrn = uniqueToken.getUp1Rrn();
-				uniqueTokensBean.remove(rrn); //delete 
-				userTokens.remove(userTokens.size() - 1);
+			if (!(userTokens == null)) { // do they have any stored tokens?
 				//debug
-				System.out.println("com.yardi.userServices UserServices chgPwd() 0017 "
-						+ "\n "
+				System.out.println("com.yardi.ejb UserServices chgpwd 0020");
+				for (UniqueTokens u : userTokens) {
+					System.out.println(
+						  "\n"
+						+ "   userTokens="
+						+ u
 						);
-				for (UniqueTokens t : userTokens) {
-
-					if (!(t==null)) {
-						System.out.println("\n   uniqueToken="
-								+ t
-								);  
-					}
 				}
 				//debug
+				nbrOfStoredTokens = userTokens.size();
+				for(int i=maxUniqueTokens, tokenToRemove=maxUniqueTokens; i<nbrOfStoredTokens; i++) {
+					//debug
+					System.out.println("com.yardi.ejb UserServices chgPwd() 0014 "
+							+ "\n "
+							+ "   uniqueToken="
+							+ userTokens.get(tokenToRemove).toString()
+							+ "\n "
+							+ "   rrn="
+							+ userTokens.get(tokenToRemove).getUp1Rrn()
+							+ "\n "
+							+ "   i="
+							+ i
+							+ "\n "
+							+ "   maxUniqueTokens="
+							+ maxUniqueTokens
+							+ "\n "
+							+ "   nbrOfStoredTokens="
+							+ nbrOfStoredTokens
+							+ "\n "
+							+ "   tokenToRemove="
+							+ tokenToRemove
+							);
+					//debug
+					/*
+					 * More tokens are being stored than the current max. These are extra rows
+					 * First delete all of the extra tokens so that the check for unique tokens can just check all the 
+					 * remaining tokens. 
+					 * Next, remove the oldest stored token
+					 * Finally, insert the new token
+					 */
+					uniqueToken = userTokens.get(tokenToRemove);
+					long rrn = uniqueToken.getUp1Rrn();
+					uniqueTokensBean.remove(rrn); // Delete the extra row. A new row will be inserted 
+					userTokens.remove(tokenToRemove);
+					// The vector elements after the one that was removed move up and occupy the position that was removed
+				}
 			}
 		}
+				
+		if (passwordPolicy(new String(newPassword)) == false ) {
+			//apply password policy to the new password
+			//debug
+			System.out.println("com.yardi.ejb UserServices chgPwd() 0010 "
+					+ "\n "
+					+ "  passwordPolicy() == false"
+					);   
+			//debug
+			return false;
+		}
 		
+		if (!(userTokens==null) && maxUniqueTokens > 0 && userTokens.size() >= maxUniqueTokens) { 
+			/*
+			 *  if there are stored tokens and
+			 *  unique tokens is being enforced and
+			 *  the number of stored tokens is greater or equal to the maximum number of unique tokens to store
+			 *  then remove oldest token 
+			 */
+			int tokenToRemove = maxUniqueTokens - 1;
+			uniqueToken = userTokens.get(tokenToRemove);
+			long rrn = uniqueToken.getUp1Rrn();
+			uniqueTokensBean.remove(rrn); // Delete the extra row. A new row will be inserted 
+			userTokens.remove(tokenToRemove);
+		}
+
 		String userToken = passwordAuthentication.hash(newPassword); //hash of new password
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.set(Calendar.HOUR, 0);
@@ -269,7 +326,7 @@ public class UserServices implements UserServicesRemote {
 		gc.set(Calendar.HOUR_OF_DAY, 0);
 		long time = gc.getTimeInMillis();
 		//debug
-		System.out.println("com.yardi.userServices UserServices chgPwd() 0018 "
+		System.out.println("com.yardi.ejb UserServices chgPwd() 0018 "
 				+ "\n "
 				+ "  userToken="
 				+ userToken
@@ -288,6 +345,7 @@ public class UserServices implements UserServicesRemote {
 		gc.add(Calendar.DAY_OF_MONTH, pwdLifeInDays); //new password expiration date
 		userProfileBean.changeUserToken(userName, userToken, new java.util.Date(gc.getTimeInMillis())); //store new token in user profile
 		userProfileBean.loginSuccess(userName);
+		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
 		return true;
 	}
 	
@@ -321,7 +379,7 @@ public class UserServices implements UserServicesRemote {
 		//if there is a row in UserProfile for userName userProfile will have a reference to UserProfile.class
 		findUserProfile(userName); 
 		//debug
-		System.out.println("com.yardi.userServices UserServices authenticate() 0000"
+		System.out.println("com.yardi.ejb UserServices authenticate() 0000"
 				+ "\n " 
 				+ "  userName =" + userName 
 				+ "\n " 
@@ -339,18 +397,18 @@ public class UserServices implements UserServicesRemote {
 		
 		if (userProfile == null) {
 			//debug
-			System.out.println("com.yardi.userServices UserServices authenticate() 0001 userProfile == null \n");
+			System.out.println("com.yardi.ejb UserServices authenticate() 0001 userProfile == null \n");
 			//debug
 			return false;
 		}
 
 		//debug
-		System.out.println("com.yardi.userServices UserServices authenticate() 0002 userProfile =" + userProfile + "\n");
+		System.out.println("com.yardi.ejb UserServices authenticate() 0002 userProfile =" + userProfile + "\n");
 		//debug
 		
 		if (userProfile.getUpDisabledDate() != null) {
 			//debug
-			System.out.println("com.yardi.userServices UserServices authenticate() 0003 userProfile.getUpDisabledDate() != null\n");
+			System.out.println("com.yardi.ejb UserServices authenticate() 0003 userProfile.getUpDisabledDate() != null\n");
 			//debug
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0003;
 			return false;
@@ -358,7 +416,7 @@ public class UserServices implements UserServicesRemote {
 		
 		if (userProfile.getUpActiveYn().equals("N")) {
 			//debug
-			System.out.println("com.yardi.userServices UserServices authenticate() 0004 userProfile.getUpActiveYn().equals(N)\n");
+			System.out.println("com.yardi.ejb UserServices authenticate() 0004 userProfile.getUpActiveYn().equals(N)\n");
 			//debug
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0004;
 			return false;
@@ -368,7 +426,7 @@ public class UserServices implements UserServicesRemote {
 		signonAttempts = userProfile.getUpPwdAttempts();
 		Boolean pwdValid = passwordAuthentication.authenticate(password, userProfile.getUptoken());
 		//debug
-		System.out.println("com.yardi.userServices UserServices authenticate() 0005 "
+		System.out.println("com.yardi.ejb UserServices authenticate() 0005 "
 				+ "\n "
 				+ "  passwordExpiration =" + passwordExpiration 
 				+ "\n "
@@ -388,7 +446,7 @@ public class UserServices implements UserServicesRemote {
 			//userProfile was set by findUserProfile(userName) see above
 			int rows = userProfileBean.setUpPwdAttempts(userName, signonAttempts);
 			//debug
-			System.out.println("com.yardi.userServices UserServices authenticate() 0006 "
+			System.out.println("com.yardi.ejb UserServices authenticate() 0006 "
 					+ "\n "
 					+ "  feedback =" + feedback  
 					+ "\n "
@@ -406,7 +464,7 @@ public class UserServices implements UserServicesRemote {
 				rows = userProfileBean.disable(userName, new java.sql.Timestamp(new java.util.Date().getTime()), 
 					maxSignonAttempts);
 				//debug
-				System.out.println("com.yardi.userServices UserServices authenticate() 0007 "
+				System.out.println("com.yardi.ejb UserServices authenticate() 0007 "
 						+ "\n "
 						+ "  signonAttempts == maxSignonAttempts"  
 						+ "\n "
@@ -420,7 +478,7 @@ public class UserServices implements UserServicesRemote {
 							
 				feedback = com.yardi.rentSurvey.YardiConstants.YRD000C;
 				//debug
-				System.out.println("com.yardi.userServices UserServices authenticate() 0008 "
+				System.out.println("com.yardi.ejb UserServices authenticate() 0008 "
 						+ "feedback =" + feedback + "\n");
 				//debug
 			}
@@ -436,7 +494,7 @@ public class UserServices implements UserServicesRemote {
 				 */
 				feedback = com.yardi.rentSurvey.YardiConstants.YRD0002;
 				//debug
-				System.out.println("com.yardi.userServices UserServices authenticate() 0009 "
+				System.out.println("com.yardi.ejb UserServices authenticate() 0009 "
 						+ "\n "
 						+ "  userIsChangingPassword =" + userIsChangingPassword   
 						+ "\n "
@@ -457,7 +515,7 @@ public class UserServices implements UserServicesRemote {
 				 */
 				int rows = userProfileBean.loginSuccess(userName);
 				//debug
-				System.out.println("com.yardi.userServices UserServices authenticate() 000A "
+				System.out.println("com.yardi.ejb UserServices authenticate() 000A "
 						+ "\n "
 						+ "  userIsChangingPassword == false"
 						+ "\n "
@@ -519,8 +577,9 @@ public class UserServices implements UserServicesRemote {
 		
 		if (getPwdPolicy() == null) {
 			//debug 
-			System.out.println("com.yardi.userServices UserServices passwordPolicy() 0019 getPwdPolicy() == null");
+			System.out.println("com.yardi.ejb UserServices passwordPolicy() 0019 getPwdPolicy() == null");
 			//debug
+			feedback = com.yardi.rentSurvey.YardiConstants.YRD000B;
 			return false;
 		}
 		
@@ -529,7 +588,7 @@ public class UserServices implements UserServicesRemote {
 		numberRqd  = Boolean.valueOf(pwdPolicy.getPpNumberRqd());
 		specialRqd = Boolean.valueOf(pwdPolicy.getPpSpecialRqd());
 		//debug
-		System.out.println("com.yardi.userServices UserServices passwordPolicy() 000B "
+		System.out.println("com.yardi.ejb UserServices passwordPolicy() 000B "
 				+ "\n "
 				+ "  upperRqd="
 				+ upperRqd 
@@ -557,7 +616,7 @@ public class UserServices implements UserServicesRemote {
 		if (lowerRqd && com.yardi.rentSurvey.YardiConstants.PATTERN_LOWER.matcher(password).matches()) {
 			hasLower = true;
 			//debug
-			System.out.println("com.yardi.userServices UserServices passwordPolicy() 000C "
+			System.out.println("com.yardi.ejb UserServices passwordPolicy() 000C "
 					+ "\n "
 					+ "  hasLower="
 					+ hasLower 
@@ -574,7 +633,7 @@ public class UserServices implements UserServicesRemote {
 		if (upperRqd && com.yardi.rentSurvey.YardiConstants.PATTERN_UPPER.matcher(password).matches()) {
 			hasUpper = true;
 			//debug
-			System.out.println("com.yardi.userServices UserServices passwordPolicy() 000D "
+			System.out.println("com.yardi.ejb UserServices passwordPolicy() 000D "
 					+ "\n "
 					+ "  hasUpper="
 					+ hasUpper 
@@ -591,7 +650,7 @@ public class UserServices implements UserServicesRemote {
 		if (numberRqd && com.yardi.rentSurvey.YardiConstants.PATTERN_NUMBER.matcher(password).matches()) {
 			hasNumber = true;
 			//debug
-			System.out.println("com.yardi.userServices UserServices passwordPolicy() 000E "
+			System.out.println("com.yardi.ejb UserServices passwordPolicy() 000E "
 					+ "\n "
 					+ "  hasNumber="
 					+ hasNumber 
@@ -608,7 +667,7 @@ public class UserServices implements UserServicesRemote {
 		if (specialRqd && com.yardi.rentSurvey.YardiConstants.PATTERN_SPECIAL1.matcher(password).matches()) {
 			hasSpecial = true;
 			//debug
-			System.out.println("com.yardi.userServices UserServices passwordPolicy() 000F "
+			System.out.println("com.yardi.ejb UserServices passwordPolicy() 000F "
 					+ "\n "
 					+ "  hasSpecial="
 					+ hasSpecial 
@@ -627,6 +686,74 @@ public class UserServices implements UserServicesRemote {
 			return false;
 		}
 		
+		short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
+		
+		if (maxUniqueTokens > 0) { // is unique tokens rule being enforced?
+			Vector<UniqueTokens> userTokens = uniqueTokensBean.findTokens(loginRequest.getUserName());
+			//debug
+			System.out.println("com.yardi.ejb UserServices 0021");
+			for (UniqueTokens u : userTokens) {
+				System.out.println(
+					  "\n"
+					+ "   userTokens="
+					+ u
+					);
+			}
+			//debug
+			
+			if (!(userTokens == null)) { // do they have any stored tokens?
+				int nbrOfStoredTokens = userTokens.size();
+				UniqueTokens uniqueToken; //single element from userTokens which is an ArrayList of UniqueToken.class 
+				//debug
+				System.out.println("com.yardi.ejb UserServices 0022"
+					+ "\n"
+					+ "   nbrOfStoredTokens="
+					+ nbrOfStoredTokens 
+					);
+				//debug
+				for(int i=0; i<nbrOfStoredTokens; i++) {
+					uniqueToken = userTokens.get(i);
+					//debug
+					System.out.println("com.yardi.ejb UserServices 0023"
+						+ "\n"
+						+ "   uniqueToken="
+						+ uniqueToken  
+						);
+					//debug
+						
+					if (passwordAuthentication.authenticate(
+						loginRequest.getNewPassword().toCharArray(), uniqueToken.getUp1Token())) {
+						/* 
+						 * Only check up to the maximum number of stored tokens established in password policy. If more tokens 
+						 * are stored than the current maximum then ignore the extra tokens
+						 */
+						feedback = com.yardi.rentSurvey.YardiConstants.YRD000A;
+						//debug
+						System.out.println("com.yardi.ejb UserServices passwordPolicy() 0015 "
+								+ "\n "
+								+ "  newPassword="
+								+ loginRequest.getNewPassword()
+								+ "\n "
+								+ "  uniqueToken.getUp1Token()="
+								+ uniqueToken.getUp1Token()
+								+ "\n "
+								+ "  feedback="
+								+ feedback
+								);
+						//debug  
+						return false;
+					}
+					//debug
+					System.out.println("com.yardi.ejb UserServices 0024"
+						+ "\n"
+						+ "   i="
+						+ i  
+						);
+					//debug
+				}  
+			}
+		}
+		
 		return true;
 	}
 	
@@ -640,6 +767,12 @@ public class UserServices implements UserServicesRemote {
 			setPwdPolicy();
 		}
 		
+		//debug
+		System.out.println("com.yardi.ejb UserServices getPwdPolicy 0017"
+			+ "\n"
+			+ "   pwdPolicy="
+			+ pwdPolicy);
+		//debug
 		return pwdPolicy;
 	}
 
@@ -649,6 +782,15 @@ public class UserServices implements UserServicesRemote {
 		if (pwdPolicy == null) {
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD000B;
 		}
+		//debug
+		System.out.println("com.yardi.ejb UserServices setPwdPolicy 001F"
+			+ "\n"
+			+ "   pwdPolicy="
+			+ pwdPolicy
+			+ "\n"
+			+ "   feedback="
+			+ feedback);
+		//debug
 	}
 
 	private PasswordAuthentication getPasswordAuthentication() {
@@ -675,20 +817,51 @@ public class UserServices implements UserServicesRemote {
 		return userProfile;
 	}
 
+	public void setLoginRequest(LoginRequest loginRequest) {
+		this.loginRequest = loginRequest;
+		//debug
+		System.out.println("com.yardi.ejb UserServices setLoginRequest() 001B " + toString());
+		//debug
+	}
+
+	public LoginRequest getLoginRequest() {
+		return loginRequest;
+	}
+	
+	public Vector<InitialPage> getInitialPageList() {
+		return initialPageList;
+	}
+
+	public String getInitialPage() {
+		return initialPage;
+	}
+
+	public LoginResponse getLoginResponse() {
+		return loginResponse;
+	}
+
+	private void setLoginResponse() {
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			this.loginResponse = new LoginResponse(
+				loginRequest.getUserName(),
+				"", //Password
+				mapper.writeValueAsString(initialPageList), //new password
+				feedback,
+				initialPage
+			);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public String toString() {
-		return "UserServices [passwordAuthentication=" + passwordAuthentication
-				+ ", feedback=" + feedback 
-				+ ", today=" + today
-				+ ", pwdPolicy=" + pwdPolicy 
-				+ ", userProfile=" + userProfile
-				+ ", loginRequest=" + loginRequest 
-				+ ", userProfileBean=" + userProfileBean 
-				+ ", uniqueTokensBean=" + uniqueTokensBean
-				+ "]"
-				+ "\n  "
-				+ userProfileBean.stringify()
-				+ "\n  "
-				+ uniqueTokensBean.stringify();
+		return "UserServices [passwordAuthentication=" + passwordAuthentication + ", feedback=" + feedback + ", today="
+				+ today + ", pwdPolicy=" + pwdPolicy + ", userProfile=" + userProfile + ", loginRequest=" + loginRequest
+				+ ", loginResponse=" + loginResponse + ", initialPageList=" + initialPageList + ", initialPage="
+				+ initialPage + ", userProfileBean=" + userProfileBean + ", uniqueTokensBean=" + uniqueTokensBean
+				+ ", passwordPolicyBean=" + passwordPolicyBean + ", userGroupsBean=" + userGroupsBean
+				+ ", sessionsBean=" + sessionsBean + "]";
 	}
 }

@@ -51,5 +51,4 @@ public class GroupPermissions implements Serializable {
 	public void setGpPermission(int gpPermission) {
 		this.gpPermission = gpPermission;
 	}
-
 }

@@ -1,0 +1,47 @@
+Unique tokens test
+
+C PP_NBR_UNIQUE = 4
+D stored tokens = 10
+E stored tokens = 4
+F stored tokens = 2
+G stored tokens = 1
+H stored tokens = 0
+
+I PP_NBR_UNIQUE = 0
+J stored tokens = 3
+K stored tokens = 0
+
+A did not match
+B matched
+
+ACD<
+ACE<
+ACF<
+ACG<
+ CH<
+ IJ<
+ IK<
+BCD<
+BCE<
+BCF<
+BCG<
+
+AC
+UP1_USER_NAME = aa
+UPTOKEN=$31$16$CcOJJC7D5xT5YUJONNNYZ67pSdQFOUWtdoUS6o3W6o0 
+password=aa
+
+TOKENS
+==========================================================
+01 $31$16$qba-udEOtO0ZqNe73OuJCspHqHm0ILLZTk6mI6ISa6w [11]
+02 $31$16$sR9a8ANCRLJ14L59Oo-5kUKtzAtO62sNzkNoxHChlmg [22]
+03 $31$16$_wDhzyy2lS69xGPnw_0urHs0FdwEmaGMuI8IpVLvdAo [33]
+04 $31$16$wtIhN2p04Keuu2ZrRJPSbd6YmzGYYvHpk-1zhdRzB9s [44]
+05 $31$16$fCztGhUhPjMBMA0_sc_OwFVbKWv8dzxvgLDWouozEjY [55]
+06 $31$16$G3mARfnlzsSgsCmnZJ6EuY-ZtPDw--OKIsRs4toSp3M [66]
+07 $31$16$xIrpkKp9Ij7ZxzR7Rb83csdqOeks4DzGbogGPCIZNAk [77]
+08 $31$16$Pp54ZaURHDXIhQZr8inXazeJa_D6msGLDoVN2nVyK9w [88]
+09 $31$16$yujsj-anm0WcFNbZnIJMLFJLlHGy1Bza-glVYWEtSE8 [99]
+10 $31$16$tEyneRZb8nWN8Ukp4XSTNcKcyB86zVrWnPvLXD8oR_4 [10]
+
+select * from db2admin.unique_tokens where up1_user_name = 'aa' order by  up1_date_added DESC, up1_rrn DESC;
