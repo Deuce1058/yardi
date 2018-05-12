@@ -193,8 +193,8 @@ public class UserServices implements UserServicesRemote {
 		char [] newPassword = loginRequest.getNewPassword().toCharArray();
 		short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
 		short pwdLifeInDays = pwdPolicy.getPpDays();
-		UniqueTokens uniqueToken; //single element from userTokens which is an ArrayList of UniqueToken.class 
-		Vector<UniqueTokens> userTokens = null;
+		UniqueTokens uniqueToken = null; //single element from userTokens which is an ArrayList of UniqueToken.class 
+		Vector<UniqueTokens> userTokens = uniqueTokensBean.findTokens(userName);
 		//debug
 		System.out.println("com.yardi.ejb UserServices chgPwd() 001A"
 			+ "\n "
@@ -238,62 +238,17 @@ public class UserServices implements UserServicesRemote {
                 0       nothing then insert
 		 */
 		
-		if (maxUniqueTokens > 0) { // is unique passwords being enforced? 
-			userTokens = uniqueTokensBean.findTokens(userName);
-			int nbrOfStoredTokens = 0;
-			
-			if (!(userTokens == null)) { // do they have any stored tokens?
-				//debug
-				System.out.println("com.yardi.ejb UserServices chgpwd 0020");
-				for (UniqueTokens u : userTokens) {
-					System.out.println(
-						  "\n"
-						+ "   userTokens="
-						+ u
-						);
-				}
-				//debug
-				nbrOfStoredTokens = userTokens.size();
-				for(int i=maxUniqueTokens, tokenToRemove=maxUniqueTokens; i<nbrOfStoredTokens; i++) {
-					//debug
-					System.out.println("com.yardi.ejb UserServices chgPwd() 0014 "
-							+ "\n "
-							+ "   uniqueToken="
-							+ userTokens.get(tokenToRemove).toString()
-							+ "\n "
-							+ "   rrn="
-							+ userTokens.get(tokenToRemove).getUp1Rrn()
-							+ "\n "
-							+ "   i="
-							+ i
-							+ "\n "
-							+ "   maxUniqueTokens="
-							+ maxUniqueTokens
-							+ "\n "
-							+ "   nbrOfStoredTokens="
-							+ nbrOfStoredTokens
-							+ "\n "
-							+ "   tokenToRemove="
-							+ tokenToRemove
-							);
-					//debug
-					/*
-					 * More tokens are being stored than the current max. These are extra rows
-					 * First delete all of the extra tokens so that the check for unique tokens can just check all the 
-					 * remaining tokens. 
-					 * Next, remove the oldest stored token
-					 * Finally, insert the new token
-					 */
-					uniqueToken = userTokens.get(tokenToRemove);
-					long rrn = uniqueToken.getUp1Rrn();
-					uniqueTokensBean.remove(rrn); // Delete the extra row. A new row will be inserted 
-					userTokens.remove(tokenToRemove);
-					// The vector elements after the one that was removed move up and occupy the position that was removed
-				}
-			}
+		userTokens = removeExtraTokens(userTokens, uniqueToken, maxUniqueTokens, userName);
+		//debug
+		if (!(userTokens==null)) {
+			System.out.println("com.yardi.ejb UserServices chgpwd() 0026"
+					+ "\n"
+					+ "   Vector<UniqueTokens>="
+					+ userTokens
+					);
 		}
-				
-		if (passwordPolicy(new String(newPassword)) == false ) {
+		//debug				
+		if (passwordPolicy(new String(newPassword), userTokens) == false ) {
 			//apply password policy to the new password
 			//debug
 			System.out.println("com.yardi.ejb UserServices chgPwd() 0010 "
@@ -304,51 +259,25 @@ public class UserServices implements UserServicesRemote {
 			return false;
 		}
 		
-		if (!(userTokens==null) && maxUniqueTokens > 0 && userTokens.size() >= maxUniqueTokens) { 
-			/*
-			 *  if there are stored tokens and
-			 *  unique tokens is being enforced and
-			 *  the number of stored tokens is greater or equal to the maximum number of unique tokens to store
-			 *  then remove oldest token 
-			 */
-			int tokenToRemove = maxUniqueTokens - 1;
-			uniqueToken = userTokens.get(tokenToRemove);
-			long rrn = uniqueToken.getUp1Rrn();
-			uniqueTokensBean.remove(rrn); // Delete the extra row. A new row will be inserted 
-			userTokens.remove(tokenToRemove);
+		//debug
+		if (!(userTokens==null)) {
+			System.out.println("com.yardi.ejb UserServices chgpwd() 0027"
+					+ "\n"
+					+ "   Vector<UniqueTokens>="
+					+ userTokens
+					);
 		}
-
-		String userToken = passwordAuthentication.hash(newPassword); //hash of new password
-		GregorianCalendar gc = new GregorianCalendar();
-		gc.set(Calendar.HOUR, 0);
-		gc.set(Calendar.MINUTE, 0);
-		gc.set(Calendar.SECOND, 0);
-		gc.set(Calendar.HOUR_OF_DAY, 0);
-		long time = gc.getTimeInMillis();
-		//debug
-		System.out.println("com.yardi.ejb UserServices chgPwd() 0018 "
-				+ "\n "
-				+ "  userToken="
-				+ userToken
-				+ "\n "
-				+ "  gc="
-				+ gc.toString()
-				+ "\n "
-				+ "  check USER PROFILE"
-				);
-		//debug
+		//debug				
+		removeOldestToken(userTokens, maxUniqueTokens, uniqueToken);
 
 		if (maxUniqueTokens > 0) {
 			uniqueTokensBean.persist(userName, userProfile.getUptoken(), new java.util.Date()); //insert
 		}
 		
-		gc.add(Calendar.DAY_OF_MONTH, pwdLifeInDays); //new password expiration date
-		userProfileBean.changeUserToken(userName, userToken, new java.util.Date(gc.getTimeInMillis())); //store new token in user profile
-		userProfileBean.loginSuccess(userName);
-		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
+		changeUserToken(pwdLifeInDays, userName, newPassword);
 		return true;
 	}
-	
+
 	/**
 	 * Support for authentication. 
 	 * 1. Get the password policy
@@ -533,28 +462,28 @@ public class UserServices implements UserServicesRemote {
 	}
 
 	/**
-     * Retrieve password policy from the PpPwdPolicy table and make the policy available to other methods
-     * Policy consists of:
-     * 1 Complexity
-     *   1a Upper case required
-     *   1b Lower case required
-     *   1c Special characters required
-     *   1d Number required
-     * 2 Password length
-     * 3 Number of days before password must be changed
-     * 4 Number of unique passwords required specifies how many unique tokens are stored. Applied when changing the password. 
+     * <p>Retrieve password policy from the PpPwdPolicy table and make the policy available to other methods</p>
+     * <p>Policy consists of:<br>
+     *   1 Complexity</p>
+     * <p>  1a Upper case required</p>
+     * <p>  1b Lower case required,</p>
+     * <p>  1c Special characters required</p>
+     * <p>  1d Number required</p>
+     * <p>2 Password length</p>
+     * <p>3 Number of days before password must be changed</p>
+     * <p>4 Number of unique passwords required specifies how many unique tokens are stored. Applied when changing the password. 
      *   This policy causes the new password token to be checked against the saved tokens for a match. This prevents user from 
-     *   reusing passwords
-     * 5 Maximum login attempts before password is disabled
-     * 
-     * Specific rules applied in passwordPolicy are complexity and length
-     * 
-	 * Instance variable feedback indicates the status of the authenticate process 
+     *   reusing passwords,</p>
+     * <p>5 Maximum login attempts before password is disabled</p>
+     * <br>
+     * <p>Specific rules applied in passwordPolicy are complexity and length,</p>
+     * <br>
+	 * <p>Instance variable feedback indicates the status of the authenticate process</p> 
 	 * 
 	 * @param password
 	 * @return Boolean
 	 */
-	public boolean passwordPolicy(String password ) {
+	public boolean passwordPolicy(final String password, final Vector<UniqueTokens> userTokens ) {
 		/* implement these new rules:
 		 *   Minimum length
 		 *   Max length
@@ -688,10 +617,9 @@ public class UserServices implements UserServicesRemote {
 		
 		short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
 		
-		if (maxUniqueTokens > 0) { // is unique tokens rule being enforced?
-			Vector<UniqueTokens> userTokens = uniqueTokensBean.findTokens(loginRequest.getUserName());
+		if (maxUniqueTokens > 0 && !(userTokens==null)) { //If unique tokens being enforced and they have stored tokens
 			//debug
-			System.out.println("com.yardi.ejb UserServices 0021");
+			System.out.println("com.yardi.ejb UserServices passwordPolicy() 0021");
 			for (UniqueTokens u : userTokens) {
 				System.out.println(
 					  "\n"
@@ -700,60 +628,56 @@ public class UserServices implements UserServicesRemote {
 					);
 			}
 			//debug
-			
-			if (!(userTokens == null)) { // do they have any stored tokens?
-				int nbrOfStoredTokens = userTokens.size();
-				UniqueTokens uniqueToken; //single element from userTokens which is an ArrayList of UniqueToken.class 
+			int nbrOfStoredTokens = userTokens.size();
+			UniqueTokens uniqueToken; //single element from userTokens which is an ArrayList of UniqueToken.class 
+			//debug
+			System.out.println("com.yardi.ejb UserServices passwordPolicy() 0022"
+				+ "\n"
+				+ "   nbrOfStoredTokens="
+				+ nbrOfStoredTokens 
+				);
+			//debug
+			for(int i=0; i<nbrOfStoredTokens; i++) {
+				uniqueToken = userTokens.get(i);
 				//debug
-				System.out.println("com.yardi.ejb UserServices 0022"
+				System.out.println("com.yardi.ejb UserServices passwordPolicy() 0023"
 					+ "\n"
-					+ "   nbrOfStoredTokens="
-					+ nbrOfStoredTokens 
+					+ "   uniqueToken="
+					+ uniqueToken  
 					);
 				//debug
-				for(int i=0; i<nbrOfStoredTokens; i++) {
-					uniqueToken = userTokens.get(i);
-					//debug
-					System.out.println("com.yardi.ejb UserServices 0023"
-						+ "\n"
-						+ "   uniqueToken="
-						+ uniqueToken  
-						);
-					//debug
 						
-					if (passwordAuthentication.authenticate(
-						loginRequest.getNewPassword().toCharArray(), uniqueToken.getUp1Token())) {
-						/* 
-						 * Only check up to the maximum number of stored tokens established in password policy. If more tokens 
-						 * are stored than the current maximum then ignore the extra tokens
-						 */
-						feedback = com.yardi.rentSurvey.YardiConstants.YRD000A;
-						//debug
-						System.out.println("com.yardi.ejb UserServices passwordPolicy() 0015 "
-								+ "\n "
-								+ "  newPassword="
-								+ loginRequest.getNewPassword()
-								+ "\n "
-								+ "  uniqueToken.getUp1Token()="
-								+ uniqueToken.getUp1Token()
-								+ "\n "
-								+ "  feedback="
-								+ feedback
-								);
-						//debug  
-						return false;
-					}
+				if (passwordAuthentication.authenticate(//does the new password match any of the stored tokens?
+					loginRequest.getNewPassword().toCharArray(), uniqueToken.getUp1Token())) {
+					/* 
+					 * Only check up to the maximum number of stored tokens established in password policy. If more tokens 
+					 * are stored than the current maximum then ignore the extra tokens
+					 */
+					feedback = com.yardi.rentSurvey.YardiConstants.YRD000A;
 					//debug
-					System.out.println("com.yardi.ejb UserServices 0024"
-						+ "\n"
-						+ "   i="
-						+ i  
-						);
-					//debug
-				}  
+					System.out.println("com.yardi.ejb UserServices passwordPolicy() 0015 "
+							+ "\n "
+							+ "  newPassword="
+							+ loginRequest.getNewPassword()
+							+ "\n "
+							+ "  uniqueToken.getUp1Token()="
+							+ uniqueToken.getUp1Token()
+							+ "\n "
+							+ "  feedback="
+							+ feedback
+							);
+					//debug  
+					return false;
+				}
+				//debug
+				System.out.println("com.yardi.ejb UserServices passwordPolicy() 0024"
+					+ "\n"
+					+ "   i="
+					+ i  
+					);
+				//debug
 			}
 		}
-		
 		return true;
 	}
 	
@@ -855,6 +779,187 @@ public class UserServices implements UserServicesRemote {
 		}
 	}
 
+	/**
+	 * Remove extra tokens in token history when the number of stored tokens exceeds the maximum defined in password 
+	 * policy. This can happen if the maximum number of tokens to store is changed. 
+	 * 
+	 * @param userTokens
+	 * @param uniqueToken
+	 * @param maxUniqueTokens
+	 * @param userName
+	 */
+	private Vector<UniqueTokens> removeExtraTokens(Vector<UniqueTokens> userTokens, UniqueTokens uniqueToken,
+			final short maxUniqueTokens, final String userName) {
+		//debug
+		if (!(userTokens==null)) {
+			System.out.println("com.yardi.ejb UserServices removeExtraTokens() 0028"
+					+ "\n"
+					+ "   Vector<UniqueTokens>="
+					+ userTokens
+					);
+		}
+		//debug
+		
+		if (maxUniqueTokens > 0) { // is unique passwords being enforced? 
+			userTokens = uniqueTokensBean.findTokens(userName);
+			int nbrOfStoredTokens = 0;
+			
+			if (!(userTokens == null)) { // do they have any stored tokens?
+				//debug
+				System.out.println("com.yardi.ejb UserServices removeExtraTokens() 0020");
+				for (UniqueTokens u : userTokens) {
+					System.out.println(
+						  "\n"
+						+ "   userTokens="
+						+ u
+						);
+				}
+				//debug
+				nbrOfStoredTokens = userTokens.size();
+				for(int i=maxUniqueTokens, tokenToRemove=maxUniqueTokens; i<nbrOfStoredTokens; i++) {
+					//debug
+					System.out.println("com.yardi.ejb UserServices removeExtraTokens() 0014 "
+							+ "\n "
+							+ "   uniqueToken="
+							+ userTokens.get(tokenToRemove).toString()
+							+ "\n "
+							+ "   rrn="
+							+ userTokens.get(tokenToRemove).getUp1Rrn()
+							+ "\n "
+							+ "   i="
+							+ i
+							+ "\n "
+							+ "   maxUniqueTokens="
+							+ maxUniqueTokens
+							+ "\n "
+							+ "   nbrOfStoredTokens="
+							+ nbrOfStoredTokens
+							+ "\n "
+							+ "   tokenToRemove="
+							+ tokenToRemove
+							);
+					//debug
+					/*
+					 * More tokens are being stored than the current max. These are extra rows
+					 * First delete all of the extra tokens so that the check for unique tokens can just check all the 
+					 * remaining tokens. 
+					 * Next, remove the oldest stored token
+					 * Finally, insert the new token
+					 */
+					uniqueToken = userTokens.get(tokenToRemove);
+					long rrn = uniqueToken.getUp1Rrn();
+					uniqueTokensBean.remove(rrn); // Delete the extra row. A new row will be inserted 
+					userTokens.remove(tokenToRemove);
+					// The vector elements after the one that was removed move up and occupy the position that was removed
+				}
+				//debug
+				System.out.println("com.yardi.ejb UserServices removeExtraTokens() 0029"
+						+ "\n"
+						+ "   Vector<UniqueTokens>="
+						+ userTokens
+						);
+				//debug
+			}
+		}
+		return userTokens;
+	}
+	
+	/**
+	 * Remove the oldest stored token in token history so that the number of stored tokens in token history will not
+	 * exceed the maximum defined in password policy when the new token is stored  
+	 * 
+	 * @param userTokens
+	 * @param maxUniqueTokens
+	 * @param uniqueToken
+	 */
+	private void removeOldestToken(Vector<UniqueTokens> userTokens, final short maxUniqueTokens, 
+			UniqueTokens uniqueToken) {
+		//debug
+		if (!(userTokens==null)) {
+			System.out.println("com.yardi.ejb UserServices removeOldestToken() 0011"
+					+ "\n"
+					+ "   maxUniqueTokens="
+					+ maxUniqueTokens
+					+ "\n"
+					+ "   userTokens.size()="
+					+ userTokens.size()
+					);
+			for (UniqueTokens u : userTokens) {
+				System.out.println(
+						  "\n"
+						+ "   userTokens="
+						+ u
+						);
+			} 
+		}
+		//debug
+		
+		if (!(userTokens==null) && maxUniqueTokens > 0 && userTokens.size() >= maxUniqueTokens) { 
+			/*
+			 *  if there are stored tokens and
+			 *  unique tokens is being enforced and
+			 *  the number of stored tokens is greater or equal to the maximum number of unique tokens to store
+			 *  then remove oldest token 
+			 */
+			int tokenToRemove = maxUniqueTokens - 1;
+			uniqueToken = userTokens.get(tokenToRemove);
+			long rrn = uniqueToken.getUp1Rrn();
+			uniqueTokensBean.remove(rrn); // Delete the extra row. A new row will be inserted 
+			userTokens.remove(tokenToRemove);
+			//debug
+			System.out.println("com.yardi.ejb UserServices removeOldestToken() 0025"
+					+ "\n"
+					+ "   tokenToRemove="
+					+ tokenToRemove
+					+ "\n"
+					+ "   rrn="
+					+ rrn);
+			for (UniqueTokens u : userTokens) {
+				System.out.println(
+					  "\n"
+					+ "   uniqueToken="
+					+ u
+					);
+			}
+			//debug
+		}
+	}
+	
+	/**
+	 * Change the user's current token stored in USER_PROFILE. Hash the new password, calculate the new password 
+	 * expiration date based on password policy, delegate to the userProfileBean to update the user profile, and 
+	 * note that there was a successful login (update the sessions table)
+	 * 
+	 * @param pwdLifeInDays
+	 * @param userName
+	 * @param newPassword
+	 */
+	private void changeUserToken(final short pwdLifeInDays, final String userName, final char [] newPassword) {
+		String userToken = passwordAuthentication.hash(newPassword); //hash of new password
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.set(Calendar.HOUR, 0);
+		gc.set(Calendar.MINUTE, 0);
+		gc.set(Calendar.SECOND, 0);
+		gc.set(Calendar.HOUR_OF_DAY, 0);
+		long time = gc.getTimeInMillis();
+		//debug
+		System.out.println("com.yardi.ejb UserServices changeUserToken() 0018 "
+				+ "\n "
+				+ "  userToken="
+				+ userToken
+				+ "\n "
+				+ "  gc="
+				+ gc.toString()
+				+ "\n "
+				+ "  check USER PROFILE"
+				);
+		//debug
+		gc.add(Calendar.DAY_OF_MONTH, pwdLifeInDays); //new password expiration date
+		userProfileBean.changeUserToken(userName, userToken, new java.util.Date(gc.getTimeInMillis())); //store new token in user profile
+		userProfileBean.loginSuccess(userName);
+		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
+	}
+	
 	@Override
 	public String toString() {
 		return "UserServices [passwordAuthentication=" + passwordAuthentication + ", feedback=" + feedback + ", today="

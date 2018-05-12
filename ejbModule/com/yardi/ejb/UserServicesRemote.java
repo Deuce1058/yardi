@@ -19,7 +19,7 @@ public interface UserServicesRemote {
 	boolean authenticate();
 	boolean chgPwd();
 	String getFeedback();
-	boolean passwordPolicy(String password);
+	boolean passwordPolicy(String password, Vector<UniqueTokens> userToken);
 	void setLoginRequest(LoginRequest loginRequest);
 	LoginRequest getLoginRequest();
 	Vector<InitialPage> getInitialPageList();
