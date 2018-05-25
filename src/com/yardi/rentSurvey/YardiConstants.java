@@ -18,6 +18,7 @@ public class YardiConstants {
 	public static final String YRD000C = "YRD000C=Maximum signon attempts exceeded. The user profile has been disabled";
 	public static final String YRD000D = "YRD000D=No such user name";
 	public static final String YRD000E = "YRD000E=User belongs to multiple groups";
+	public static final String YRD000F = "YRD000F=Invalid password";
 	public static final Pattern PATTERN_UPPER    = Pattern.compile(".*?\\p{Lu}");
 	public static final Pattern PATTERN_LOWER    = Pattern.compile(".*?[\\p{L}&&[^\\p{Lu}]]");
 	public static final Pattern PATTERN_NUMBER   = Pattern.compile(".*\\d.*");
