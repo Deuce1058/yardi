@@ -57,4 +57,6 @@ public interface UserProfileSessionBeanRemote {
 			short pwdAttempts
 			);
 	String stringify();
+	boolean authenticate(String userName, String password, boolean userIsChangingPassword);
+	String getFeedback();
 }

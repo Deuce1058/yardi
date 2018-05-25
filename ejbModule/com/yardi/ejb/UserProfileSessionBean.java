@@ -1,6 +1,7 @@
 package com.yardi.ejb;
 
-import javax.ejb.LocalBean;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -10,6 +11,8 @@ import javax.persistence.Query;
 import javax.persistence.SynchronizationType;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
+
+import com.yardi.userServices.PasswordAuthentication;
 
 /**
  * Session Bean implementation class UserProfileSessionBean
@@ -31,8 +34,19 @@ public class UserProfileSessionBean implements UserProfileSessionBeanRemote {
 	 */
 	@PersistenceContext(unitName = "yardi")	
 	private EntityManager entityManager;
+	private UserProfile userProfile;
+	private String feedback = "";
+	private PpPwdPolicy pwdPolicy;
+	@EJB PasswordPolicySessionBeanRemote passwordPolicyBean;
 
     public UserProfileSessionBean() {
+    	System.out.println("com.yardi.ejb UserProfileSessionBean UserProfileSessionBean() 0015");
+    }
+
+    @PostConstruct
+    private void postConstructCallback() {
+    	System.out.println("com.yardi.ejb UserProfileSessionBean postConstructCallback() 0016");
+    	getPwdPolicy();
     }
 
     public UserProfile find(String userName) {
@@ -133,6 +147,12 @@ public class UserProfileSessionBean implements UserProfileSessionBeanRemote {
     	return rows;
     }
     
+    /**
+     * Update the user profile to reflect successful login. Password attempts is set to zero, disabled date is set to null,
+     * last login date is today. 
+     * 
+     * @param userName
+     */
     public int loginSuccess(String userName) {
     	//upDisabledDate, upPwdAttempts, upLastLoginDate
     	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
@@ -370,7 +390,212 @@ public class UserProfileSessionBean implements UserProfileSessionBeanRemote {
 	   		.executeUpdate();
 		return rows;
 	}
-	 	
+	 
+	/*
+	 * findUserProfile(userName);
+	 * if userProfile == null
+	 *   feedback = com.yardi.rentSurvey.YardiConstants.YRD0001;
+	 * if disabled
+	 *   feedback = com.yardi.rentSurvey.YardiConstants.YRD0003;
+	 * if inactive
+	 *   feedback = com.yardi.rentSurvey.YardiConstants.YRD0004;
+	 * authenticate
+	 * if invalid password
+	 *   sigonAttempts++
+	 *   if (signonAttempts == maxSignonAttempts)
+	 *     disable profile
+	 * else
+	 *   if user is not changing password and the password expired
+	 *     return false
+	 *   if user is not changing password and the password has not expired
+	 *     userProfileBean.loginSuccess(userName)
+	 *          update user profile upPwdAttempts=0, upDisabledDate=null, upLastLoginDate
+	 */
+	public boolean authenticate(String userName, String password, boolean userIsChangingPassword) {
+		System.out.println("com.yardi.ejb UserProfileSessionBean authenticate() 0013");
+		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
+		java.sql.Timestamp today = new java.sql.Timestamp(new java.util.Date().getTime());
+		userProfile = find(userName); 
+
+		//if (getPwdPolicy()== null) { //get the password policy
+		if (pwdPolicy==null) { //get the password policy
+			//debug
+			System.out.println("com.yardi.ejb UserProfileSessionBean authenticate() 0010 pwdPolicy == null");
+			//debug
+			feedback = com.yardi.rentSurvey.YardiConstants.YRD000B;
+			return false;
+		}
+
+		if (userProfile == null) {
+			//debug
+			System.out.println("com.yardi.ejb UserProfileSessionBean authenticate() 0006 userProfile == null");
+			//debug
+			feedback = com.yardi.rentSurvey.YardiConstants.YRD0001;
+			return false;
+		}
+
+		//debug
+		System.out.println("com.yardi.ejb UserProfileSessionBean authenticate() 0007 userProfile =" + userProfile + "\n");
+		//debug
+
+		if (userProfile.getUpDisabledDate() != null) {
+			//debug
+			System.out.println("com.yardi.ejb UserProfileSessionBean authenticate() 0008 userProfile.getUpDisabledDate() != null\n");
+			//debug
+			feedback = com.yardi.rentSurvey.YardiConstants.YRD0003;
+			return false;
+		}
+
+		if (userProfile.getUpActiveYn().equals("N")) {
+			//debug
+			System.out.println("com.yardi.ejb UserProfileSessionBean authenticate() 0009 userProfile.getUpActiveYn().equals(N)");
+			//debug
+			feedback = com.yardi.rentSurvey.YardiConstants.YRD0004;
+			return false;
+		}
+
+		short maxSignonAttempts = pwdPolicy.getPpMaxSignonAttempts();
+		long passwordExpiration = userProfile.getUpPwdexpd().getTime();
+		short signonAttempts = userProfile.getUpPwdAttempts();
+		PasswordAuthentication passwordAuthentication = new PasswordAuthentication(); 
+		boolean pwdValid = passwordAuthentication.authenticate(password.toCharArray(), userProfile.getUptoken());
+
+		if (pwdValid == false) {
+			feedback = com.yardi.rentSurvey.YardiConstants.YRD000F;
+			signonAttempts++;
+			int rows = setUpPwdAttempts(userName, signonAttempts);
+			//debug
+			System.out.println("com.yardi.ejb UserProfileSessionBean authenticate() 0012"
+					+ "\n "
+					+ "  feedback =" + feedback  
+					+ "\n "
+					+ "  signonAttempts = " + signonAttempts
+					+ "\n "
+					+ "  rows =" + rows
+					);
+			//debug
+
+			if (rows != 1) {
+				int z = rows;
+			}
+
+			if (signonAttempts == maxSignonAttempts) {
+				rows = disable(userName, new java.sql.Timestamp(new java.util.Date().getTime()), 
+						maxSignonAttempts);
+				//debug
+				System.out.println("com.yardi.ejb UserProfileSessionBean authenticate() 000C"
+						+ "\n "
+						+ "  signonAttempts == maxSignonAttempts"  
+						+ "\n "
+						+ "  rows =" + rows
+						);
+				//debug
+
+				if (rows != 1) {
+					int z = rows;
+				}
+
+				feedback = com.yardi.rentSurvey.YardiConstants.YRD000C;
+				//debug
+				System.out.println("com.yardi.ejb UserProfileSessionBean authenticate() 000D"
+						+ "feedback =" + feedback + "\n");
+				//debug
+			}
+		} else {
+
+			if (userIsChangingPassword == false && passwordExpiration <= today.getTime()) {
+				/*
+				 * Password expired. Use chgPwd() in this class to change it
+				 * 
+				 * If the password is being changed because it expired then the expired password error should be ignored (it is
+				 * expected) as long as all of the other criteria (they have provided valid credentials, they are active and 
+				 * the password is not disabled) have been met. For this reason, the expired password test happens last. 
+				 */
+				feedback = com.yardi.rentSurvey.YardiConstants.YRD0002;
+				//debug
+				System.out.println("com.yardi.ejb UserProfileSessionBean authenticate() 000E"
+						+ "\n "
+						+ "  userIsChangingPassword =" + userIsChangingPassword   
+						+ "\n "
+						+ "  passwordExpiration =" + passwordExpiration
+						+ "\n "
+						+ "  today =" + today
+						+ "\n "
+						+ "  feedback =" + feedback
+						);
+				//debug
+				return false;
+			}
+
+			if (userIsChangingPassword == false) {
+				/*
+				 * They have successfully logged in at this point only if they are not changing the password so only set 
+				 * last login date when they are not changing the password 
+				 */
+				int rows = loginSuccess(userName);
+				//debug
+				System.out.println("com.yardi.ejb UserProfileSessionBean authenticate() 000F"
+						+ "\n "
+						+ "  userIsChangingPassword == false"
+						+ "\n "
+						+ "  rows =" + rows
+						);   
+				//debug
+
+				if (rows != 1) {
+					int z = rows;
+				}
+			}
+		}
+		return pwdValid;
+	}
+	
+	public String getFeedback() {
+		return feedback;
+	}
+
+	private PpPwdPolicy getPwdPolicy() {
+		
+		if (pwdPolicy==null) {
+			setPwdPolicy();
+		}
+		
+		//debug
+		System.out.println("com.yardi.ejb UserProfileSessionBean getPwdPolicy() 000A"
+			+ "\n"
+			+ "   pwdPolicy="
+			+ pwdPolicy
+			);
+		//debug
+		return pwdPolicy;
+	}
+
+	private void setPwdPolicy() {
+		//debug
+		System.out.println("com.yardi.ejb UserProfileSessionBean setPwdPolicy() 0014"
+				+ "\n"
+				+ "   passwordPolicyBean="
+				+ passwordPolicyBean
+				);
+		//debug
+		pwdPolicy = passwordPolicyBean.getPwdPolicy();
+		
+		if (pwdPolicy == null) {
+			feedback = com.yardi.rentSurvey.YardiConstants.YRD000B;
+			System.out.println("com.yardi.ejb UserProfileSessionBean setPwdPolicy() pwdPolicy==null 0011");
+			return;
+		}
+		//debug
+		System.out.println("com.yardi.ejb UserProfileSessionBean setPwdPolicy() 000B"
+			+ "\n"
+			+ "   pwdPolicy="
+			+ pwdPolicy
+			+ "\n"
+			+ "   feedback="
+			+ feedback);
+		//debug
+	}
+
 	public String stringify() {
 		return "UserProfileSessionBean="
 				+ this;

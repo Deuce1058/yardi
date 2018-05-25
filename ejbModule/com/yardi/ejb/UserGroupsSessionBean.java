@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import com.yardi.userServices.InitialPage;
 import com.yardi.userServices.UserGroupsGraph;
 
 /**
@@ -18,6 +19,10 @@ import com.yardi.userServices.UserGroupsGraph;
 public class UserGroupsSessionBean implements UserGroupsSessionBeanRemote {
 	@PersistenceContext(unitName="yardi")
 	private EntityManager em;
+	private String initialPage = "";
+	private String feedback = "";
+	private Vector<InitialPage> initialPageList = new Vector<InitialPage>();
+	private Vector<UserGroupsGraph> userGroups;
 
 	public Vector<UserGroupsGraph> find(String userID) {
 		System.out.println("com.yardi.ejb.UserGroupsSessionBean find() 0000");
@@ -72,6 +77,62 @@ public class UserGroupsSessionBean implements UserGroupsSessionBeanRemote {
     	return userGroupsVector;
 	}
 	
-    public UserGroupsSessionBean() {
+    public String getInitialPage(String userName) {
+    	feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
+    	userGroups = find(userName);
+		initialPage = userGroups.get(0).getGmInitialPage(); //GM_INITIAL_PAGE from GROUPS_MASTER
+		//debug
+		System.out.println("com.yardi.ejb UserGroupsSessionBean getInitialPage() 0001" 
+				+ "\n"
+				+ "   initialPage="
+				+ initialPage
+				);
+		System.out.println("com.yardi.ejb UserGroupsSessionBean getInitialPage() 0002");
+		for (UserGroupsGraph u : userGroups) {
+			System.out.println(
+				  "\n"
+				+ "   UserGroupsGraph=" 
+				+ u.toString()
+				);
+		}
+		//debug
+
+		if (userGroups.size()>1) {
+			// user is in multiple groups. Set ST_LAST_REQUEST to the html select group page. User picks the initial page
+			feedback = com.yardi.rentSurvey.YardiConstants.YRD000E;
+			initialPage = com.yardi.rentSurvey.YardiConstants.USER_SELECT_GROUP_PAGE;
+			//debug
+			System.out.println("com.yardi.ejb UserGroupsSessionBean getInitialPage() 0003" 
+					+ "\n"
+					+ "   initialPage="
+					+ initialPage
+					);
+			//debug
+		}
+		
+		return initialPage;
+	}
+
+	public String getFeedback() {
+		return feedback;
+	}
+
+	public Vector<InitialPage> getInitialPageList() {
+		setInitialPageList();
+		return initialPageList;
+	}
+
+	private void setInitialPageList() {
+		this.initialPageList = new Vector<InitialPage>();
+
+		for (UserGroupsGraph g : userGroups) {
+			//getGmDescription returns a string containing the short description for the button and a label for the button
+			//getGmInitialPage() returns the url value for url= attribute
+			initialPageList.add(new InitialPage(g.getGmDescription(),
+				g.getGmInitialPage()));
+		}
+	}
+
+	public UserGroupsSessionBean() {
     }
 }
