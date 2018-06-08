@@ -1,6 +1,5 @@
 package com.yardi.QSECOFR;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;

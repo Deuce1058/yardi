@@ -259,7 +259,6 @@ public class UserServices implements UserServicesRemote {
 					+ pwdLifeInDays 
 					);
 			//debug
-			UniqueTokens uniqueToken = null; //single element from userTokens which is an ArrayList of UniqueToken.class \
 			Vector<UniqueTokens> userTokens = uniqueTokensBean.findTokens(userName);
 			userTokens = uniqueTokensBean.removeExtraTokens(userTokens);
 			//debug
@@ -524,7 +523,6 @@ public class UserServices implements UserServicesRemote {
 		gc.set(Calendar.MINUTE, 0);
 		gc.set(Calendar.SECOND, 0);
 		gc.set(Calendar.HOUR_OF_DAY, 0);
-		long time = gc.getTimeInMillis();
 		//debug
 		System.out.println("com.yardi.ejb UserServices changeUserToken() 0018 "
 				+ "\n "

@@ -19,6 +19,9 @@ public class YardiConstants {
 	public static final String YRD000D = "YRD000D=No such user name";
 	public static final String YRD000E = "YRD000E=User belongs to multiple groups";
 	public static final String YRD000F = "YRD000F=Invalid password";
+	public static final String YRD0010 = "YRD0010=New password must not contain current password";
+	public static final String YRD0011 = "YRD0011=New password must not contain user name in any case";
+	public static final String YRD0012 = "YRD0012=New password has too many repeated charaters";
 	public static final Pattern PATTERN_UPPER    = Pattern.compile(".*?\\p{Lu}");
 	public static final Pattern PATTERN_LOWER    = Pattern.compile(".*?[\\p{L}&&[^\\p{Lu}]]");
 	public static final Pattern PATTERN_NUMBER   = Pattern.compile(".*\\d.*");

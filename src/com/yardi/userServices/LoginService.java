@@ -1,13 +1,9 @@
 package com.yardi.userServices;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.Vector;
-import java.util.Hashtable;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -17,8 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 //import javax.servlet.RequestDispatcher;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.yardi.ejb.SessionsTable;
 //import com.yardi.ejb.SessionsTableSessionBeanRemote;
@@ -26,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.yardi.ejb.UserGroupsSessionBeanRemote;
 import com.yardi.ejb.UserServicesRemote;
 //import com.yardi.QSECOFR.TokenRequest;
-import com.yardi.userServices.InitialPage;
 
 
 /**

@@ -3,6 +3,7 @@ package com.yardi.ejb;
 import java.util.Vector;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.persistence.EntityManager;
@@ -10,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import com.yardi.userServices.PasswordAuthentication;
+import com.yardi.userServices.PasswordStatistics;
 
 /**
  * Session Bean implementation class PasswordPolicySessionBean
@@ -26,7 +28,8 @@ public class PasswordPolicySessionBean implements PasswordPolicySessionBeanRemot
 	private EntityManager emgr;
 	private String feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
 	private PpPwdPolicy pwdPolicy;
-
+	@EJB UserProfileSessionBeanRemote userProfileBean; 
+	
     public PasswordPolicySessionBean() {
     	System.out.println("com.yadri.ejb PasswordPolicySessionBean PasswordPolicySessionBean()");
     }
@@ -98,6 +101,7 @@ public class PasswordPolicySessionBean implements PasswordPolicySessionBeanRemot
 		boolean lowerRqd = false;
 		boolean numberRqd = false;
 		boolean specialRqd = false;
+		PasswordStatistics pwdStatistics; 
 		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
 		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
 		//getPwdPolicy();
@@ -140,77 +144,85 @@ public class PasswordPolicySessionBean implements PasswordPolicySessionBeanRemot
 				);   
 		//debug
 		
-		if (lowerRqd && com.yardi.rentSurvey.YardiConstants.PATTERN_LOWER.matcher(password).matches()) {
-			hasLower = true;
+		synchronized(this) {
+			pwdStatistics = new PasswordStatistics(password.toCharArray());
 			//debug
-			System.out.println("com.yardi.ejb PasswordPolicySessionBean enforce() 0003"
-					+ "\n "
-					+ "  hasLower="
-					+ hasLower 
-					);   
+			System.out.println(pwdStatistics.toString1());
 			//debug
-		} else {
-			
-			if (lowerRqd) {
-				feedback = com.yardi.rentSurvey.YardiConstants.YRD0007;
+
+
+			if (lowerRqd && pwdStatistics.getPwdNbrLower() > 0) {
+				hasLower = true;
+				//debug
+				System.out.println("com.yardi.ejb PasswordPolicySessionBean enforce() 0003"
+						+ "\n "
+						+ "  hasLower="
+						+ hasLower 
+						);   
+				//debug
+			} else {
+
+				if (lowerRqd) {
+					feedback = com.yardi.rentSurvey.YardiConstants.YRD0007;
+					return false;
+				}
+			}
+
+			if (upperRqd && pwdStatistics.getPwdNbrUpper() > 0) {
+				hasUpper = true;
+				//debug
+				System.out.println("com.yardi.ejb com.yardi.ejb PasswordPolicySessionBean enforce() 0004"
+						+ "\n "
+						+ "  hasUpper="
+						+ hasUpper 
+						);   
+				//debug
+			} else {
+
+				if (upperRqd) {
+					feedback = com.yardi.rentSurvey.YardiConstants.YRD0006;
+					return false;
+				}
+			}
+
+			if (numberRqd && pwdStatistics.getPwdNbrNbr() > 0) {
+				hasNumber = true;
+				//debug
+				System.out.println("com.yardi.ejb PasswordPolicySessionBean enforce() 0005"
+						+ "\n "
+						+ "  hasNumber="
+						+ hasNumber 
+						);   
+				//debug
+			} else {
+
+				if (numberRqd) {
+					feedback = com.yardi.rentSurvey.YardiConstants.YRD0008;
+					return false;
+				}
+			}
+
+			if (specialRqd && pwdStatistics.getPwdNbrSpecial() > 0) {
+				hasSpecial = true;
+				//debug
+				System.out.println("com.yardi.ejb PasswordPolicySessionBean enforce() 0006"
+						+ "\n "
+						+ "  hasSpecial="
+						+ hasSpecial 
+						);   
+				//debug
+			} else {
+
+				if (specialRqd) {
+					feedback = com.yardi.rentSurvey.YardiConstants.YRD0009;
+					return false;
+				}
+			}
+
+			if (pwdStatistics.getPwdLength() < pwdPolicy.getPpPwdMinLen()) {
+				feedback = com.yardi.rentSurvey.YardiConstants.YRD0005;
 				return false;
 			}
-		}
-		
-		if (upperRqd && com.yardi.rentSurvey.YardiConstants.PATTERN_UPPER.matcher(password).matches()) {
-			hasUpper = true;
-			//debug
-			System.out.println("com.yardi.ejb com.yardi.ejb PasswordPolicySessionBean enforce() 0004"
-					+ "\n "
-					+ "  hasUpper="
-					+ hasUpper 
-					);   
-			//debug
-		} else {
-			
-			if (upperRqd) {
-				feedback = com.yardi.rentSurvey.YardiConstants.YRD0006;
-				return false;
-			}
-		}
-		
-		if (numberRqd && com.yardi.rentSurvey.YardiConstants.PATTERN_NUMBER.matcher(password).matches()) {
-			hasNumber = true;
-			//debug
-			System.out.println("com.yardi.ejb PasswordPolicySessionBean enforce() 0005"
-					+ "\n "
-					+ "  hasNumber="
-					+ hasNumber 
-					);   
-			//debug
-		} else {
-			
-			if (numberRqd) {
-				feedback = com.yardi.rentSurvey.YardiConstants.YRD0008;
-				return false;
-			}
-		}
-		
-		if (specialRqd && com.yardi.rentSurvey.YardiConstants.PATTERN_SPECIAL1.matcher(password).matches()) {
-			hasSpecial = true;
-			//debug
-			System.out.println("com.yardi.ejb PasswordPolicySessionBean enforce() 0006"
-					+ "\n "
-					+ "  hasSpecial="
-					+ hasSpecial 
-					);   
-			//debug
-		} else {
-			
-			if (specialRqd) {
-				feedback = com.yardi.rentSurvey.YardiConstants.YRD0009;
-				return false;
-			}
-		}
-		
-		if (password.length() < pwdPolicy.getPpPwdMinLen()) {
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD0005;
-			return false;
 		}
 		
 		short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
@@ -323,7 +335,85 @@ public class PasswordPolicySessionBean implements PasswordPolicySessionBeanRemot
 			+ feedback);
 		//debug
 	}
+	
+	private boolean passwordContainsCurrent(final String userName, final String password) {
+		int passwordLength = password.length();
+		int lengthToExtract;
+		int startPosition;
+		int endPosition;
+		String substr = "";
+		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
+		UserProfile userProfile = userProfileBean.find(userName);
+		
+		if (userProfile==null) {
+			System.out.println("com.yardi.ejb PasswordPolicySessionBean passwordContainsCurrent() 0012"
+					+ com.yardi.rentSurvey.YardiConstants.YRD0001);
+			feedback = com.yardi.rentSurvey.YardiConstants.YRD0001;
+			return true;
+		}
 
+		for(lengthToExtract=1, startPosition=0, endPosition=startPosition+lengthToExtract; 
+				lengthToExtract<passwordLength;
+				endPosition++) {
+			substr = password.substring(startPosition, endPosition);
+			startPosition++;
+			
+			if (startPosition+lengthToExtract > passwordLength) {
+				startPosition = 0;
+				endPosition = startPosition+lengthToExtract;
+				lengthToExtract++;
+			}
+			
+			/* substr is handed off to authenticate to see if it matches the current or previous password*/
+			if (passwordAuthentication.authenticate(substr.toCharArray(), userProfile.getUptoken())) {
+				feedback = com.yardi.rentSurvey.YardiConstants.YRD0010;
+				return true;
+			}
+			
+			System.out.println("com.yardi.ejb PasswordPolicySessionBean passwordContainsCurrent() 0011"
+					+ "\n "
+					+ "   substr="
+					+ substr
+					);
+		}
+		
+		return false;
+	}
+	
+	private boolean passwordConatinsUserName(final String userName, final String password) {
+		int passwordLength = password.length();
+		int lengthToExtract;
+		int startPosition;
+		int endPosition;
+		String substr = "";
+		
+		for(lengthToExtract=1, startPosition=0, endPosition=startPosition+lengthToExtract; 
+				lengthToExtract<passwordLength;
+				endPosition++) {
+			substr = password.substring(startPosition, endPosition);
+			startPosition++;
+			
+			if (startPosition+lengthToExtract > passwordLength) {
+				startPosition = 0;
+				endPosition = startPosition+lengthToExtract;
+				lengthToExtract++;
+			}
+			
+			if (substr.equalsIgnoreCase(password)) {
+				feedback = com.yardi.rentSurvey.YardiConstants.YRD0011;
+				return true;
+			}
+			
+			System.out.println("com.yardi.ejb PasswordPolicySessionBean passwordContainsCurrent() 0013"
+					+ "\n "
+					+ "   substr="
+					+ substr
+					);
+		}
+		
+		return false;
+	}
+	
 	public String stringify() {
 		return "PasswordPolicySessionBean [emgr=" + emgr + "]"
 				+ "\n  "
