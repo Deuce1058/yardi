@@ -28,7 +28,7 @@ BCG<
 
 AC
 UP1_USER_NAME = aa
-UPTOKEN=$31$16$CcOJJC7D5xT5YUJONNNYZ67pSdQFOUWtdoUS6o3W6o0 
+UPTOKEN=$31$16$CcOJJC7D5xT5YUJONNNYZ67pSdQFOUWtdoUS6o3W6o0
 password=aa
 
 TOKENS
@@ -45,3 +45,2107 @@ TOKENS
 10 $31$16$tEyneRZb8nWN8Ukp4XSTNcKcyB86zVrWnPvLXD8oR_4 [10]
 
 select * from db2admin.unique_tokens where up1_user_name = 'aa' order by  up1_date_added DESC, up1_rrn DESC;
+
+
+$31$16$qba-udEOtO0ZqNe73OuJCspHqHm0ILLZTk6mI6ISa6w 2018-01-01 270
+$31$16$Pp54ZaURHDXIhQZr8inXazeJa_D6msGLDoVN2nVyK9w 2017-01-08 271
+$31$16$xIrpkKp9Ij7ZxzR7Rb83csdqOeks4DzGbogGPCIZNAk 2017-01-07 272
+$31$16$G3mARfnlzsSgsCmnZJ6EuY-ZtPDw--OKIsRs4toSp3M 2017-01-06 273<
+$31$16$fCztGhUhPjMBMA0_sc_OwFVbKWv8dzxvgLDWouozEjY 2017-01-05 274
+$31$16$_wDhzyy2lS69xGPnw_0urHs0FdwEmaGMuI8IpVLvdAo 2017-01-04 276
+$31$16$wtIhN2p04Keuu2ZrRJPSbd6YmzGYYvHpk-1zhdRzB9s 2017-01-04 275
+$31$16$sR9a8ANCRLJ14L59Oo-5kUKtzAtO62sNzkNoxHChlmg 2017-01-03 277
+$31$16$yujsj-anm0WcFNbZnIJMLFJLlHGy1Bza-glVYWEtSE8 2017-01-02 278
+$31$16$tEyneRZb8nWN8Ukp4XSTNcKcyB86zVrWnPvLXD8oR_4 2017-01-01 279
+
+UniqueTokensBean
+0000
+0001
+0002
+0003
+0004
+0005
+0006
+0007
+0008
+0009
+000A
+000B
+000C
+000D
+000E
+000F
+0010
+0011
+0012
+0013
+0014
+0015
+0016
+
+
+UserProfileBean()
+0000
+0001
+0002
+0003
+0004
+0005
+0006
+0007
+0008
+0009
+000A
+000B
+000C
+000D
+000E
+000F
+0010
+0011
+0012
+0013
+0014
+0015
+0016
+0017
+
+
+UserServices
+0000
+0001
+    0002
+    0003
+    0004
+    0005
+    0006
+    0007
+    0008
+    0009
+    000A
+    000B
+    000C
+    000D
+    000E
+    000F
+0014
+    0015
+0020
+    0021
+    0022
+    0023
+    0024
+0029
+002A
+002B
+002C
+002D
+    002E
+    002F
+0018
+0030
+0031
+0032
+0033
+0034
+0035
+
+
+PasswordPolicyBean
+0000
+0001
+0002
+0003
+0004
+0005
+0006
+0007
+0008
+0009
+000A
+000B
+000C
+000D
+000E
+000F
+0010
+0011
+
+0012
+0013
+
+SessionsTableBean
+0000
+0001
+0002
+
+StartupShutdown
+0000
+
+password=ABC
+   has   lower=false
+   has   upper=true
+   has  number=false
+   has special=false
+password=ABc
+   has   lower=true
+   has   upper=true
+   has  number=false
+   has special=false
+password=AB2
+   has   lower=false
+   has   upper=true
+   has  number=true
+   has special=false
+password=AB!
+   has   lower=false
+   has   upper=true
+   has  number=false
+   has special=true
+password=AbC
+   has   lower=true
+   has   upper=true
+   has  number=false
+   has special=false
+password=Abc
+   has   lower=true
+   has   upper=true
+   has  number=false
+   has special=false
+password=Ab2
+   has   lower=true
+   has   upper=true
+   has  number=true
+   has special=false
+password=Ab!
+   has   lower=true
+   has   upper=true
+   has  number=false
+   has special=true
+password=A2C
+   has   lower=false
+   has   upper=true
+   has  number=true
+   has special=false
+password=A2c
+   has   lower=true
+   has   upper=true
+   has  number=true
+   has special=false
+password=A23
+   has   lower=false
+   has   upper=true
+   has  number=true
+   has special=false
+password=A2!
+   has   lower=false
+   has   upper=true
+   has  number=true
+   has special=true
+password=A!C
+   has   lower=false
+   has   upper=true
+   has  number=false
+   has special=true
+password=A!c
+   has   lower=true
+   has   upper=true
+   has  number=false
+   has special=true
+password=A!2
+   has   lower=false
+   has   upper=true
+   has  number=true
+   has special=true
+password=A!@
+   has   lower=false
+   has   upper=true
+   has  number=false
+   has special=true
+password=aBC
+   has   lower=true
+   has   upper=true
+   has  number=false
+   has special=false
+password=aBc
+   has   lower=true
+   has   upper=true
+   has  number=false
+   has special=false
+password=aB2
+   has   lower=true
+   has   upper=true
+   has  number=true
+   has special=false
+password=aB!
+   has   lower=true
+   has   upper=true
+   has  number=false
+   has special=true
+password=abC
+   has   lower=true
+   has   upper=true
+   has  number=false
+   has special=false
+password=abc
+   has   lower=true
+   has   upper=false
+   has  number=false
+   has special=false
+password=ab2
+   has   lower=true
+   has   upper=false
+   has  number=true
+   has special=false
+password=ab!
+   has   lower=true
+   has   upper=false
+   has  number=false
+   has special=true
+password=a2C
+   has   lower=true
+   has   upper=true
+   has  number=true
+   has special=false
+password=a2c
+   has   lower=true
+   has   upper=false
+   has  number=true
+   has special=false
+password=a23
+   has   lower=true
+   has   upper=false
+   has  number=true
+   has special=false
+password=a2!
+   has   lower=true
+   has   upper=false
+   has  number=true
+   has special=true
+password=a!C
+   has   lower=true
+   has   upper=true
+   has  number=false
+   has special=true
+password=a!c
+   has   lower=true
+   has   upper=false
+   has  number=false
+   has special=true
+password=a!2
+   has   lower=true
+   has   upper=false
+   has  number=true
+   has special=true
+password=a!@
+   has   lower=true
+   has   upper=false
+   has  number=false
+   has special=true
+password=2AB
+   has   lower=false
+   has   upper=true
+   has  number=true
+   has special=false
+password=2Ab
+   has   lower=true
+   has   upper=true
+   has  number=true
+   has special=false
+password=2A3
+   has   lower=false
+   has   upper=true
+   has  number=true
+   has special=false
+password=2A!
+   has   lower=false
+   has   upper=true
+   has  number=true
+   has special=true
+password=2aB
+   has   lower=true
+   has   upper=true
+   has  number=true
+   has special=false
+password=2ab
+   has   lower=true
+   has   upper=false
+   has  number=true
+   has special=false
+password=2a3
+   has   lower=true
+   has   upper=false
+   has  number=true
+   has special=false
+password=2a!
+   has   lower=true
+   has   upper=false
+   has  number=true
+   has special=true
+password=23A
+   has   lower=false
+   has   upper=true
+   has  number=true
+   has special=false
+password=23a
+   has   lower=true
+   has   upper=false
+   has  number=true
+   has special=false
+password=234
+   has   lower=false
+   has   upper=false
+   has  number=true
+   has special=false
+password=23!
+   has   lower=false
+   has   upper=false
+   has  number=true
+   has special=true
+password=2!A
+   has   lower=false
+   has   upper=true
+   has  number=true
+   has special=true
+password=2!a
+   has   lower=true
+   has   upper=false
+   has  number=true
+   has special=true
+password=2!3
+   has   lower=false
+   has   upper=false
+   has  number=true
+   has special=true
+password=2!@
+   has   lower=false
+   has   upper=false
+   has  number=true
+   has special=true
+password=!AB
+   has   lower=false
+   has   upper=true
+   has  number=false
+   has special=true
+password=!Ab
+   has   lower=true
+   has   upper=true
+   has  number=false
+   has special=true
+password=!A2
+   has   lower=false
+   has   upper=true
+   has  number=true
+   has special=true
+password=!A@
+   has   lower=false
+   has   upper=true
+   has  number=false
+   has special=true
+password=!aB
+   has   lower=true
+   has   upper=true
+   has  number=false
+   has special=true
+password=!ab
+   has   lower=true
+   has   upper=false
+   has  number=false
+   has special=true
+password=!a2
+   has   lower=true
+   has   upper=false
+   has  number=true
+   has special=true
+password=!a@
+   has   lower=true
+   has   upper=false
+   has  number=false
+   has special=true
+password=!2A
+   has   lower=false
+   has   upper=true
+   has  number=true
+   has special=true
+password=!2a
+   has   lower=true
+   has   upper=false
+   has  number=true
+   has special=true
+password=!23
+   has   lower=false
+   has   upper=false
+   has  number=true
+   has special=true
+password=!2@
+   has   lower=false
+   has   upper=false
+   has  number=true
+   has special=true
+password=!@A
+   has   lower=false
+   has   upper=true
+   has  number=false
+   has special=true
+password=!@a
+   has   lower=true
+   has   upper=false
+   has  number=false
+   has special=true
+password=!@2
+   has   lower=false
+   has   upper=false
+   has  number=true
+   has special=true
+password=!@#
+   has   lower=false
+   has   upper=false
+   has  number=false
+   has special=true
+======================================================
+======================================================
+======================================================
+OK1 password=[A, A, b, 2, c, 3, d, 4, +, =, !, @, e, f, g, B, C, D, E, 5, 6]
+              R  R                                                        
+              U  U                                         U  U  U  U
+                    L     L     L                 L  L  L           
+                       D     D     D                                   D  D
+                                      S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=6
+          pwdNbrLower=6
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK1 password=[c, c, A, B, 2, d, e, f, g, h, 3, 4, 5, 6, !, C, D, @, #, $, %]
+              R  R                                         
+                    U  U                                   U  U
+              L  L           L  L  L  L  L              
+                          D                 D  D  D  D
+                                                        S        S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+
+OK1 password=[9, 9, A, B, C, D, 2, 3, 4, +, _, #, e, f, g, 5, 6, h, j, k, 7]
+              R  R
+                    U  U  U  U                       
+                                                  L  L  L        L  L  L
+              D  D              D  D  D                    D  D           D
+                                         S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=6
+            pwdNbrNbr=8
+        pwdNbrSpecial=3
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK1 password=[!, !, a, b, c, d, 2, 3, 4, 5, A, B, C, %, ^, D, E, e, f, g, 6]
+              R  R  
+                                            U  U  U        U  U  
+                    L  L  L  L                                   L  L  L
+                                D  D  D  D                                D
+              S  S                                   S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=5
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKA password=[b, 2, c, A, A, 3, d, 4, +, =, !, @, e, f, g, B, C, D, E, 5, 6]
+                       R  R
+                       U  U                                U  U  U  U
+              L     L           L                 L  L  L
+                 D           D     D                                   D  D
+                                      S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=6
+          pwdNbrLower=6
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKA password=[A, B, 2, c, c, d, e, f, g, h, 3, 4, 5, 6, !, C, D, @, #, $, %]
+                       R  R
+              U  U                                         U  U
+                       L  L  L  L  L  L  L
+                    D                       D  D  D  D
+                                                        S        S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKA password=[A, B, C, 9, 9, D, 2, 3, 4, +, _, #, e, f, g, 5, 6, h, j, k, 7]
+                       R  R
+              U  U  U        U                             
+                                                  L  L  L        L  L  L
+                       D  D     D  D  D                     D  D          D
+                                         S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=6
+            pwdNbrNbr=8
+        pwdNbrSpecial=3
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKA password=[a, b, c, !, !, d, 2, 3, 4, 5, A, B, C, %, ^, D, E, e, f, g, 6]
+                       R  R
+                                            U  U  U        U  U  
+              L  L  L        L                                   L  L  L  
+                                D  D  D  D                                D
+                       S  S                          S  S  
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=5
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKB password=[b, A, 2, c, A, 3, d, 4, +, =, !, @, e, f, g, B, C, D, E, 5, 6]
+                 R        R
+                 U        U                                U  U  U  U  
+              L        L        L                 L  L  L
+                    D        D     D                                    D  D
+                                      S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=6
+          pwdNbrLower=6
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKB password=[A, c, B, 2, c, d, e, f, g, h, 3, 4, 5, 6, !, C, D, @, #, $, %]
+             R        R
+          U     U                                      U  U  
+             L        L  L  L  L  L  L
+                   D                    D  D  D  D
+                                                    S        S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKB password=[A, 9, B, C, 9, D, 2, 3, 4, +, _, #, e, f, g, 5, 6, h, j, k, 7]
+                 R        R
+              U     U  U     U         
+                                                  L  L  L        L  L  L  
+                 D        D     D  D  D                    D  D           D
+                                         S  S   S  
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=6
+            pwdNbrNbr=8
+        pwdNbrSpecial=3
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKB password=[a, !, b, c, !, d, 2, 3, 4, 5, A, B, C, %, ^, D, E, e, f, g, 6]
+                 R        R
+                                            U  U  U        U  U  
+              L     L  L     L                                   L  L  L
+                                D  D  D  D                                D
+                 S        S                          S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=5
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK2 password=[B, B, B, c, d, e, f, 1, 2, 3, $, %, ^, &, G, 4, 5, 6, H, j, 7]
+              R  R  R
+              U  U  U                                   U           U
+                       L  L  L  L                                      L
+                                   D  D  D                 D  D  D        D
+                                            S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=5
+          pwdNbrLower=5
+            pwdNbrNbr=7
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK2 password=[e, e, e, 2, 3, 4, 5, 6, !, @, #, $, F, G, H, a, b, c, d, J, K]
+              R  R  R
+                                                  U  U  U              U  U
+              L  L  L                                      L  L  L  L  
+                       D  D  D  D  D
+                                      S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=5
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK2 password=[5, 5, 5, D, E, F, G, H, k, m, 4, 5, !, @, #, a, b, c, d, $, %]
+              R  R  R                          R
+                       U  U  U  U  U  
+                                      L  L                 L  L  L  L
+              D  D  D                       D  D
+                                                  S  S  S              S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=5
+          pwdNbrLower=6
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK2 password=[@, @, @, 7, 8, 9, 6, !, #, $, %, A, B, C, D, a, b, c, 2, 3, 4]
+              R  R  R
+                                               U  U  U  U
+                                                           L  L  L  
+                       D  D  D  D                                   D  D  D
+              S  S  S              S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=3
+            pwdNbrNbr=7
+        pwdNbrSpecial=7
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKC password=[c, d, e, B, B, B, f, 1, 2, 3, $, %, ^, &, G, 4, 5, 6, H, j, 7]
+                       R  R  R
+                       U  U  U                          U           U
+              L  L  L           L                                      L
+                                   D  D  D                 D  D  D        D
+                                             S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=5
+          pwdNbrLower=5
+            pwdNbrNbr=7
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKC password=[2, 3, 4, e, e, e, 5, 6, !, @, #, $, F, G, H, a, b, c, d, J, K]
+                       R  R  R
+                                                  U  U  U              U  U
+                       L  L  L                             L  L  L  L  
+              D  D  D           D  D         
+                                      S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=5
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKC password=[D, E, F, 5, 5, 5, G, H, k, m, 4, 5, !, @, #, a, b, c, d, $, %]
+                       R  R  R                 R
+              U  U  U           U  U  
+                                      L  L                 L  L  L  L
+                       D  D  D              D  D  
+                                                  S  S  S              S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=5
+          pwdNbrLower=6
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKC password=[7, 8, 9, @, @, @, 6, !, #, $, %, A, B, C, D, a, b, c, 2, 3, 4]
+                       R  R  R
+                                               U  U  U  U
+                                                           L  L  L
+              D  D  D           D                                   D  D  D
+                       S  S  S     S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=3
+            pwdNbrNbr=7
+        pwdNbrSpecial=7
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKD password=[B, c, B, d, B, e, f, 1, 2, 3, $, %, ^, &, G, 4, 5, 6, H, j, 7]
+              R     R     R
+              U     U     U                             U           U
+                 L     L     L  L                                      L                       
+                                   D  D  D                 D  D  D        D
+                                            S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=5
+          pwdNbrLower=5
+            pwdNbrNbr=7
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKD password=[e, 2, e, 3, e, 4, 5, 6, !, @, #, $, F, G, H, a, b, c, d, J, K]
+              R     R     R
+                                                  U  U  U              U  U
+              L     L     L                                L  L  L  L
+                 D     D     D  D  D          
+                                      S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=5
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKD password=[5, D, 5, E, 5, F, G, H, k, m, 4, 5, !, @, #, a, b, c, d, $, %]
+              R     R     R                    R
+                 U     U     U  U  U       
+                                      L  L                 L  L  L  L
+              D     D     D                 D  D
+                                                  S  S  S              S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=5
+          pwdNbrLower=6
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKD password=[@, 7, @, 8, @, 9, 6, !, #, $, %, A, B, C, D, a, b, c, 2, 3, 4]
+              R     R     R
+                                               U  U  U  U
+                                                           L  L  L
+                 D     D     D  D                                   D  D  D
+              S     S     S        S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=3
+            pwdNbrNbr=7
+        pwdNbrSpecial=7
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK3 password=[C, C, C, C, 2, 3, 4, 5, a, b, c, d, @, #, $, %, ^, A, B, D, E]
+              R  R  R  R
+              U  U  U  U                                         U  U  U  U
+                                      L  L  L  L
+                          D  D  D  D         
+                                                  S  S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=8
+          pwdNbrLower=4
+            pwdNbrNbr=4
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK3 password=[b, b, b, b, B, C, D, E, 3, 4, 5, 6, 7, @, #, $, %, ^, a, c, d]
+              R  R  R  R
+                          U  U  U  U
+              L  L  L  L                                            L  L  L
+                                      D  D  D  D  D
+                                                     S  S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=4
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK3 password=[2, 2, 2, 2, a, b, c, d, E, F, G, !, @, #, $, A, B, 3, 4, 5, 6]
+              R  R  R  R
+                                      U  U  U              U  U  
+                          L  L  L  L                     
+              D  D  D  D                                         D  D  D  D  
+                                               S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=5
+          pwdNbrLower=4
+            pwdNbrNbr=8
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK3 password=[#, #, #, #, A, B, C, d, e, f, g, 2, 3, 4, 5, !, @, $, %, D, E]
+          R  R  R  R
+                      U  U  U                                      U  U
+                               L  L  L  L
+                                           D  D  D  D
+          S  S  S  S                                   S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=5
+          pwdNbrLower=4
+            pwdNbrNbr=4
+        pwdNbrSpecial=8
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKE password=[2, C, 3, C, 5, C, C, 4, a, b, c, d, @, #, $, %, ^, A, B, D, E]
+                 R     R     R  R
+                 U     U     U  U                                U  U  U  U
+                                      L  L  L  L
+              D     D     D        D                      
+                                                  S  S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=8
+          pwdNbrLower=4
+            pwdNbrNbr=4
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKE password=[b, 3, 4, b, b, 4, b, 5, B, C, D, E, 6, 7, @, #, %, ^, a, c, d]
+              R     R  R  R  R  R
+                                      U  U  U  U
+              L        L  L     L                                   L  L  L
+                 D  D        D     D              D  D
+                                                        S  S  S  S
+   pwdNbrRepeatedchar=6
+          pwdNbrUpper=4
+          pwdNbrLower=7
+            pwdNbrNbr=6
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKE password=[a, 2, b, 2, c, 2, 2, d, E, F, G, !, @, #, $, A, B, 3, 4, 5, 6]
+                 R     R     R  R
+                                      U  U  U              U  U  
+              L     L     L        L  
+                 D     D     D  D                                D  D  D  D
+                                               S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=5
+          pwdNbrLower=4
+            pwdNbrNbr=8
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKE password=[#, #, A, B, C, #, #, d, e, f, g, 2, 3, 4, 5, !, @, $, %, D, E]
+              R  R           R  R
+                    U  U  U                                            U  U
+                                   L  L  L  L  
+                                               D  D  D  D
+              S  S           S  S                          S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=5
+          pwdNbrLower=4
+            pwdNbrNbr=4
+        pwdNbrSpecial=8
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK4 password=[a, b, c, d, e, f, g, A, A, 2, 3, 4, 5, @, #, $, %, ^, B, C, D]
+                                   R  R
+                                   U  U                             U  U  U
+              L  L  L  L  L  L  L
+                                         D  D  D  D
+                                                     S  S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=5
+          pwdNbrLower=7
+            pwdNbrNbr=4
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK4 password=[b, c, d, e, f, g, h, a, a, 2, 3, 4, 5, 6, A, B, C, @, #, $, %]
+                               R  R
+                                                    U  U  U   
+          L  L  L  L  L  L  L  L  L
+                                     D  D  D  D  D
+                                                             S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=3
+          pwdNbrLower=9
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK4 password=[a, b, c, d, e, f, g, 2, 2, A, B, C, D, 3, 4, 5, 6, @, #, $, %]
+                                   R  R
+                                         U  U  U  U  
+              L  L  L  L  L  L  L
+                                   D  D              D  D  D  D
+                                                                 S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=7
+            pwdNbrNbr=6
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK4 password=[a, b, c, d, e, f, g, !, !, 2, 3, 4, 5, 6, A, B, C, D, @, #, $]
+                                   R  R
+                                                        U  U  U  U
+              L  L  L  L  L  L  L
+                                         D  D  D  D  D
+                                   S  S                             S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKF password=[a, b, c, d, e, f, g, A, 2, 3, A, 4, 5, @, #, $, %, ^, B, C, D]
+                                   R        R
+                                   U        U                       U  U  U
+              L  L  L  L  L  L  L
+                                      D  D     D  D   
+                                                     S  S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=5
+          pwdNbrLower=7
+            pwdNbrNbr=4
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKF password=[b, c, d, e, f, g, h, a, 2, 3, a, 4, 5, 6, A, B, C, @, #, $, %]
+                                   R        R
+                                                        U  U  U
+              L  L  L  L  L  L  L  L        L
+                                      D  D     D  D  D
+                                                                 S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=3
+          pwdNbrLower=9
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKF password=[a, b, c, d, e, f, g, 2, A, B, 2, C, D, 3, 4, 5, 6, @, #, $, %]
+                                   R        R
+                                      U  U     U  U
+              L  L  L  L  L  L  L
+                                   D        D        D  D  D  D
+                                                                 S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=7
+            pwdNbrNbr=6
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKF password=[a, b, c, d, e, f, g, !, 2, 3, !, 4, 5, 6, A, B, C, D, @, #, $]
+                                   R        R
+                                                        U  U  U  U
+              L  L  L  L  L  L  L
+                                      D  D     D  D  D
+                                   S        S                       S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKG password=[a, b, c, d, e, f, g, 2, 3, A, A, 4, 5, @, #, $, %, ^, B, C, D]
+                                         R  R
+                                         U  U                       U  U  U
+              L  L  L  L  L  L  L
+                                   D  D        D  D
+                                                     S  S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=5
+          pwdNbrLower=7
+            pwdNbrNbr=4
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKG password=[b, c, d, e, f, g, h, 2, 3, a, a, 4, 5, 6, A, B, C, @, #, $, %]
+                                         R  R
+                                                        U  U  U
+              L  L  L  L  L  L  L        L  L
+                                   D  D        D  D  D  
+                                                                 S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=3
+          pwdNbrLower=9
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKG password=[a, b, c, d, e, f, g, A, B, 2, 2, C, D, 3, 4, 5, 6, @, #, $, %]
+                                         R  R
+                                   U  U        U  U  
+              L  L  L  L  L  L  L
+                                         D  D        D  D  D  D  
+                                                                 S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=7
+            pwdNbrNbr=6
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKG password=[a, b, c, d, e, f, g, 2, 3, !, !, 4, 5, 6, A, B, C, D, @, #, $]
+                                         R  R
+                                                        U  U  U  U
+              L  L  L  L  L  L  L
+                                   D  D        D  D  D  
+                                         S  S                       S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK5 password=[a, b, c, d, e, f, g, A, A, A, !, @, #, $, B, C, D, E, 2, 3, 4]
+                                   R  R  R
+                                   U  U  U              U  U  U  U
+              L  L  L  L  L  L  L
+                                                                    D  D  D
+                                            S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=7
+          pwdNbrLower=7
+            pwdNbrNbr=3
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK5 password=[b, c, d, e, f, g, h, a, a, a, A, B, C, D, 2, 3, 4, @, #, $, %]
+                                   R  R  R
+                                            U  U  U  U
+              L  L  L  L  L  L  L  L  L  L
+                                                        D  D  D
+                                                                 S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=10
+            pwdNbrNbr=3
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK5 password=[a, b, c, d, e, f, g, 2, 2, 2, !, @, #, $, A, B, C, 3, 4, 5, 6]
+                                   R  R  R
+                                                        U  U  U  
+              L  L  L  L  L  L  L
+                                   D  D  D                       D  D  D  D
+                                            S  S  S  S  
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=3
+          pwdNbrLower=7
+            pwdNbrNbr=7
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK5 password=[a, b, c, d, e, f, g, !, !, !, A, B, C, D, 2, 3, 4, h, j, k, m]
+                                   R  R  R
+                                            U  U  U  U
+              L  L  L  L  L  L  L                                L  L  L  L
+                                                        D  D  D
+                                   S  S  S 
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=11
+            pwdNbrNbr=3
+        pwdNbrSpecial=3
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKH password=[a, b, c, d, e, f, g, !, @, #, A, A, A, $, B, C, D, E, 2, 3, 4]
+                                            R  R  R
+                                            U  U  U     U  U  U  U
+              L  L  L  L  L  L  L
+                                                                    D  D  D
+                                   S  S  S           S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=7
+          pwdNbrLower=7
+            pwdNbrNbr=3
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKH password=[b, c, d, e, f, g, h, 2, 3, A, a, a, a, B, C, D, 4, @, #, $, %]
+                                            R  R  R
+                                         U           U  U  U
+              L  L  L  L  L  L  L           L  L  L
+                                   D  D                       D  
+                                                                 S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=10
+            pwdNbrNbr=3
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKH password=[a, b, c, d, e, f, g, @, #, 2, 2, 2, !, $, A, B, C, 3, 4, 5, 6]
+                                         R  R  R
+                                                        U  U  U  
+              L  L  L  L  L  L  L
+                                         D  D  D                 D  D  D  D
+                                   S  S           S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=3
+          pwdNbrLower=7
+            pwdNbrNbr=7
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKH password=[a, b, c, d, e, f, g, A, B, !, !, !, C, D, 2, 3, 4, h, j, k, m]
+                                         R  R  R
+                                   U  U           U  U
+              L  L  L  L  L  L  L                                L  L  L  L
+                                                        D  D  D  
+                                         S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=11
+            pwdNbrNbr=3
+        pwdNbrSpecial=3
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKI password=[a, b, c, d, e, f, g, @, A, #, A, $, A, !, B, C, D, E, 2, 3, 4]
+                                      R     R     R
+                                      U     U     U     U  U  U  U
+              L  L  L  L  L  L  L
+                                                                    D  D  D
+                                   S     S     S     S    
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=7
+          pwdNbrLower=7
+            pwdNbrNbr=3
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKI password=[b, c, d, e, f, g, h, A, a, B, a, C, a, D, 2, 3, 4, @, #, $, %]
+                                      R     R     R
+                                   U     U     U     U    
+              L  L  L  L  L  L  L     L     L     L
+                                                        D  D  D
+                                                                 S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=10
+            pwdNbrNbr=3
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKI password=[a, b, c, d, e, f, g, !, 2, @, 2, #, 2, $, A, B, C, 3, 4, 5, 6]
+                                  R     R     R
+                                                    U  U  U
+          L  L  L  L  L  L  L
+                                  D     D     D              D  D  D  D
+                               S     S     S     S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=3
+          pwdNbrLower=7
+            pwdNbrNbr=7
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKI password=[a, b, c, d, e, f, g, A, !, B, !, C, !, D, 2, 3, 4, h, j, k, m]
+                                      R     R     R
+                                   U     U     U     U
+              L  L  L  L  L  L  L                                L  L  L  L
+                                                        D  D  D
+                                      S     S     S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=11
+            pwdNbrNbr=3
+        pwdNbrSpecial=3
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK6 password=[a, b, c, d, e, f, g, A, A, A, A, 2, 3, 4, 5, B, C, D, @, #, $]
+                                   R  R  R  R
+                                   U  U  U  U              U  U  U
+              L  L  L  L  L  L  L
+                                               D  D  D  D
+                                                                    S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=7
+          pwdNbrLower=7
+            pwdNbrNbr=4
+        pwdNbrSpecial=3
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK6 password=[b, c, d, e, f, g, h, a, a, a, a, @, #, $, %, A, B, C, 2, 3, 4]
+                                   R  R  R  R
+                                                           U  U  U 
+              L  L  L  L  L  L  L  L  L  L  L
+                                                                    D  D  D
+                                               S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=3
+          pwdNbrLower=11
+            pwdNbrNbr=3
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK6 password=[a, b, c, d, e, f, g, 2, 2, 2, 2, A, B, C, 3, 4, 5, 6, @, #, $]
+                                   R  R  R  R
+                                               U  U  U 
+              L  L  L  L  L  L  L
+                                   D  D  D  D           D  D  D  D
+                                                                    S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=3
+          pwdNbrLower=7
+            pwdNbrNbr=8
+        pwdNbrSpecial=3
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK6 password=[a, b, c, d, e, f, g, !, !, !, !, A, B, C, @, #, $, 2, 3, 4, 5]
+                                   R  R  R  R
+                                               U  U  U 
+              L  L  L  L  L  L  L
+                                                                 D  D  D  D
+                                   S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=3
+          pwdNbrLower=7
+            pwdNbrNbr=4
+        pwdNbrSpecial=7
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKJ password=[a, b, c, d, e, f, g, 2, 3, A, A, A, A, 4, 5, B, C, D, @, #, $] 
+                                         R  R  R  R
+                                         U  U  U  U        U  U  U
+              L  L  L  L  L  L  L
+                                   D  D              D  D
+                                                                       S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=7
+          pwdNbrLower=7
+            pwdNbrNbr=4
+        pwdNbrSpecial=3
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKJ password=[b, c, d, e, f, g, h, @, #, a, a, a, a, $, %, A, B, C, 2, 3, 4]
+                                         R  R  R  R
+                                                           U  U  U
+              L  L  L  L  L  L  L        L  L  L  L
+                                                                    D  D  D
+                                   S  S               S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=3
+          pwdNbrLower=11
+            pwdNbrNbr=3
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKJ password=[a, b, c, d, e, f, g, A, B, 2, 2, 2, 2, C, 3, 4, 5, 6, @, #, $]
+                                         R  R  R  R
+                                   U  U              U
+              L  L  L  L  L  L  L  
+                                         D  D  D  D     D  D  D  D
+                                                                    S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=3
+          pwdNbrLower=7
+            pwdNbrNbr=8
+        pwdNbrSpecial=3
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKJ password=[a, b, c, d, e, f, g, A, B, !, !, !, !, C, @, #, $, 2, 3, 4, 5]
+                                         R  R  R  R
+                                   U  U              U
+              L  L  L  L  L  L  L 
+                                                                 D  D  D  D
+                                         S  S  S  S     S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=3
+          pwdNbrLower=7
+            pwdNbrNbr=4
+        pwdNbrSpecial=7
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK7 password=[a, b, c, d, e, 2, 3, 4, 5, 6, 7, @, #, $, %, B, C, D, ^, A, A]
+                                                                       R  R
+                                                           U  U  U     U  U
+              L  L  L  L  L
+                             D  D  D  D  D  D
+                                               S  S  S  S           S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=5
+          pwdNbrLower=5
+            pwdNbrNbr=6
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK7 password=[b, c, d, e, f, 2, 3, 4, 5, 6, A, B, C, D, @, #, $, %, ^, a, a]
+                                                                       R  R
+                                            U  U  U  U
+              L  L  L  L  L                                            L  L
+                             D  D  D  D  D  
+                                                        S  S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK7 password=[a, b, c, d, e, 3, 4, 5, 6, 7, A, B, C, D, @, #, $, %, ^, 2, 2]
+                                                                       R  R
+                                            U  U  U  U
+              L  L  L  L  L 
+                             D  D  D  D  D                             D  D
+                                                        S  S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=5
+            pwdNbrNbr=7
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK7 password=[A, B, C, D, E, 2, 3, 4, 5, 6, a, b, c, d, @, #, $, %, ^, !, !]
+                                                                       R  R
+              U  U  U  U  U
+                                            L  L  L  L
+                             D  D  D  D  D
+                                                        S  S  S  S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=5
+          pwdNbrLower=4
+            pwdNbrNbr=5
+        pwdNbrSpecial=7
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKL password=[a, b, c, d, e, 2, 3, 4, 5, 6, 7, @, #, $, %, B, A, A, C, D, ^]
+                                                              R  R
+                                                           U  U  U  U  U
+              L  L  L  L  L
+                             D  D  D  D  D  D
+                                               S  S  S  S                 S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=5
+          pwdNbrLower=5
+            pwdNbrNbr=6
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKL password=[b, c, d, e, f, 2, 3, 4, 5, 6, A, B, C, D, @, #, a, a, $, %, ^]
+                                                              R  R
+                                            U  U  U  U
+              L  L  L  L  L                                   L  L
+                             D  D  D  D  D
+                                                        S  S        S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKL password=[a, b, c, d, e, 3, 4, 5, 6, 7, A, B, C, D, @, #, 2, 2, $, %, ^]
+                                                              R  R
+                                            U  U  U  U
+              L  L  L  L  L
+                             D  D  D  D  D                    D  D
+                                                        S  S        S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=5
+            pwdNbrNbr=7
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKL password=[A, B, C, D, E, 2, 3, 4, 5, 6, a, b, c, d, @, #, !, !, $, %, ^]
+                                                              R  R
+              U  U  U  U  U
+                                            L  L  L  L  
+                             D  D  D  D  D  
+                                                        S  S  S  S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=5
+          pwdNbrLower=4
+            pwdNbrNbr=5
+        pwdNbrSpecial=7
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKM password=[a, b, c, d, e, 2, 3, 4, 5, 6, 7, @, #, $, %, B, C, A, D, ^, A]
+                                                                 R        R
+                                                           U  U  U  U     U
+              L  L  L  L  L
+                             D  D  D  D  D  D
+                                               S  S  S  S              S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=5
+          pwdNbrLower=5
+            pwdNbrNbr=6
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKM password=[b, c, d, e, f, 2, 3, 4, 5, 6, A, B, C, D, @, #, $, a, %, ^, a]
+                                                                 R        R
+                                            U  U  U  U
+              L  L  L  L  L                                      L        L
+                             D  D  D  D  D
+                                                        S  S  S     S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKM password=[a, b, c, d, e, 3, 4, 5, 6, 7, A, B, C, D, @, #, $, 2, %, ^, 2]
+                                                                 R        R
+                                            U  U  U  U
+              L  L  L  L  L
+                             D  D  D  D  D                       D        D
+                                                        S  S  S     S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=5
+            pwdNbrNbr=7
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKM password=[A, B, C, D, E, 2, 3, 4, 5, 6, a, b, c, d, @, #, $, !, %, ^, !]
+                                                                 R        R
+              U  U  U  U  U
+                                            L  L  L  L
+                             D  D  D  D  D  
+                                                        S  S  S  S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=5
+          pwdNbrLower=4
+            pwdNbrNbr=5
+        pwdNbrSpecial=7
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKN password=[a, b, c, d, e, 2, 3, 4, 5, 6, 7, @, #, $, A, %, B, C, D, A, ^]
+                                                        R              R
+                                                        U     U  U  U  U
+              L  L  L  L  L
+                             D  D  D  D  D  D
+                                               S  S  S     S              S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=5
+          pwdNbrLower=5
+            pwdNbrNbr=6
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKN password=[b, c, d, e, f, 2, 3, 4, 5, 6, A, B, C, D, a, @, #, $, %, a, ^]
+                                                        R              R
+                                            U  U  U  U  
+              L  L  L  L  L                             L              L
+                             D  D  D  D  D
+                                                           S  S  S  S     S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=7
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKN password=[a, b, c, d, e, 3, 4, 5, 6, 7, A, B, C, D, 2, @, #, $, %, 2, ^]
+                                                        R              R
+                                            U  U  U  U
+              L  L  L  L  L
+                             D  D  D  D  D              D              D
+                                                           S  S  S  S     S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=4
+          pwdNbrLower=5
+            pwdNbrNbr=7
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKN password=[A, B, C, D, E, 2, 3, 4, 5, 6, a, b, c, d, !, @, #, $, %, !, ^]
+                                                        R              R
+              U  U  U  U  U
+                                            L  L  L  L
+                             D  D  D  D  D
+                                                        S  S  S  S  S  S  S
+   pwdNbrRepeatedchar=2
+          pwdNbrUpper=5
+          pwdNbrLower=4
+            pwdNbrNbr=5
+        pwdNbrSpecial=7
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK8 password=[a, b, c, d, e, 2, 3, 4, 5, 6, B, C, D, E, @, #, $, %, A, A, A]
+                                                                    R  R  R
+                                            U  U  U  U              U  U  U
+              L  L  L  L  L
+                             D  D  D  D  D  
+                                                        S  S  S  S  
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=7
+          pwdNbrLower=5
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK8 password=[a, b, c, d, e, 2, 3, 4, 5, 6, !, @, #, $, A, B, C, D, a, a, a]
+              R                                                     R  R  R
+                                                        U  U  U  U
+              L  L  L  L  L                                         L  L  L
+                             D  D  D  D  D
+                                            S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=4
+          pwdNbrLower=8
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK8 password=[a, b, c, d, e, 3, 4, 5, 6, 7, A, B, C, D, @, #, $, %, 2, 2, 2]
+                                                                    R  R  R
+                                            U  U  U  U
+              L  L  L  L  L  
+                             D  D  D  D  D                          D  D  D
+                                                        S  S  S  S  
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=5
+            pwdNbrNbr=8
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK8 password=[a, b, c, d, e, 2, 3, 4, 5, 6, A, B, C, D, @, #, $, %, !, !, !]
+                                                                    R  R  R
+                                            U  U  U  U  
+              L  L  L  L  L
+                             D  D  D  D  D
+                                                        S  S  S  S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=5
+            pwdNbrNbr=5
+        pwdNbrSpecial=7
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKO password=[a, b, c, d, e, 2, 3, 4, 5, 6, B, C, D, E, @, A, #, A, $, A, %]
+                                                           R     R     R
+                                            U  U  U  U     U     U     U
+              L  L  L  L  L
+                             D  D  D  D  D
+                                                        S     S     S     S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=7
+          pwdNbrLower=5
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKO password=[a, b, c, d, e, 2, 3, 4, 5, 6, !, @, #, $, A, a, B, a, C, a, D]
+              R                                            R     R     R
+                                                        U     U     U     U
+              L  L  L  L  L                                L     L     L
+                             D  D  D  D  D
+                                            S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=4
+          pwdNbrLower=8
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKO password=[a, b, c, d, e, 3, 4, 5, 6, 7, A, B, C, D, @, 2, #, 2, $, 2, %]
+                                                           R     R     R
+                                            U  U  U  U  
+              L  L  L  L  L
+                             D  D  D  D  D                 D     D     D
+                                                        S     S     S     S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=5
+            pwdNbrNbr=8
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKO password=[a, b, c, d, e, 2, 3, 4, 5, 6, A, B, C, D, @, !, #, !, $, !, %]
+                                                           R     R     R
+                                            U  U  U  U                          
+              L  L  L  L  L                                                   
+                             D  D  D  D  D                                  
+                                                        S  S  S  S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=5
+            pwdNbrNbr=5
+        pwdNbrSpecial=7
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKP password=[a, b, c, d, e, 2, 3, 4, 5, 6, B, C, D, E, A, @, #, A, $, A, %]
+                                                        R        R     R
+                                            U  U  U  U  U        U     U
+              L  L  L  L  L
+                             D  D  D  D  D
+                                                           S  S     S     S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=7
+          pwdNbrLower=5
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKP password=[a, b, c, d, e, 2, 3, 4, 5, 6, !, @, #, $, a, A, B, a, C, a, D]
+              R                                         R        R     R
+                                                           U  U     U     U
+              L  L  L  L  L                             L        L     L
+                             D  D  D  D  D
+                                            S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=4
+          pwdNbrLower=8
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKP password=[a, b, c, d, e, 3, 4, 5, 6, 7, A, B, C, D, 2, @, #, 2, $, 2, %]
+                                                        R        R     R
+                                            U  U  U  U
+              L  L  L  L  L
+                             D  D  D  D  D              D        D     D
+                                                           S  S     S     S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=5
+            pwdNbrNbr=8
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKP password=[a, b, c, d, e, 2, 3, 4, 5, 6, A, B, C, D, !, @, #, !, $, !, %]
+                                                        R        R     R
+                                            U  U  U  U
+              L  L  L  L  L 
+                             D  D  D  D  D
+                                                        S  S  S  S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=5
+            pwdNbrNbr=5
+        pwdNbrSpecial=7
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKQ password=[a, b, c, d, e, 2, 3, 4, 5, 6, B, C, D, E, @, #, A, A, A, $, %]
+                                                              R  R  R
+                                            U  U  U  U        U  U  U
+              L  L  L  L  L
+                             D  D  D  D  D  
+                                                        S  S           S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=7
+          pwdNbrLower=5
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKQ password=[a, b, c, d, e, 2, 3, 4, 5, 6, !, @, #, $, a, A, B, a, C, a, D]
+              R                                         R        R     R
+                                                           U  U     U     U
+              L  L  L  L  L                             L        L     L
+                             D  D  D  D  D
+                                            S  S  S  S  
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=4
+          pwdNbrLower=8
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKQ password=[a, b, c, d, e, 3, 4, 5, 6, 7, A, B, C, D, 2, @, #, 2, $, 2, %]
+                                                        R        R     R
+                                            U  U  U  U
+              L  L  L  L  L    
+                             D  D  D  D  D              D        D     D
+                                                           S  S     S     S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=5
+            pwdNbrNbr=8
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKQ password=[a, b, c, d, e, 2, 3, 4, 5, 6, A, B, C, D, !, @, #, !, $, !, %]
+                                                        R        R     R
+                                            U  U  U  U
+              L  L  L  L  L   
+                             D  D  D  D  D
+                                                        S  S  S  S  S  S  S
+   pwdNbrRepeatedchar=3
+          pwdNbrUpper=4
+          pwdNbrLower=5
+            pwdNbrNbr=5
+        pwdNbrSpecial=7
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK9 password=[a, b, c, d, e, 2, 3, 4, 5, 6, @, #, $, %, B, C, D, A, A, A, A]
+                                                                 R  R  R  R
+                                                        U  U  U  U  U  U  U
+              L  L  L  L  L
+                             D  D  D  D  D
+                                            S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=7
+          pwdNbrLower=5
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK9 password=[b, c, d, e, f, 2, 3, 4, 5, 6, !, @, #, $, %, A, B, a, a, a, a]
+                                                                 R  R  R  R
+                                                           U  U
+              L  L  L  L  L                                      L  L  L  L
+                             D  D  D  D  D
+                                            S  S  S  S  S  
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=2
+          pwdNbrLower=9
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK9 password=[a, b, c, d, e, 3, 4, 5, 7, 8, A, B, C, D, E, @, #, 2, 2, 2, 2]
+                                                                 R  R  R  R
+                                            U  U  U  U  U
+              L  L  L  L  L  
+                             D  D  D  D  D                       D  D  D  D
+                                                           S  S  
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=5
+          pwdNbrLower=5
+            pwdNbrNbr=9
+        pwdNbrSpecial=2
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OK9 password=[a, b, c, d, e, 2, 3, 4, 5, 6, A, B, C, D, E, @, #, !, !, !, !]
+                                                                 R  R  R  R
+                                            U  U  U  U  U
+              L  L  L  L  L  
+                             D  D  D  D  D  
+                                                           S  S  S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=5
+          pwdNbrLower=5
+            pwdNbrNbr=5
+        pwdNbrSpecial=6
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKR password=[a, b, c, d, e, 2, 3, 4, 5, 6, @, #, $, %, B, C, A, A, A, A, D]
+                                                              R  R  R  R
+                                                        U  U  U  U  U  U  U
+              L  L  L  L  L
+                             D  D  D  D  D
+                                            S  S  S  S  
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=7
+          pwdNbrLower=5
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKR password=[b, c, d, e, f, 2, 3, 4, 5, 6, !, @, #, $, %, A, a, a, a, a, B]
+                                                              R  R  R  R
+                                                           U              U
+              L  L  L  L  L                                   L  L  L  L
+                             D  D  D  D  D  
+                                            S  S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=2
+          pwdNbrLower=9
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKR password=[a, b, c, d, e, 3, 4, 5, 7, 8, A, B, C, D, E, @, 2, 2, 2, 2, #]
+                                                              R  R  R  R
+                                            U  U  U  U  U
+              L  L  L  L  L
+                             D  D  D  D  D                    D  D  D  D
+                                                           S              S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=5
+          pwdNbrLower=5
+            pwdNbrNbr=9
+        pwdNbrSpecial=2
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKR password=[a, b, c, d, e, 2, 3, 4, 5, 6, A, B, C, D, E, @, !, !, !, !, #]
+                                                              R  R  R  R
+                                            U  U  U  U  U
+              L  L  L  L  L
+                             D  D  D  D  D
+                                                           S  S  S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=5
+          pwdNbrLower=5
+            pwdNbrNbr=5
+        pwdNbrSpecial=6
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKS password=[a, b, c, d, e, 2, 3, 4, 5, 6, @, #, $, %, B, A, C, A, D, A, A]
+                                                           R     R     R  R
+                                                        U  U  U  U  U  U  U
+              L  L  L  L  L
+                             D  D  D  D  D
+                                            S  S  S  S  
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=7
+          pwdNbrLower=5
+            pwdNbrNbr=5
+        pwdNbrSpecial=4
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKS password=[b, c, d, e, f, 2, 3, 4, 5, 6, !, @, #, $, %, a, A, a, B, a, a]
+                                                           R     R     R  R
+                                                              U     U
+              L  L  L  L  L                                L     L     L  L
+                             D  D  D  D  D  
+                                            S  S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=2
+          pwdNbrLower=9
+            pwdNbrNbr=5
+        pwdNbrSpecial=5
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKS password=[a, b, c, d, e, 3, 4, 5, 7, 8, A, B, C, D, E, 2, @, 2, #, 2, 2]
+                                                           R     R     R  R
+                                            U  U  U  U  U
+              L  L  L  L  L
+                             D  D  D  D  D                 D     D     D  D
+                                                              S     S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=5
+          pwdNbrLower=5
+            pwdNbrNbr=9
+        pwdNbrSpecial=2
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+OKS password=[a, b, c, d, e, 2, 3, 4, 5, 6, A, B, C, D, E, !, @, !, #, !, !]
+                                                           R     R     R  R
+                                            U  U  U  U  U
+              L  L  L  L  L
+                             D  D  D  D  D 
+                                                           S  S  S  S  S  S
+   pwdNbrRepeatedchar=4
+          pwdNbrUpper=5
+          pwdNbrLower=5
+            pwdNbrNbr=5
+        pwdNbrSpecial=6
+             hasUpper=true
+             haslower=true
+             hasDigit=true
+           hasSpecial=true
+=======================================================================================================
+====Naming Convention For Beans =======================================================================
+=======================================================================================================                    GroupPermissions.java ==>  Group_Permissions.java(entity)
+                   GroupsMaster.java ==>      Groups_Master.java(entity)
+                    PpPwdPolicy.java ==>      Pp_Pwd_Policy.java(entity)
+PasswordPolicySessionBeanRemote.java ==>     PasswordPolicy.java(interface)
+      PasswordPolicySessionBean.java ==> PasswordPolicyBean.java
+              PermissionsMaster.java ==> Permissions_Master.java(entity)
+                  SessionsTable.java ==>     Sessions_Table.java(entity)
+ SessionsTableSessionBeanRemote.java ==>      SessionsTable.java(interface)
+       SessionsTableSessionBean.java ==>  SessionsTableBean.java
+                   UniqueTokens.java ==>      Unique_Tokens.java(entity)
+  UniqueTokensSessionBeanRemote.java ==>       UniqueTokens.java(interface)
+        UniqueTokensSessionBean.java ==>   UniqueTokensBean.java
+                     UserGroups.java ==>        User_Groups.java(entity)
+    UserGroupsSessionBeanRomote.java ==>         UserGroups.java(interface)
+          UserGroupsSessionBean.java ==>     UserGroupsBean.java
+                    UserProfile.java ==>       User_Profile.java(entity)
+   UserProfileSessionBeanRemote.java ==>        UserProfile.java(interface)
+         UserProfileSessionBean.java ==>    UserProfileBean.java
+             UserServicesRemote.java ==>       UserServices.java(interface)
+                   UserServices.java ==>   UserServicesBean.java
+

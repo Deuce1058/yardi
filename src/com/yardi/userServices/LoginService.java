@@ -11,15 +11,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-//import javax.servlet.RequestDispatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.yardi.ejb.SessionsTable;
-//import com.yardi.ejb.SessionsTableSessionBeanRemote;
-//import com.yardi.ejb.UserGroups;
-//import com.yardi.ejb.UserGroupsSessionBeanRemote;
-import com.yardi.ejb.UserServicesRemote;
-//import com.yardi.QSECOFR.TokenRequest;
+import com.yardi.ejb.UserServices;
 
 
 /**
@@ -29,7 +23,7 @@ import com.yardi.ejb.UserServicesRemote;
 @WebServlet("/doLogin")
 public class LoginService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	@EJB UserServicesRemote userSvc;
+	@EJB UserServices userSvcBean;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -79,7 +73,7 @@ public class LoginService extends HttpServlet {
 		//debug
 		System.out.println("com.yardi.userServices LoginService doGet() 0009 " + loginRequest.toString());
 		//debug
-		userSvc.setLoginRequest(loginRequest);
+		userSvcBean.setLoginRequest(loginRequest);
 
     	if (loginRequest.getChangePwd()==false) { //normal login
     		//debug
@@ -90,7 +84,7 @@ public class LoginService extends HttpServlet {
     				+ "  loginRequest = " + loginRequest
     				);
     		//debug
-        	userSvc.authenticate();
+        	userSvcBean.authenticate();
     	}
 
     	//debug
@@ -109,13 +103,13 @@ public class LoginService extends HttpServlet {
     				+ "  loginRequest = " + loginRequest
     				);
     		//debug
-        	userSvc.chgPwd();
+        	userSvcBean.chgPwd();
     	}
     	
-		if (userSvc.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0000)) {
+		if (userSvcBean.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0000)) {
 			/*
 			 * Successful login.
-			 * 1 lookup initial page with join GroupsMaster and UserGroups
+			 * 1 lookup initial page with join Groups_Masterr and User_Groupss
 			 *   1A if user is in multiple groups set ST_LAST_REQUEST to the html select group page. User picks the initial page
 			 *   1B if user is in only one group set ST_LAST_REQUEST to GM_INITIAL_PAGE
 			 * 2 Set user ID as session attribute  
@@ -128,7 +122,7 @@ public class LoginService extends HttpServlet {
 			
 			//store the userID in the session
 			request.getSession().setAttribute("userID", loginRequest.getUserName()); 
-			userSvc.loginSuccess();
+			userSvcBean.loginSuccess();
 			
 		    /*
 			 * Respond to yardiLogin.html/changePwd.html. The page sees that the login request is successful (YRD0000) or 
@@ -137,7 +131,7 @@ public class LoginService extends HttpServlet {
 			 */
 			response.reset(); 
 			PrintWriter out = response.getWriter();
-			formData = mapper.writeValueAsString(userSvc.getLoginResponse()); //convert the feedback to json 
+			formData = mapper.writeValueAsString(userSvcBean.getLoginResponse()); //convert the feedback to json 
 			out.print(formData);
 			out.flush();
 	    	//debug xyzzy
@@ -149,7 +143,7 @@ public class LoginService extends HttpServlet {
 			return;
 		}
 				
-		if (loginRequest.getChangePwd() || userSvc.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0002)) {
+		if (loginRequest.getChangePwd() || userSvcBean.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0002)) {
     		//debug
     		System.out.println("com.yardi.userServices LoginService doGet() 0002 "
     				+ "\n "
@@ -157,14 +151,14 @@ public class LoginService extends HttpServlet {
     				+ "\n "
     				+ "  loginRequest = " + loginRequest
     				+ "\n "
-    				+ "  userSvc.getFeedback() = " + userSvc.getFeedback()
+    				+ "  userSvcBean.getFeedback() = " + userSvcBean.getFeedback()
     				);
     		//debug
 			
 			if (loginRequest.getChangePwd()==false) {
 				response.reset();
 				response.setContentType("application/json");
-				String msg[] = userSvc.getFeedback().split("=");
+				String msg[] = userSvcBean.getFeedback().split("=");
 				LoginResponse loginResponse = new LoginResponse("", "", "", msg[0], "views/changePwd.html");
 				PrintWriter out = response.getWriter();
 				formData = mapper.writeValueAsString(loginResponse); //convert the feedback to json 
@@ -185,7 +179,7 @@ public class LoginService extends HttpServlet {
 				return;
 			} 
 			
-			String msg [] = userSvc.getFeedback().split("=");
+			String msg [] = userSvcBean.getFeedback().split("=");
 			LoginResponse loginResponse = new LoginResponse( 
 				loginRequest.getUserName(),
 				loginRequest.getPassword(),
@@ -221,8 +215,8 @@ public class LoginService extends HttpServlet {
 		//YRD000B$Password policy is missing
 		//YRD000C$Maximum signon attempts exceeded. The user profile has been disabled
 		
-		if (userSvc.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0000)==false) {
-			String msg [] = userSvc.getFeedback().split("=");
+		if (userSvcBean.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0000)==false) {
+			String msg [] = userSvcBean.getFeedback().split("=");
 			LoginResponse loginResponse = new LoginResponse(
 				loginRequest.getUserName(),
 				loginRequest.getPassword(),
@@ -238,7 +232,7 @@ public class LoginService extends HttpServlet {
     		//debug
     		System.out.println("com.yardi.userServices LoginService doGet() 0005 "
     				+ "\n "
-    				+ "  userSvc.getFeedback() =" + userSvc.getFeedback()
+    				+ "  userSvcBean.getFeedback() =" + userSvcBean.getFeedback()
     				+ "\n "
     				+ "  loginResponse =" + loginResponse
     				+ "\n "

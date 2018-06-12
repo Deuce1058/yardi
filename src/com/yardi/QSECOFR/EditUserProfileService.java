@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yardi.ejb.User_Profile;
 import com.yardi.ejb.UserProfile;
-import com.yardi.ejb.UserProfileSessionBeanRemote;
 
 /**
  * Servlet implementation class EditUserProfileService
@@ -22,12 +22,11 @@ import com.yardi.ejb.UserProfileSessionBeanRemote;
 @WebServlet(description = "Handle edit user profile requests", urlPatterns = { "/editUserProfile" })
 public class EditUserProfileService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private UserProfile userProfile;
-	@EJB UserProfileSessionBeanRemote userProfileBean;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+	private User_Profile userProfile;
+	@EJB UserProfile userProfileBean;
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
     public EditUserProfileService() {
         super();
     }

@@ -13,10 +13,10 @@ import com.yardi.userServices.InitialPage;
 import com.yardi.userServices.UserGroupsGraph;
 
 /**
- * Session Bean implementation class UserGroupsSessionBean
+ * Session Bean implementation class UserGroupsBean
  */
 @Stateless
-public class UserGroupsSessionBean implements UserGroupsSessionBeanRemote {
+public class UserGroupsBean implements UserGroups {
 	@PersistenceContext(unitName="yardi")
 	private EntityManager em;
 	private String initialPage = "";
@@ -25,20 +25,20 @@ public class UserGroupsSessionBean implements UserGroupsSessionBeanRemote {
 	private Vector<UserGroupsGraph> userGroups;
 
 	public Vector<UserGroupsGraph> find(String userID) {
-		System.out.println("com.yardi.ejb.UserGroupsSessionBean find() 0000");
+		System.out.println("com.yardi.ejb.UserGroupsBean find() 0000");
 		Vector<UserGroupsGraph> userGroupsVector = new Vector<UserGroupsGraph>();
 		List userGroupsList;
-    	TypedQuery<UserGroups> qry = em.createQuery(
-    			  "SELECT g from UserGroups g " 
+    	TypedQuery<User_Groups> qry = em.createQuery(
+    			  "SELECT g from User_Groups g " 
     			+ "WHERE g.ugUserId = :userID AND "
     			+ "g.ugGroupsMaster.gmType = g.ugGroup ",
-    			UserGroups.class);
+    			User_Groups.class);
     	userGroupsList = qry
     			.setParameter("userID", userID)
     			.getResultList();
 
     	for (Object o : userGroupsList) {
-    		UserGroups userGroup = (UserGroups) o;
+    		User_Groups userGroup = (User_Groups) o;
     		userGroupsVector.add(new UserGroupsGraph(
     			userGroup.getUgUserId(), 
     			userGroup.getUgGroup(), 
@@ -53,11 +53,11 @@ public class UserGroupsSessionBean implements UserGroupsSessionBeanRemote {
     	/*
     	for (UserGroupsGraph graph : userGroupsVector) {
     		int groupType = graph.getUgGroup();
-        	TypedQuery<GroupsMaster> q = em.createQuery(
-      			  "SELECT g from GroupsMaster g " 
+        	TypedQuery<Groups_Master> q = em.createQuery(
+      			  "SELECT g from Groups_Master g " 
       			+ "WHERE g.gmType = :groupType ",
-      			GroupsMaster.class);
-        	GroupsMaster gm = q
+      			Groups_Master.class);
+        	Groups_Master gm = q
       			.setParameter("groupType", groupType)
       			.getSingleResult();
         	
@@ -82,12 +82,12 @@ public class UserGroupsSessionBean implements UserGroupsSessionBeanRemote {
     	userGroups = find(userName);
 		initialPage = userGroups.get(0).getGmInitialPage(); //GM_INITIAL_PAGE from GROUPS_MASTER
 		//debug
-		System.out.println("com.yardi.ejb UserGroupsSessionBean getInitialPage() 0001" 
+		System.out.println("com.yardi.ejb UserGroupsBean getInitialPage() 0001" 
 				+ "\n"
 				+ "   initialPage="
 				+ initialPage
 				);
-		System.out.println("com.yardi.ejb UserGroupsSessionBean getInitialPage() 0002");
+		System.out.println("com.yardi.ejb UserGroupsBean getInitialPage() 0002");
 		for (UserGroupsGraph u : userGroups) {
 			System.out.println(
 				  "\n"
@@ -102,7 +102,7 @@ public class UserGroupsSessionBean implements UserGroupsSessionBeanRemote {
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD000E;
 			initialPage = com.yardi.rentSurvey.YardiConstants.USER_SELECT_GROUP_PAGE;
 			//debug
-			System.out.println("com.yardi.ejb UserGroupsSessionBean getInitialPage() 0003" 
+			System.out.println("com.yardi.ejb UserGroupsBean getInitialPage() 0003" 
 					+ "\n"
 					+ "   initialPage="
 					+ initialPage
@@ -133,6 +133,6 @@ public class UserGroupsSessionBean implements UserGroupsSessionBeanRemote {
 		}
 	}
 
-	public UserGroupsSessionBean() {
+	public UserGroupsBean() {
     }
 }

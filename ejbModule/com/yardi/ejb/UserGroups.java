@@ -1,73 +1,16 @@
 package com.yardi.ejb;
 
-import java.io.Serializable;
-import javax.persistence.*;
+import java.util.Vector;
 
+import javax.ejb.Remote;
 
-/**
- * The persistent class for the USER_GROUPS database table.
- * 
- */
-@Entity
-@Table(name="USER_GROUPS")
-@NamedQuery(name="UserGroups.findAll", query="SELECT u FROM UserGroups u")
-public class UserGroups implements Serializable {
-	private static final long serialVersionUID = 1L;
+import com.yardi.userServices.InitialPage;
+import com.yardi.userServices.UserGroupsGraph;
 
-	@Column(name="UG_USER_ID")
-	private String ugUserId;
-
-	@Column(name="UG_GROUP")
-	private int ugGroup;
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="UG_RRN")
-	private long ugRrn;
-
-	@ManyToOne
-	@JoinColumn(name = "UG_GROUP", referencedColumnName = "GM_TYPE", nullable=false, updatable=false, insertable=false)
-	private GroupsMaster ugGroupsMaster;
-	
-	
-	public UserGroups() {
-	}
-
-	public long getUgRrn() {
-		return this.ugRrn;
-	}
-
-	public void setUgRrn(long ugRrn) {
-		this.ugRrn = ugRrn;
-	}
-
-	public int getUgGroup() {
-		return this.ugGroup;
-	}
-
-	public void setUgGroup(int ugGroup) {
-		this.ugGroup = ugGroup;
-	}
-
-	public String getUgUserId() {
-		return this.ugUserId;
-	}
-
-	public void setUgUserId(String ugUserId) {
-		this.ugUserId = ugUserId;
-	}
-
-	public GroupsMaster getUgGroupsMaster() {
-		return ugGroupsMaster;
-	}
-
-	public void setUgGroupsMaster(GroupsMaster ugGroupsMaster) {
-		this.ugGroupsMaster = ugGroupsMaster;
-	}
-
-	@Override
-	public String toString() {
-		return "UserGroups [ugUserId=" + ugUserId + ", ugGroup=" + ugGroup + ", ugRrn=" + ugRrn + ", ugGroupsMaster="
-				+ ugGroupsMaster + "]";
-	}
+@Remote
+public interface UserGroups {
+	Vector<UserGroupsGraph> find(String userID);
+	String getFeedback();
+	String getInitialPage(String userName);
+	Vector<InitialPage> getInitialPageList();
 }

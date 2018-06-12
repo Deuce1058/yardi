@@ -5,11 +5,11 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import com.yardi.ejb.SessionsTableSessionBeanRemote;
+import com.yardi.ejb.SessionsTable;
 
 @WebListener
 public class StartupShutdown implements ServletContextListener {
-	@EJB SessionsTableSessionBeanRemote sessionsBean;
+	@EJB SessionsTable sessionsBean;
 	
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
@@ -17,6 +17,7 @@ public class StartupShutdown implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
+		System.out.println("com.yardi.system StartupShutdown contextInitialized() 0000");
 		sessionsBean.clear(); //clear sessions table
 	}
 
