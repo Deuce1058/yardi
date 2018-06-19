@@ -9,7 +9,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="USER_PROFILE")
+@Table(name="USER_PROFILE", schema="DB2ADMIN")
 @NamedQuery(name="User_Profile.findAll", query="SELECT u FROM User_Profile u")
 public class User_Profile implements Serializable {
 	private static final long serialVersionUID = 1L;

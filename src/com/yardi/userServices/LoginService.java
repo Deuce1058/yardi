@@ -138,6 +138,9 @@ public class LoginService extends HttpServlet {
 			System.out.println("com.yardi.userServices LoginService doGet() 0007 "
 					+ "\n "
 					+ "  loginRequest = " + loginRequest
+					+ "\n "
+					+ "  formData="
+					+ formData 
 					);
 			//debug
 			return;

@@ -9,7 +9,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="PERMISSIONS_MASTER")
+@Table(name="PERMISSIONS_MASTER", schema="DB2ADMIN")
 @NamedQuery(name="Permissions_Master.findAll", query="SELECT p FROM Permissions_Master p")
 public class Permissions_Master implements Serializable {
 	private static final long serialVersionUID = 1L;

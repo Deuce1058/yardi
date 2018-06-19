@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  */
 @Entity
-@Table(name="UNIQUE_TOKENS")
+@Table(name="UNIQUE_TOKENS", schema="DB2ADMIN")
 @NamedQuery(name="Unique_Tokens.findAll", query="SELECT u FROM Unique_Tokens u")
 public class Unique_Tokens implements Serializable {
 	private static final long serialVersionUID = 1L;

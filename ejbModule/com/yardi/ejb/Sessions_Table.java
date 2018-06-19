@@ -10,7 +10,7 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
-@Table(name="SESSIONS_TABLE")
+@Table(name="SESSIONS_TABLE", schema="DB2ADMIN")
 @NamedQuery(name="Sessions_Table.findAll", query="SELECT s FROM Sessions_Table s")
 public class Sessions_Table implements Serializable {
 	private static final long serialVersionUID = 1L;

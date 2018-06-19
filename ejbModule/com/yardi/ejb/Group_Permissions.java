@@ -9,7 +9,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="GROUP_PERMISSIONS")
+@Table(name="GROUP_PERMISSIONS", schema="DB2ADMIN")
 @NamedQuery(name="Group_Permissions.findAll", query="SELECT g FROM Group_Permissions g")
 public class Group_Permissions implements Serializable {
 	private static final long serialVersionUID = 1L;

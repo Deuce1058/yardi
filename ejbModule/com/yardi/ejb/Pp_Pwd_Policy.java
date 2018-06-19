@@ -9,7 +9,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="PP_PWD_POLICY")
+@Table(name="PP_PWD_POLICY", schema="DB2ADMIN")
 @NamedQuery(name="Pp_Pwd_Policy.findAll", query="SELECT p FROM Pp_Pwd_Policy p")
 public class Pp_Pwd_Policy implements Serializable {
 	private static final long serialVersionUID = 1L;

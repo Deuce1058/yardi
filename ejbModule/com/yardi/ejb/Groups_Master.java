@@ -11,7 +11,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="GROUPS_MASTER")
+@Table(name="GROUPS_MASTER", schema="DB2ADMIN")
 @NamedQuery(name="Groups_Master.findAll", query="SELECT g FROM Groups_Master g")
 public class Groups_Master implements Serializable {
 	private static final long serialVersionUID = 1L;

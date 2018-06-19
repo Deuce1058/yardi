@@ -134,11 +134,10 @@
     -->
   </div>
 <script>
-  var userID = ' ';
   $(function () {
     var viewMode = false;
     var initialPageList = parent.initialPageList;
-    getSessionInfo('sessionInfo', '', '', '', ''); //request session info
+    $('#title-loginID').text('Initial Menu Selection   ' + parent.userName);
     $.each(JSON.parse(initialPageList), function(key, value) {
       console.log('key:' + key + ' | page:' + value.page + ' | url:' + value.url);
       var s = value.page.split(';');
@@ -274,30 +273,6 @@
                     );
                   });
                 }
-    });
-  }
-  
-  function getSessionInfo(requestType, user, session, token, requestURL) {
-    var sessionInfo = {
-      request      : requestType,
-      userID       : user,
-      sessionID    : session,
-      sessionToken : token,
-      lastRequest  : requestURL,
-      lastActive   : Date.now()
-    }
-    var parms = JSON.stringify(sessionInfo);
-    $.ajax({
-      type:     'POST',
-      url:      '../SessionInfo',
-      data:     parms,
-      dataType: "json",
-      success:  function(data) {
-        document.getElementById('title-loginID').innerHTML='Initial Menu Selection   ' + data.userID;
-        console.log("data.userID=" + data.userID);
-        userID = data.userID;
-        console.log('userID=' + userID);
-      }
     });
   }
 </script>

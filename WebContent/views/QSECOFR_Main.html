@@ -222,9 +222,8 @@
     </div>
   </div>
 <script>
-  var userID = ' ';
   $(function () {
-    getSessionInfo('sessionInfo', '', '', '', ''); //request session info
+    $('#title-loginID').text(parent.userName);
     $('li#UPView').click(function() {
       newFrame('views/userProfile_CRUD.html?mode=view');
     });
@@ -280,30 +279,6 @@
     console.log(' nextFrame=' + newFrame);
     parent.frame = newFrame;
     parent.nextFrame();
-  }
-
-  function getSessionInfo(requestType, user, session, token, requestURL) {
-    var sessionInfo = {
-      request      : requestType,
-      userID       : user,
-      sessionID    : session,
-      sessionToken : token,
-      lastRequest  : requestURL,
-      lastActive   : Date.now()
-    }
-    var parms = JSON.stringify(sessionInfo);
-    $.ajax({
-      type:     'POST',
-      url:      '../SessionInfo',
-      data:     parms,
-      dataType: "json",
-      success:  function(data) {
-        document.getElementById('title-loginID').innerHTML=data.userID;
-        console.log("data.userID=" + data.userID);
-        userID = data.userID;
-        console.log('userID=' + userID);
-      }
-    });
   }
 </script>
 </body>

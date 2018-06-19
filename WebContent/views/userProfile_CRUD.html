@@ -460,9 +460,7 @@
     </div>
 </div> 
 <script>
-  var userID = ' ';
   $(function() {
-    getSessionInfo('sessionInfo', '', '', '', ''); //request session info
     var formData;
     var formItems;
     var ajaxData;
@@ -478,12 +476,10 @@
       setFormData();
       doPost();
     });
-    
     $('#crtToken').click(function () {
       addUpdateDeleteCancelClick = false;
       newToken();
     });
-    
     $('#addButton').click(function () {
       addUpdateDeleteCancelClick = true;
       setFormItems('add', ajaxData);
@@ -493,7 +489,6 @@
       configureButtons(false, true, true, true, true, true);
       configureViewMode();
     });
-    
     $('#updateButton').click(function () {
       addUpdateDeleteCancelClick = true;
       setFormItems('update', ajaxData);
@@ -503,7 +498,6 @@
       configureButtons(false, true, true, true, true, true);
       configureViewMode();
     });
-    
     $('#deleteButton').click(function () {
       addUpdateDeleteCancelClick = true;
       setFormItems('delete', ajaxData);
@@ -513,14 +507,12 @@
       configureButtons(false, true, true, true, true, true);
       configureViewMode();
     });
-    
     $('#cancelButon').click(function () {
       addUpdateDeleteCancelClick = true;
       clearScreen();
       configureButtons(false, true, true, true, true, true);
       configureViewMode();
     });
-
     $('#datePicker').datetimepicker({
       format: "MM/DD/YYYY",
       ignoreReadonly: true,
@@ -531,7 +523,6 @@
         down: "fa fa-arrow-down"
       }
     });
-
     $('#datePicker2').datetimepicker({
       format: "MM/DD/YYYY",
       ignoreReadonly: true,
@@ -542,7 +533,6 @@
         down: "fa fa-arrow-down"
       }
     });
-
     $('#datePicker3').datetimepicker({
       format: "MM/DD/YYYY",
       ignoreReadonly: true,
@@ -553,7 +543,6 @@
         down: "fa fa-arrow-down"
       }
     });
-
     $('#datePicker4').datetimepicker({
       format: "MM/DD/YYYY",
       ignoreReadonly: true,
@@ -564,7 +553,6 @@
         down: "fa fa-arrow-down"
       }
     }); 
-    
     $('.navbar-brand').click(function() {
       newFrame('views/QSECOFR_Main.html');
     }); 
@@ -700,6 +688,7 @@
 
   function configureViewMode() {
     $('#newToken').css("color", "green");
+    $('#title-loginID').text('User Profile Maintenance   ' + parent.userName);
     
     /**
       Protect input fields when:
@@ -708,6 +697,7 @@
     **/
     if (getAllUrlParams().mode === 'view') {
       viewMode = true;
+      $('#title-loginID').text('User Profile Maintenance   VIEW MODE    ' + parent.userName);
       $('[pwdFn]').css("display", "none"); //hide password functions in view mode
       //disable the rest of the input fields
       $("#firstName")    .attr("disabled", true);
@@ -1080,33 +1070,6 @@
     console.log(' nextFrame=' + newFrame);
     parent.frame = newFrame;
     parent.nextFrame();
-  }
-  
-  function getSessionInfo(requestType, user, session, token, requestURL) {
-    var sessionInfo = {
-      request      : requestType,
-      userID       : user,
-      sessionID    : session,
-      sessionToken : token,
-      lastRequest  : requestURL,
-      lastActive   : Date.now()
-    }
-    var parms = JSON.stringify(sessionInfo);
-    $.ajax({
-      type:     'POST',
-      url:      '../SessionInfo',
-      data:     parms,
-      dataType: "json",
-      success:  function(data) {
-        document.getElementById('title-loginID').innerHTML='User Profile Maintenance    ' + data.userID;
-        if (getAllUrlParams().mode === 'view') {
-          document.getElementById('title-loginID').innerHTML='User Profile Maintenance VIEW MODE    ' + data.userID;
-        }
-        console.log("data.userID=" + data.userID);
-        userID = data.userID;
-        console.log('userID=' + userID);
-      }
-    });
   }
   });
 </script>

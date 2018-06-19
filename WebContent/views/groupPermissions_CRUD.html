@@ -173,10 +173,9 @@
     </div><!-- /.container-fluid -->
   </nav>
 <script>
-  var userID = ' ';
+  var viewMode = false;
   $(function () {
-    getSessionInfo('sessionInfo', '', '', '', ''); //request session info
-    var viewMode = false;
+    configureViewMode();
     $('.navbar-brand').click(function() {
       newFrame('views/QSECOFR_Main.html');
     }); 
@@ -243,9 +242,13 @@
         1. Its view mode 
         2. Its not view mode and the find button is enabled
     **/
+    $('#title-loginID').text('Group Permissions Maintenance    ' + parent.userName);
+    viewMode = false;
+
     if (getAllUrlParams().mode === 'view') {
       viewMode = true;
       console.log('view mode');
+      $('#title-loginID').text('Group Permissions Maintenance    VIEW MODE    ' + parent.userName);
     }
     
     /**
@@ -318,33 +321,6 @@
     }
 
     return obj;
-  }
-  
-  function getSessionInfo(requestType, user, session, token, requestURL) {
-    var sessionInfo = {
-      request      : requestType,
-      userID       : user,
-      sessionID    : session,
-      sessionToken : token,
-      lastRequest  : requestURL,
-      lastActive   : Date.now()
-    }
-    var parms = JSON.stringify(sessionInfo);
-    $.ajax({
-      type:     'POST',
-      url:      '../SessionInfo',
-      data:     parms,
-      dataType: "json",
-      success:  function(data) {
-        document.getElementById('title-loginID').innerHTML='Group Permissions CRUD    ' + data.userID;
-        if (getAllUrlParams().mode === 'view') {
-          document.getElementById('title-loginID').innerHTML='User Profile Maintenance VIEW MODE    ' + data.userID;
-        }
-        console.log("data.userID=" + data.userID);
-        userID = data.userID;
-        console.log('userID=' + userID);
-      }
-    });
   }
 </script>
 </body>
