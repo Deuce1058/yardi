@@ -30,4 +30,20 @@ public interface UniqueTokens {
 	 * @param uniqueToken
 	 */
 	void removeOldestToken(Vector<Unique_Tokens> userTokens);
-	}
+	/**
+	 * Update the token add date
+	 * 
+	 * @param rrn 
+	 * @param addDate
+	 * @return count of updated rows
+	 */
+	int updateDateAdded(Long rrn, java.util.Date addDate);
+	/**
+	 * Update the unique token
+	 * 
+	 * @param rrn
+	 * @param token
+	 * @return count of updated rows
+	 */
+	int updateToken(Long rrn, String token);
+}

@@ -6,8 +6,11 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.SynchronizationType;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
@@ -335,6 +338,32 @@ public class UniqueTokensBean implements UniqueTokens {
 			+ pwdPolicy
 			);
 		//debug
+	}
+	
+	public int updateToken(Long rrn, String token) {
+	   	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
+	   	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
+	   	Query qry = em.createQuery("UPDATE Unique_Tokens "
+    	    + "SET up1token = :token "
+    		+ "WHERE up1rrn = :rrn");
+	   	int rows = qry
+	   		.setParameter("token", token)
+	   		.setParameter("rrn", rrn)
+	   		.executeUpdate();
+		return rows;
+	}
+
+	public int updateDateAdded(Long rrn, java.util.Date addDate) {
+	   	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
+	   	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
+	   	Query qry = em.createQuery("UPDATE Unique_Tokens "
+    	    + "SET up1DateAdded = :addDate "
+    		+ "WHERE up1rrn = :rrn");
+	   	int rows = qry
+	   		.setParameter("addDate", addDate)
+	   		.setParameter("rrn", rrn)
+	   		.executeUpdate();
+		return rows;
 	}
 
 	public String stringify() {

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -202,17 +203,30 @@ public class EditUniqueTokensService extends HttpServlet {
 	private void updateTokens() {
 		for (EditUniqueTokensRequest r : updatedTokens) {
 			for (int i=0; i < uniqueTokens.size(); i++) {
+				String [] s = r.getUp1DateAdded().split("-");
+				Calendar c = Calendar.getInstance();
+				c.set(Integer.parseInt(s[2]),
+					  Integer.parseInt(s[1]) - 1,
+					  Integer.parseInt(s[0]),
+					  0, 0, 0
+					 );	
 				if ((Long.parseLong(r.getUp1Rrn()) != 0L) && 
 					(Long.parseLong(r.getUp1Rrn()) == uniqueTokens.get(i).getUp1Rrn()) ) {
-					if 	( !  (r.getUp1Token().equals(uniqueTokens.get(i).getUp1Token()))
-						) || (r.getUp1DateAdded())
-					{
-						java.util.Calendar c = new java.util.Calendar();
-						c.set(Integer.parseInt(r.getUp1DateAdded().substring(6, 9)),
-							  Integer.parseInt(r.getUp1DateAdded().substring(0, 1) - 1),
-							  Integer.parseInt(r.getUp1DateAdded().substring(3, 4)),
-							  0, 0, 0
-							 );	
+					if (Boolean.valueOf(r.getDeleteToken())) {
+						uniqueTokenBean.remove(uniqueTokens.get(i).getUp1Rrn());
+						continue;
+					}
+					if 	( ! (r.getUp1Token().equals(uniqueTokens.get(i).getUp1Token())) ||
+						     c.getTimeInMillis() != r.getTokenAddedDate().getTime()
+						) {
+						if (! (r.getUp1Token().equals(uniqueTokens.get(i).getUp1Token()))) {
+							uniqueTokenBean.updateDateAdded(uniqueTokens.get(i).getUp1Rrn(), 
+									new java.util.Date(c.getTimeInMillis()));
+						}
+						if (c.getTimeInMillis() != r.getTokenAddedDate().getTime()) {
+							uniqueTokenBean.updateToken(uniqueTokens.get(i).getUp1Rrn(), 
+								r.getUp1Token());
+						}
 					} 
 				}
 			}
