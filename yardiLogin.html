@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+  <meta HTTP-EQUIV="Expires" CONTENT="-1">
+  <title>Yardi Login</title>
+  <link href="resources/styles/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="resources/css/font-awesome.min.css">
+  <script src="resources/scripts/jquery-2.2.4.min.js"></script>
+  <script src="resources/scripts/bootstrap.min.js"></script>
+  <style>
+        .xx-flex-container {
+            border: 2px solid green;
+            height: 300px; 
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .xx-flex-container-column {
+            /*border: 2px solid green;*/
+            height: 175px;
+            margin-top: 50px;
+        }
+        .xx-flex-item {
+            background-color: lightgray;
+            border: 1px dotted grey;
+            height: 48px;
+        }
+        .xx-flex-item-2 {
+            background-color: lightgray;
+            border: 1px dotted grey;
+            height: 96px;
+        }
+        .xx-flex-item-3 {
+            background-color: lightgray;
+            border: 1px dotted grey;
+        }
+        .xx-flex-item-4 {
+            background-color: lightgray;
+            border: 1px dotted blue;
+        }
+        .xx-flex-item-5 {
+            background-color: lightgray;
+            border: 1px dotted red;
+        }
+        .login-btn-margin {
+            margin-left: 94px;
+        }
+				.red {
+					color: red;
+				}
+				.green {
+					color: lawngreen;
+				}
+    </style>
+</head>
+<body>
+  <!--
+  <img  class="bg" alt="" src="resources/img/yardi_banner.jpg">
+  -->
+  <div class="container">
+		<div class="d-flex flex-column xx-flex-container-column">
+			<form class="needs-validation" novalidate>
+				<div class="form-group form-inline">
+					<label for="username" class="col-form-label col-sm-1">Username</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="fa-user"><i class="fa fa-user fa-lg" aria-hidden="true"></i></span>
+						</div>
+						<input type="text" required class="form-control-sm border username" name="username" id="username" placeholder="User name" aria-describedby="fa-user" />
+						<div class="input-group-append1">
+							<span><i class="append-icon" aria-hidden="true"></i></span>
+						</div>
+						<div class="valid-feedback">
+						</div>
+						<div class="invalid-feedback">
+						</div>
+					</div>
+				</div>
+				<div class="form-group form-inline">
+					<label for="password" class="col-form-label col-sm-1">Password</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="fa-lock"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+						</div>
+						<input type="password" required class="form-control-sm border" name="password" id="password" placeholder="Password" aria-describedby="fa-key" />
+						<div class="input-group-append1">
+							<span><i class="append-icon" aria-hidden="true"></i></span>
+						</div>
+						<div class="valid-feedback">
+						</div>
+						<div class="invalid-feedback">
+						</div>
+					</div>
+				</div>
+				<div class="flex-row">
+					<button type="button" class="btn btn-success login-btn-margin" id="login">Login</button>
+				</div>
+			</form>
+			<div class="col-sm-offset-2" style="color:red; margin-left: 94px;" id="form-feedback">xxx</div>
+		</div>
+	</div>
+  <script>
+    $(function() {
+      window.parent.document.title = 'Yardi Login';
+      $('#login').click(function (e) {
+        var formValid = true;
+        
+        //iterate over the input controls
+        $('input').each(function () {
+          var formGroup = $(this).parents('.form-group');
+          var glyphIcon = formGroup.find('.append-icon');
+          var obj = $(this);
+          
+          if (this.checkValidity()) {
+            //show green, remove red
+            formGroup.removeClass('is-invalid').addClass('is-valid');
+            //show check, remove X
+            glyphIcon.removeClass('fa fa-remove fa-lg red').addClass('fa fa-check fa-lg green');
+          } else {
+            // show red, remove green
+            formGroup.removeClass('is-valid').addClass('is-invalid');
+            // show x, remove check
+            glyphIcon.removeClass('fa fa-check fa-lg green').addClass('fa fa-remove fa-lg red');
+            //mark form invalid
+            formValid = false;
+						e.preventDefault();
+						e.stopPropagation();
+          }
+        }); //end of each
+				
+        $('form').addClass('was-validated');
+				
+        if (formValid) {
+          var userName = $('#username').val();
+          var password = $('#password').val();
+          var formItems = {
+            "userName"       : userName,
+            "password"       : password,
+            "newPassword"    : '',
+            "msgID"          : '',
+            "msgDescription" : '',
+            "chgPwd"         : 'false'
+          }          
+          var formData = JSON.stringify(formItems);
+          $.ajax({
+            type:     'POST',
+            url:      'doLogin',
+            data:     formData,
+            async:    false,
+            dataType: "json", 
+            success:  function(data) {
+              $('#form-feedback').text(data.msgDescription);
+            
+              if (data.msgID === 'YRD0001') {
+                var x = '';
+                $('input').each(function () {
+                  formValid = false;
+                  var formGroup = $(this).parents('.form-group');
+                  var glyphIcon = formGroup.find('.append-icon');
+                  var obj = $(this);
+                  formGroup.removeClass('is-valid').addClass('is-invalid');
+                  glyphIcon.removeClass('fa fa-check fa-lg green').addClass('fa fa-remove fa-lg red');
+                });
+              }
+          
+              if (data.msgID === 'YRD0002') {
+                $('html').html(data.msgDescription);
+                console.log('nextFrame ' + data.msgDescription);
+                parent.frame = data.msgDescription;
+                parent.nextFrame();
+              }
+
+              if (data.msgID === 'YRD0003' || data.msgID === 'YRD0004') {
+                formValid = false;
+                var formGroup = $('.username').parent('.form-group');
+                var glyphIcon = formGroup.find('.append-icon');
+                var obj = $(this);
+                formGroup.removeClass('is-valid').addClass('is-invalid');
+                glyphIcon.removeClass('fa fa-check fa-lg green').addClass('fa fa-remove fa-lg red');
+              }
+                    
+              if (data.msgID === 'YRD000B' || data.msgID === 'YRD000C') {
+                $('input').each(function () {
+                  formValid = false;
+                  var formGroup = $(this).parents('.form-group');
+                  var glyphIcon = formGroup.find('.append-icon');
+                  var obj = $(this);
+                  formGroup.removeClass('is-invalid');
+                  formGroup.removeClass('is-valid');
+                  glyphIcon.removeClass('fa fa-check fa-lg green');
+                  glyphIcon.removeClass('fa fa-remove fa-lg red');
+                });
+              }
+              
+              if (data.msgID === 'YRD000E' || data.msgID === 'YRD000') {
+
+                if (data.msgID === 'YRD000E') {
+                  /**
+                    if user is a member of multiple groups newPassword contains the list of initial pages for each group they
+                    are a member of. This will be used by selectGroup.html to build a list of pages the user uses to decide
+                    which initial page to view
+                  **/
+                  parent.initialPageList = data.newPassword;
+                } 
+
+                parent.userName = data.userName;
+                $('html').html(data.msgDescription);
+                console.log('nextFrame ' + data.msgDescription);
+                parent.frame = data.msgDescription;
+                parent.nextFrame();
+              }
+            } //end of function inside ajax
+          }); //end of ajax
+          var x = 1;
+          /*******
+          $.post('doLogin', 
+          {
+              formData : JSON.stringify(formItems)
+          })
+          .done(function(data) {
+            $('#form-feedback').text(data.msgDescription);
+            
+            if (data.msgID === 'YRD0001') {
+              $('input').each(function () {
+                formValid = false;
+                var formGroup = $(this).parents('.form-group');
+                var glyphIcon = formGroup.find('.glyph_icon');
+                var obj = $(this);
+                // show red, remove green
+                formGroup.addClass('has-error').removeClass('has-success');
+                // show x, remove check
+                glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+              });
+            }
+          
+            if (data.msgID === 'YRD0003' || data.msgID === 'YRD0004') {
+              formValid = false;
+              var formGroup = $('[name="username"]').parent('.form-group');
+              var glyphIcon = formGroup.find('.glyph_icon');
+              var obj = $(this);
+              // show red, remove green
+              formGroup.addClass('has-error').removeClass('has-success');
+              // show x, remove check
+              glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+            }
+                    
+            if (data.msgID === 'YRD0005' || data.msgID === 'YRD0006' 
+                || data.msgID === 'YRD0007' || data.msgID === 'YRD0008' 
+                || data.msgID === 'YRD0009' || data.msgID === 'YRD000A'  ) {
+                formValid = false;
+                var formGroup = $('[name="password"]').parent('.form-group');
+                var glyphIcon = formGroup.find('.glyph_icon');
+                var obj = $(this);
+                // show red, remove green
+                formGroup.addClass('has-error').removeClass('has-success');
+                // show x, remove check
+                glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+            }
+
+            if (data.msgID === 'YRD000B' || data.msgID === 'YRD000C') {
+              $('input').each(function () {
+                formValid = false;
+                var formGroup = $(this).parents('.form-group');
+                var glyphIcon = formGroup.find('.glyph_icon');
+                var obj = $(this);
+                formGroup.removeClass('has-error');
+                formGroup.removeClass('has-success');
+                glyphIcon.removeClass('glyphicon-ok');
+                glyphIcon.removeClass('glyphicon-remove');
+              });
+            }
+          });  //end of done
+          ********/
+        } //end form is valid
+        e.preventDefault();
+      });
+    });
+  </script>
+</body>
+</html>
