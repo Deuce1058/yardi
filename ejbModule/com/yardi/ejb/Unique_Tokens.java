@@ -2,6 +2,9 @@ package com.yardi.ejb;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 
@@ -21,6 +24,10 @@ public class Unique_Tokens implements Serializable {
 	@Column(name="UP1_TOKEN")
 	private String up1Token;
 
+	@JsonFormat(
+		shape = JsonFormat.Shape.STRING,
+		pattern = "MM/dd/yyyy"
+	)
 	@Temporal(TemporalType.DATE)
 	@Column(name="UP1_DATE_ADDED")
 	private Date up1DateAdded;
