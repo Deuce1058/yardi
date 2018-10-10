@@ -25,7 +25,7 @@
 <style type="text/css">
 /* Custom Styles */
   body{
-    padding-top: 70px;
+    padding-top: 0px;
   }
   .userProfileForm {
     margin-left: 0px;
@@ -100,32 +100,24 @@
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
 }
+	
+	.formFeedback {
+		margin-left: ($spacer * 3) !important;
+	}
 </style>
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">Brand</a>
-      </div>
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-        </ul>
-        <form class="navbar-form navbar-left">
-          <div id="title-loginID" class="formElementPadLeft preserveWhiteSpace"></div>
-          <div id="form-feedback" class="formElementPadLeft" style="color:red;">XXX</div> <!--90 char-->
-        </form>
-      </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-  </nav>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-bottom">
+		<a class="navbar-brand" href="#">Navbar</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="d-inline-flex flex-sm-column" id="navbarSupportedContent">
+			<div id="title-loginID" class="preserveWhiteSpace"></div>
+			<div id="form-feedback" style="color:red; margin-left: 167px">XXX</div> <!--90 char-->
+		</div>
+	</nav>
   
   <div class="container" id="pageLinks">
     <h2>Select your initial menu from the following</h2>

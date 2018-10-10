@@ -1,137 +1,170 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
-    <meta HTTP-EQUIV="Expires" CONTENT="-1">
-    <link href="Content/bootstrap.min.css" rel="stylesheet" />
-    <link href="Content/font-awesome.min.css" rel="stylesheet" />
-    <script src="Scripts/jquery-3.3.1.min.js"></script>
-    <script src="Scripts/bootstrap.min.js"></script>
-    <title>Unique Tokens CRUD</title>
-    <style type="text/css">
-        /* Custom Styles */
-        body {
-            padding-top: 0px;
-        }
+  <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+  <meta HTTP-EQUIV="Expires" CONTENT="-1">
+	<meta charset="utf-8">
+	<title>Unique Tokens CRUD</title>
+  
+	<!-- 
+  https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=scrollspy
+  https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-affix.php
+  https://www.tutorialrepublic.com/css-reference/css-top-property.php
+  -->
+<!--
 
-        .userProfileForm {
-            margin-left: 0px;
-        }
+NEW
+======================================
+D:\glassfish4\glassfish\lib\resources
+======================================
+D:\glassfish4\glassfish\domains\domain1\eclipseApps\yardiWeb\views
+../ == D:\glassfish4\glassfish\domains\domain1\eclipseApps\yardiWeb
+../ == D:\glassfish4\glassfish\domains\domain1\eclipseApps
+../ == D:\glassfish4\glassfish\domains\domain1\
+../ == D:\glassfish4\glassfish\domains\
+../ == D:\glassfish4\glassfish\
+../../../../../lib/resources/
 
-        .formElementPadBottom {
-            padding-bottom: 10px;
-        }
-
-        .formElementPadLeft {
-            padding-left: 5px;
-        }
-
-        .formElementPadBottomLeft {
-            padding-bottom: 10px;
-            padding-left: 5px;
-        }
-
-        .roundedCorners {
-            -webkit-border-radius: 4px;
-            -moz-border-radius: 4px;
+Try using jquery to change the html on the <link> tags and the <script> tags
+-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="../resources/styles/bootstrap.min.css" rel="stylesheet" />
+  <link href="../resources/css/font-awesome.min.css" rel="stylesheet">
+  <script src="../resources/scripts/jquery-2.2.4.min.js"></script>
+  <script src="../resources/scripts/Moment/moment.min.js" type="text/javascript"></script>
+  <script src="../resources/scripts/DatePicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+  <script src="../resources/scripts/bootstrap.min.js"></script>
+  <script src="../resources/scripts/jquery-globalize.1.3.0/cldrjs/dist/cldr.js"></script>
+  <script src="../resources/scripts/jquery-globalize.1.3.0/cldrjs/dist/cldr/event.js"></script>
+  <script src="../resources/scripts/jquery-globalize.1.3.0/cldrjs/dist/cldr/supplemental.js"></script>
+  <script src="../resources/scripts/jquery-globalize.1.3.0/globalize/dist/globalize.js"></script>
+  <script src="../resources/scripts/jquery-globalize.1.3.0/globalize/dist/globalize/number.js"></script>
+  <script src="../resources/scripts/jquery-globalize.1.3.0/globalize/dist/globalize/date.js"></script>
+  <script src="../resources/scripts/custom/enCldrDate.js"></script>
+  <!--
+  <link href="../../../../Boostrap/styles/bootstrap.min.css" rel="stylesheet">
+  <script src="../../../../jQueryLib/scripts/jquery-2.2.4.min.js"></script>
+  <script src="../../../../Boostrap/scripts/bootstrap.min.js"></script>
+  -->
+  
+<style type="text/css">
+/* Custom Styles */
+  body{
+    padding-top: 0px;
+  }
+  .userProfileForm {
+    margin-left: 0px;
+  }
+  .formElementPadBottom {
+    padding-bottom: 10px;
+  }
+  .formElementPadLeft {
+    padding-left: 5px;
+  }
+  .formElementPadBottomLeft {
+    padding-bottom: 10px;
+    padding-left: 5px;
+  }
+  .roundedCorners {
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
             border-radius: 4px;
-            border-style: solid;
-            border-width: 1px;
-        }
+    border-style: solid;
+    border-width: 1px;
+  }
+  .preserveWhiteSpace {
+    white-space: pre;
+  }
+  
+  
+  
+.dropdown-submenu {
+    position: relative;
+}
 
-        .preserveWhiteSpace {
-            white-space: pre;
-        }
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
 
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+}
 
+.dropdown-submenu>a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
 
-        .dropdown-submenu {
-            position: relative;
-        }
+.dropdown-submenu:hover>a:after {
+    border-left-color: #fff;
+}
 
-            .dropdown-submenu > .dropdown-menu {
-                top: 0;
-                left: 100%;
-                margin-top: -6px;
-                margin-left: -1px;
-                -webkit-border-radius: 0 6px 6px 6px;
-                -moz-border-radius: 0 6px 6px;
-                border-radius: 0 6px 6px 6px;
-            }
+.dropdown-submenu.pull-left {
+    float: none;
+}
 
-            .dropdown-submenu:hover > .dropdown-menu {
-                display: block;
-            }
+.dropdown-submenu.pull-left>.dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
+  
+table {
+        width: 100%;
+}
 
-            .dropdown-submenu > a:after {
-                display: block;
-                content: " ";
-                float: right;
-                width: 0;
-                height: 0;
-                border-color: transparent;
-                border-style: solid;
-                border-width: 5px 0 5px 5px;
-                border-left-color: #ccc;
-                margin-top: 5px;
-                margin-right: -10px;
-            }
+thead, tbody, tr, td, th { display: block; }
 
-            .dropdown-submenu:hover > a:after {
-                border-left-color: #fff;
-            }
+tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
 
-            .dropdown-submenu.pull-left {
-                float: none;
-            }
+thead th {
+    height: 30px;
 
-                .dropdown-submenu.pull-left > .dropdown-menu {
-                    left: -100%;
-                    margin-left: 10px;
-                    -webkit-border-radius: 6px 0 6px 6px;
-                    -moz-border-radius: 6px 0 6px 6px;
-                    border-radius: 6px 0 6px 6px;
-                }
+    /*text-align: left;*/
+}
 
-        table {
-            width: 100%;
-        }
+tbody {
+    height: 700px;
+    overflow-y: auto;
+}
 
-        thead, tbody, tr, td, th {
-            display: block;
-        }
+tbody td, thead th {
+    /*width: 19.2%;*/
+    float: left;
+}
 
-            tr:after {
-                content: ' ';
-                display: block;
-                visibility: hidden;
-                clear: both;
-            }
+.orange {
+  color: darkorange;
+}
 
-            thead th {
-                height: 30px;
-                /*text-align: left;*/
-            }
-
-        tbody {
-            height: 700px;
-            overflow-y: auto;
-        }
-        quick
-        thead {
-            /* fallback */
-        }
-
-            tbody td, thead th {
-                /*width: 19.2%;*/
-                float: left;
-            }
-
-        .orange {
-            color: darkorange;
-        }
-    </style>
+.mediumRedBorder {
+	border-color: red;
+	border-style: solid;
+	border-width: medium;
+}
+</style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-bottom">
@@ -149,7 +182,7 @@
                     <ul class="dropdown-menu  multi-level" role="menu" aria-labelledby="dropdownMenu">
                         <li class="dropdown-submenu">
                             <a tabindex="-1" href="#">User Tables</a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu" style="width: 250px;">
                                 <li id="UPView"><a href="#">View User Profile</a></li>
                                 <li id="UPChange"><a href="#">User Profile Maintenance</a></li>
                                 <li id="STView"><a href="#">View Sessions Table</a></li>
@@ -163,7 +196,7 @@
 
                         <li class="dropdown-submenu">
                             <a href="#">Permissions</a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu" style="width: 250px;">
                                 <li id="PMView"><a href="#">View Permissions Master</a></li>
                                 <li id="PMChange"><a href="#">Permissions Master Maintenance</a></li>
                                 <li id="GPView"><a href="#">View Group Permissions</a></li>
@@ -173,7 +206,7 @@
 
                         <li class="dropdown-submenu">
                             <a href="#">Misc.</a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu" style="width: 250px;">
                                 <li id="GMView"><a href="#">View Group Master</a></li>
                                 <li id="GMChange"><a href="#">Group Master Maintenance</a></li>
                                 <li id="PPView"><a href="#">View Password Policy</a></li>
@@ -196,5 +229,496 @@
             <div id="form-feedback" class="formElementPadLeft" style="color:red;">XXX</div> <!--90 char-->
         </div>
     </nav>
+  <div class="col-md-12">
+    <table class="table table-striped" id='tokensTable'>
+    </table>
+  </div>
+	<div class="actionButtons" class="actionButtons">
+		<button type="button" class="btn btn-success" id="updateButton" style="background-color: darkturquoise;">Update</button>
+		<button type="button" class="btn btn-success" id="cancelButon" style="background-color: red;">Cancel</button>
+	</div>
+
+<script>
+  var viewMode = false;
+  $(function () {
+    var findButtonDisabled;
+		var formItems;
+    var formData;
+    var ajaxData;
+		var enCldr = inzCldr();
+		Globalize.locale("en");
+		p = Globalize.dateParser();
+		var z = p("6/12/2018");
+		configureButtons(false, true, true);
+    configureViewMode();
+    $('.navbar-brand').click(function() {
+      newFrame('views/QSECOFR_Main.html');
+    }); 
+    $('#UPView').click(function() {
+      newFrame('views/userProfile_CRUD.html?mode=view');
+    });
+    $('#UPChange').click(function() {
+      newFrame('views/userProfile_CRUD.html');
+    });
+    $('#STView').click(function() {
+      newFrame('views/sessions_CRUD.html?mode=view');
+    });
+    $('#STChange').click(function() {
+      newFrame('views/sessions_CRUD.html');
+    });
+    $('#UP1View').click(function() {
+      newFrame('views/uniqueTokens_CRUD.html?mode=view');
+    });
+    $('#UP1Change').click(function() {
+      newFrame('views/uniqueTokens_CRUD.html');
+    });
+    $('#UGView').click(function() {
+      newFrame('views/userGroups_CRUD.html?mode=view');
+    });
+    $('#UGChange').click(function() {
+      newFrame('views/userGroups_CRUD.html');
+    });
+    $('#PMView').click(function() {
+      newFrame('views/permissionsMaster_CRUD.html?mode=view');
+    });
+    $('#PMChange').click(function() {
+      newFrame('views/permissionsMaster_CRUD.html');
+    });
+    $('#GPView').click(function() {
+      newFrame('views/groupPermissions_CRUD.html?mode=view');
+    });
+    $('#GPChange').click(function() {
+      newFrame('views/groupPermissions_CRUD.html');
+    });
+    $('#GMView').click(function() {
+      newFrame('views/groupMaster_CRUD.html?mode=view');
+    });
+    $('#GMChange').click(function() {
+      newFrame('views/groupMaster_CRUD.html');
+    });
+    $('#PPView').click(function() {
+      newFrame('views/passwordPolicy_CRUD.html?mode=view');
+    });
+    $('#PPChange').click(function() {
+      newFrame('views/passwordPolicy_CRUD.html');
+    });
+    $('#findBtn').click(function(e) {
+			e.preventDefault();
+      setFormItems('find', ajaxData);
+      setFormData();
+      doPost();
+    });
+		$('#cancelButon').click(function() {
+			configureButtons(false, true, true);
+			$('#username').val('');
+			$('#form-feedback').text('');
+			$('#tokensTable').html('');
+		}); 
+		$('#updateButton').click(function() {
+			if (validate()) {
+				setFormItems('update', doUpdate());
+      	setFormData();
+      	doPost();
+				configureButtons(false, true, true);
+				$('#username').val('');
+				$('#form-feedback').text('');
+				$('#tokensTable').html('');
+			}
+		}); 
+	});
+
+  function doPost() {
+    $.ajax({
+      type:     'POST',
+      url:      '../editUniqueTokens',
+      data:     formData,
+      dataType: "json", 
+      success:  function (ajaxData) {
+        ajaxSuccess(ajaxData);
+      } 
+    });
+  }
+  
+  function ajaxSuccess(data) {
+    setFormItems('ajaxSuccess', data);
+  }
+  
+  function setFormItems(action, data) {
+    if (
+          action === 'find'
+       ){
+          formItems = {
+            "action"               : action,
+            "msgID"                : '',                      
+            "msgDescription"       : '',                       
+            "findUser"             : $('#username').val(),
+						"up1UserName"					 : '',
+            "up1Token"             : '',
+            "up1DateAdded" 				 : '',
+            "up1Rrn" 		           : '',
+            "deleteToken"          : '',
+            "uniqueTokensString"   : ''
+          } 
+        }
+    
+    if (action === 'ajaxSuccess') {
+      formItems = {
+        "action"                : action,
+        "msgID"                 : data.msgID,                      
+        "msgDescription"        : data.msgDescription,                       
+        "findUser"              : data.findUser,
+				"up1UserName"						: '',
+        "up1Token"              : '',
+        "up1DateAdded" 				  : '',
+        "up1Rrn"	              : '',
+        "deleteToken"           : '',
+        "uniqueTokensString"    : data.uniqueTokensString
+      }
+			
+			if (formItems.msgID === 'YRD0000') {
+				if (getAllUrlParams().mode === 'view') {
+					configureButtons(true, true, false);
+				} else {
+					configureButtons(true, false, false);
+				}
+				$('#form-feedback').text('');
+				$('#tokensTable').html('');
+				$('#tokensTable').append(
+					   '<thead>'
+           + '<tr id="tableHeaders">'
+					 + '  <th style="width: 60%; padding: 0rem;">Token</th>'
+        	 + '  <th style="width: 20%; padding: 0rem;">Date</th>'
+					 + '  <th style="width: 10%; padding: 0rem;">RRN</th>'
+					 + '  <th style="width: 10%; padding: 0rem;">DLT</th>'
+        	 + '</tr>'
+        	 + '</thead>'
+        	 + '<tbody>'
+      	);
+				var tableRows = 0;
+       	if (getAllUrlParams().mode != 'view') {
+					$.each(JSON.parse(data.uniqueTokensString), function(key, value) {
+						console.log('key:' + key 
+												+ ' | up1Token:' 
+												+ value.up1Token
+												+ ' | up1DateAdded:' 
+												+ value.up1DateAdded
+												+ ' | up1Rrn:'
+												+ value.up1Rrn
+										 	);
+						tableRows++;
+						$('#tokensTable').append(
+								'<tr class="tableRow existingToken" id="tableRow"> '
+            	+ '<td id="userToken" style="width: 60%; padding: .75rem .75rem .75rem 0rem"> '
+							+ '<input type="text" class="roundedCorners userToken1" name="userToken1" id="token'
+							+ value.up1Rrn
+							+ '" required size="70" value="'
+							+ value.up1Token
+							+ '"> '
+							+ '</td>'
+							
+							+ '<td id="dateAdded" style="width: 20%; padding: .75rem .75rem .75rem 0rem"> '
+            	+ '<div class="input-group date" id="datePicker"> '
+            	+ '<input type="text" class="form-control tokenDate" name="tokenDate" required ' 
+            	+ 'placeholder="mm/dd/yyyy" value="'
+            	+ value.up1DateAdded
+            	+ '">'
+            	+ '<span class="input-group-addon">'
+            	+ '<span class="glyphicon glyphicon-calendar"></span>'
+            	+ '</span>'
+            	+ '</div>'
+            	+ '</td>'
+							
+            	+ '<td class="tokenRRN" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+            	+ value.up1Rrn
+            	+ '</td>'
+							
+            	+ '<td id="tokenDLT" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+            	+ '<input class="dlt" type="checkbox" name="dlt" value=" ">'
+            	+ '</td>'
+            	+ '</tr>'
+          	);
+					} );
+					console.log('tableRows: ' + tableRows);
+					/*Add 10 extra rows for new tokens*/
+					var i = 0;
+					up1Rrn = -1;
+					for (	i=0; i<10; i++, up1Rrn--) {
+								$('#tokensTable').append(
+									'<tr class="tableRow newToken" id="tableRow"> '
+								+ '<td id="userToken" style="width: 60%; padding: .75rem .75rem .75rem 0rem"> '
+								+ '<input type="text" class="roundedCorners userToken1" name="userToken1" id="token'
+								+ up1Rrn
+								+ '" size="70" value=""> '
+								+ '</td>'
+							
+								+ '<td id="dateAdded" style="width: 20%; padding: .75rem .75rem .75rem 0rem"> '
+            		+ '<div class="input-group date" id="datePicker"> '
+            		+ '<input type="text" class="form-control tokenDate" name="tokenDate" required ' 
+            		+ 'placeholder="mm/dd/yyyy" value="">'
+            		+ '<span class="input-group-addon">'
+            		+ '<span class="glyphicon glyphicon-calendar"></span>'
+            		+ '</span>'
+            		+ '</div>'
+            		+ '</td>'
+							
+            		+ '<td class="tokenRRN" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+								+ up1Rrn
+            		+ '</td>'
+							
+            		+ '<td id="tokenDLT" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+            		+ '</td>'
+            		+ '</tr>'
+							);
+					}
+				} else { /* view mode */
+					$.each(JSON.parse(data.uniqueTokensString), function(key, value) {
+						console.log('key:' + key 
+												+ ' | up1Token:' 
+												+ value.up1Token
+												+ ' | up1DateAdded:' 
+												+ value.up1DateAdded
+												+ ' | up1Rrn:'
+												+ value.up1Rrn
+										 	);
+						$('#tokensTable').append(
+								'<tr class="tableRow existingToken" id="tableRow"> '
+            	+ '<td id="userToken" style="width: 60%; padding: .75rem .75rem .75rem 0rem"> '
+							+ value.up1Token
+							+ '</td>'
+							
+							+ '<td id="dateAdded" style="width: 20%; padding: .75rem .75rem .75rem 0rem"> '
+            	+ '<div class="input-group date" id="datePicker"> '
+            	+ value.up1DateAdded
+            	+ '</div>'
+            	+ '</td>'
+							
+            	+ '<td class="tokenRRN" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+            	+ value.up1Rrn
+            	+ '</td>'
+							
+            	+ '<td id="tokenDLT" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+            	+ '</td>'
+            	+ '</tr>'
+          	);
+					} );
+				}
+				$('#tokensTable').append('</tbody>');
+			} else {
+				$('#form-feedback').text('No such user');
+				configureButtons(false, true, true);
+			}
+		}
+		
+		if (action === 'update') {
+      formItems = {
+        "action"                : action,
+        "msgID"                 : '',                      
+        "msgDescription"        : '',                       
+        "findUser"              : $('#username').val(),
+				"up1UserName"						: '',
+        "up1Token"              : '',
+        "up1DateAdded" 				  : '',
+        "up1Rrn"	              : '',
+        "deleteToken"           : '',
+        "uniqueTokensString"    : data
+      }
+		}
+  }
+  
+  function setFormData() {
+     formData = JSON.stringify(formItems);
+  }
+
+  function newFrame(newFrame) {
+    $('html').html(newFrame);
+    console.log(' nextFrame=' + newFrame);
+    parent.frame = newFrame;
+    parent.nextFrame();
+  }
+
+  function configureViewMode() {
+    $('#title-loginID').text('Unique Tokens Maintenance    ' + parent.userName);
+    viewMode = false;
+
+    if (getAllUrlParams().mode === 'view') {
+      viewMode = true;
+      console.log('view mode');
+      $('#title-loginID').text('Unique Tokens Maintenance    VIEW MODE    ' + parent.userName);
+    }
+  }
+  
+  function getAllUrlParams(url) {
+    //see: https://www.sitepoint.com/get-url-parameters-with-javascript/
+    // get query string from url (optional) or window
+    var queryString = url ? url.split('?')[1] : window.location.search.slice(1);
+
+    // we'll store the parameters here
+    var obj = {};
+
+    // if query string exists
+    if (queryString) {
+
+      // stuff after # is not part of query string, so get rid of it
+      queryString = queryString.split('#')[0];
+
+      // split our query string into its component parts
+      var arr = queryString.split('&');
+
+      for (var i=0; i<arr.length; i++) {
+        // separate the keys and the values
+        var a = arr[i].split('=');
+
+        // in case params look like: list[]=thing1&list[]=thing2
+        var paramNum = undefined;
+        var paramName = a[0].replace(/\[\d*\]/, function(v) {
+          paramNum = v.slice(1,-1);
+          return '';
+        });
+
+        // set parameter value (use 'true' if empty)
+        var paramValue = typeof(a[1])==='undefined' ? true : a[1];
+
+        // (optional) keep case consistent
+        paramName = paramName.toLowerCase();
+        paramValue = paramValue.toLowerCase();
+
+        // if parameter name already exists
+        if (obj[paramName]) {
+          // convert value to array (if still string)
+          if (typeof obj[paramName] === 'string') {
+            obj[paramName] = [obj[paramName]];
+          }
+          // if no array index number specified...
+          if (typeof paramNum === 'undefined') {
+            // put the value on the end of the array
+            obj[paramName].push(paramValue);
+          }
+          // if array index number specified...
+          else {
+            // put the value at that index number
+            obj[paramName][paramNum] = paramValue;
+          }
+        }
+        // if param name doesn't exist yet, set it
+        else {
+          obj[paramName] = paramValue;
+        }
+      }
+    }
+
+    return obj;
+  }
+	
+	function configureButtons(findBtn, updateBtn, cancelBtn) {
+    
+		if (findBtn) {
+			$('#findBtn')   .attr('disabled', true);
+			$('#username')  .attr("disabled", true);
+			findButtonDisabled = true;
+		} else {
+			$('#findBtn')   .attr('disabled', false);
+			$('#username')  .attr("disabled", false);    
+			findButtonDisabled = false;
+		}                   
+                          
+		$('#updateButton').attr("disabled", updateBtn);
+		$('#cancelButon') .attr("disabled", cancelBtn);
+  }
+	
+	function doUpdate() {
+		//https://stackoverflow.com/questions/17120633/loop-through-each-html-table-column-and-get-the-data-using-jquery
+		var uniqueTokens = [];
+		$('.existingToken').each(function(k, v) {
+			var uniqueToken = {
+													up1UserName:	$('#username').val(),
+  												up1Token:			$(this).find('.userToken1').val(),
+  												up1DateAdded:	$(this).find('.tokenDate').val(),
+  												up1Rrn:				$(this).find('.tokenRRN').text(),
+													deleteToken:	$(this).find('.dlt').is(':checked')
+												};
+			uniqueTokens.push(uniqueToken);
+			console.log('doUpdate1: k=' + k + ' | v=' + v);
+		});
+		$('.newToken').each(function(k, v) {
+			if ($(this).find('.userToken1').val() !== '' && $(this).find('.tokenDate').val() !=='') {
+				uniqueTokens.push(uniqueToken);
+				console.log('doUpdate2: k=' + k + ' | v=' + v);
+			}
+		});
+		var x = JSON.stringify(uniqueTokens);
+		console.log('uniqueTokens[] as JSON=' + x);
+		return x;
+	}
+	
+	function validate() {
+		var isValid = true;
+		Globalize.locale("en");
+		var dateParser = Globalize.dateParser();
+		$('.tableRow').each(function(k, v) {
+			console.log('validate1: k=' + k + ' | v=' + v);
+			$(this).find('.userToken1').removeClass('mediumRedBorder');
+			$(this).find('.tokenDate').removeClass('mediumRedBorder');
+			
+			if (		$(this).find('.userToken1').val() === ''   						&&
+					  	$(this).find('.tokenDate') .val() === ''									) { 
+
+				if ($(this).find('.dlt').is(':checked') === false &&
+					 	$(this).hasClass('existingToken')) {
+					isValid = false;
+					$(this).find('.userToken1').addClass('mediumRedBorder');
+					$(this).find('.tokenDate') .addClass('mediumRedBorder');
+				}	
+			}
+			
+			if (		$(this).find('.userToken1').val() === ''   						&&
+						!($(this).find('.tokenDate') .val() === '')									) {
+
+				if ($(this).find('.dlt').is(':checked') === false) {
+					isValid = false;
+					$(this).find('.userToken1').addClass('mediumRedBorder');
+
+					if (dateParser($(this).find('.tokenDate').val())===null) {
+						isValid = false;
+						$(this).find('.tokenDate').addClass('mediumRedBorder');
+					}
+				}
+				
+				if ($(this).hasClass('newToken')) {
+					isValid = false;
+					$(this).find('.userToken1').addClass('mediumRedBorder');
+
+					if (dateParser($(this).find('.tokenDate').val())===null) {
+						isValid = false;
+						$(this).find('.tokenDate').addClass('mediumRedBorder');
+					}
+				}
+			}
+			
+			if (	!($(this).find('.userToken1').val() === '')   					&&
+							$(this).find('.tokenDate') .val() === ''									) {
+
+				if (	$(this).find('.dlt').is(':checked') === false || 
+							$(this).hasClass('newToken')) {
+					isValid = false;
+					$(this).find('.tokenDate').addClass('mediumRedBorder');
+				}
+			}
+			
+			if (	!($(this).find('.userToken1').val() === '')   && 
+				 		!($(this).find('.tokenDate') .val() === '')							) {
+
+				if (	$(this).find('.dlt').is(':checked') === false || 
+							$(this).hasClass('newToken')) {
+
+					if (dateParser($(this).find('.tokenDate').val())===null) {
+						isValid = false;
+						$(this).find('.tokenDate').addClass('mediumRedBorder');
+					}
+				}
+			}
+		});
+		return isValid;
+	}
+</script>
 </body>
 </html>
