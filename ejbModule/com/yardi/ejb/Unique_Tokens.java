@@ -26,7 +26,7 @@ public class Unique_Tokens implements Serializable {
 
 	@JsonFormat(
 		shape = JsonFormat.Shape.STRING,
-		pattern = "MM-dd-yyyy"
+		pattern = "MM/dd/yyyy"
 	)
 	@Temporal(TemporalType.DATE)
 	@Column(name="UP1_DATE_ADDED")

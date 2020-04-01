@@ -3,44 +3,39 @@
 <head>
   <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
   <meta HTTP-EQUIV="Expires" CONTENT="-1">
-  <title>Unique Tokens CRUD</title>
-  <!-- 
+	<meta charset="utf-8">
+	<title>Unique Tokens CRUD</title>
+  
+	<!-- 
   https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=scrollspy
   https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-affix.php
   https://www.tutorialrepublic.com/css-reference/css-top-property.php
   -->
 <!--
-D:\glassfish4\glassfish\domains\domain1\eclipseApps\yardiWeb\views == ../resources/styles/bootstrap.min.css
-../ == D:\glassfish4\glassfish\domains\domain1\eclipseApps\yardiWeb
-
-
-NEW
-======================================
-D:\glassfish4\glassfish\lib\resources
-======================================
-D:\glassfish4\glassfish\domains\domain1\eclipseApps\yardiWeb\views
-../ == D:\glassfish4\glassfish\domains\domain1\eclipseApps\yardiWeb
-../ == D:\glassfish4\glassfish\domains\domain1\eclipseApps
-../ == D:\glassfish4\glassfish\domains\domain1\
-../ == D:\glassfish4\glassfish\domains\
-../ == D:\glassfish4\glassfish\
-../../../../../lib/resources/
-
 Try using jquery to change the html on the <link> tags and the <script> tags
 -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="../resources/styles/bootstrap.min.css" rel="stylesheet" />
-  <link href="../resources/css/font-awesome.min.css" rel="stylesheet">
-  <script src="../resources/scripts/jquery-2.2.4.min.js"></script>
-  <script src="../resources/scripts/Moment/moment.min.js" type="text/javascript"></script>
-  <script src="../resources/scripts/DatePicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+  <link href="../resources/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="../resources/css/font-awesome-free-5.12.1-web/all.min.css" rel="stylesheet" />
+  <link href="../resources/css/font-awesome-free-5.12.1-web/font-awesome.min.css" rel="stylesheet">
+  <link href="../resources/css/font-awesome-free-5.12.1-web/brands.min.css" rel="stylesheet" />
+  <link href="../resources/css/font-awesome-free-5.12.1-web/solid.min.css" rel="stylesheet" />
+  <script defer src="../resources/scripts/font-awesome-free-5.12.1-web/all.min.js"></script>
+  <script defer src="../resources/scripts/font-awesome-free-5.12.1-web/brands.min.js"></script>
+  <script defer src="../resources/scripts/font-awesome-free-5.12.1-web/solid.min.js"></script>
+  <script defer src="../resources/scripts/font-awesome-free-5.12.1-web/fontawesome.min.js"></script>
+  <script src="../resources/scripts/jquery-3.4.1.min.js"></script>
   <script src="../resources/scripts/bootstrap.min.js"></script>
-  <script src="../resources/scripts/jquery-globalize.1.3.0/cldrjs/dist/cldr.js"></script>
-  <script src="../resources/scripts/jquery-globalize.1.3.0/cldrjs/dist/cldr/event.js"></script>
-  <script src="../resources/scripts/jquery-globalize.1.3.0/cldrjs/dist/cldr/supplemental.js"></script>
-  <script src="../resources/scripts/jquery-globalize.1.3.0/globalize/dist/globalize.js"></script>
-  <script src="../resources/scripts/jquery-globalize.1.3.0/globalize/dist/globalize/number.js"></script>
-  <script src="../resources/scripts/jquery-globalize.1.3.0/globalize/dist/globalize/date.js"></script>
+  <script src="../resources/scripts/momentJS/moment.min.js" type="text/javascript"></script>
+  <script src="../resources/scripts/bootstrap4-datetimepicker/tempusdominus-bootstrap-4.min.js" type="text/javascript"></script>
+  <link href="../resources/css/bootstrap4-datetimepicker/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+  <script src="../resources/scripts/globalizeJS/cldrjs/dist/cldr.js"></script>
+  <script src="../resources/scripts/globalizeJS/cldrjs/dist/cldr/event.js"></script>
+  <script src="../resources/scripts/globalizeJS/cldrjs/dist/cldr/supplemental.js"></script>
+  <script src="../resources/scripts/globalizeJS/globalize/dist/globalize.js"></script>
+  <script src="../resources/scripts/globalizeJS/globalize/dist/globalize/number.js"></script>
+  <script src="../resources/scripts/globalizeJS/globalize/dist/globalize/date.js"></script>
+  <script src="../resources/scripts/custom/enCldrDate.js"></script>
   <!--
   <link href="../../../../Boostrap/styles/bootstrap.min.css" rel="stylesheet">
   <script src="../../../../jQueryLib/scripts/jquery-2.2.4.min.js"></script>
@@ -50,7 +45,7 @@ Try using jquery to change the html on the <link> tags and the <script> tags
 <style type="text/css">
 /* Custom Styles */
   body{
-    padding-top: 60px;
+    padding-top: 0px;
   }
   .userProfileForm {
     margin-left: 0px;
@@ -150,101 +145,89 @@ tbody {
     overflow-y: auto;
 }
 
-thead {
-    /* fallback */
-}
-
 tbody td, thead th {
-    width: 19.2%;
+    /*width: 19.2%;*/
     float: left;
 }
 
 .orange {
   color: darkorange;
 }
+
+.mediumRedBorder {
+	border-color: red;
+	border-style: solid;
+	border-width: medium;
+}
 </style>
 </head>
 <body>
-  <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-bottom">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="#">Brand</a>
-      </div>
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Quick Links<span class="caret"></span></a>
-            <ul class="dropdown-menu  multi-level" role="menu" aria-labelledby="dropdownMenu">
 
-              <li class="dropdown-submenu">
-                <a tabindex="-1" href="#">User Tables</a>
-                <ul class="dropdown-menu">
-                  <li id="UPView"><a href="#">View User Profile</a></li>
-                  <li id="UPChange"><a href="#">User Profile Maintenance</a></li>
-                  <li id="STView"><a href="#">View Sessions Table</a></li>
-                  <li id="STChange"><a href="#">Sessions Table Maintenance</a></li>
-                  <li id="UP1View"><a href="#">View Unique Tokens Table</a></li>
-                  <li id="UP1Change"><a href="#">Unique Tokens Table Maintenance</a></li>
-                  <li id="UGView"><a href="#">View User Groups Table</a></li>
-                  <li id="UGChange"><a href="#">User Groups Table Maintenance</a></li>
-                </ul>
-              </li>
-              
-              <li class="dropdown-submenu">
-                <a href="#">Permissions</a>
-                <ul class="dropdown-menu">
-                  <li id="PMView"><a href="#">View Permissions Master</a></li>
-                  <li id="PMChange"><a href="#">Permissions Master Maintenance</a></li>
-                  <li id="GPView"><a href="#">View Group Permissions</a></li>
-                  <li id="GPChange"><a href="#">Group Permissions Maintenance</a></li>
-                </ul>
-              </li>
-              
-              <li class="dropdown-submenu">
-                <a href="#">Misc.</a>
-                <ul class="dropdown-menu">
-                  <li id="GMView"><a href="#">View Group Master</a></li>
-                  <li id="GMChange"><a href="#">Group Master Maintenance</a></li>
-                  <li id="PPView"><a href="#">View Password Policy</a></li>
-                  <li id="PPChange"><a href="#">Password Policy Maintenance</a></li>
-                  <li id="STView"><a href="#">View Sessions Table</a></li>
-                  <li id="STChange"><a href="#">Sessions Table Maintenance</a></li>
-                </ul>
-              </li>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Quick Links<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu  multi-level" role="menu" aria-labelledby="dropdownMenu">
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" href="#">User Tables</a>
+                            <ul class="dropdown-menu" style="width: 250px;">
+                                <li id="UPView"><a href="#">View User Profile</a></li>
+                                <li id="UPChange"><a href="#">User Profile Maintenance</a></li>
+                                <li id="STView"><a href="#">View Sessions Table</a></li>
+                                <li id="STChange"><a href="#">Sessions Table Maintenance</a></li>
+                                <li id="UP1View"><a href="#">View Unique Tokens Table</a></li>
+                                <li id="UP1Change"><a href="#">Unique Tokens Table Maintenance</a></li>
+                                <li id="UGView"><a href="#">View User Groups Table</a></li>
+                                <li id="UGChange"><a href="#">User Groups Table Maintenance</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown-submenu">
+                            <a href="#">Permissions</a>
+                            <ul class="dropdown-menu" style="width: 250px;">
+                                <li id="PMView"><a href="#">View Permissions Master</a></li>
+                                <li id="PMChange"><a href="#">Permissions Master Maintenance</a></li>
+                                <li id="GPView"><a href="#">View Group Permissions</a></li>
+                                <li id="GPChange"><a href="#">Group Permissions Maintenance</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown-submenu">
+                            <a href="#">Misc.</a>
+                            <ul class="dropdown-menu" style="width: 250px;">
+                                <li id="GMView"><a href="#">View Group Master</a></li>
+                                <li id="GMChange"><a href="#">Group Master Maintenance</a></li>
+                                <li id="PPView"><a href="#">View Password Policy</a></li>
+                                <li id="PPChange"><a href="#">Password Policy Maintenance</a></li>
+                                <li id="STView"><a href="#">View Sessions Table</a></li>
+                                <li id="STChange"><a href="#">Sessions Table Maintenance</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
             </ul>
-          </li>
-        </ul>
-        <form class="navbar-form navbar-left">
-          <label for="username" class="control-label">Username</label>
-          <div class="form-group">
-            <input type="text" class="form-control" name="username" id="username" required placeholder="User Name">
-          </div>
-          <button type="button" class="btn btn-success" id="findBtn">Find</button>
-        </form>
-        <div id="title-loginID" class="formElementPadLeft preserveWhiteSpace"></div>
-        <div id="form-feedback" class="formElementPadLeft" style="color:red;">XXX</div> <!--90 char-->
-      </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-  </nav>
+            <form class="form-inline pl-2">
+                <div class="form-group px-sm-1">
+                    <label for="username" class="control-label preserveWhiteSpace" style="padding-left: 20px;"><strong>Username </strong></label>
+                    <input type="search" class="form-control" name="username" id="username" required placeholder="User Name" aria-label="Username">
+                </div>
+                <button type="submit" class="btn btn-success" id="findBtn">Find</button>
+            </form>
+            <div id="title-loginID" class="formElementPadLeft preserveWhiteSpace"></div>
+            <div id="form-feedback" class="formElementPadLeft" style="color:red;">XXX</div> <!--90 char-->
+        </div>
+    </nav>
   <div class="col-md-12">
     <table class="table table-striped" id='tokensTable'>
     </table>
   </div>
-            <div class="col-md-2 formElementPadBottom ">
-                <input type="text" class="form-control" name="dob" id="dob" required  
-                       placeholder="mm/dd/yyyy"/>
-                <span class="input-group-addon">
-                  <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-						</div>
 	<div class="actionButtons" class="actionButtons">
 		<button type="button" class="btn btn-success" id="updateButton" style="background-color: darkturquoise;">Update</button>
 		<button type="button" class="btn btn-success" id="cancelButon" style="background-color: red;">Cancel</button>
@@ -253,13 +236,14 @@ tbody td, thead th {
 <script>
   var viewMode = false;
   $(function () {
-    //$('.newToken').children('#tokenRRN').hide(); //ID of a table row
-    //$('.newToken').children('#tokenDLT').hide();
-    //$('.newToken').hide();
     var findButtonDisabled;
 		var formItems;
     var formData;
     var ajaxData;
+		var enCldr = inzCldr();
+		Globalize.locale("en");
+		p = Globalize.dateParser();
+		var z = p("6/12/2018");
 		configureButtons(false, true, true);
     configureViewMode();
     $('.navbar-brand').click(function() {
@@ -313,7 +297,8 @@ tbody td, thead th {
     $('#PPChange').click(function() {
       newFrame('views/passwordPolicy_CRUD.html');
     });
-    $('#findBtn').click(function() {
+    $('#findBtn').click(function(e) {
+			e.preventDefault();
       setFormItems('find', ajaxData);
       setFormData();
       doPost();
@@ -325,16 +310,18 @@ tbody td, thead th {
 			$('#tokensTable').html('');
 		}); 
 		$('#updateButton').click(function() {
-      setFormItems('update', doUpdate());
-      setFormData();
-      doPost();
-			configureButtons(false, true, true);
-			$('#username').val('');
-			$('#form-feedback').text('');
-			$('#tokensTable').html('');
+			if (validate()) {
+				setFormItems('update', doUpdate());
+      	setFormData();
+      	doPost();
+				configureButtons(false, true, true);
+				$('#username').val('');
+				$('#form-feedback').text('');
+				$('#tokensTable').html('');
+			}
 		}); 
-  });
-  
+	});
+
   function doPost() {
     $.ajax({
       type:     'POST',
@@ -384,79 +371,137 @@ tbody td, thead th {
       }
 			
 			if (formItems.msgID === 'YRD0000') {
-				configureButtons(true, false, false);
+				if (getAllUrlParams().mode === 'view') {
+					configureButtons(true, true, false);
+				} else {
+					configureButtons(true, false, false);
+				}
 				$('#form-feedback').text('');
 				$('#tokensTable').html('');
 				$('#tokensTable').append(
 					   '<thead>'
            + '<tr id="tableHeaders">'
-					 + '  <th>Token</th>'
-        	 + '  <th>Date</th>'
-					 + '  <th>RRN</th>'
-					 + '  <th>DLT</th>'
+					 + '  <th style="width: 60%; padding: 0rem;">Token</th>'
+        	 + '  <th style="width: 20%; padding: 0rem;">Date</th>'
+					 + '  <th style="width: 10%; padding: 0rem;">RRN</th>'
+					 + '  <th style="width: 10%; padding: 0rem;">DLT</th>'
         	 + '</tr>'
         	 + '</thead>'
         	 + '<tbody>'
       	);
 				var tableRows = 0;
-				$.each(JSON.parse(data.uniqueTokensString), function(key, value) { 
-        	console.log('key:' + key 
-											 + ' | up1Token:' 
-                    	 + value.up1Token
-                    	 + ' | up1DateAdded:' 
-                    	 + value.up1DateAdded
-                     	 + ' | up1Rrn:'
-											 + value.up1Rrn
-										 );
-					tableRows++;
-        	if (getAllUrlParams().mode != 'view') {
-          	$('#tokensTable').append(
-								'<tr class="existingToken" id="tableRow">'
-            	+ '<td id="userToken">'
-							+ '<input type="text" class="roundedCorners" name="userToken1" id="userToken1" required value="'
+       	if (getAllUrlParams().mode != 'view') {
+					$.each(JSON.parse(data.uniqueTokensString), function(key, value) {
+						console.log('key:' + key 
+												+ ' | up1Token:' 
+												+ value.up1Token
+												+ ' | up1DateAdded:' 
+												+ value.up1DateAdded
+												+ ' | up1Rrn:'
+												+ value.up1Rrn
+										 	);
+						tableRows++;
+						$('#tokensTable').append(
+								'<tr class="tableRow existingToken" id="tableRow"> '
+            	+ '<td id="userToken" style="width: 60%; padding: .75rem .75rem .75rem 0rem"> '
+							+ '<input type="text" class="roundedCorners userToken1" name="userToken1" id="token'
+							+ value.up1Rrn
+							+ '" required size="70" value="'
 							+ value.up1Token
-							+ '"/>'
+							+ '"> '
 							+ '</td>'
-							+ '<td id="dateAdded">'
-            	+ '<div class="input-group date" id="datePicker">'
-            	+ '<input type="text" class="form-control" name="tokenDate" id="tokenDate" required ' 
+							
+							+ '<td id="dateAdded" style="width: 20%; padding: .75rem .75rem .75rem 0rem"> '
+            	+ '<div class="input-group date" id="datePicker"> '
+            	+ '<input type="text" class="form-control tokenDate" name="tokenDate" required ' 
             	+ 'placeholder="mm/dd/yyyy" value="'
             	+ value.up1DateAdded
-            	+ '"/>'
+            	+ '">'
             	+ '<span class="input-group-addon">'
             	+ '<span class="glyphicon glyphicon-calendar"></span>'
             	+ '</span>'
             	+ '</div>'
             	+ '</td>'
-            	+ '<td id="tokenRRN">'
+							
+            	+ '<td class="tokenRRN" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
             	+ value.up1Rrn
             	+ '</td>'
-            	+ '<td id="tokenDLT">'
-            	+ '<input type="checkbox" name="dlt" id="dlt" value=" ">'
+							
+            	+ '<td id="tokenDLT" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+            	+ '<input class="dlt" type="checkbox" name="dlt" value=" ">'
             	+ '</td>'
             	+ '</tr>'
           	);
-					} else {
-          	$('#tokensTable').append(
-              	'<tr class="newToken" id="tableRow">'
-            	+ '<td id="userToken">'
-            	+ value.up1Token
-            	+ '</td>'
-            	+ '<td id="dateAdded">'
-            	+ value.up1DateAdded
-            	+ '</td>'
-            	+ '<td id="tokenRRN">'
-            	+ '0'
-            	+ '</td>'
-            	+ '</tr>'
-          	);
+					} );
+					console.log('tableRows: ' + tableRows);
+					/*Add 10 extra rows for new tokens*/
+					var i = 0;
+					up1Rrn = -1;
+					for (	i=0; i<10; i++, up1Rrn--) {
+								$('#tokensTable').append(
+									'<tr class="tableRow newToken" id="tableRow"> '
+								+ '<td id="userToken" style="width: 60%; padding: .75rem .75rem .75rem 0rem"> '
+								+ '<input type="text" class="roundedCorners userToken1" name="userToken1" id="token'
+								+ up1Rrn
+								+ '" size="70" value=""> '
+								+ '</td>'
+							
+								+ '<td id="dateAdded" style="width: 20%; padding: .75rem .75rem .75rem 0rem"> '
+            		+ '<div class="input-group date" id="datePicker"> '
+            		+ '<input type="text" class="form-control tokenDate" name="tokenDate" required ' 
+            		+ 'placeholder="mm/dd/yyyy" value="">'
+            		+ '<span class="input-group-addon">'
+            		+ '<span class="glyphicon glyphicon-calendar"></span>'
+            		+ '</span>'
+            		+ '</div>'
+            		+ '</td>'
+							
+            		+ '<td class="tokenRRN" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+								+ up1Rrn
+            		+ '</td>'
+							
+            		+ '<td id="tokenDLT" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+            		+ '</td>'
+            		+ '</tr>'
+							);
 					}
-      	} );
-					$('#tokensTable').append('</tbody>');
-				} else {
-					$('#form-feedback').text('No such user');
-					configureButtons(false, true, true);
+				} else { /* view mode */
+					$.each(JSON.parse(data.uniqueTokensString), function(key, value) {
+						console.log('key:' + key 
+												+ ' | up1Token:' 
+												+ value.up1Token
+												+ ' | up1DateAdded:' 
+												+ value.up1DateAdded
+												+ ' | up1Rrn:'
+												+ value.up1Rrn
+										 	);
+						$('#tokensTable').append(
+								'<tr class="tableRow existingToken" id="tableRow"> '
+            	+ '<td id="userToken" style="width: 60%; padding: .75rem .75rem .75rem 0rem"> '
+							+ value.up1Token
+							+ '</td>'
+							
+							+ '<td id="dateAdded" style="width: 20%; padding: .75rem .75rem .75rem 0rem"> '
+            	+ '<div class="input-group date" id="datePicker"> '
+            	+ value.up1DateAdded
+            	+ '</div>'
+            	+ '</td>'
+							
+            	+ '<td class="tokenRRN" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+            	+ value.up1Rrn
+            	+ '</td>'
+							
+            	+ '<td id="tokenDLT" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+            	+ '</td>'
+            	+ '</tr>'
+          	);
+					} );
 				}
+				$('#tokensTable').append('</tbody>');
+			} else {
+				$('#form-feedback').text('No such user');
+				configureButtons(false, true, true);
+			}
 		}
 		
 		if (action === 'update') {
@@ -581,17 +626,93 @@ tbody td, thead th {
 		$('.existingToken').each(function(k, v) {
 			var uniqueToken = {
 													up1UserName:	$('#username').val(),
-  												up1Token:			$(this).find('#userToken1').val(),
-  												up1DateAdded:	$(this).find('#tokenDate').val(),
-  												up1Rrn:				$(this).find('#tokenRRN').text(),
-													deleteToken:	$(this).find('#dlt').is(':checked')
+  												up1Token:			$(this).find('.userToken1').val(),
+  												up1DateAdded:	$(this).find('.tokenDate').val(),
+  												up1Rrn:				$(this).find('.tokenRRN').text(),
+													deleteToken:	$(this).find('.dlt').is(':checked')
 												};
 			uniqueTokens.push(uniqueToken);
-			console.log('k=' + k + ' | v=' + v);
+			console.log('doUpdate1: k=' + k + ' | v=' + v);
+		});
+		$('.newToken').each(function(k, v) {
+			if ($(this).find('.userToken1').val() !== '' && $(this).find('.tokenDate').val() !=='') {
+				uniqueTokens.push(uniqueToken);
+				console.log('doUpdate2: k=' + k + ' | v=' + v);
+			}
 		});
 		var x = JSON.stringify(uniqueTokens);
 		console.log('uniqueTokens[] as JSON=' + x);
 		return x;
+	}
+	
+	function validate() {
+		var isValid = true;
+		Globalize.locale("en");
+		var dateParser = Globalize.dateParser();
+		$('.tableRow').each(function(k, v) {
+			console.log('validate1: k=' + k + ' | v=' + v);
+			$(this).find('.userToken1').removeClass('mediumRedBorder');
+			$(this).find('.tokenDate').removeClass('mediumRedBorder');
+			
+			if (		$(this).find('.userToken1').val() === ''   						&&
+					  	$(this).find('.tokenDate') .val() === ''									) { 
+
+				if ($(this).find('.dlt').is(':checked') === false &&
+					 	$(this).hasClass('existingToken')) {
+					isValid = false;
+					$(this).find('.userToken1').addClass('mediumRedBorder');
+					$(this).find('.tokenDate') .addClass('mediumRedBorder');
+				}	
+			}
+			
+			if (		$(this).find('.userToken1').val() === ''   						&&
+						!($(this).find('.tokenDate') .val() === '')									) {
+
+				if ($(this).find('.dlt').is(':checked') === false) {
+					isValid = false;
+					$(this).find('.userToken1').addClass('mediumRedBorder');
+
+					if (dateParser($(this).find('.tokenDate').val())===null) {
+						isValid = false;
+						$(this).find('.tokenDate').addClass('mediumRedBorder');
+					}
+				}
+				
+				if ($(this).hasClass('newToken')) {
+					isValid = false;
+					$(this).find('.userToken1').addClass('mediumRedBorder');
+
+					if (dateParser($(this).find('.tokenDate').val())===null) {
+						isValid = false;
+						$(this).find('.tokenDate').addClass('mediumRedBorder');
+					}
+				}
+			}
+			
+			if (	!($(this).find('.userToken1').val() === '')   					&&
+							$(this).find('.tokenDate') .val() === ''									) {
+
+				if (	$(this).find('.dlt').is(':checked') === false || 
+							$(this).hasClass('newToken')) {
+					isValid = false;
+					$(this).find('.tokenDate').addClass('mediumRedBorder');
+				}
+			}
+			
+			if (	!($(this).find('.userToken1').val() === '')   && 
+				 		!($(this).find('.tokenDate') .val() === '')							) {
+
+				if (	$(this).find('.dlt').is(':checked') === false || 
+							$(this).hasClass('newToken')) {
+
+					if (dateParser($(this).find('.tokenDate').val())===null) {
+						isValid = false;
+						$(this).find('.tokenDate').addClass('mediumRedBorder');
+					}
+				}
+			}
+		});
+		return isValid;
 	}
 </script>
 </body>

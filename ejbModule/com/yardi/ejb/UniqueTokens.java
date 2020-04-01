@@ -46,4 +46,4 @@ public interface UniqueTokens {
 	 * @return count of updated rows
 	 */
 	int updateToken(Long rrn, String token);
-}
+	}

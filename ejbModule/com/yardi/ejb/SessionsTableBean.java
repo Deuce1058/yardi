@@ -1,11 +1,11 @@
 package com.yardi.ejb;
 
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.SynchronizationType;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;

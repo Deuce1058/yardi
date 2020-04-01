@@ -210,23 +210,34 @@ public class EditUniqueTokensService extends HttpServlet {
 					  Integer.parseInt(s[0]),
 					  0, 0, 0
 					 );	
-				if ((Long.parseLong(r.getUp1Rrn()) != 0L) && 
+				if ((Long.parseLong(r.getUp1Rrn()) > 0L) && 
 					(Long.parseLong(r.getUp1Rrn()) == uniqueTokens.get(i).getUp1Rrn()) ) {
 					if (Boolean.valueOf(r.getDeleteToken())) {
 						uniqueTokenBean.remove(uniqueTokens.get(i).getUp1Rrn());
 						continue;
 					}
-					if 	( ! (r.getUp1Token().equals(uniqueTokens.get(i).getUp1Token())) ||
-						     c.getTimeInMillis() != r.getTokenAddedDate().getTime()
-						) {
-						if (! (r.getUp1Token().equals(uniqueTokens.get(i).getUp1Token()))) {
-							uniqueTokenBean.updateDateAdded(uniqueTokens.get(i).getUp1Rrn(), 
-									new java.util.Date(c.getTimeInMillis()));
-						}
-						if (c.getTimeInMillis() != r.getTokenAddedDate().getTime()) {
-							uniqueTokenBean.updateToken(uniqueTokens.get(i).getUp1Rrn(), 
+					if (! (r.getUp1Token().equals(uniqueTokens.get(i).getUp1Token()))) {
+						uniqueTokenBean.updateToken(uniqueTokens.get(i).getUp1Rrn(), 
 								r.getUp1Token());
-						}
+					}
+					if (c.getTimeInMillis() != r.getTokenAddedDate().getTime()) {
+						uniqueTokenBean.updateDateAdded(uniqueTokens.get(i).getUp1Rrn(), 
+								new java.util.Date(c.getTimeInMillis()));
+					}
+				}
+				if (Long.parseLong(r.getUp1Rrn()) < 0L) {
+					if	(!(r.getUp1Token().isEmpty()) && 
+						 !(r.getUp1DateAdded().isEmpty()) 
+						 
+						) {
+						s = r.getUp1DateAdded().split("-");
+						c = Calendar.getInstance();
+						c.set(Integer.parseInt(s[2]),
+							  Integer.parseInt(s[1]) - 1,
+							  Integer.parseInt(s[0]),
+							  0, 0, 0
+							 );	
+						uniqueTokenBean.persist(r.getUp1UserName(), r.getUp1Token(), c.getTime());
 					} 
 				}
 			}

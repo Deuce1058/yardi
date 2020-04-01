@@ -339,33 +339,33 @@ public class UniqueTokensBean implements UniqueTokens {
 			);
 		//debug
 	}
-	
-	public int updateToken(Long rrn, String token) {
-	   	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-	   	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
-	   	Query qry = em.createQuery("UPDATE Unique_Tokens "
-    	    + "SET up1token = :token "
-    		+ "WHERE up1rrn = :rrn");
-	   	int rows = qry
-	   		.setParameter("token", token)
-	   		.setParameter("rrn", rrn)
-	   		.executeUpdate();
-		return rows;
-	}
 
-	public int updateDateAdded(Long rrn, java.util.Date addDate) {
-	   	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-	   	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
-	   	Query qry = em.createQuery("UPDATE Unique_Tokens "
-    	    + "SET up1DateAdded = :addDate "
-    		+ "WHERE up1rrn = :rrn");
-	   	int rows = qry
-	   		.setParameter("addDate", addDate)
-	   		.setParameter("rrn", rrn)
-	   		.executeUpdate();
-		return rows;
-	}
-
+    public int updateToken(Long rrn, String token) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
+        EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
+        Query qry = em.createQuery("UPDATE Unique_Tokens " 
+        + "SET up1token = :token "
+        + "WHERE up1rrn = :rrn");
+        int rows = qry
+                .setParameter("token", token)
+                .setParameter("rrn", rrn)
+                .executeUpdate();
+        return rows;
+    }
+    
+    public int updateDateAdded(Long rrn, java.util.Date addDate) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
+        EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
+        Query qry = em.createQuery("UPDATE Unique_Tokens " 
+        + "SET up1DateAdded = :addDate "
+        + "WHERE up1rrn = :rrn");
+        int rows = qry
+                .setParameter("addDate", addDate)
+                .setParameter("rrn", rrn)
+                .executeUpdate();
+        return rows;
+    }
+    
 	public String stringify() {
 		return "UniqueTokensBean [emgr=" + emgr + "]"
 				+ "\n  "

@@ -5,74 +5,103 @@
   <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
   <meta HTTP-EQUIV="Expires" CONTENT="-1">
   <title>Yardi Change Password</title>
-  
-  <!-- Bootstrap -->
-  <link href="../resources/styles/bootstrap.min.css" rel="stylesheet" />
-  
+  <link href="../resources/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="../resources/css/font-awesome-free-5.12.1-web/all.min.css" rel="stylesheet" />
+  <link href="../resources/css/font-awesome-free-5.12.1-web/font-awesome.min.css" rel="stylesheet" />
+  <link href="../resources/css/font-awesome-free-5.12.1-web/brands.min.css" rel="stylesheet" />
+  <link href="../resources/css/font-awesome-free-5.12.1-web/solid.min.css" rel="stylesheet" />
+	<style>
+		.red {
+			color: red;
+		}
+		.green {
+			color: lawngreen;
+		}
+	</style>  
 </head>
 <body>
-  <script src="../resources/scripts/jquery-2.2.4.min.js"></script>
+  <script defer src="../resources/scripts/font-awesome-free-5.12.1-web/all.min.js"></script>
+  <script defer src="../resources/scripts/font-awesome-free-5.12.1-web/brands.min.js"></script>
+  <script defer src="../resources/scripts/font-awesome-free-5.12.1-web/solid.min.js"></script>
+  <script defer src="../resources/scripts/font-awesome-free-5.12.1-web/fontawesome.min.js"></script>
+  <script src="../resources/scripts/jquery-3.4.1.min.js"></script>
   <script src="../resources/scripts/bootstrap.min.js"></script>
-  <div class="container">
-    <div class="main">
-      <form class="form-horizontal" role="form" style="margin-top: 100px;">
-        <h4 class="col-sm-offset-3">Change Password</h4>
-        <p class="col-sm-offset-1">Your password has expired and must be changed before continuing</p>
-        <div class="form-group has-feedback">
-          <label for="username" class="col-sm-2 control-label">Username</label>
-          <div class="col-sm-3">
-            <div class="input-group">
-              <!-- using font-awesome -->
-              <!--
-              -->
-              <span class="input-group-addon"><i class="glyphicon glyphicon-user" ></i></span>
-              <input type="text" class="form-control" name="username" id="username" required placeholder="User name"/>
+    <div class="container">
+        <div class="d-flex flex-column xx-flex-container-column">
+            <form>
+                <h4 class="col-sm-offset-3">Change Password</h4>
+                <p class="col-sm-offset-1">Your password has expired and must be changed before continuing</p>
+                <div class="form-group form-inline">
+                    <label for="username" class="col-form-label col-sm-1">Username</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="fa-user"><i class="fas fa-user fa-sm" aria-hidden="true"></i></span>
+                        </div>
+                        <input type="text" required class="form-control-sm border" name="username" id="username" placeholder="User name" aria-describedby="fa-user" />
+                        <div class="input-group-append1">
+                            <span><i class="append-icon" aria-hidden="true"></i></span>
+                        </div>
+                        <div class="valid-feedback">
+                        </div>
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-inline">
+                    <label for="oldPassword" class="control-label col-sm-1">Old Password</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="fa-lock"><i class="fas fa-lock fa-sm" aria-hidden="true"></i></span>
+                        </div>
+                        <input type="password" class="form-control-sm border" name="oldPassword" id="oldPassword" required  placeholder="Old Password" aria-describedby="fa-lock" />
+                        <div class="input-group-append1">
+                            <span><i class="append-icon" aria-hidden="true"></i></span>
+                        </div>
+                        <div class="valid-feedback">
+                        </div>
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-inline">
+                    <label for="newPassword" class="control-label col-sm-1">New Password</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="fa-lock"><i class="fas fa-lock fa-sm" aria-hidden="true"></i></span>
+                        </div>
+                        <input type="password" class="form-control-sm border" name="newPassword" id="newPassword" required placeholder="New Password" aria-describedby="fa-lock"/>
+                        <div class="input-group-append1">
+                            <span><i class="append-icon" aria-hidden="true"></i></span>
+                        </div>
+                        <div class="valid-feedback">
+                        </div>
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-inline">
+                    <label for="verifyPassword" class="control-label col-sm-1">Verify Password</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="fa-lock"><i class="fas fa-lock fa-sm" aria-hidden="true"></i></span>
+                        </div>
+                        <input type="password" class="form-control-sm border" name="verifyPassword" id="verifyPassword" required placeholder="Verify Password" aria-describedby="fa-lock" />
+                        <div class="input-group-append1">
+                            <span><i class="append-icon" aria-hidden="true"></i></span>
+                        </div>
+                        <div class="valid-feedback">
+                        </div>
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="flex-row">
+                <button type="button" class="btn btn-success login-btn-margin" style="margin-left: 94px;"  id="login">Login</button>
             </div>
-            <span class="glyphicon glyph_icon form-control-feedback"></span>
-          </div>
-        </div>          
-        <div class="form-group has-feedback">
-          <label for="oldPassword" class="col-sm-2 control-label">Old Password</label>
-          <div class="col-sm-3">
-            <div class="input-group">
-              <!-- using font-awesome -->
-              <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-              <input type="password" class="form-control" name="oldPassword" id="oldPassword" 
-                     required placeholder="Old Password"/>
-            </div>
-            <span class="glyphicon glyph_icon form-control-feedback"></span>
-          </div>
-        </div>          
-        <div class="form-group has-feedback">
-          <label for="newPassword" class="col-sm-2 control-label">New Password</label>
-          <div class="col-sm-3">
-            <div class="input-group">
-              <!-- using font-awesome -->
-              <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-              <input type="password" class="form-control" name="newPassword" id="newPassword" 
-                     required placeholder="New Password"/>
-            </div>
-            <span class="glyphicon glyph_icon form-control-feedback"></span>
-          </div>
-        </div>          
-        <div class="form-group has-feedback">
-          <label for="verifyPassword" class="col-sm-2 control-label">Verify Password</label>
-          <div class="col-sm-3">
-            <div class="input-group">
-              <!-- using font-awesome -->
-              <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-              <input type="password" class="form-control" name="verifyPassword" id="verifyPassword" required 
-                     placeholder="Verify Password"/>
-            </div>
-            <span class="glyphicon glyph_icon form-control-feedback"></span>
-            <p></p>
-            <button type="button" class="btn btn-success" id="login">Login</button>
-          </div>
-        </div>          
-      </form>
-      <div class="col-sm-offset-2" style="color:red;" id="form-feedback"></div>
+            <div class="col-sm-offset-2" style="color:red;  margin-left: 94px;" id="form-feedback">xxx</div>
+        </div>
     </div>
-  </div>
 <script>
   //var feedback = ${feedback};
   $(function () {
@@ -87,13 +116,13 @@
         var obj = $(this);
         
         if (this.checkValidity()) {
-          addAndRemoveClasses($(this), '.form-group', '.glyph_icon', 
-                              'has-success',  'has-error',
-                              'glyphicon-ok', 'glyphicon-remove');
+					addAndRemoveClasses($(this), '.form-group', '.append-icon',
+																			 'is-valid', 'is-invalid', 
+                            					 'fa fa-check fa-lg green', 'fa fa-remove fa-lg red');
         } else {
-          addAndRemoveClasses($(this), '.form-group', '.glyph_icon', 
-                              'has-error',        'has-success',
-                              'glyphicon-remove', 'glyphicon-ok' );
+					addAndRemoveClasses($(this), '.form-group', '.append-icon',
+																			 'is-invalid', 'is-valid',
+                            					 'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
           formValid = false;
         }
       }); // input each
@@ -105,13 +134,13 @@
       if (formValid) {
         
         if ($('[name="oldPassword"]').val() === $('[name="newPassword"]').val()) {
-          addAndRemoveClasses('[name="oldPassword"]', '.form-group', '.glyphicon', 
-                              'has-error', 'has-success', 
-                              'glyphicon-remove', 'glyphicon-ok');
-          
-          addAndRemoveClasses('[name="newPassword"]', '.form-group', '.glyphicon', 
-                              'has-error', 'has-success', 
-                              'glyphicon-remove', 'glyphicon-ok');
+					addAndRemoveClasses('[name="oldPassword"]', '.form-group', '.append-icon',
+															'is-invalid', 'is-valid',
+                            	'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
+
+					addAndRemoveClasses('[name="newPassword"]', '.form-group', '.append-icon',
+															'is-invalid', 'is-valid',
+                            	'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
           $('#form-feedback').text('The new pasword is the same as the old password');
           var formValid = false;
         }
@@ -120,12 +149,12 @@
       if (formValid) {
         
         if ($('[name="newPassword"]').val() !== $('[name="verifyPassword"]').val()) {
-          addAndRemoveClasses('[name="newPassword"]', '.form-group', '.glyphicon', 
-                              'has-error', 'has-success', 
-                              'glyphicon-remove', 'glyphicon-ok');
-          addAndRemoveClasses('[name="verifyPassword"]', '.form-group', '.glyphicon', 
-                              'has-error', 'has-success', 
-                              'glyphicon-remove', 'glyphicon-ok');
+					addAndRemoveClasses('[name="newPassword"]', '.form-group', '.append-icon',
+															'is-invalid', 'is-valid',
+															'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
+					addAndRemoveClasses('[name="verifyPassword"]', '.form-group', '.append-icon',
+															'is-invalid', 'is-valid',
+															'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
           $('#form-feedback').text('New pasword and verify passwords do not match');
           var formValid = false;
         }
@@ -156,12 +185,12 @@
             
             if (data.msgID === 'YRD0001') {
               $('input').each(function () {
-                addAndRemoveClasses('[name="username"]', '.form-group', '.glyphicon', 
-                                    'has-error', 'has-success', 
-                                    'glyphicon-remove', 'glyphicon-ok');
-                addAndRemoveClasses('name="oldPassword"]', '.form-group', '.glyphicon', 
-                                    'has-error', 'has-success', 
-                                    'glyphicon-remove', 'glyphicon-ok');
+								addAndRemoveClasses('[name="username"]', '.form-group', '.append-icon',
+																		'is-invalid', 'is-valid',
+																		'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
+								addAndRemoveClasses('[name="oldPassword"]', '.form-group', '.append-icon',
+																		'is-invalid', 'is-valid',
+																		'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
                 formValid = false;
               });
             } //YRD0001
@@ -169,9 +198,9 @@
             if (   data.msgID === 'YRD0005' || data.msgID === 'YRD0006' 
                 || data.msgID === 'YRD0007' || data.msgID === 'YRD0008' 
                 || data.msgID === 'YRD0009' || data.msgID === 'YRD000A'  ) {
-              addAndRemoveClasses('[name="newPassword"]', '.form-group', '.glyphicon', 
-                                  'has-error', 'has-success', 
-                                  'glyphicon-remove', 'glyphicon-ok');
+							addAndRemoveClasses('[name="newPassword"]', '.form-group', '.append-icon',
+																	'is-invalid', 'is-valid',
+																	'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
               formValid = false;
             } //YRD0005
 
@@ -179,12 +208,12 @@
               $('input').each(function () {
                 formValid = false;
                 var formGroup = $(this).parents('.form-group');
-                var glyphIcon = formGroup.find('.glyph_icon');
+                var glyphIcon = formGroup.find('.append-icon');
                 var obj = $(this);
-                formGroup.removeClass('has-error');
-                formGroup.removeClass('has-success');
-                glyphIcon.removeClass('glyphicon-ok');
-                glyphIcon.removeClass('glyphicon-remove');
+								formGroup.removeClass('is-invalid');
+								formGroup.removeClass('is-valid');
+								glyphIcon.removeClass('fa fa-check fa-lg green');
+								glyphIcon.removeClass('fa fa-remove fa-lg red');
               });              
             } //YRD000B
             
@@ -207,49 +236,6 @@
           } //end of function inside ajax
         }); //end of ajax
         
-        /**
-        $.post('doLogin', 
-        {
-          formData : JSON.stringify(formItems)
-        })
-        .done(function(data) {
-          $('#form-feedback').text(data.msgDescription);
-            
-          if (data.msgID === 'YRD0001') {
-            $('input').each(function () {
-              addAndRemoveClasses('[name="username"]', '.form-group', '.glyphicon', 
-                                  'has-error', 'has-success', 
-                                  'glyphicon-remove', 'glyphicon-ok');
-              addAndRemoveClasses('name="oldPassword"]', '.form-group', '.glyphicon', 
-                                  'has-error', 'has-success', 
-                                  'glyphicon-remove', 'glyphicon-ok');
-              formValid = false;
-            });
-          } //YRD0001
-          
-          if (   data.msgID === 'YRD0005' || data.msgID === 'YRD0006' 
-              || data.msgID === 'YRD0007' || data.msgID === 'YRD0008' 
-              || data.msgID === 'YRD0009' || data.msgID === 'YRD000A'  ) {
-            addAndRemoveClasses('[name="newPassword"]', '.form-group', '.glyphicon', 
-                                'has-error', 'has-success', 
-                                'glyphicon-remove', 'glyphicon-ok');
-            formValid = false;
-          } //YRD0005
-
-          if (data.msgID === 'YRD000B' || data.msgID === 'YRD000C') {
-            $('input').each(function () {
-              formValid = false;
-              var formGroup = $(this).parents('.form-group');
-              var glyphIcon = formGroup.find('.glyph_icon');
-              var obj = $(this);
-              formGroup.removeClass('has-error');
-              formGroup.removeClass('has-success');
-              glyphIcon.removeClass('glyphicon-ok');
-              glyphIcon.removeClass('glyphicon-remove');
-            });
-          } //YRD000B
-        }); //done
-        **/
       } //form valid
       e.preventDefault();
     }); //#login click
@@ -262,8 +248,8 @@
 
     var formGroup = $(formGroupTarget).parents(parentsTarget);
     var glyphIcon = formGroup.find(glyphTarget);  
-    formGroup.addClass(formAddClass).removeClass(formRemoveClass);
-    glyphIcon.addClass(glyphAddClass).removeClass(glyphRemoveClass);
+    formGroup.removeClass(formRemoveClass).addClass(formAddClass);
+    glyphIcon.removeClass(glyphRemoveClass).addClass(glyphAddClass);
   }
 </script>
 </body>

@@ -10,12 +10,20 @@
   https://www.tutorialrepublic.com/css-reference/css-top-property.php
   -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="../resources/styles/bootstrap.min.css" rel="stylesheet" />
-  <link href="../resources/css/font-awesome.min.css" rel="stylesheet">
-  <script src="../resources/scripts/jquery-2.2.4.min.js"></script>
-  <script src="../resources/scripts/Moment/moment.min.js" type="text/javascript"></script>
-  <script src="../resources/scripts/DatePicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+  <link href="../resources/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="../resources/css/font-awesome-free-5.12.1-web/all.min.css" rel="stylesheet" />
+  <link href="../resources/css/font-awesome-free-5.12.1-web/font-awesome.min.css" rel="stylesheet">
+  <link href="../resources/css/font-awesome-free-5.12.1-web/brands.min.css" rel="stylesheet" />
+  <link href="../resources/css/font-awesome-free-5.12.1-web/solid.min.css" rel="stylesheet" />
+  <script defer src="../resources/scripts/font-awesome-free-5.12.1-web/all.min.js"></script>
+  <script defer src="../resources/scripts/font-awesome-free-5.12.1-web/brands.min.js"></script>
+  <script defer src="../resources/scripts/font-awesome-free-5.12.1-web/solid.min.js"></script>
+  <script defer src="../resources/scripts/font-awesome-free-5.12.1-web/fontawesome.min.js"></script>
+  <script src="../resources/scripts/jquery-3.4.1.min.js"></script>
   <script src="../resources/scripts/bootstrap.min.js"></script>
+  <script src="../resources/scripts/momentJS/moment.min.js" type="text/javascript"></script>
+  <script src="../resources/scripts/bootstrap4-datetimepicker/tempusdominus-bootstrap-4.min.js" type="text/javascript"></script>
+  <link href="../resources/css/bootstrap4-datetimepicker/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
   <!--
   <link href="../../../../Boostrap/styles/bootstrap.min.css" rel="stylesheet">
   <link href="../resources/css/font-awesome.min.css" rel="stylesheet">
@@ -27,7 +35,7 @@
 <style type="text/css">
 /* Custom Styles */
   body{
-    padding-top: 70px;
+    padding-top: 0px;
   }
   .userProfileForm {
     margin-left: 0px;
@@ -49,7 +57,7 @@
     border-style: solid;
     border-width: 1px;
   }
-  .preserveWhiteSpace {
+.preserveWhiteSpace {
     white-space: pre;
   }
   
@@ -103,9 +111,10 @@
 </style>
 </head>
 <body>
-  <nav class="navbar navbar-default navbar-fixed-top">
+	<!--
+	<nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
-      <!-- Brand and toggle get grouped for better mobile display -->
+      
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
           <span class="sr-only">Toggle navigation</span>
@@ -115,7 +124,7 @@
         </button>
         <a class="navbar-brand" href="#">Brand</a>
       </div>
-      <!-- Collect the nav links, forms, and other content for toggling -->
+      
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
           <li class="dropdown">
@@ -167,34 +176,109 @@
           <button type="button" class="btn btn-success" id="findBtn">Find</button>
         </form>
         <div id="title-loginID" class="formElementPadLeft preserveWhiteSpace"></div>
-        <div id="form-feedback" class="formElementPadLeft" style="color:red;">XXX</div> <!--90 char-->
-      </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
+        <div id="form-feedback" class="formElementPadLeft" style="color:red;">XXX</div> 
+      </div>
+    </div>
   </nav>
-  <div class="container-fluid">
-    
+	-->
+	
+	
+	
+	
+	
+	
+	
+	
+	    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-bottom">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Quick Links<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu  multi-level" style="width: 150px;" role="menu" aria-labelledby="dropdownMenu">
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" href="#">User Tables</a>
+                            <ul class="dropdown-menu" style="width: 250px;">
+                                <li id="UPView"><a href="#">View User Profile</a></li>
+                                <li id="UPChange"><a href="#">User Profile Maintenance</a></li>
+                                <li id="STView"><a href="#">View Sessions Table</a></li>
+                                <li id="STChange"><a href="#">Sessions Table Maintenance</a></li>
+                                <li id="UP1View"><a href="#">View Unique Tokens Table</a></li>
+                                <li id="UP1Change"><a href="#">Unique Tokens Table Maintenance</a></li>
+                                <li id="UGView"><a href="#">View User Groups Table</a></li>
+                                <li id="UGChange"><a href="#">User Groups Table Maintenance</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown-submenu">
+                            <a href="#">Permissions</a>
+                            <ul class="dropdown-menu" style="width: 250px;">
+                                <li id="PMView"><a href="#">View Permissions Master</a></li>
+                                <li id="PMChange"><a href="#">Permissions Master Maintenance</a></li>
+                                <li id="GPView"><a href="#">View Group Permissions</a></li>
+                                <li id="GPChange"><a href="#">Group Permissions Maintenance</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown-submenu">
+                            <a href="#">Misc.</a>
+                            <ul class="dropdown-menu" style="width: 250px;">
+                                <li id="GMView"><a href="#">View Group Master</a></li>
+                                <li id="GMChange"><a href="#">Group Master Maintenance</a></li>
+                                <li id="PPView"><a href="#">View Password Policy</a></li>
+                                <li id="PPChange"><a href="#">Password Policy Maintenance</a></li>
+                                <li id="STView"><a href="#">View Sessions Table</a></li>
+                                <li id="STChange"><a href="#">Sessions Table Maintenance</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="form-inline pl-2">
+                <div class="form-group px-sm-1">
+                    <label for="username" class="control-label preserveWhiteSpace" style="padding-left: 20px;"><strong>Username </strong></label>
+                    <input type="search" class="form-control" name="username" id="username" required placeholder="User Name" aria-label="Username">
+                </div>
+                <button type="submit" class="btn btn-success" id="findBtn">Find</button>
+            </form>
+						<div class="d-inline-flex flex-sm-column">
+							<div id="title-loginID" class="formElementPadLeft preserveWhiteSpace"></div>
+            	<div id="form-feedback" class="formElementPadLeft" style="color:red; margin-left: 188px">
+								*...+ .. 1 .. + .. 2 .. + .. 3 .. + .. 4 .. + .. 5 .. + .. 6 .. + .. 7 .. + .. 8 .. + .. 9
+							</div> <!--90 char-->
+						</div>
+        </div>
+    </nav>	
+  <div class="container" style="margin-left: 5px;">
+    <form>
       <div style="height:700px; overflow-y:scroll;">
         <div id="section1">
           <h2>Contact Info</h2>
-          <div class="row userProfileForm">
-            <label for="firstName" class="control-label formElementPadBottom" >First name</label>
-            <input type="text" class="roundedCorners" name="firstName" id="firstName" required placeholder="First name"/>
-            <label for="lastName" class="control-label formElementPadLeft">Last name</label>
-            <input type="text" class="roundedCorners" name="lastName" id="lastName" required placeholder="Last name"/>
+          <div class="d-sm-flex pb-sm-1">
+            <label for="firstName" class="control-label pr-sm-2" >First name</label>
+            <input type="text" class="roundedCorners form-control-sm border" name="firstName" id="firstName" required placeholder="First name"/>
+            <label for="lastName" class="control-label pl-sm-3 pr-sm-2">Last name</label>
+            <input type="text" class="roundedCorners form-control-sm border" name="lastName" id="lastName" required placeholder="Last name"/>
           </div>
-          <div class="row userProfileForm">
-            <label for="address1" class="control-label formElementPadBottom">Address 1</label>
-            <input type="text" class="roundedCorners" name="address1" id="address1" required placeholder="Address 1"/>
+          <div class="d-sm-flex pb-sm-1">
+            <label for="address1" class="control-label pr-sm-2">Address 1</label>
+            <input type="text" class="roundedCorners form-control-sm border" name="address1" id="address1" required placeholder="Address 1"/>
           </div>
-          <div class="row userProfileForm">
-            <label for="address2" class="control-label formElementPadBottom">Address 2</label>
-            <input type="text" class="roundedCorners" name="address2" id="address2" placeholder="Address 2"/>
+          <div class="d-sm-flex pb-sm-1">
+            <label for="address2" class="control-label pr-sm-2">Address 2</label>
+            <input type="text" class="roundedCorners form-control-sm border" name="address2" id="address2" placeholder="Address 2"/>
           </div>
-          <div class="row userProfileForm">
-            <label for="city" class="control-label formElementPadBottom">City</label>
-            <input type="text" class="roundedCorners" name="city" id="city" required placeholder="City"/>
-            <label for="state" class="control-label formElementPadBottomLeft">State</label>
-            <select name="state" id="state">
+          <div class="d-sm-flex pb-sm-1">
+            <label for="city" class="control-label pr-sm-2">City</label>
+            <input type="text" class="roundedCorners form-control-sm border" name="city" id="city" required placeholder="City"/>
+            <label for="state" class="control-label pl-sm-3 pr-sm-2">State</label>
+            <select class="roundedCorners" name="state" id="state">
               <option value="AL">AL</option><option value="AK">AK</option><option value="AZ">AZ</option>
               <option value="AR">AR</option><option value="CA">CA</option><option value="CO">CO</option>
               <option value="CT">CT</option><option value="DE">DE</option><option value="FL">FL</option>
@@ -216,84 +300,77 @@
               <option value="MH">MH</option><option value="MP">MP</option><option value="PW">PW</option>
               <option value="PR">PR</option><option value="VI">VI</option>
             </select>
-            <label for="zip" class="control-label formElementPadLeft">Zip</label>
-            <input type="text" class="roundedCorners" name="zip" id="zip" required placeholder="Zip" maxlength="5" 
-                   style="width: 70px;"/>
-            <label for="zip4" class="control-label formElementPadLeft">Zip 4</label>
-            <input type="text" class="roundedCorners" name="zip4" id="zip4" placeholder="Zip 4" maxlength="4" style="width: 60px;"/>
+            <label for="zip" class="control-label pl-sm-3 pr-sm-2">Zip</label>
+            <input type="text" class="roundedCorners form-control-sm border" name="zip" id="zip" required placeholder="Zip" maxlength="5" style="width: 70px;"/>
+            <label for="zip4" class="control-label pl-sm-3 pr-sm-2">Zip 4</label>
+            <input type="text" class="roundedCorners form-control-sm border" name="zip4" id="zip4" placeholder="Zip 4" maxlength="4" style="width: 60px;"/>
           </div>
-          <div class="row userProfileForm">
-            <label for="phone" class="control-label formElementPadBottom">Phone</label>
-            <input type="text" class="roundedCorners" name="phone" id="phone" required placeholder="Phone"/>
+          <div class="d-sm-flex pb-sm-1">
+            <label for="phone" class="control-label pr-sm-2">Phone</label>
+            <input type="text" class="roundedCorners form-control-sm border" name="phone" id="phone" required placeholder="Phone"/>
           </div>
-          <div class="row userProfileForm">
-            <label for="fax" class="control-label formElementPadBottom">Fax</label>
-            <input type="text" class="roundedCorners" name="fax" id="fax" placeholder="Fax"/>
+          <div class="d-sm-flex pb-sm-1">
+            <label for="fax" class="control-label pr-sm-2">Fax</label>
+            <input type="text" class="roundedCorners form-control-sm border" name="fax" id="fax" placeholder="Fax"/>
           </div>
-          <div class="row userProfileForm">
-            <label for="email" class="control-label formElementPadBottom">Email</label>
-            <input type="text" class="roundedCorners" name="email" id="email" placeholder="Email"/>
+          <div class="d-sm-slex pb-sm-1">
+            <label for="email" class="control-label pr-sm-2">Email</label>
+            <input type="text" class="roundedCorners form-control-sm border" name="email" id="email" placeholder="Email"/>
           </div>
         </div>
-        <hr>
-		<div id="section2">
+				<hr>
+				<div id="section2">
           <h2>Misc</h2>
-          <div class="row userProfileForm">
-            <label for="ssn" class="control-label formElementPadBottom">SSN</label>
-            <input type="text" class="roundedCorners" name="ssn" id="ssn" required placeholder="SSN"/>
+          <div class="d-sm-flex pb-sm-1">
+            <label for="ssn" class="control-label pr-sm-2">SSN</label>
+            <input type="text" class="roundedCorners form-control-sm border" name="ssn" id="ssn" required placeholder="SSN"/>
           </div>
-          <div class="row date">
-            <label for="dob" class="control-label col-md-1">Birth date</label>
-            <div class="col-md-2 formElementPadBottom pull-left">
-              <div class="input-group date" id="datePicker" style="left: -58px;">
-                <input type="text" class="form-control" name="dob" id="dob" required readonly 
-                       placeholder="click here==>"/>
-                <span class="input-group-addon">
-                  <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="row userProfileForm">
-            <label for="homeMarket" class="control-label formElementPadBottom">Home market</label>
-            <input type="text" class="roundedCorners" name="homeMarket" id="homeMarket" required placeholder="Home market"/>
+					<div class="form-group form-inline pb-sm-1" style="margin-bottom: 0;">
+						<label for="dob" class="control-label pr-sm-2">Birth date</label>
+						<div class="input-group date" id="datePicker">
+							<input type="text" class="roundedCorners form-control-sm border" name="dob" id="dob" required readonly 
+										 placeholder="click here==>"/>
+							<div class="input-group-append">	
+								<span class="fa fa-calendar fa-lg"></span>
+							</div>
+						</div>
+					</div>					
+          <div class="d-sm-flex pb-sm-1">
+            <label for="homeMarket" class="control-label pr-sm-2">Home market</label>
+            <input	type="text" class="roundedCorners form-control-sm border" name="homeMarket" id="homeMarket" required 								placeholder="Home market"/>
           </div>
         </div>
-        <hr>
-        <div id="section3">
+        <hr>			
+				<div id="section3">
           <h2>Login</h2>
-          <div class="row userProfileForm">
-            <label for="activeYN" class="control-label formElementPadBottom">User is active Y/N</label>
-            <select name="activeYN" id="activeYN">
-              <option value="Y">Y</option><option value="N">N</option>
+          <div class="d-sm-flex pb-sm-1">
+            <label for="activeYN" class="control-label pr-sm-2">User is active Y/N</label>
+            <select name="activeYN" class="roundedCorners form-control-sm border" id="activeYN">
+							<option value="Y">Y</option><option value="N">N</option>
             </select>
           </div>
-          <div class="row date">
-            <label for="pwdExpDate" class="control-label col-md-2">Password expiration date</label>
-            <div class="col-md-2 formElementBottom pull-left">
-              <div class="input-group date formElementBottom" id="datePicker4" style="left: -75px; padding-bottom: 10px;">
-                <input type="text" class="form-control" name="pwdExpDate" id="pwdExpDate" required readonly
-                       placeholder="click here ==>"/>
-                <span class="input-group-addon">
-                  <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="row date">
-            <label for="disabledDate" class="control-label col-md-2">Date disabled</label>
-            <div class="col-md-2 formElementPadBottom pull-left">
-              <div class="input-group date" id="datePicker2" style="left: -160px;">
-                <input type="text" class="form-control" name="disabledDate" id="disabledDate" readonly
-                       placeholder="click here==>"/>
-                <span class="input-group-addon">
-                  <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-              </div>
-            </div>
-            <div class="col-md-3" style="left: -165px;">
-              <label>Time disabled</label>
-              <select class="disabledHour" id="disabledHour" name="disabledHour">
+					<div class="form-group form-inline pb-sm-1" style="margin-bottom: 0;">
+            <label for="pwdExpDate" class="control-label pr-sm-2">Password expiration date</label>
+						<div class="input-group date" id="datePicker4">
+							<input	type="text" class="roundedCorners form-control-sm border" name="pwdExpDate" id="pwdExpDate" required 							readonly placeholder="click here ==>"/>
+							<div class="input-group-append">
+								<span class="fa fa-calendar fa-lg"></span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group form-inline pb-sm-1" style="margin-bottom: 0;">
+            <label for="disabledDate" class="control-label pr-sm-2">Date disabled</label>
+						<div class="input-group date" id="datePicker2">
+							<input type="text" class="roundedCorners form-control-sm border" name="disabledDate" id="disabledDate" readonly
+										 placeholder="click here==>"/>
+							<div class="input-group-append">
+								<span class="fa fa-calendar fa-lg"></span>
+							</div>
+						</div>
+					</div>					
+					<div class="d-sm-flex pb-sm-1 date">            
+						<label class="pr-sm-2">Time disabled</label>
+						<select class="disabledHour roundedCorners" id="disabledHour" name="disabledHour">
               <option value="00">00</option><option value="01">01</option><option value="02">02</option>
               <option value="03">03</option><option value="04">04</option><option value="05">05</option>
               <option value="06">06</option><option value="07">07</option><option value="08">08</option>
@@ -302,32 +379,9 @@
               <option value="15">15</option><option value="16">16</option><option value="17">17</option>
               <option value="18">18</option><option value="19">19</option><option value="20">20</option>
               <option value="21">21</option><option value="22">22</option><option value="23">23</option>
-            </select>
-              :
-              <select class="disabledMin" id="disabledMin" name="disabledMin">
-              <option value="00">00</option><option value="01">01</option><option value="02">02</option>
-              <option value="03">03</option><option value="04">04</option><option value="05">05</option>
-              <option value="06">06</option><option value="07">07</option><option value="08">08</option>
-              <option value="09">09</option><option value="10">10</option><option value="11">11</option>
-              <option value="12">12</option><option value="13">13</option><option value="14">14</option>
-              <option value="15">15</option><option value="16">16</option><option value="17">17</option>
-              <option value="18">18</option><option value="19">19</option><option value="20">20</option>
-              <option value="21">21</option><option value="22">22</option><option value="23">23</option>
-              <option value="24">24</option><option value="25">25</option><option value="26">26</option>
-              <option value="27">27</option><option value="28">28</option><option value="29">29</option>
-              <option value="30">30</option><option value="31">31</option><option value="32">32</option>
-              <option value="33">33</option><option value="34">34</option><option value="35">35</option>
-              <option value="36">36</option><option value="37">37</option><option value="38">38</option>
-              <option value="39">39</option><option value="40">40</option><option value="41">41</option>
-              <option value="42">42</option><option value="43">43</option><option value="44">44</option>
-              <option value="45">45</option><option value="46">46</option><option value="47">47</option>
-              <option value="48">48</option><option value="49">49</option><option value="50">50</option>
-              <option value="51">51</option><option value="52">52</option><option value="53">53</option>
-              <option value="54">54</option><option value="55">55</option><option value="56">56</option>
-              <option value="57">57</option><option value="58">58</option><option value="59">59</option>
-            </select>
-              :
-              <select class="disabledSec" id="disabledSec" name="disabledSec">
+            	</select>
+						<div class="pl-sm-1 pr-sm-1">:</div>
+						<select class="disabledMin roundedCorners" id="disabledMin" name="disabledMin">
               <option value="00">00</option><option value="01">01</option><option value="02">02</option>
               <option value="03">03</option><option value="04">04</option><option value="05">05</option>
               <option value="06">06</option><option value="07">07</option><option value="08">08</option>
@@ -348,12 +402,34 @@
               <option value="51">51</option><option value="52">52</option><option value="53">53</option>
               <option value="54">54</option><option value="55">55</option><option value="56">56</option>
               <option value="57">57</option><option value="58">58</option><option value="59">59</option>
-            </select>
-            </div>
+            	</select>
+						<div class="pl-sm-1 pr-sm-1">:</div>
+						<select class="disabledSec roundedCorners" id="disabledSec" name="disabledSec">
+              <option value="00">00</option><option value="01">01</option><option value="02">02</option>
+              <option value="03">03</option><option value="04">04</option><option value="05">05</option>
+              <option value="06">06</option><option value="07">07</option><option value="08">08</option>
+              <option value="09">09</option><option value="10">10</option><option value="11">11</option>
+              <option value="12">12</option><option value="13">13</option><option value="14">14</option>
+              <option value="15">15</option><option value="16">16</option><option value="17">17</option>
+              <option value="18">18</option><option value="19">19</option><option value="20">20</option>
+              <option value="21">21</option><option value="22">22</option><option value="23">23</option>
+              <option value="24">24</option><option value="25">25</option><option value="26">26</option>
+              <option value="27">27</option><option value="28">28</option><option value="29">29</option>
+              <option value="30">30</option><option value="31">31</option><option value="32">32</option>
+              <option value="33">33</option><option value="34">34</option><option value="35">35</option>
+              <option value="36">36</option><option value="37">37</option><option value="38">38</option>
+              <option value="39">39</option><option value="40">40</option><option value="41">41</option>
+              <option value="42">42</option><option value="43">43</option><option value="44">44</option>
+              <option value="45">45</option><option value="46">46</option><option value="47">47</option>
+              <option value="48">48</option><option value="49">49</option><option value="50">50</option>
+              <option value="51">51</option><option value="52">52</option><option value="53">53</option>
+              <option value="54">54</option><option value="55">55</option><option value="56">56</option>
+              <option value="57">57</option><option value="58">58</option><option value="59">59</option>
+            	</select>
           </div>
-          <div class="row userProfileForm">
-            <label for="pwdAttempts" class="control-label formElementPadBottom">Password attempts</label>
-            <select name="pwdAttempts" id="pwdAttempts">
+          <div class="d-sm-flex pb-sm-1">
+            <label for="pwdAttempts" class="control-label pr-sm-2">Password attempts</label>
+            <select name="pwdAttempts" class="roundedCorners" id="pwdAttempts">
               <option value="0">0</option><option value="1">1</option><option value="2">2</option>
               <option value="3">3</option><option value="4">4</option><option value="5">5</option>
               <option value="6">6</option><option value="7">7</option><option value="8">8</option>
@@ -363,34 +439,31 @@
               <option value="18">18</option><option value="19">19</option><option value="20">20</option>
             </select>
           </div>
-          <div class="row userProfileForm">
-            <label for="password" class="control-label formElementPadBottom" pwdFn>Password</label>
-            <input type="text" class="roundedCorners" name="password" id="password" placeholder="Password" pwdFn/>
-            <button type="button" class="btn btn-success formElementPadBottomLeft" id="crtToken" pwdFn>Create token</button>
+          <div class="d-sm-flex pb-sm-1">
+            <label for="password" class="control-label pr-sm-2" pwdFn>Password</label>
+            <input	type="text" class="roundedCorners form-control-sm border" name="password" id="password" 														placeholder="Password" pwdFn/>
+            <button type="button" class="btn btn-success pl-sm-2" id="crtToken" pwdFn>Create token</button>
           </div>
-          <div class="row userProfileForm">
-            <b pwdFn>New token=</b>
-            <label id="newToken" class="formElementPadBottom" style="color:green;" pwdFn>
-              $31$16$zBv5r6wXaLrlJ1iRF6-j79463_7AFER7LxMWxCzL4uY</label>
+          <div class="d-sm-flex pb-sm-1">
+						<label pwdFn style="font-weight: bold">New token=</label>
+            <label id="newToken" style="color:green;" pwdFn>$31$16$zBv5r6wXaLrlJ1iRF6-j79463_7AFER7LxMWxCzL4uY</label>
           </div>
-          <div class="row userProfileForm">
-            <label for="currentToken" class="control-label formElementPadBottom">Current token</label>
-            <input type="text" class="roundedCorners" name="currentToken" id="currentToken" required placeholder="Current token"  maxlen="50"/>
-          </div>
-          <div class="row date">
-            <label for="lastLogin" class="control-label col-md-1">Last login</label>
-            <div class="col-md-2 formElementPadBottom pull-left">
-              <div class="input-group date" id="datePicker3" style="left: -57px;">
-                <input type="text" class="form-control" name="lastLogin" id="lastLogin" required readonly
-                       placeholder="click here==>"/>
-                <span class="input-group-addon">
-                  <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-              </div>
-            </div>            
-            <div class="col-md-2 formElementPadBottom pull-left" style="left: -65px;">
-              <label>Login time</label>
-              <select class="loginHour" id="loginHour" name="loginHour">
+          <div class="d-sm-flex pb-sm-1">
+            <label for="currentToken" class="control-label pr-sm-2">Current token</label>
+            <input	type="text" class="roundedCorners form-control-sm border" name="currentToken" id="currentToken" required 						placeholder="Current token"  maxlen="50"/>
+          </div>					
+					<div class="d-sm-flex pb-sm-1">
+						<div class="form-group form-inline" style="margin-bottom: 0;">
+            	<label for="lastLogin" class="control-label pr-sm-2">Last login</label>
+							<div class="input-group date" id="datePicker3">
+								<input	type="text" class="roundedCorners form-control-sm border" name="lastLogin" id="lastLogin" required 							readonly placeholder="click here==>"/>
+								<div class="input-group-append">
+									<span class="fa fa-calendar fa-lg"></span>
+								</div>
+							</div>
+						</div>
+						<label class="pl-sm-2 pr-sm-2">Login time</label>
+						<select class="loginHour roundedCorners" id="loginHour" name="loginHour">
               <option value="00">00</option><option value="01">01</option><option value="02">02</option>
               <option value="03">03</option><option value="04">04</option><option value="05">05</option>
               <option value="06">06</option><option value="07">07</option><option value="08">08</option>
@@ -399,32 +472,9 @@
               <option value="15">15</option><option value="16">16</option><option value="17">17</option>
               <option value="18">18</option><option value="19">19</option><option value="20">20</option>
               <option value="21">21</option><option value="22">22</option><option value="23">23</option>
-            </select>
-              :
-              <select class="loginMin" id="loginMin" name="loginMin">
-              <option value="00">00</option><option value="01">01</option><option value="02">02</option>
-              <option value="03">03</option><option value="04">04</option><option value="05">05</option>
-              <option value="06">06</option><option value="07">07</option><option value="08">08</option>
-              <option value="09">09</option><option value="10">10</option><option value="11">11</option>
-              <option value="12">12</option><option value="13">13</option><option value="14">14</option>
-              <option value="15">15</option><option value="16">16</option><option value="17">17</option>
-              <option value="18">18</option><option value="19">19</option><option value="20">20</option>
-              <option value="21">21</option><option value="22">22</option><option value="23">23</option>
-              <option value="24">24</option><option value="25">25</option><option value="26">26</option>
-              <option value="27">27</option><option value="28">28</option><option value="29">29</option>
-              <option value="30">30</option><option value="31">31</option><option value="32">32</option>
-              <option value="33">33</option><option value="34">34</option><option value="35">35</option>
-              <option value="36">36</option><option value="37">37</option><option value="38">38</option>
-              <option value="39">39</option><option value="40">40</option><option value="41">41</option>
-              <option value="42">42</option><option value="43">43</option><option value="44">44</option>
-              <option value="45">45</option><option value="46">46</option><option value="47">47</option>
-              <option value="48">48</option><option value="49">49</option><option value="50">50</option>
-              <option value="51">51</option><option value="52">52</option><option value="53">53</option>
-              <option value="54">54</option><option value="55">55</option><option value="56">56</option>
-              <option value="57">57</option><option value="58">58</option><option value="59">59</option>
-            </select>
-              :
-              <select class="loginSec" id="loginSec" name="loginSec">
+            	</select>
+						<div class="pl-sm-1 pr-sm-1">:</div>
+						<select class="loginMin roundedCorners" id="loginMin" name="loginMin">
               <option value="00">00</option><option value="01">01</option><option value="02">02</option>
               <option value="03">03</option><option value="04">04</option><option value="05">05</option>
               <option value="06">06</option><option value="07">07</option><option value="08">08</option>
@@ -445,19 +495,42 @@
               <option value="51">51</option><option value="52">52</option><option value="53">53</option>
               <option value="54">54</option><option value="55">55</option><option value="56">56</option>
               <option value="57">57</option><option value="58">58</option><option value="59">59</option>
-            </select>
-            </div>
-          </div>
+            	</select>
+						<div class="pl-sm-1 pr-sm-1">:</div>
+						<select class="loginSec roundedCorners" id="loginSec" name="loginSec">
+              <option value="00">00</option><option value="01">01</option><option value="02">02</option>
+              <option value="03">03</option><option value="04">04</option><option value="05">05</option>
+              <option value="06">06</option><option value="07">07</option><option value="08">08</option>
+              <option value="09">09</option><option value="10">10</option><option value="11">11</option>
+              <option value="12">12</option><option value="13">13</option><option value="14">14</option>
+              <option value="15">15</option><option value="16">16</option><option value="17">17</option>
+              <option value="18">18</option><option value="19">19</option><option value="20">20</option>
+              <option value="21">21</option><option value="22">22</option><option value="23">23</option>
+              <option value="24">24</option><option value="25">25</option><option value="26">26</option>
+              <option value="27">27</option><option value="28">28</option><option value="29">29</option>
+              <option value="30">30</option><option value="31">31</option><option value="32">32</option>
+              <option value="33">33</option><option value="34">34</option><option value="35">35</option>
+              <option value="36">36</option><option value="37">37</option><option value="38">38</option>
+              <option value="39">39</option><option value="40">40</option><option value="41">41</option>
+              <option value="42">42</option><option value="43">43</option><option value="44">44</option>
+              <option value="45">45</option><option value="46">46</option><option value="47">47</option>
+              <option value="48">48</option><option value="49">49</option><option value="50">50</option>
+              <option value="51">51</option><option value="52">52</option><option value="53">53</option>
+              <option value="54">54</option><option value="55">55</option><option value="56">56</option>
+              <option value="57">57</option><option value="58">58</option><option value="59">59</option>
+            	</select>
+					</div>					
         </div>
       </div>
     
-    <p></p><p></p>
-    <div class="actionButtons" class="actionButtons">
+			<p></p><p></p>
+			<div class="actionButtons" class="actionButtons">
       <button type="button" class="btn btn-success" id="addButton" style="background-color: darkturquoise;">Add</button>
       <button type="button" class="btn btn-success" id="updateButton" style="background-color: darkturquoise;">Update</button>
       <button type="button" class="btn btn-success" id="deleteButton" style="background-color: darkturquoise;">Delete</button>
       <button type="button" class="btn btn-success" id="cancelButon" style="background-color: red;">Cancel</button>
-    </div>
+    	</div>
+		</form>
 </div> 
 <script>
   $(function() {
@@ -470,17 +543,20 @@
     configureButtons(false, true, true, true, true, true);
     configureViewMode();
     
-    $('#findBtn').click(function() {
-      addUpdateDeleteCancelClick = false;
+    $('#findBtn').click(function(e) {
+			e.preventDefault();
+			addUpdateDeleteCancelClick = false;
       setFormItems('find', ajaxData);
       setFormData();
       doPost();
     });
-    $('#crtToken').click(function () {
+    $('#crtToken').click(function (e) {
+			e.preventDefault();
       addUpdateDeleteCancelClick = false;
       newToken();
     });
-    $('#addButton').click(function () {
+    $('#addButton').click(function (e) {
+			e.preventDefault();
       addUpdateDeleteCancelClick = true;
       setFormItems('add', ajaxData);
       setFormData();
@@ -489,7 +565,8 @@
       configureButtons(false, true, true, true, true, true);
       configureViewMode();
     });
-    $('#updateButton').click(function () {
+    $('#updateButton').click(function (e) {
+			e.preventDefault();
       addUpdateDeleteCancelClick = true;
       setFormItems('update', ajaxData);
       setFormData();
@@ -498,7 +575,8 @@
       configureButtons(false, true, true, true, true, true);
       configureViewMode();
     });
-    $('#deleteButton').click(function () {
+    $('#deleteButton').click(function (e) {
+			e.preventDefault();
       addUpdateDeleteCancelClick = true;
       setFormItems('delete', ajaxData);
       setFormData();
@@ -507,7 +585,8 @@
       configureButtons(false, true, true, true, true, true);
       configureViewMode();
     });
-    $('#cancelButon').click(function () {
+    $('#cancelButon').click(function (e) {
+			e.preventDefault();
       addUpdateDeleteCancelClick = true;
       clearScreen();
       configureButtons(false, true, true, true, true, true);
