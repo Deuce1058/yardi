@@ -2,13 +2,5 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 	<persistence-unit name="yardi">
 		<jta-data-source>jdbc/yardiDatasource</jta-data-source>
-		<class>com.yardi.ejb.User_Profile</class>
-		<class>com.yardi.ejb.Pp_Pwd_Policy</class>
-		<class>com.yardi.ejb.Unique_Tokens</class>
-		<class>com.yardi.ejb.Groups_Master</class>
-		<class>com.yardi.ejb.User_Groups</class>
-		<class>com.yardi.ejb.Group_Permissions</class>
-		<class>com.yardi.ejb.Permissions_Master</class>
-		<class>com.yardi.ejb.Sessions_Table</class>
 	</persistence-unit>
 </persistence>
