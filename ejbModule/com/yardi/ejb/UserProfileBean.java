@@ -36,7 +36,7 @@ public class UserProfileBean implements UserProfile {
 	private EntityManager entityManager;
 	private User_Profile userProfile;
 	private String feedback = "";
-	private Pp_Pwd_Policy pwdPolicy;
+	private Pwd_Policy pwdPolicy;
 	@EJB PasswordPolicy passwordPolicyBean;
 
     public UserProfileBean() {
@@ -555,7 +555,7 @@ public class UserProfileBean implements UserProfile {
 		return feedback;
 	}
 
-	private Pp_Pwd_Policy getPwdPolicy() {
+	private Pwd_Policy getPwdPolicy() {
 		
 		if (pwdPolicy==null) {
 			setPwdPolicy();

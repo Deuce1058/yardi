@@ -26,7 +26,7 @@ public class UniqueTokensBean implements UniqueTokens {
 	 */
 	@PersistenceContext(unitName="yardi")
 	private EntityManager emgr;
-	private Pp_Pwd_Policy pwdPolicy;
+	private Pwd_Policy pwdPolicy;
 	@EJB PasswordPolicy passwordPolicyBean;
 
     public UniqueTokensBean() {
@@ -301,7 +301,7 @@ public class UniqueTokensBean implements UniqueTokens {
 		}
 	}
 
-	private Pp_Pwd_Policy getPwdPolicy() {
+	private Pwd_Policy getPwdPolicy() {
 		
 		if (pwdPolicy==null) {
 			setPwdPolicy();

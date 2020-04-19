@@ -21,7 +21,7 @@ import com.yardi.userServices.LoginResponse;
 import com.yardi.userServices.PasswordAuthentication;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.PasswordPolicy;
-import com.yardi.ejb.Pp_Pwd_Policy;
+import com.yardi.ejb.Pwd_Policy;
 import com.yardi.ejb.User_Profile;
 
 
@@ -45,7 +45,7 @@ public class UserServicesBean implements UserServices {
 	//private String userName = "";
 	private String feedback = "";
 	private java.sql.Timestamp today = new java.sql.Timestamp(new java.util.Date().getTime());
-	private Pp_Pwd_Policy pwdPolicy = null;
+	private Pwd_Policy pwdPolicy = null;
 	private User_Profile userProfile = null;
 	private LoginRequest loginRequest;
 	private LoginResponse loginResponse;
@@ -420,7 +420,7 @@ public class UserServicesBean implements UserServices {
 		return feedback;
 	}
 
-	private Pp_Pwd_Policy getPwdPolicy() {
+	private Pwd_Policy getPwdPolicy() {
 		
 		if (pwdPolicy == null) {
 			setPwdPolicy();

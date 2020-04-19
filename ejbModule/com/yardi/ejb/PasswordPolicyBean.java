@@ -27,7 +27,7 @@ public class PasswordPolicyBean implements PasswordPolicy {
 	@PersistenceContext(unitName="yardi")
 	private EntityManager emgr;
 	private String feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
-	private Pp_Pwd_Policy pwdPolicy;
+	private Pwd_Policy pwdPolicy;
 	@EJB UserProfile userProfileBean; 
 	
     public PasswordPolicyBean() {
@@ -40,16 +40,22 @@ public class PasswordPolicyBean implements PasswordPolicy {
     	getPwdPolicy();
     }
 
-	public Pp_Pwd_Policy find(Long rrn) {
-		Pp_Pwd_Policy pwdPolicy = null;
-		//pwdPolicy = emgr.find(Pp_Pwd_Policy.class, rrn);
-		TypedQuery<Pp_Pwd_Policy> qry = emgr.createQuery(
-			  "SELECT p from Pp_Pwd_Policy p "
+	public Pwd_Policy find(Long rrn) {
+		Pwd_Policy pwdPolicy = null;
+		TypedQuery<Pwd_Policy> qry = emgr.createQuery(
+			  "SELECT p from Pwd_Policy p "
 			+ "WHERE p.ppRrn = :rrn ",
-			Pp_Pwd_Policy.class);
+			Pwd_Policy.class);
 		pwdPolicy = qry
 			.setParameter("rrn", rrn)
 			.getSingleResult();
+		if (!(pwdPolicy==null)) {
+			pwdPolicy.setPpUpperRqd();
+			pwdPolicy.setPpLowerRqd();
+			pwdPolicy.setPpNumberRqd();
+			pwdPolicy.setPpSpecialRqd();
+		}
+		//debug
 		System.out.println("com.yardi.ejb PasswordPolicyBean find() 0000 "
 				+ "\n "
 				+ "  rrn=" + rrn
@@ -61,7 +67,7 @@ public class PasswordPolicyBean implements PasswordPolicy {
 	}
 
 	/**
-     * <p>Retrieve password policy from the Pp_Pwd_Policy table and make the policy available to other methods</p>
+     * <p>Retrieve password policy from the Pwd_Policy table and make the policy available to other methods</p>
      * <p>Policy consists of:<br>
      *   1 Complexity</p>
      * <p>  1a Upper case required</p>
@@ -114,10 +120,10 @@ public class PasswordPolicyBean implements PasswordPolicy {
 			return false;
 		}
 		
-		upperRqd   = Boolean.valueOf(pwdPolicy.getPpUpperRqd());
-		lowerRqd   = Boolean.valueOf(pwdPolicy.getPpLowerRqd());
-		numberRqd  = Boolean.valueOf(pwdPolicy.getPpNumberRqd());
-		specialRqd = Boolean.valueOf(pwdPolicy.getPpSpecialRqd());
+		upperRqd   = pwdPolicy.getPpUpperRqd();
+		lowerRqd   = pwdPolicy.getPpLowerRqd();
+		numberRqd  = pwdPolicy.getPpNumberRqd();
+		specialRqd = pwdPolicy.getPpSpecialRqd();
 		//debug
 		System.out.println("com.yardi.ejb PasswordPolicyBean enforce() 0002"
 				+ "\n "
@@ -295,7 +301,7 @@ public class PasswordPolicyBean implements PasswordPolicy {
 		return feedback;
 	}
 
-	public Pp_Pwd_Policy getPwdPolicy() {
+	public Pwd_Policy getPwdPolicy() {
 		//debug
 		System.out.println("com.yardi.ejb PasswordPolicyBean getPwdPolicy() 000C");
 		//debug
