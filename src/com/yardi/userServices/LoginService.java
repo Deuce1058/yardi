@@ -6,11 +6,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 import javax.ejb.EJB;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.UserServices;
@@ -23,7 +26,6 @@ import com.yardi.ejb.UserServices;
 @WebServlet("/doLogin")
 public class LoginService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	@EJB UserServices userSvcBean;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -48,8 +50,10 @@ public class LoginService extends HttpServlet {
 		 * https://www.java-tips.org/java-ee-tips-100042/17-enterprise-java-beans/1472-introduction-to-the-java-transaction-api.html
 		 */
 		//debug
-		System.out.println("com.yardi.userServices LoginService doGet() 0008 " + toString());
+		System.out.println("com.yardi.userServices LoginService doGet() 0008 ");
 		//debug
+		HttpSession session = request.getSession(false);
+		UserServices userSvcBean = (UserServices)session.getAttribute("userSvcBean");
 		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		String formData = "";
 		
@@ -73,9 +77,30 @@ public class LoginService extends HttpServlet {
 		//debug
 		System.out.println("com.yardi.userServices LoginService doGet() 0009 " + loginRequest.toString());
 		//debug
+		
+		if (userSvcBean == null) {
+			InitialContext ctx;
+			try {
+				//debug
+				System.out.println("com.yardi.userServices LoginService doGet() 000A ");
+				//debug
+				ctx = new InitialContext();
+				userSvcBean = (UserServices)ctx.lookup("java:global/yardiWeb/UserServicesBean");
+			} catch (NamingException e) {
+				//debug
+				System.out.println("com.yardi.userServices LoginService doGet() 000B ");
+				//debug
+				e.printStackTrace();
+			}
+			session.setAttribute("userSvcBean", userSvcBean);
+			//debug
+			System.out.println("com.yardi.userServices LoginService doGet() 000C");
+			//debug
+		}
+
 		userSvcBean.setLoginRequest(loginRequest);
 
-    	if (loginRequest.getChangePwd()==false) { //normal login
+		if (loginRequest.getChangePwd()==false) { //normal login
     		//debug
     		System.out.println("com.yardi.userServices LoginService doGet() 0000 "
     				+ "\n "
@@ -184,11 +209,11 @@ public class LoginService extends HttpServlet {
 			
 			String msg [] = userSvcBean.getFeedback().split("=");
 			LoginResponse loginResponse = new LoginResponse( 
-				loginRequest.getUserName(),
-				loginRequest.getPassword(),
-				loginRequest.getNewPassword(),
-				msg[0],
-				msg[1]);
+			loginRequest.getUserName(),
+			loginRequest.getPassword(),
+			loginRequest.getNewPassword(),
+			msg[0],
+			msg[1]);
 			response.reset();
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();

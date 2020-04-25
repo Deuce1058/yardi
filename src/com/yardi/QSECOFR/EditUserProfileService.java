@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
-import javax.ejb.EJB;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.User_Profile;
@@ -23,7 +25,6 @@ import com.yardi.ejb.UserProfile;
 public class EditUserProfileService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private User_Profile userProfile;
-	@EJB UserProfile userProfileBean;
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -35,6 +36,29 @@ public class EditUserProfileService extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
+		InitialContext ctx;
+		UserProfile userProfileBean = (UserProfile)session.getAttribute("userProfileBean");
+		
+		if (userProfileBean == null) {
+			try {
+				ctx = new InitialContext();
+				userProfileBean = (UserProfile)ctx.lookup("java:global/yardiWeb/UserProfileBean");
+				//debug
+				System.out.println("com.yardi.QSECOFR EditUserProfileService doGet() 0011");
+				//debug
+			} catch (NamingException e) {
+				//debug
+				System.out.println("com.yardi.QSECOFR EditUserProfileService doGet() 0012");
+				//debug
+				e.printStackTrace();
+			}
+			session.setAttribute("userProfileBean", userProfileBean);
+			//debug
+			System.out.println("com.yardi.QSECOFR EditUserProfileService doGet() 0013");
+			//debug
+		}
+		
 		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		String formData = new String();
 		formData = "";

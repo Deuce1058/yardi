@@ -21,7 +21,6 @@ import com.yardi.userServices.PasswordAuthentication;
 @WebServlet("/newToken")
 public class CreateTokenService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private PasswordAuthentication passwordAuthentication = null;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -34,7 +33,7 @@ public class CreateTokenService extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		passwordAuthentication = new PasswordAuthentication();
+		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
 		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		String formData = "";
 		
