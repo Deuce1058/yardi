@@ -3,10 +3,7 @@ package com.yardi.ejb;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
-import javax.persistence.SynchronizationType;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
@@ -29,8 +26,6 @@ public class SessionsTableBean implements SessionsTable {
 			java.util.Date lastActive
 			) {
 		
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-    	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
     	Query qry = em.createNativeQuery("INSERT INTO DB2ADMIN.SESSIONS_TABLE "
     		+ "("
     		+ "ST_USER_ID, "
@@ -54,18 +49,12 @@ public class SessionsTableBean implements SessionsTable {
 	
 	public int clear() {
 		System.out.println("com.yardi.ejb.SessionsTableBean clear() 0002"); 
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-    	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
     	Query qry = em.createQuery("DELETE FROM Sessions_Table");
     	int rows = qry.executeUpdate();
     	return rows;
 	}
 	
 	public Sessions_Table findSession(String sessionID) {
-		/*
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-    	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED);
-    	*/ 
 		Sessions_Table sessionsTable = null;
 		TypedQuery<Sessions_Table> qry = em.createQuery("SELECT s from Sessions_Table s "
 			+ "WHERE s.stSesssionId = :sessionID",
@@ -83,8 +72,6 @@ public class SessionsTableBean implements SessionsTable {
 	}
 	
 	public Sessions_Table findUser(String userID) {
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-    	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
 		Sessions_Table sessionsTable = null;
 		TypedQuery<Sessions_Table> qry = em.createQuery("SELECT s from Sessions_Table s "
 			+ "WHERE s.stUserId = :userID",
@@ -108,8 +95,6 @@ public class SessionsTableBean implements SessionsTable {
 			java.util.Date lastActive
 			) {
 		
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-    	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
     	Query qry = em.createQuery("UPDATE Sessions_Table "
     		+ "SET stUserId = :userID, "
     		+ "stSessionToken = :sessionToken, "

@@ -6,11 +6,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.SynchronizationType;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
@@ -25,7 +22,7 @@ public class UniqueTokensBean implements UniqueTokens {
 	 * EntityTransaction while using JTA 
 	 */
 	@PersistenceContext(unitName="yardi")
-	private EntityManager emgr;
+	private EntityManager em;
 	private Pwd_Policy pwdPolicy;
 	@EJB PasswordPolicy passwordPolicyBean;
 
@@ -41,7 +38,7 @@ public class UniqueTokensBean implements UniqueTokens {
 
     public Vector<Unique_Tokens> findTokens(String userName) {
     	Vector<Unique_Tokens> userTokens = new Vector<Unique_Tokens>();
-		TypedQuery<Unique_Tokens> qry = emgr.createQuery(
+		TypedQuery<Unique_Tokens> qry = em.createQuery(
 			  "SELECT t from Unique_Tokens t " 
 			+ "WHERE t.up1UserName = :userName "
 			+ "ORDER BY t.up1DateAdded DESC, t.up1Rrn DESC", 
@@ -69,8 +66,7 @@ public class UniqueTokensBean implements UniqueTokens {
 
     public Unique_Tokens find(long rrn) {
     	Unique_Tokens uniqueToken = null;
-    	//uniqueToken = emgr.find(Unique_Tokens.class, rrn);
-    	TypedQuery<Unique_Tokens> qry = emgr.createQuery(
+    	TypedQuery<Unique_Tokens> qry = em.createQuery(
     		  "SELECT t from Unique_Tokens "
     		+ "WHERE t.up1Rrn = :rrn",
     		Unique_Tokens.class
@@ -96,7 +92,7 @@ public class UniqueTokensBean implements UniqueTokens {
     
     public int persist(String userName, String token, java.util.Date dateAdded) {
 		System.out.println("com.yardi.ejb UniqueTokenSessionBean persist() 0011");
-    	Query qry = emgr.createNativeQuery("INSERT INTO DB2ADMIN.UNIQUE_TOKENS "
+    	Query qry = em.createNativeQuery("INSERT INTO DB2ADMIN.UNIQUE_TOKENS "
     		+ "(UP1_USER_NAME, UP1_TOKEN, UP1_DATE_ADDED) "
     		+ "VALUES(?, ?, ?)");
     	int rows = qry
@@ -120,7 +116,7 @@ public class UniqueTokensBean implements UniqueTokens {
     }
 
     public int remove(long rrn) {
-    	Query qry = emgr.createQuery("DELETE FROM Unique_Tokens "
+    	Query qry = em.createQuery("DELETE FROM Unique_Tokens "
     		+ "WHERE up1Rrn = :rrn");
     	int rows = qry
     		.setParameter("rrn", rrn)
@@ -341,8 +337,6 @@ public class UniqueTokensBean implements UniqueTokens {
 	}
 
     public int updateToken(Long rrn, String token) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-        EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
         Query qry = em.createQuery("UPDATE Unique_Tokens " 
         + "SET up1token = :token "
         + "WHERE up1rrn = :rrn");
@@ -354,8 +348,6 @@ public class UniqueTokensBean implements UniqueTokens {
     }
     
     public int updateDateAdded(Long rrn, java.util.Date addDate) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-        EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
         Query qry = em.createQuery("UPDATE Unique_Tokens " 
         + "SET up1DateAdded = :addDate "
         + "WHERE up1rrn = :rrn");
@@ -367,7 +359,7 @@ public class UniqueTokensBean implements UniqueTokens {
     }
     
 	public String stringify() {
-		return "UniqueTokensBean [emgr=" + emgr + "]"
+		return "UniqueTokensBean [emgr=" + em + "]"
 				+ "\n  "
 				+ this;
 	}

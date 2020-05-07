@@ -4,11 +4,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.SynchronizationType;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
@@ -33,7 +30,7 @@ public class UserProfileBean implements UserProfile {
 	 * examples of EntityManagerFactory.createEntityManager(SynchronizationType synchronizationType, Map map)
 	 */
 	@PersistenceContext(unitName = "yardi")	
-	private EntityManager entityManager;
+	private EntityManager em;
 	private User_Profile userProfile;
 	private String feedback = "";
 	private Pwd_Policy pwdPolicy;
@@ -50,10 +47,7 @@ public class UserProfileBean implements UserProfile {
     }
 
     public User_Profile find(String userName) {
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-    	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
     	User_Profile userProfile = null;
-    	//userProfile = entityManager.find(User_Profile.class, userName);
     	TypedQuery<User_Profile> qry = em.createQuery(
     		  "SELECT u from User_Profile u "
     		+ "WHERE u.upUserid = :userName ",
@@ -85,8 +79,6 @@ public class UserProfileBean implements UserProfile {
     
     public int setUpPwdAttempts(String userName, short pwdAttempts) {
     	//upPwdAttempts
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-    	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
     	Query qry = em.createQuery("UPDATE User_Profile " 
     		+ "SET upPwdAttempts = :pwdAttempts " 
     		+ "WHERE upUserid    = :userName");
@@ -115,8 +107,6 @@ public class UserProfileBean implements UserProfile {
     
     public int disable(String userName, java.sql.Timestamp disabledDate, short pwdAttempts) {
     	//upDisabledDate, upPwdAttempts
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-    	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
     	Query qry = em.createQuery("UPDATE User_Profile "  
     	    + "SET upPwdAttempts = :pwdAttempts, "
     		+ "upDisabledDate    = :disabledDate "
@@ -155,8 +145,6 @@ public class UserProfileBean implements UserProfile {
      */
     public int loginSuccess(String userName) {
     	//upDisabledDate, upPwdAttempts, upLastLoginDate
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-    	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
     	java.sql.Timestamp loginDate = new java.sql.Timestamp(new java.util.Date().getTime());
     	Query qry = em.createQuery("UPDATE User_Profile " 
     		+ "SET upPwdAttempts =  0, "
@@ -191,8 +179,6 @@ public class UserProfileBean implements UserProfile {
     }
     
     public int changeUserToken(String userName, String token, java.util.Date pwdExpirationDate) {
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-    	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
     	Query qry = em.createQuery("UPDATE User_Profile " 
         		+ "SET uptoken    = :token,"
         		+ "upPwdexpd      = :pwdExpirationDate "
@@ -247,8 +233,6 @@ public class UserProfileBean implements UserProfile {
 		short pwdAttempts
 		) {
 		String disabledYN = "N";
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-    	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
     	Query qry = em.createNativeQuery("INSERT INTO DB2ADMIN.USER_PROFILE "
     		+ "("
     		+ "UP_USERID, "
@@ -306,8 +290,6 @@ public class UserProfileBean implements UserProfile {
 	}
   
 	public int remove(String userID) {
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-    	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
     	Query qry = em.createQuery("DELETE FROM User_Profile "
     		+ "WHERE upUserid = :userID");
     	int rows = qry
@@ -340,8 +322,6 @@ public class UserProfileBean implements UserProfile {
 		short pwdAttempts
 		) {
 		String disabledYN = "N";
-	   	EntityManagerFactory emf = Persistence.createEntityManagerFactory("yardi");
-	   	EntityManager em = emf.createEntityManager(SynchronizationType.SYNCHRONIZED); 
 	   	Query qry = em.createQuery("UPDATE User_Profile "
     	    + "SET uptoken     = :token, "
     		+ "upHomeMarket    = :homeMarket, "
