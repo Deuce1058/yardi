@@ -23,7 +23,6 @@ public interface UserServices {
 	Vector<InitialPage> getInitialPageList();
 	LoginRequest getLoginRequest();
 	LoginResponse getLoginResponse();
-	void loginSuccess();
 	void remove();
 	void setLoginRequest(LoginRequest loginRequest);
 }

@@ -60,7 +60,7 @@ public class UserServicesBean implements UserServices {
 	public UserServicesBean() {
 	}
 
-	public void loginSuccess() {
+	private void loginSuccess() {
 		/*
 		 * Successful login.
 		 * 1 lookup initial page with join Groups_Master and User_Groups
@@ -280,6 +280,7 @@ public class UserServicesBean implements UserServices {
 			System.out.println("com.yardi.ejb UserServicesBean chgpwd() 0025");
 			//debug
 			changeUserToken(pwdLifeInDays, userName, newPassword);
+			loginSuccess();
 			tx.commit();
 			return true;
 		} catch (Exception e) {
@@ -336,6 +337,7 @@ public class UserServicesBean implements UserServices {
 				//debug
 				System.out.println("com.yardi.ejb UserServicesBean authenticate() 0029");
 				//debug
+				loginSuccess();
 				tx.commit();
 			} else {
 				//debug

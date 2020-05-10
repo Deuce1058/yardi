@@ -147,7 +147,6 @@ public class LoginService extends HttpServlet {
 			
 			//store the userID in the session
 			request.getSession().setAttribute("userID", loginRequest.getUserName()); 
-			userSvcBean.loginSuccess();
 			
 		    /*
 			 * Respond to yardiLogin.html/changePwd.html. The page sees that the login request is successful (YRD0000) or 
