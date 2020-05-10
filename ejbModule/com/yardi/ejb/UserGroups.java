@@ -13,4 +13,5 @@ public interface UserGroups {
 	String getFeedback();
 	String getInitialPage(String userName);
 	Vector<InitialPage> getInitialPageList();
+	void removeBean();
 }

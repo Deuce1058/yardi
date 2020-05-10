@@ -4,9 +4,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
-import javax.ejb.Stateless;
+import javax.ejb.Remove;
+import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import javax.persistence.TypedQuery;
 
 import com.yardi.userServices.InitialPage;
@@ -15,9 +17,9 @@ import com.yardi.userServices.UserGroupsGraph;
 /**
  * Session Bean implementation class UserGroupsBean
  */
-@Stateless
+@Stateful
 public class UserGroupsBean implements UserGroups {
-	@PersistenceContext(unitName="yardi")
+	@PersistenceContext(unitName="yardi", type=PersistenceContextType.EXTENDED)
 	private EntityManager em;
 	private String initialPage = "";
 	private String feedback = "";
@@ -133,6 +135,11 @@ public class UserGroupsBean implements UserGroups {
 		}
 	}
 
+	@Override
+	@Remove
+	public void removeBean() {
+	}
+	
 	public UserGroupsBean() {
     }
 }

@@ -6,7 +6,8 @@ import java.util.Vector;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.ejb.Remove;
+import javax.ejb.Stateful;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.transaction.UserTransaction;
@@ -38,11 +39,9 @@ import com.yardi.ejb.User_Profile;
  *
  * @author Jim
  */
-@Stateless
+@Stateful
 @TransactionManagement(TransactionManagementType.BEAN)
 public class UserServicesBean implements UserServices {
-	//private PasswordAuthentication passwordAuthentication = null;
-	//private String userName = "";
 	private String feedback = "";
 	private java.sql.Timestamp today = new java.sql.Timestamp(new java.util.Date().getTime());
 	private Pwd_Policy pwdPolicy = null;
@@ -77,42 +76,7 @@ public class UserServicesBean implements UserServices {
 
 		//msg is needed for the response to yardiLogin.html/changePwd.html but depends on userGroups.size() 
 		String msg [] = com.yardi.rentSurvey.YardiConstants.YRD0000.split("=");
-		//what groups is the user in and what is the initial page for the group?
-		//Vector<UserGroupsGraph> userGroups = userGroupsBean.find(loginRequest.getUserName());
-		//need initialPage for the sessions table and in the response to yardiLogin.html/changePwd.html so set it here
-		//initialPage = userGroups.get(0).getGmInitialPage(); //GM_INITIAL_PAGE from GROUPS_MASTER
 		//debug
-		/*
-		System.out.println("com.yardi.ejb UserServicesBean loginSuccess 0012" 
-				+ "\n"
-				+ "   initialPage="
-				+ initialPage
-				);
-		System.out.println("com.yardi.ejb UserServicesBean loginSuccess 0013");
-		for (UserGroupsGraph u : userGroups) {
-			System.out.println(
-				  "\n"
-				+ "   UserGroupsGraph=" 
-				+ u.toString()
-				);
-		}
-		*/
-		//debug
-		
-		/*
-		if (userGroups.size()>1) {
-			// user is in multiple groups. Set ST_LAST_REQUEST to the html select group page. User picks the initial page
-			initialPage = com.yardi.rentSurvey.YardiConstants.USER_SELECT_GROUP_PAGE;
-			msg = com.yardi.rentSurvey.YardiConstants.YRD000E.split("=");
-			//debug
-			System.out.println("com.yardi.ejb UserServicesBean loginSuccess 001C" 
-					+ "\n"
-					+ "   initialPage="
-					+ initialPage
-					);
-			//debug
-		}
-		*/
 		
 		initialPage = userGroupsBean.getInitialPage(loginRequest.getUserName());
 		msg = userGroupsBean.getFeedback().split("=");
@@ -559,6 +523,13 @@ public class UserServicesBean implements UserServices {
 					);	
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	@Remove
+	public void remove() {
+		userGroupsBean.removeBean();
+		userProfileBean.removeBean();		
 	}
 	
 	@Override

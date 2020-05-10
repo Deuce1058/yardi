@@ -19,11 +19,11 @@ public interface UserServices {
 	boolean authenticate();
 	boolean chgPwd();
 	String getFeedback();
-	//boolean passwordPolicy(String password, Vector<Unique_Tokens> userToken);
-	void setLoginRequest(LoginRequest loginRequest);
-	LoginRequest getLoginRequest();
-	Vector<InitialPage> getInitialPageList();
 	String getInitialPage();
-	void loginSuccess();
+	Vector<InitialPage> getInitialPageList();
+	LoginRequest getLoginRequest();
 	LoginResponse getLoginResponse();
+	void loginSuccess();
+	void remove();
+	void setLoginRequest(LoginRequest loginRequest);
 }

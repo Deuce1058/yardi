@@ -59,4 +59,5 @@ public interface UserProfile {
 	String stringify();
 	boolean authenticate(String userName, String password, boolean userIsChangingPassword);
 	String getFeedback();
+	void removeBean();
 }

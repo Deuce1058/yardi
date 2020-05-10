@@ -2,9 +2,11 @@ package com.yardi.ejb;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.ejb.Remove;
+import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
@@ -14,7 +16,7 @@ import com.yardi.userServices.PasswordAuthentication;
 /**
  * Session Bean implementation class UserProfileBean
  */
-@Stateless
+@Stateful
 public class UserProfileBean implements UserProfile {
 	/*
 	 * In the case of a RESOURCE_LOCAL, EntityManager.getTransaction().begin() and EntityManager.getTransaction().comit() 
@@ -29,9 +31,8 @@ public class UserProfileBean implements UserProfile {
 	 * examples of EntityManager.setProperty()
 	 * examples of EntityManagerFactory.createEntityManager(SynchronizationType synchronizationType, Map map)
 	 */
-	@PersistenceContext(unitName = "yardi")	
+	@PersistenceContext(unitName = "yardi", type=PersistenceContextType.EXTENDED)	
 	private EntityManager em;
-	private User_Profile userProfile;
 	private String feedback = "";
 	private Pwd_Policy pwdPolicy;
 	@EJB PasswordPolicy passwordPolicyBean;
@@ -395,7 +396,7 @@ public class UserProfileBean implements UserProfile {
 		System.out.println("com.yardi.ejb UserProfileBean authenticate() 0013");
 		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
 		java.sql.Timestamp today = new java.sql.Timestamp(new java.util.Date().getTime());
-		userProfile = find(userName); 
+		User_Profile userProfile = find(userName); 
 
 		//if (getPwdPolicy()== null) { //get the password policy
 		if (pwdPolicy==null) { //get the password policy
@@ -577,6 +578,10 @@ public class UserProfileBean implements UserProfile {
 		//debug
 	}
 
+	@Remove
+	public void removeBean() {
+	}
+	
 	public String stringify() {
 		return "UserProfileBean="
 				+ this;
