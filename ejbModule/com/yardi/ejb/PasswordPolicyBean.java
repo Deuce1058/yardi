@@ -28,7 +28,6 @@ public class PasswordPolicyBean implements PasswordPolicy {
 	private EntityManager emgr;
 	private String feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
 	private Pwd_Policy pwdPolicy;
-	@EJB UserProfile userProfileBean; 
 	
     public PasswordPolicyBean() {
     	System.out.println("com.yadri.ejb PasswordPolicyBean PasswordPolicyBean()");
@@ -342,21 +341,13 @@ public class PasswordPolicyBean implements PasswordPolicy {
 		//debug
 	}
 	
-	private boolean passwordContainsCurrent(final String userName, final String password) {
+	private boolean passwordContainsCurrent(final String userName, final String password, final String userToken) {
 		int passwordLength = password.length();
 		int lengthToExtract;
 		int startPosition;
 		int endPosition;
 		String substr = "";
 		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
-		User_Profile userProfile = userProfileBean.find(userName);
-		
-		if (userProfile==null) {
-			System.out.println("com.yardi.ejb PasswordPolicyBean passwordContainsCurrent() 0012"
-					+ com.yardi.rentSurvey.YardiConstants.YRD0001);
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD0001;
-			return true;
-		}
 
 		for(lengthToExtract=1, startPosition=0, endPosition=startPosition+lengthToExtract; 
 				lengthToExtract<passwordLength;
@@ -371,7 +362,7 @@ public class PasswordPolicyBean implements PasswordPolicy {
 			}
 			
 			/* substr is handed off to authenticate to see if it matches the current or previous password*/
-			if (passwordAuthentication.authenticate(substr.toCharArray(), userProfile.getUptoken())) {
+			if (passwordAuthentication.authenticate(substr.toCharArray(), userToken)) {
 				feedback = com.yardi.rentSurvey.YardiConstants.YRD0010;
 				return true;
 			}
