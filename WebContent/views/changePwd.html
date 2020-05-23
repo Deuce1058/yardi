@@ -118,11 +118,11 @@
         if (this.checkValidity()) {
 					addAndRemoveClasses($(this), '.form-group', '.append-icon',
 																			 'is-valid', 'is-invalid', 
-                            					 'fa fa-check fa-lg green', 'fa fa-remove fa-lg red');
+                            					 'fas fa-check fa-lg green', 'fas fa-times fa-lg red');
         } else {
 					addAndRemoveClasses($(this), '.form-group', '.append-icon',
 																			 'is-invalid', 'is-valid',
-                            					 'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
+                            					 'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
           formValid = false;
         }
       }); // input each
@@ -136,11 +136,11 @@
         if ($('[name="oldPassword"]').val() === $('[name="newPassword"]').val()) {
 					addAndRemoveClasses('[name="oldPassword"]', '.form-group', '.append-icon',
 															'is-invalid', 'is-valid',
-                            	'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
+                            	'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
 
 					addAndRemoveClasses('[name="newPassword"]', '.form-group', '.append-icon',
 															'is-invalid', 'is-valid',
-                            	'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
+                            	'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
           $('#form-feedback').text('The new pasword is the same as the old password');
           var formValid = false;
         }
@@ -151,10 +151,10 @@
         if ($('[name="newPassword"]').val() !== $('[name="verifyPassword"]').val()) {
 					addAndRemoveClasses('[name="newPassword"]', '.form-group', '.append-icon',
 															'is-invalid', 'is-valid',
-															'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
+															'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
 					addAndRemoveClasses('[name="verifyPassword"]', '.form-group', '.append-icon',
 															'is-invalid', 'is-valid',
-															'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
+															'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
           $('#form-feedback').text('New pasword and verify passwords do not match');
           var formValid = false;
         }
@@ -187,10 +187,10 @@
               $('input').each(function () {
 								addAndRemoveClasses('[name="username"]', '.form-group', '.append-icon',
 																		'is-invalid', 'is-valid',
-																		'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
+																		'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
 								addAndRemoveClasses('[name="oldPassword"]', '.form-group', '.append-icon',
 																		'is-invalid', 'is-valid',
-																		'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
+																		'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
                 formValid = false;
               });
             } //YRD0001
@@ -200,7 +200,7 @@
                 || data.msgID === 'YRD0009' || data.msgID === 'YRD000A'  ) {
 							addAndRemoveClasses('[name="newPassword"]', '.form-group', '.append-icon',
 																	'is-invalid', 'is-valid',
-																	'fa fa-remove fa-lg red', 'fa fa-check fa-lg green');
+																	'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
               formValid = false;
             } //YRD0005
 
@@ -212,8 +212,8 @@
                 var obj = $(this);
 								formGroup.removeClass('is-invalid');
 								formGroup.removeClass('is-valid');
-								glyphIcon.removeClass('fa fa-check fa-lg green');
-								glyphIcon.removeClass('fa fa-remove fa-lg red');
+								glyphIcon.removeClass('fas fa-check fa-lg green');
+								glyphIcon.removeClass('fas fa-times fa-lg red');
               });              
             } //YRD000B
             

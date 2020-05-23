@@ -72,9 +72,6 @@
 					<label for="username" class="col-form-label col-sm-1">Username</label>
 					<div class="input-group">
 						<div class="input-group-prepend">
-                            <!--
-							<span class="input-group-text" id="fa-user"><i class="far fa-user fa-lg" aria-hidden="true"></i></span>
-                            -->
 							<span class="input-group-text" id="fa-user"><i class="fas fa-user fa-sm" aria-hidden="true"></i></span>
 						</div>
 						<input type="text" required class="form-control-sm border username" name="username" id="username" placeholder="User name" aria-describedby="fa-user" />
@@ -126,12 +123,12 @@
             //show green, remove red
             formGroup.removeClass('is-invalid').addClass('is-valid');
             //show check, remove X
-            glyphIcon.removeClass('fa fa-remove fa-lg red').addClass('fa fa-check fa-lg green');
+            glyphIcon.removeClass('fas fa-times fa-lg red').addClass('fas fa-check fa-lg green');
           } else {
             // show red, remove green
             formGroup.removeClass('is-valid').addClass('is-invalid');
             // show x, remove check
-            glyphIcon.removeClass('fa fa-check fa-lg green').addClass('fa fa-remove fa-lg red');
+            glyphIcon.removeClass('fas fa-check fa-lg green').addClass('fas fa-times fa-lg red');
             //mark form invalid
             formValid = false;
 						e.preventDefault();
@@ -170,7 +167,7 @@
                   var glyphIcon = formGroup.find('.append-icon');
                   var obj = $(this);
                   formGroup.removeClass('is-valid').addClass('is-invalid');
-                  glyphIcon.removeClass('fa fa-check fa-lg green').addClass('fa fa-remove fa-lg red');
+                  glyphIcon.removeClass('fas fa-check fa-lg green').addClass('fas fa-times fa-lg red');
                 });
               }
           
@@ -187,7 +184,7 @@
                 var glyphIcon = formGroup.find('.append-icon');
                 var obj = $(this);
                 formGroup.removeClass('is-valid').addClass('is-invalid');
-                glyphIcon.removeClass('fa fa-check fa-lg green').addClass('fa fa-remove fa-lg red');
+                glyphIcon.removeClass('fas fa-check fa-lg green').addClass('fas fa-times fa-lg red');
               }
                     
               if (data.msgID === 'YRD000B' || data.msgID === 'YRD000C') {
@@ -198,8 +195,8 @@
                   var obj = $(this);
                   formGroup.removeClass('is-invalid');
                   formGroup.removeClass('is-valid');
-                  glyphIcon.removeClass('fa fa-check fa-lg green');
-                  glyphIcon.removeClass('fa fa-remove fa-lg red');
+                  glyphIcon.removeClass('fas fa-check fa-lg green');
+                  glyphIcon.removeClass('fas fa-times fa-lg red');
                 });
               }
               
