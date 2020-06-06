@@ -53,13 +53,25 @@
         .login-btn-margin {
             margin-left: 94px;
         }
-				.red {
-					color: red;
-				}
-				.green {
-					color: lawngreen;
-				}
+		.red {
+		    color: red;
+		}
+		.green {
+		    color: lawngreen;
+		}
+        .white {
+            color: white;
+        }
+        .align-center {
+            text-align: center;
+        }
+        .background-red {
+            background-color:red;
+        }
     </style>
+    <h4 class="white align-center background-red">
+        <noscript class="red">This site requires JavaScript. Ensure that this is enabled on your browser.</noscript>
+    </h4>
 </head>
 <body>
   <!--
@@ -106,11 +118,35 @@
 			</form>
 			<div class="col-sm-offset-2" style="color:red; margin-left: 94px;" id="form-feedback">xxx</div>
 		</div>
-	</div>
+  </div>
+  <div class="modal fade" id="jsCookiesAlert" tabindex="-1" role="dialog" aria-labelledby="jsCookiesAlert" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Notice:</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          This site requires cookies and JavaScript. Ensure that these are enabled on your browser.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
     $(function() {
       window.parent.document.title = 'Yardi Login';
+      if (navigator.cookieEnabled == false) {
+        $('#jsCookiesAlert').modal('show');
+      }
       $('#login').click(function (e) {
+        if (navigator.cookieEnabled == false) {
+          $('#jsCookiesAlert').modal('show');
+        }
         var formValid = true;
         
         //iterate over the input controls

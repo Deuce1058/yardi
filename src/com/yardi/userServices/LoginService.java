@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
-import javax.ejb.EJB;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
@@ -18,6 +17,8 @@ import javax.servlet.http.HttpSession;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.UserServices;
 
+
+import java.util.Collection;
 
 /**
  * Servlet implementation class LoginService
@@ -51,9 +52,15 @@ public class LoginService extends HttpServlet {
 		 */
 		//debug
 		System.out.println("com.yardi.userServices LoginService doGet() 0008 ");
-		//debug
-		HttpSession session = request.getSession(false);
-		UserServices userSvcBean = (UserServices)session.getAttribute("userSvcBean");
+		UserServices userSvcBean;
+		
+		try {
+			userSvcBean = checkSession(request);
+		} catch (InvalidSessionException e1) {
+			e1.printStackTrace();
+			return;
+		}
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		String formData = "";
 		
@@ -73,30 +80,10 @@ public class LoginService extends HttpServlet {
 		 * As a convenience, there is a boolean in LoginRequest which is the same as the change password indicator. 
 		 */
 		loginRequest.setChangePwd(loginRequest.getChgPwd()); 
-		loginRequest.setSessionID(request.getSession().getId());
 		//debug
 		System.out.println("com.yardi.userServices LoginService doGet() 0009 " + loginRequest.toString());
 		//debug
 		
-		if (userSvcBean == null) {
-			InitialContext ctx;
-			try {
-				//debug
-				System.out.println("com.yardi.userServices LoginService doGet() 000A ");
-				//debug
-				ctx = new InitialContext();
-				userSvcBean = (UserServices)ctx.lookup("java:global/yardiWeb/UserServicesBean");
-			} catch (NamingException e) {
-				//debug
-				System.out.println("com.yardi.userServices LoginService doGet() 000B ");
-				//debug
-				e.printStackTrace();
-			}
-			session.setAttribute("userSvcBean", userSvcBean);
-			//debug
-			System.out.println("com.yardi.userServices LoginService doGet() 000C");
-			//debug
-		}
 
 		userSvcBean.setLoginRequest(loginRequest);
 
@@ -146,14 +133,64 @@ public class LoginService extends HttpServlet {
 			 */
 			
 			//store the userID in the session
-			request.getSession().setAttribute("userID", loginRequest.getUserName()); 
+			request.getSession(false).setAttribute("userID", loginRequest.getUserName()); 
 			
 		    /*
 			 * Respond to yardiLogin.html/changePwd.html. The page sees that the login request is successful (YRD0000) or 
 			 * that the user is in multiple groups (YRD000E) and looks at the 5th parm (initialPage) in loginResponse to 
 			 * get the next page to load. yardiLogin.html/changePwd.html tells index.html to load the initialPage page.
 			 */
-			response.reset(); 
+			//debug 
+			Collection<String> headerNames = response.getHeaderNames();
+			if (headerNames.isEmpty()) {
+				System.out.println("com.yardi.userServices LoginService doGet() 000E headerNames is empty");
+			}
+			for (String n : headerNames) {
+				Collection<String> headerValues = response.getHeaders(n);
+				if (headerValues.isEmpty()) {
+					System.out.println("com.yardi.userServices LoginService doGet() 000F "
+						+ "\n"
+						+ "   Response header name="
+						+ n
+						+ "   no headerValues");
+				}
+				for (String v :  headerValues) {
+					System.out.println("com.yardi.userServices LoginService doGet() 0016 "
+							+ "\n"
+							+ "   Response header name="
+							+ n
+							+ "   Value="
+							+ v
+						);
+				}
+			}
+			//debug
+			response.resetBuffer(); 
+			//debug 
+			headerNames = response.getHeaderNames();
+			if (headerNames.isEmpty()) {
+				System.out.println("com.yardi.userServices LoginService doGet() 0017 headerNames is empty");
+			}
+			for (String n : headerNames) {
+				Collection<String> headerValues = response.getHeaders(n);
+				if (headerValues.isEmpty()) {
+					System.out.println("com.yardi.userServices LoginService doGet() 0018 "
+						+ "\n"
+						+ "   Response header name="
+						+ n
+						+ "   no headerValues");
+				}
+				for (String v :  headerValues) {
+					System.out.println("com.yardi.userServices LoginService doGet() 0019 "
+							+ "\n"
+							+ "   Response header name="
+							+ n
+							+ "   Value="
+							+ v
+						);
+				}
+			}
+			//debug
 			PrintWriter out = response.getWriter();
 			formData = mapper.writeValueAsString(userSvcBean.getLoginResponse()); //convert the feedback to json 
 			out.print(formData);
@@ -183,7 +220,57 @@ public class LoginService extends HttpServlet {
     		//debug
 			
 			if (loginRequest.getChangePwd()==false) {
-				response.reset();
+				//debug 
+				Collection<String> headerNames = response.getHeaderNames();
+				if (headerNames.isEmpty()) {
+					System.out.println("com.yardi.userServices LoginService doGet() 001A headerNames is empty");
+				}
+				for (String n : headerNames) {
+					Collection<String> headerValues = response.getHeaders(n);
+					if (headerValues.isEmpty()) {
+						System.out.println("com.yardi.userServices LoginService doGet() 001B "
+							+ "\n"
+							+ "   Response header name="
+							+ n
+							+ "   no headerValues");
+					}
+					for (String v :  headerValues) {
+						System.out.println("com.yardi.userServices LoginService doGet() 001C "
+								+ "\n"
+								+ "   Response header name="
+								+ n
+								+ "   Value="
+								+ v
+							);
+					}
+				}
+				//debug
+				response.resetBuffer();
+				//debug 
+				headerNames = response.getHeaderNames();
+				if (headerNames.isEmpty()) {
+					System.out.println("com.yardi.userServices LoginService doGet() 001D headerNames is empty");
+				}
+				for (String n : headerNames) {
+					Collection<String> headerValues = response.getHeaders(n);
+					if (headerValues.isEmpty()) {
+						System.out.println("com.yardi.userServices LoginService doGet() 001E "
+							+ "\n"
+							+ "   Response header name="
+							+ n
+							+ "   no headerValues");
+					}
+					for (String v :  headerValues) {
+						System.out.println("com.yardi.userServices LoginService doGet() 001F "
+								+ "\n"
+								+ "   Response header name="
+								+ n
+								+ "   Value="
+								+ v
+							);
+					}
+				}
+				//debug
 				response.setContentType("application/json");
 				String msg[] = userSvcBean.getFeedback().split("=");
 				LoginResponse loginResponse = new LoginResponse("", "", "", msg[0], "views/changePwd.html");
@@ -213,7 +300,57 @@ public class LoginService extends HttpServlet {
 			loginRequest.getNewPassword(),
 			msg[0],
 			msg[1]);
-			response.reset();
+			//debug 
+			Collection<String> headerNames = response.getHeaderNames();
+			if (headerNames.isEmpty()) {
+				System.out.println("com.yardi.userServices LoginService doGet() 0020 headerNames is empty");
+			}
+			for (String n : headerNames) {
+				Collection<String> headerValues = response.getHeaders(n);
+				if (headerValues.isEmpty()) {
+					System.out.println("com.yardi.userServices LoginService doGet() 0021 "
+						+ "\n"
+						+ "   Response header name="
+						+ n
+						+ "   no headerValues");
+				}
+				for (String v :  headerValues) {
+					System.out.println("com.yardi.userServices LoginService doGet() 0022 "
+							+ "\n"
+							+ "   Response header name="
+							+ n
+							+ "   Value="
+							+ v
+						);
+				}
+			}
+			//debug
+			response.resetBuffer();
+			//debug 
+			headerNames = response.getHeaderNames();
+			if (headerNames.isEmpty()) {
+				System.out.println("com.yardi.userServices LoginService doGet() 0023 headerNames is empty");
+			}
+			for (String n : headerNames) {
+				Collection<String> headerValues = response.getHeaders(n);
+				if (headerValues.isEmpty()) {
+					System.out.println("com.yardi.userServices LoginService doGet() 0024 "
+						+ "\n"
+						+ "   Response header name="
+						+ n
+						+ "   no headerValues");
+				}
+				for (String v :  headerValues) {
+					System.out.println("com.yardi.userServices LoginService doGet() 0025 "
+							+ "\n"
+							+ "   Response header name="
+							+ n
+							+ "   Value="
+							+ v
+						);
+				}
+			}
+			//debug
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();
 			formData = mapper.writeValueAsString(loginResponse); //convert the feedback to json 
@@ -243,6 +380,31 @@ public class LoginService extends HttpServlet {
 		//YRD000C$Maximum signon attempts exceeded. The user profile has been disabled
 		
 		if (userSvcBean.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0000)==false) {
+			//debug 
+			Collection<String> headerNames = response.getHeaderNames();
+			if (headerNames.isEmpty()) {
+				System.out.println("com.yardi.userServices LoginService doGet() 0014 headerNames is empty");
+			}
+			for (String n : headerNames) {
+				Collection<String> headerValues = response.getHeaders(n);
+				if (headerValues.isEmpty()) {
+					System.out.println("com.yardi.userServices LoginService doGet() 0012 "
+						+ "\n"
+						+ "   Response header name="
+						+ n
+						+ "   no headerValues");
+				}
+				for (String v :  headerValues) {
+					System.out.println("com.yardi.userServices LoginService doGet() 0011 "
+							+ "\n"
+							+ "   Response header name="
+							+ n
+							+ "   Value="
+							+ v
+						);
+				}
+			}
+			//debug
 			String msg [] = userSvcBean.getFeedback().split("=");
 			LoginResponse loginResponse = new LoginResponse(
 				loginRequest.getUserName(),
@@ -251,13 +413,39 @@ public class LoginService extends HttpServlet {
 				msg[0],
 				msg[1]
 			);
-			response.reset();
+			response.resetBuffer();
+			//debug 
+			headerNames = response.getHeaderNames();
+			if (headerNames.isEmpty()) {
+				System.out.println("com.yardi.userServices LoginService doGet() 0005 headerNames is empty");
+			}
+			for (String n : headerNames) {
+				Collection<String> headerValues = response.getHeaders(n);
+				if (headerValues.isEmpty()) {
+					System.out.println("com.yardi.userServices LoginService doGet() 0013 "
+							+ "\n"
+							+ "   Response header name="
+							+ n
+							+ "   no headerValues");
+				}
+				for (String v :  headerValues) {
+					System.out.println("com.yardi.userServices LoginService doGet() 0010 "
+							+ "\n"
+							+ "   Response header name="
+							+ n
+							+ "   Value="
+							+ v
+						);
+				}
+			}
+			//debug
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();
 			formData = mapper.writeValueAsString(loginResponse); //convert the feedback to json 
 			out.print(formData);
     		//debug
-    		System.out.println("com.yardi.userServices LoginService doGet() 0005 "
+    		System.out.println("com.yardi.userServices LoginService doGet() 0015"
+    				+ " "
     				+ "\n "
     				+ "  userSvcBean.getFeedback() =" + userSvcBean.getFeedback()
     				+ "\n "
@@ -270,6 +458,59 @@ public class LoginService extends HttpServlet {
 			out.flush();
 			return;
 		}		
+	}
+
+	/**
+	 * Ensure that the UserServices object stored in the session is the same object that was originally obtained from JNDI.<p>
+	 * <p>
+	 * When a reference to UserServices is obtained from JNDI, the HTTP session ID is stored on the object.<p>
+	 * <p>
+	 * Get the session<br>
+	 * Get the UserServicesBean either from the session or JNDI<br>
+	 * If UserServicesBean came from JNDI, store the session ID on UserServicesBean<br>
+	 * If the session ID from UserServicesBean does not match HttpServletRequest.getSession() throw InvalidSessionException
+	 * <p>
+	 * @param request - HttpServletRequest
+	 * @return UserServices - the bean implementation of this interface 
+	 */
+	private UserServices checkSession(HttpServletRequest request) throws InvalidSessionException {
+		HttpSession session = request.getSession();
+		//debug
+		System.out.println("com.yardi.userServices LoginService checkSession() 000D "
+			+ "\n"
+			+ "    sessionID=" + session.getId());
+		//debug
+
+		UserServices userSvcBean = (UserServices)session.getAttribute("userSvcBean");
+ 
+		if (userSvcBean == null) {
+			try {
+				//debug
+				System.out.println("com.yardi.userServices LoginService checkSession() 000A ");
+				//debug
+				InitialContext ctx = new InitialContext();
+				userSvcBean = (UserServices)ctx.lookup("java:global/yardiWeb/UserServicesBean");
+			} catch (NamingException e) {
+				//debug
+				System.out.println("com.yardi.userServices LoginService checkSession() 000B ");
+				//debug
+				e.printStackTrace();
+				return null;
+			}
+			
+			userSvcBean.setSessionID(session.getId());
+			session.setAttribute("userSvcBean", userSvcBean);
+			//debug
+			System.out.println("com.yardi.userServices LoginService checkSession() 000C");
+			//debug
+		}
+		
+		
+		if (!(userSvcBean.getSessionID().equals(session.getId()))) {
+			throw new InvalidSessionException(session.getId(), userSvcBean.getSessionID());
+		}
+		
+		return userSvcBean;
 	}
 
 	/**

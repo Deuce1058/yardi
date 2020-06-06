@@ -50,6 +50,7 @@ public class UserServicesBean implements UserServices {
 	private LoginResponse loginResponse;
 	private Vector<InitialPage> initialPageList;
 	private String initialPage = "";
+	private String sessionID = "";
 	@EJB UserProfile userProfileBean; //bean is thread safe unless marked reentrant in the deployment descriptor
 	@EJB UniqueTokens uniqueTokensBean;
 	@EJB PasswordPolicy passwordPolicyBean;
@@ -541,6 +542,14 @@ public class UserServicesBean implements UserServices {
 				+ ", initialPageList=" + initialPageList + ", initialPage=" + initialPage + ", userProfileBean="
 				+ userProfileBean + ", uniqueTokensBean=" + uniqueTokensBean + ", passwordPolicyBean="
 				+ passwordPolicyBean + ", userGroupsBean=" + userGroupsBean + ", sessionsBean=" + sessionsBean + ", tx="
-				+ tx + "]";
+				+ tx + ", sessionID=" + sessionID + "]";
+	}
+
+	public String getSessionID() {
+		return sessionID;
+	}
+
+	public void setSessionID(String sessionID) {
+		this.sessionID = sessionID;
 	}
 }

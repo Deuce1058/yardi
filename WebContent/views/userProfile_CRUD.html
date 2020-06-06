@@ -49,15 +49,13 @@
     border-style: solid;
     border-width: 1px;
   }
-.preserveWhiteSpace {
+  .preserveWhiteSpace {
     white-space: pre;
-  }
-  
-.dropdown-submenu {
+  }  
+  .dropdown-submenu {
     position: relative;
-}
-
-.dropdown-submenu>.dropdown-menu {
+  }
+  .dropdown-submenu>.dropdown-menu {
     top: 0;
     left: 100%;
     margin-top: -6px;
@@ -65,13 +63,11 @@
     -webkit-border-radius: 0 6px 6px 6px;
     -moz-border-radius: 0 6px 6px;
     border-radius: 0 6px 6px 6px;
-}
-
-.dropdown-submenu:hover>.dropdown-menu {
+  }
+  .dropdown-submenu:hover>.dropdown-menu {
     display: block;
-}
-
-.dropdown-submenu>a:after {
+  }
+  .dropdown-submenu>a:after {
     display: block;
     content: " ";
     float: right;
@@ -83,104 +79,35 @@
     border-left-color: #ccc;
     margin-top: 5px;
     margin-right: -10px;
-}
-
-.dropdown-submenu:hover>a:after {
+  }
+  .dropdown-submenu:hover>a:after {
     border-left-color: #fff;
-}
-
-.dropdown-submenu.pull-left {
+  }
+  .dropdown-submenu.pull-left {
     float: none;
-}
-
-.dropdown-submenu.pull-left>.dropdown-menu {
+  }
+  .dropdown-submenu.pull-left>.dropdown-menu {
     left: -100%;
     margin-left: 10px;
     -webkit-border-radius: 6px 0 6px 6px;
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
-}
+  }  
+  .white {
+    color: white;
+  }
+  .align-center {
+    text-align: center;
+  }
+  .background-red {
+    background-color:red;
+  }
 </style>
+  <h4 class="white align-center background-red">
+    <noscript>This site requires JavaScript. Ensure that this is enabled on your browser.</noscript>
+  </h4>
 </head>
 <body>
-	<!--
-	<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
-      
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">Brand</a>
-      </div>
-      
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Quick Links<span class="caret"></span></a>
-            <ul class="dropdown-menu  multi-level" role="menu" aria-labelledby="dropdownMenu">
-              <li class="dropdown-submenu">
-                <a tabindex="-1" href="#">User Tables</a>
-                <ul class="dropdown-menu">
-                  <li id="UPView"><a href="#">View User Profile</a></li>
-                  <li id="UPChange"><a href="#">User Profile Maintenance</a></li>
-                  <li id="STView"><a href="#">View Sessions Table</a></li>
-                  <li id="STChange"><a href="#">Sessions Table Maintenance</a></li>
-                  <li id="UP1View"><a href="#">View Unique Tokens Table</a></li>
-                  <li id="UP1Change"><a href="#">Unique Tokens Table Maintenance</a></li>
-                  <li id="UGView"><a href="#">View User Groups Table</a></li>
-                  <li id="UGChange"><a href="#">User Groups Table Maintenance</a></li>
-                </ul>
-              </li>
-              
-              <li class="dropdown-submenu">
-                <a href="#">Permissions</a>
-                <ul class="dropdown-menu">
-                  <li id="PMView"><a href="#">View Permissions Master</a></li>
-                  <li id="PMChange"><a href="#">Permissions Master Maintenance</a></li>
-                  <li id="GPView"><a href="#">View Group Permissions</a></li>
-                  <li id="GPChange"><a href="#">Group Permissions Maintenance</a></li>
-                </ul>
-              </li>
-              
-              <li class="dropdown-submenu">
-                <a href="#">Misc.</a>
-                <ul class="dropdown-menu">
-                  <li id="GMView"><a href="#">View Group Master</a></li>
-                  <li id="GMChange"><a href="#">Group Master Maintenance</a></li>
-                  <li id="PPView"><a href="#">View Password Policy</a></li>
-                  <li id="PPChange"><a href="#">Password Policy Maintenance</a></li>
-                  <li id="STView"><a href="#">View Sessions Table</a></li>
-                  <li id="STChange"><a href="#">Sessions Table Maintenance</a></li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <form class="navbar-form navbar-left">
-          <label for="username" class="control-label">Username</label>
-          <div class="form-group">
-            <input type="text" class="form-control" name="username" id="username" required placeholder="User Name">
-          </div>
-          <button type="button" class="btn btn-success" id="findBtn">Find</button>
-        </form>
-        <div id="title-loginID" class="formElementPadLeft preserveWhiteSpace"></div>
-        <div id="form-feedback" class="formElementPadLeft" style="color:red;">XXX</div> 
-      </div>
-    </div>
-  </nav>
-	-->
-	
-	
-	
-	
-	
-	
-	
-	
 	    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-bottom">
         <a class="navbar-brand" href="#">Navbar</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -524,6 +451,24 @@
     	</div>
 		</form>
 </div> 
+  <div class="modal fade" id="jsCookiesAlert" tabindex="-1" role="dialog" aria-labelledby="jsCookiesAlert" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Notice:</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          This site requires cookies and JavaScript. Ensure that these are enabled on your browser.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
 <script>
   $(function() {
     var formData;
@@ -535,9 +480,18 @@
     configureButtons(false, true, true, true, true, true);
     configureViewMode();
     
+    if (navigator.cookieEnabled == false) {
+      $('#jsCookiesAlert').modal('show');
+    }
+
     $('#findBtn').click(function(e) {
-			e.preventDefault();
-			addUpdateDeleteCancelClick = false;
+
+      if (navigator.cookieEnabled == false) {
+        $('#jsCookiesAlert').modal('show');
+      }
+
+      e.preventDefault();
+      addUpdateDeleteCancelClick = false;
       setFormItems('find', ajaxData);
       setFormData();
       doPost();

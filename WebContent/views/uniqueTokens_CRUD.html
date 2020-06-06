@@ -3,17 +3,8 @@
 <head>
   <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
   <meta HTTP-EQUIV="Expires" CONTENT="-1">
-	<meta charset="utf-8">
-	<title>Unique Tokens CRUD</title>
-  
-	<!-- 
-  https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=scrollspy
-  https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-affix.php
-  https://www.tutorialrepublic.com/css-reference/css-top-property.php
-  -->
-<!--
-Try using jquery to change the html on the <link> tags and the <script> tags
--->
+  <meta charset="utf-8">
+  <title>Unique Tokens CRUD</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="../resources/css/bootstrap.min.css" rel="stylesheet" />
   <link href="../resources/fontawesome-free-5.12.1-web/css/all.min.css" rel="stylesheet" />
@@ -36,130 +27,115 @@ Try using jquery to change the html on the <link> tags and the <script> tags
   <script src="../resources/scripts/globalizeJS/globalize/dist/globalize/number.js"></script>
   <script src="../resources/scripts/globalizeJS/globalize/dist/globalize/date.js"></script>
   <script src="../resources/scripts/custom/enCldrDate.js"></script>
-  <!--
-  <link href="../../../../Boostrap/styles/bootstrap.min.css" rel="stylesheet">
-  <script src="../../../../jQueryLib/scripts/jquery-2.2.4.min.js"></script>
-  <script src="../../../../Boostrap/scripts/bootstrap.min.js"></script>
-  -->
-  
-<style type="text/css">
-/* Custom Styles */
-  body{
-    padding-top: 0px;
-  }
-  .userProfileForm {
-    margin-left: 0px;
-  }
-  .formElementPadBottom {
-    padding-bottom: 10px;
-  }
-  .formElementPadLeft {
-    padding-left: 5px;
-  }
-  .formElementPadBottomLeft {
-    padding-bottom: 10px;
-    padding-left: 5px;
-  }
-  .roundedCorners {
-    -webkit-border-radius: 4px;
-       -moz-border-radius: 4px;
-            border-radius: 4px;
-    border-style: solid;
-    border-width: 1px;
-  }
-  .preserveWhiteSpace {
-    white-space: pre;
-  }
-  
-  
-  
-.dropdown-submenu {
-    position: relative;
-}
-
-.dropdown-submenu>.dropdown-menu {
-    top: 0;
-    left: 100%;
-    margin-top: -6px;
-    margin-left: -1px;
-    -webkit-border-radius: 0 6px 6px 6px;
-    -moz-border-radius: 0 6px 6px;
-    border-radius: 0 6px 6px 6px;
-}
-
-.dropdown-submenu:hover>.dropdown-menu {
-    display: block;
-}
-
-.dropdown-submenu>a:after {
-    display: block;
-    content: " ";
-    float: right;
-    width: 0;
-    height: 0;
-    border-color: transparent;
-    border-style: solid;
-    border-width: 5px 0 5px 5px;
-    border-left-color: #ccc;
-    margin-top: 5px;
-    margin-right: -10px;
-}
-
-.dropdown-submenu:hover>a:after {
-    border-left-color: #fff;
-}
-
-.dropdown-submenu.pull-left {
-    float: none;
-}
-
-.dropdown-submenu.pull-left>.dropdown-menu {
-    left: -100%;
-    margin-left: 10px;
-    -webkit-border-radius: 6px 0 6px 6px;
-    -moz-border-radius: 6px 0 6px 6px;
-    border-radius: 6px 0 6px 6px;
-}
-  
-table {
-        width: 100%;
-}
-
-thead, tbody, tr, td, th { display: block; }
-
-tr:after {
-    content: ' ';
-    display: block;
-    visibility: hidden;
-    clear: both;
-}
-
-thead th {
-    height: 30px;
-
-    /*text-align: left;*/
-}
-
-tbody {
-    height: 700px;
-    overflow-y: auto;
-}
-
-tbody td, thead th {
-    /*width: 19.2%;*/
-    float: left;
-}
-
-.orange {
-  color: darkorange;
-}
-
-.mediumRedBorder {
-	border-color: red;
-	border-style: solid;
-	border-width: medium;
-}
-</style>
+  <style type="text/css">
+    body{
+      padding-top: 0px;
+    }
+    .userProfileForm {
+      margin-left: 0px;
+    }
+    .formElementPadBottom {
+      padding-bottom: 10px;
+    }
+    .formElementPadLeft {
+      padding-left: 5px;
+    }
+    .formElementPadBottomLeft {
+      padding-bottom: 10px;
+      padding-left: 5px;
+    }
+    .roundedCorners {
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      border-style: solid;
+      border-width: 1px;
+    }
+    .preserveWhiteSpace {
+      white-space: pre;
+    }
+    .dropdown-submenu {
+      position: relative;
+    }
+    .dropdown-submenu>.dropdown-menu {
+      top: 0;
+      left: 100%;
+      margin-top: -6px;
+      margin-left: -1px;
+      -webkit-border-radius: 0 6px 6px 6px;
+      -moz-border-radius: 0 6px 6px;
+      border-radius: 0 6px 6px 6px;
+    }
+    .dropdown-submenu:hover>.dropdown-menu {
+      display: block;
+    }
+    .dropdown-submenu>a:after {
+      display: block;
+      content: " ";
+      float: right;
+      width: 0;
+      height: 0;
+      border-color: transparent;
+      border-style: solid;
+      border-width: 5px 0 5px 5px;
+      border-left-color: #ccc;
+      margin-top: 5px;
+      margin-right: -10px;
+    }
+    .dropdown-submenu:hover>a:after {
+      border-left-color: #fff;
+    }
+    .dropdown-submenu.pull-left {
+      float: none;
+    }
+    .dropdown-submenu.pull-left>.dropdown-menu {
+      left: -100%;
+      margin-left: 10px;
+      -webkit-border-radius: 6px 0 6px 6px;
+      -moz-border-radius: 6px 0 6px 6px;
+      border-radius: 6px 0 6px 6px; 
+    }
+    table {
+      width: 100%;
+    }
+    thead, tbody, tr, td, th { display: block; }
+    tr:after {
+      content: ' ';
+      display: block;
+      visibility: hidden;
+      clear: both;
+    }
+    thead th {
+      height: 30px;
+    }
+    tbody {
+      height: 700px;
+      overflow-y: auto;
+    }
+    tbody td, thead th {
+      float: left;
+    }
+    .orange {
+      color: darkorange;
+    }
+    .mediumRedBorder {
+      border-color: red;
+      border-style: solid;
+      border-width: medium;
+    }
+    .white {
+      color: white;
+    }
+    .align-center {
+      text-align: center;
+    }
+    .background-red {
+      background-color:red;
+    }
+  </style>
+  <h4 class="white align-center background-red">
+    <noscript>This site requires JavaScript. Ensure that this is enabled on your browser.</noscript>
+  </h4>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-bottom">
@@ -232,6 +208,24 @@ tbody td, thead th {
 		<button type="button" class="btn btn-success" id="updateButton" style="background-color: darkturquoise;">Update</button>
 		<button type="button" class="btn btn-success" id="cancelButon" style="background-color: red;">Cancel</button>
 	</div>
+  <div class="modal fade" id="jsCookiesAlert" tabindex="-1" role="dialog" aria-labelledby="jsCookiesAlert" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Notice:</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          This site requires cookies and JavaScript. Ensure that these are enabled on your browser.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <script>
   var viewMode = false;
@@ -240,11 +234,16 @@ tbody td, thead th {
 		var formItems;
     var formData;
     var ajaxData;
-		var enCldr = inzCldr();
-		Globalize.locale("en");
-		p = Globalize.dateParser();
-		var z = p("6/12/2018");
-		configureButtons(false, true, true);
+    var enCldr = inzCldr();
+
+    if (navigator.cookieEnabled == false) {
+      $('#jsCookiesAlert').modal('show');
+    }
+
+    Globalize.locale("en");
+    p = Globalize.dateParser();
+    var z = p("6/12/2018");
+    configureButtons(false, true, true);
     configureViewMode();
     $('.navbar-brand').click(function() {
       newFrame('views/QSECOFR_Main.html');
@@ -298,7 +297,12 @@ tbody td, thead th {
       newFrame('views/passwordPolicy_CRUD.html');
     });
     $('#findBtn').click(function(e) {
-			e.preventDefault();
+
+      if (navigator.cookieEnabled == false) {
+        $('#jsCookiesAlert').modal('show');
+      }
+
+      e.preventDefault();
       setFormItems('find', ajaxData);
       setFormData();
       doPost();

@@ -89,6 +89,7 @@ public class LoginRequest {
 				+ ", msgDescription=" + msgDescription 
 				+ ", chgPwd=" + chgPwd
 				+ ", changePwd=" + changePwd 
+				+ ", sessionID=" + sessionID
 				+ "]";
 	}
 }

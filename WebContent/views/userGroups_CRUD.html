@@ -24,91 +24,87 @@
   <script src="../resources/scripts/momentJS/moment.min.js" type="text/javascript"></script>
   <script src="../resources/scripts/bootstrap4-datetimepicker/tempusdominus-bootstrap-4.min.js" type="text/javascript"></script>
   <link href="../resources/css/bootstrap4-datetimepicker/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
-  <!--
-  <link href="../../../../Boostrap/styles/bootstrap.min.css" rel="stylesheet">
-  <script src="../../../../jQueryLib/scripts/jquery-2.2.4.min.js"></script>
-  <script src="../../../../Boostrap/scripts/bootstrap.min.js"></script>
-  -->
-  
-<style type="text/css">
-/* Custom Styles */
-  body{
-    padding-top: 60px;
-  }
-  .userProfileForm {
-    margin-left: 0px;
-  }
-  .formElementPadBottom {
-    padding-bottom: 10px;
-  }
-  .formElementPadLeft {
-    padding-left: 5px;
-  }
-  .formElementPadBottomLeft {
-    padding-bottom: 10px;
-    padding-left: 5px;
-  }
-  .roundedCorners {
-    -webkit-border-radius: 4px;
-       -moz-border-radius: 4px;
-            border-radius: 4px;
-    border-style: solid;
-    border-width: 1px;
-  }
-  .preserveWhiteSpace {
-    white-space: pre;
-  }
-  
-  
-  
-.dropdown-submenu {
-    position: relative;
-}
-
-.dropdown-submenu>.dropdown-menu {
-    top: 0;
-    left: 100%;
-    margin-top: -6px;
-    margin-left: -1px;
-    -webkit-border-radius: 0 6px 6px 6px;
-    -moz-border-radius: 0 6px 6px;
-    border-radius: 0 6px 6px 6px;
-}
-
-.dropdown-submenu:hover>.dropdown-menu {
-    display: block;
-}
-
-.dropdown-submenu>a:after {
-    display: block;
-    content: " ";
-    float: right;
-    width: 0;
-    height: 0;
-    border-color: transparent;
-    border-style: solid;
-    border-width: 5px 0 5px 5px;
-    border-left-color: #ccc;
-    margin-top: 5px;
-    margin-right: -10px;
-}
-
-.dropdown-submenu:hover>a:after {
-    border-left-color: #fff;
-}
-
-.dropdown-submenu.pull-left {
-    float: none;
-}
-
-.dropdown-submenu.pull-left>.dropdown-menu {
-    left: -100%;
-    margin-left: 10px;
-    -webkit-border-radius: 6px 0 6px 6px;
-    -moz-border-radius: 6px 0 6px 6px;
-    border-radius: 6px 0 6px 6px;
-}
-</style>
+  <style type="text/css">
+    body{
+      padding-top: 60px;
+    }
+    .userProfileForm {
+      margin-left: 0px;
+    }
+    .formElementPadBottom {
+      padding-bottom: 10px;
+    }
+    .formElementPadLeft {
+      padding-left: 5px;
+    }
+    .formElementPadBottomLeft {
+      padding-bottom: 10px;
+      padding-left: 5px;
+    }
+    .roundedCorners {
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      border-style: solid;
+      border-width: 1px;
+    }
+    .preserveWhiteSpace {
+      white-space: pre;
+    }    
+    .dropdown-submenu {
+      position: relative;
+    }
+    .dropdown-submenu>.dropdown-menu {
+      top: 0;
+      left: 100%;
+      margin-top: -6px;
+      margin-left: -1px;
+      -webkit-border-radius: 0 6px 6px 6px;
+      -moz-border-radius: 0 6px 6px;
+      border-radius: 0 6px 6px 6px;
+    }
+    .dropdown-submenu:hover>.dropdown-menu {
+      display: block;
+    }
+    .dropdown-submenu>a:after {
+      display: block;
+      content: " ";
+      float: right;
+      width: 0;
+      height: 0;
+      border-color: transparent;
+      border-style: solid;
+      border-width: 5px 0 5px 5px;
+      border-left-color: #ccc;
+      margin-top: 5px;
+      margin-right: -10px;
+    }
+    .dropdown-submenu:hover>a:after {
+      border-left-color: #fff;
+    }
+    .dropdown-submenu.pull-left {
+      float: none;
+    }
+    .dropdown-submenu.pull-left>.dropdown-menu {
+      left: -100%;
+      margin-left: 10px;
+      -webkit-border-radius: 6px 0 6px 6px;
+      -moz-border-radius: 6px 0 6px 6px;
+      border-radius: 6px 0 6px 6px;
+    }
+    .white {
+      color: white;
+    }
+    .align-center {
+      text-align: center;
+    }
+    .background-red {
+      background-color:red;
+    }
+  </style>
+  <h4 class="white align-center background-red">
+    <noscript>This site requires JavaScript. Ensure that this is enabled on your browser.</noscript>
+  </h4>
 </head>
 <body>
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -180,9 +176,32 @@
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
+  <div class="modal fade" id="jsCookiesAlert" tabindex="-1" role="dialog" aria-labelledby="jsCookiesAlert" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Notice:</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          This site requires cookies and JavaScript. Ensure that these are enabled on your browser.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
 <script>
   var viewMode = false;
   $(function () {
+
+    if (navigator.cookieEnabled == false) {
+      $('#jsCookiesAlert').modal('show');
+    }
+
     configureViewMode();
     $('.navbar-brand').click(function() {
       newFrame('views/QSECOFR_Main.html');
