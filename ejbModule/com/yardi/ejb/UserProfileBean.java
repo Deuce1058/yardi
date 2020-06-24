@@ -1,5 +1,9 @@
 package com.yardi.ejb;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Remove;
@@ -179,14 +183,22 @@ public class UserProfileBean implements UserProfile {
     	return rows;
     }
     
-    public int changeUserToken(String userName, String token, java.util.Date pwdExpirationDate) {
+    public int changeUserToken(String userName, final char [] newPassword) {
+		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
+		String userToken = passwordAuthentication.hash(newPassword); //hash of new password
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.set(Calendar.HOUR, 0);
+		gc.set(Calendar.MINUTE, 0);
+		gc.set(Calendar.SECOND, 0);
+		gc.set(Calendar.HOUR_OF_DAY, 0);
+		gc.add(Calendar.DAY_OF_MONTH, new Short(pwdPolicy.getPpDays()).intValue()); //new password expiration date
     	Query qry = em.createQuery("UPDATE User_Profile " 
         		+ "SET uptoken    = :token,"
         		+ "upPwdexpd      = :pwdExpirationDate "
         		+ "WHERE upUserid = :userName");
         int rows = qry
-        	.setParameter("token", token)
-        	.setParameter("pwdExpirationDate", pwdExpirationDate, TemporalType.DATE)
+        	.setParameter("token", userToken)
+        	.setParameter("pwdExpirationDate", new java.util.Date(gc.getTimeInMillis()), TemporalType.DATE)
         	.setParameter("userName", userName)
         	.executeUpdate();
 		//debug
@@ -194,15 +206,12 @@ public class UserProfileBean implements UserProfile {
 				+ "\n "
 				+ "  userName=" + userName
 				+ "\n "
-				+ "  uptoken=" + token
+				+ "  uptoken=" + userToken
 				+ "\n "
-				+ "  upPwdexpd=" + pwdExpirationDate
+				+ "  upPwdexpd=" + gc
 				+ "\n "
 				+ "  rows=" 
 				+ rows
-				+ "\n "
-				+ "  em="
-				+ em
 				);
 		//debug
 		em.flush();

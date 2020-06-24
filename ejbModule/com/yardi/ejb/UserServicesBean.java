@@ -280,7 +280,7 @@ public class UserServicesBean implements UserServices {
 			//debug
 			System.out.println("com.yardi.ejb UserServicesBean chgpwd() 0025");
 			//debug
-			changeUserToken(pwdLifeInDays, userName, newPassword);
+			changeUserToken(userName, newPassword);
 			loginSuccess();
 			tx.commit();
 			return true;
@@ -482,28 +482,8 @@ public class UserServicesBean implements UserServices {
 	 * @param userName
 	 * @param newPassword
 	 */
-	private void changeUserToken(final short pwdLifeInDays, final String userName, final char [] newPassword) {
-		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
-		String userToken = passwordAuthentication.hash(newPassword); //hash of new password
-		GregorianCalendar gc = new GregorianCalendar();
-		gc.set(Calendar.HOUR, 0);
-		gc.set(Calendar.MINUTE, 0);
-		gc.set(Calendar.SECOND, 0);
-		gc.set(Calendar.HOUR_OF_DAY, 0);
-		//debug
-		System.out.println("com.yardi.ejb UserServicesBean changeUserToken() 0018 "
-				+ "\n "
-				+ "  userToken="
-				+ userToken
-				+ "\n "
-				+ "  gc="
-				+ gc.toString()
-				+ "\n "
-				+ "  check USER PROFILE"
-				);
-		//debug
-		gc.add(Calendar.DAY_OF_MONTH, pwdLifeInDays); //new password expiration date
-		userProfileBean.changeUserToken(userName, userToken, new java.util.Date(gc.getTimeInMillis())); //store new token in user profile
+	private void changeUserToken(final String userName, final char [] newPassword) {
+		userProfileBean.changeUserToken(userName, newPassword); //store new token in user profile
 		userProfileBean.loginSuccess(userName);
 		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
 	}

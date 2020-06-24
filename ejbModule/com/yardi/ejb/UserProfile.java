@@ -4,11 +4,12 @@ import javax.ejb.Remote;
 
 @Remote
 public interface UserProfile {
-	User_Profile find(String userName);
-	int setUpPwdAttempts(String userName, short pwdAttempts);
+	boolean authenticate(String userName, String password, boolean userIsChangingPassword);
+	int changeUserToken(String userName, char [] newPassword);
 	int disable(String userName, java.sql.Timestamp disabledDate, short pwdAttempts);
+	User_Profile find(String userName);
+	String getFeedback();
 	int loginSuccess(String userName);
-	int changeUserToken(String userName, String token, java.util.Date pwdExpirationDate);
 	int persist(
 			String userId, 
 			String token,
@@ -33,6 +34,9 @@ public interface UserProfile {
 			short pwdAttempts
 			);
 	int remove(String userID);
+	void removeBean();
+	int setUpPwdAttempts(String userName, short pwdAttempts);
+	String stringify();
 	int updateAll(
 			String userId, 
 			String token,
@@ -56,8 +60,4 @@ public interface UserProfile {
 			java.sql.Timestamp lastLoginDate,
 			short pwdAttempts
 			);
-	String stringify();
-	boolean authenticate(String userName, String password, boolean userIsChangingPassword);
-	String getFeedback();
-	void removeBean();
 }
