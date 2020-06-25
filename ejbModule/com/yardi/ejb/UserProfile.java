@@ -6,7 +6,6 @@ import javax.ejb.Remote;
 public interface UserProfile {
 	boolean authenticate(String userName, String password, boolean userIsChangingPassword);
 	int changeUserToken(String userName, char [] newPassword);
-	int disable(String userName, java.sql.Timestamp disabledDate, short pwdAttempts);
 	User_Profile find(String userName);
 	String getFeedback();
 	int loginSuccess(String userName);

@@ -110,15 +110,15 @@ public class UserProfileBean implements UserProfile {
     	return rows;
     }
     
-    public int disable(String userName, java.sql.Timestamp disabledDate, short pwdAttempts) {
+    private int disable(String userName) {
     	//upDisabledDate, upPwdAttempts
     	Query qry = em.createQuery("UPDATE User_Profile "  
     	    + "SET upPwdAttempts = :pwdAttempts, "
     		+ "upDisabledDate    = :disabledDate "
     		+ "WHERE upUserid    = :userName");
     	int rows = qry
-    		.setParameter("pwdAttempts" , pwdAttempts)
-    		.setParameter("disabledDate", disabledDate, TemporalType.TIMESTAMP)
+    		.setParameter("pwdAttempts" , pwdPolicy.getPpMaxSignonAttempts())
+    		.setParameter("disabledDate", new java.sql.Timestamp(new java.util.Date().getTime()), TemporalType.TIMESTAMP)
     		.setParameter("userName"    , userName)
     		.executeUpdate();
 		//debug
@@ -126,9 +126,9 @@ public class UserProfileBean implements UserProfile {
 				+ "\n "
 				+ "  userName=" + userName
 				+ "\n "
-				+ "  disabledDate=" + disabledDate
+				+ "  disabledDate=" + new java.util.Date().getTime()
 				+ "\n "
-				+ "  pwdAttempts=" + pwdAttempts
+				+ "  pwdAttempts=" + pwdPolicy.getPpMaxSignonAttempts()
 				+ "\n "
 				+ "  rows=" 
 				+ rows
@@ -471,8 +471,7 @@ public class UserProfileBean implements UserProfile {
 			}
 
 			if (signonAttempts == maxSignonAttempts) {
-				rows = disable(userName, new java.sql.Timestamp(new java.util.Date().getTime()), 
-						maxSignonAttempts);
+				rows = disable(userName);
 				//debug
 				System.out.println("com.yardi.ejb UserProfileBean authenticate() 000C"
 						+ "\n "
