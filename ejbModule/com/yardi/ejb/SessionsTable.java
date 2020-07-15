@@ -4,6 +4,9 @@ import javax.ejb.Remote;
 
 @Remote
 public interface SessionsTable {
+	int clear();
+	Sessions_Table findSession(String sessionID);
+	Sessions_Table findUser(String userID);
 	int persist(
 			String userID, 
 			String sessionID, 
@@ -11,9 +14,7 @@ public interface SessionsTable {
 			String lastRequest, 
 			java.util.Date lastActive
 			);
-	int clear();
-	Sessions_Table findSession(String sessionID);
-	Sessions_Table findUser(String userID);
+	int resetSeq();
 	int update(
 			String userID,
 			String sessionID,

@@ -19,6 +19,7 @@ public class StartupShutdown implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent arg0) {
 		System.out.println("com.yardi.system StartupShutdown contextInitialized() 0000");
 		sessionsBean.clear(); //clear sessions table
+		sessionsBean.resetSeq(); //reset sequence column
 	}
 
 }
