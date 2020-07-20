@@ -246,10 +246,10 @@
           </div>
 					<div class="form-group form-inline pb-sm-1" style="margin-bottom: 0;">
 						<label for="dob" class="control-label pr-sm-2">Birth date</label>
-						<div class="input-group date" id="datePicker">
-							<input type="text" class="roundedCorners form-control-sm border" name="dob" id="dob" required readonly 
+						<div class="input-group date" id="datePicker" data-target-input="nearest">
+							<input type="text" class="roundedCorners form-control-sm border datetimepicker-input" name="dob" id="dob" data-target="#datePicker" required readonly 
 										 placeholder="click here==>"/>
-							<div class="input-group-append">	
+							<div class="input-group-append" data-target="#datePicker" data-toggle="datetimepicker">	
 								<span class="far fa-calendar-alt fa-lg"></span>
 							</div>
 						</div>
@@ -270,19 +270,19 @@
           </div>
 					<div class="form-group form-inline pb-sm-1" style="margin-bottom: 0;">
             <label for="pwdExpDate" class="control-label pr-sm-2">Password expiration date</label>
-						<div class="input-group date" id="datePicker4">
-							<input	type="text" class="roundedCorners form-control-sm border" name="pwdExpDate" id="pwdExpDate" required 							readonly placeholder="click here ==>"/>
-							<div class="input-group-append">
+						<div class="input-group date" id="datePicker4" data-target-input="nearest">
+							<input	type="text" class="roundedCorners form-control-sm border datetimepicker-input" name="pwdExpDate" id="pwdExpDate" data-target="#datePicker4" required 							readonly placeholder="click here ==>"/>
+							<div class="input-group-append" data-target="#datePicker4" data-toggle="datetimepicker">
 								<span class="far fa-calendar-alt fa-lg"></span>
 							</div>
 						</div>
 					</div>
 					<div class="form-group form-inline pb-sm-1" style="margin-bottom: 0;">
             <label for="disabledDate" class="control-label pr-sm-2">Date disabled</label>
-						<div class="input-group date" id="datePicker2">
-							<input type="text" class="roundedCorners form-control-sm border" name="disabledDate" id="disabledDate" readonly
+						<div class="input-group date" id="datePicker2" data-target-input="nearest">
+							<input type="text" class="roundedCorners form-control-sm border datetimepicker-input" name="disabledDate" id="disabledDate" data-target="#datePicker2" readonly
 										 placeholder="click here==>"/>
-							<div class="input-group-append">
+							<div class="input-group-append" data-target="#datePicker2" data-toggle="datetimepicker">
 								<span class="far fa-calendar-alt fa-lg"></span>
 							</div>
 						</div>
@@ -374,9 +374,9 @@
 					<div class="d-sm-flex pb-sm-1">
 						<div class="form-group form-inline" style="margin-bottom: 0;">
             	<label for="lastLogin" class="control-label pr-sm-2">Last login</label>
-							<div class="input-group date" id="datePicker3">
-								<input	type="text" class="roundedCorners form-control-sm border" name="lastLogin" id="lastLogin" required 							readonly placeholder="click here==>"/>
-								<div class="input-group-append">
+							<div class="input-group date" id="datePicker3" data-target-input="nearest">
+								<input	type="text" class="roundedCorners form-control-sm border datetimepicker-input" name="lastLogin" id="lastLogin" data-target="#datePicker3" required 							readonly placeholder="click here==>"/>
+								<div class="input-group-append" data-target="#datePicker3" data-toggle="datetimepicker">
 									<span class="far fa-calendar-alt fa-lg"></span>
 								</div>
 							</div>
@@ -820,7 +820,7 @@
       $("#pwdAttempts")  .attr("disabled", false);
       $('#password')     .attr("disabled", false); 
       $("#currentToken") .attr("disabled", false);
-      $("#lastLogin")    .attr("disabled", false);
+      $("#lastLogin")    .attr("disabled", null);
       $('#loginHour')    .attr("disabled", false);
       $('#loginMin')     .attr("disabled", false);
       $('#loginSec')     .attr("disabled", false);
