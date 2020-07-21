@@ -92,7 +92,13 @@
     -webkit-border-radius: 6px 0 6px 6px;
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
-  }  
+  }
+  .not-allowed {
+    cursor: not-allowed;
+  }
+  .pointer {
+        cursor: pointer;
+  }
   .white {
     color: white;
   }
@@ -250,7 +256,7 @@
 							<input type="text" class="roundedCorners form-control-sm border datetimepicker-input" name="dob" id="dob" data-target="#datePicker" required readonly 
 										 placeholder="click here==>"/>
 							<div class="input-group-append" data-target="#datePicker" data-toggle="datetimepicker">	
-								<span class="far fa-calendar-alt fa-lg"></span>
+								<span class="far fa-calendar-alt fa-lg calendar-dob"></span>
 							</div>
 						</div>
 					</div>					
@@ -273,7 +279,7 @@
 						<div class="input-group date" id="datePicker4" data-target-input="nearest">
 							<input	type="text" class="roundedCorners form-control-sm border datetimepicker-input" name="pwdExpDate" id="pwdExpDate" data-target="#datePicker4" required 							readonly placeholder="click here ==>"/>
 							<div class="input-group-append" data-target="#datePicker4" data-toggle="datetimepicker">
-								<span class="far fa-calendar-alt fa-lg"></span>
+								<span class="far fa-calendar-alt fa-lg calendar-pwdexpd"></span>
 							</div>
 						</div>
 					</div>
@@ -283,7 +289,7 @@
 							<input type="text" class="roundedCorners form-control-sm border datetimepicker-input" name="disabledDate" id="disabledDate" data-target="#datePicker2" readonly
 										 placeholder="click here==>"/>
 							<div class="input-group-append" data-target="#datePicker2" data-toggle="datetimepicker">
-								<span class="far fa-calendar-alt fa-lg"></span>
+								<span class="far fa-calendar-alt fa-lg calendar-disabledd"></span>
 							</div>
 						</div>
 					</div>					
@@ -377,7 +383,7 @@
 							<div class="input-group date" id="datePicker3" data-target-input="nearest">
 								<input	type="text" class="roundedCorners form-control-sm border datetimepicker-input" name="lastLogin" id="lastLogin" data-target="#datePicker3" required 							readonly placeholder="click here==>"/>
 								<div class="input-group-append" data-target="#datePicker3" data-toggle="datetimepicker">
-									<span class="far fa-calendar-alt fa-lg"></span>
+									<span class="far fa-calendar-alt fa-lg calendar-last-login"></span>
 								</div>
 							</div>
 						</div>
@@ -695,12 +701,20 @@
   function configureButtons(findBtn, crtTokenBtn, addBtn, updateBtn, deleteBtn, cancelBtn) {
     
       if (findBtn) {
-        $('#findBtn')   .attr('disabled', true);
-        $('#username')  .attr("disabled", true);
+        $('.calendar-dob')       .addClass('pointer')    .removeClass('not-allowed');
+        $('.calendar-pwdexpd')   .addClass('pointer')    .removeClass('not-allowed');
+        $('.calendar-disabledd') .addClass('pointer')    .removeClass('not-allowed');
+        $('.calendar-last-login').addClass('pointer')    .removeClass('not-allowed');
+        $('#findBtn')            .addClass('not-allowed').removeClass('pointer').attr('disabled', true);
+        $('#username')           .attr("disabled", true);
         findButtonDisabled = true;
       } else {
-        $('#findBtn')   .attr('disabled', false);
-        $('#username')  .attr("disabled", false);    
+        $('.calendar-dob')       .addClass('not-allowed').removeClass('pointer');
+        $('.calendar-pwdexpd')   .addClass('not-allowed').removeClass('pointer');
+        $('.calendar-disabledd') .addClass('not-allowed').removeClass('pointer');
+        $('.calendar-last-login').addClass('not-allowed').removeClass('pointer');
+        $('#findBtn')            .addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
+        $('#username')           .attr("disabled", false);    
         findButtonDisabled = false;
       }                   
                           
@@ -709,6 +723,32 @@
       $('#updateButton').attr("disabled", updateBtn);
       $('#deleteButton').attr("disabled", deleteBtn);
       $('#cancelButon') .attr("disabled", cancelBtn);
+
+      if (crtTokenBtn) {
+        $('#crtToken')    .addClass('not-allowed').removeClass('pointer');
+      } else {
+        $('#crtToken')    .addClass('pointer').removeClass('not-allowed');
+      }
+      if (addBtn) {
+        $('#addButton')   .addClass('not-allowed').removeClass('pointer');
+      } else {
+        $('#addButton')   .addClass('pointer').removeClass('not-allowed');
+      }
+      if (updateBtn) {
+        $('#updateButton').addClass('not-allowed').removeClass('pointer');
+      } else {
+        $('#updateButton').addClass('pointer').removeClass('not-allowed');
+      }
+      if (deleteBtn) {
+        $('#deleteButton').addClass('not-allowed').removeClass('pointer');
+      } else {
+        $('#deleteButton').addClass('pointer').removeClass('not-allowed');
+      }
+      if (cancelBtn) {
+        $('#cancelButon') .addClass('not-allowed').removeClass('pointer');
+      } else {
+        $('#cancelButon') .addClass('pointer').removeClass('not-allowed');
+      }
   }
 
   function configureViewMode() {
