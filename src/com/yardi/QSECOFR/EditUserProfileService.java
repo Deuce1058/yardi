@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Collection;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -45,17 +46,17 @@ public class EditUserProfileService extends HttpServlet {
 				ctx = new InitialContext();
 				userProfileBean = (UserProfile)ctx.lookup("java:global/yardiWeb/UserProfileBean");
 				//debug
-				System.out.println("com.yardi.QSECOFR EditUserProfileService doGet() 0011");
+				System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0011");
 				//debug
 			} catch (NamingException e) {
 				//debug
-				System.out.println("com.yardi.QSECOFR EditUserProfileService doGet() 0012");
+				System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0012");
 				//debug
 				e.printStackTrace();
 			}
 			session.setAttribute("userProfileBean", userProfileBean);
 			//debug
-			System.out.println("com.yardi.QSECOFR EditUserProfileService doGet() 0013");
+			System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0013");
 			//debug
 		}
 		
@@ -136,7 +137,9 @@ public class EditUserProfileService extends HttpServlet {
 				feedback = com.yardi.rentSurvey.YardiConstants.YRD000D.split("="); 
 				editRequest.setMsgID(feedback[0]);
 				editRequest.setMsgDescription(feedback[1]);
-				response.reset();
+				showResponseHeaders(response);
+				response.resetBuffer();
+				showResponseHeaders(response);
 				response.setContentType("application/json");
 				PrintWriter out = response.getWriter();
 				formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
@@ -211,8 +214,9 @@ public class EditUserProfileService extends HttpServlet {
 	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000A FIND"
 		        	+ "\n"
 		        	+ "   editRequest=" + editRequest);
-
-			response.reset();
+	        showResponseHeaders(response);
+			response.resetBuffer();
+			showResponseHeaders(response);
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();
 			formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
@@ -254,7 +258,9 @@ public class EditUserProfileService extends HttpServlet {
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
 			editRequest.setMsgID(feedback[0]);
 			editRequest.setMsgDescription(feedback[1]);
-			response.reset();
+			showResponseHeaders(response);
+			response.resetBuffer();
+			showResponseHeaders(response);
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();
 			formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
@@ -269,7 +275,9 @@ public class EditUserProfileService extends HttpServlet {
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
 			editRequest.setMsgID(feedback[0]);
 			editRequest.setMsgDescription(feedback[1]);
-			response.reset();
+			showResponseHeaders(response);
+			response.resetBuffer();
+			showResponseHeaders(response);
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();
 			formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
@@ -308,7 +316,9 @@ public class EditUserProfileService extends HttpServlet {
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
 			editRequest.setMsgID(feedback[0]);
 			editRequest.setMsgDescription(feedback[1]);
-			response.reset();
+			showResponseHeaders(response);
+			response.resetBuffer();
+			showResponseHeaders(response);
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();
 			formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
@@ -323,5 +333,33 @@ public class EditUserProfileService extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
+	}
+	
+	private void showResponseHeaders(HttpServletResponse response) {
+		//debug 
+		Collection<String> headerNames = response.getHeaderNames();
+		if (headerNames.isEmpty()) {
+			System.out.println("com.yardi.QSECOFR.EditUserProfileService showResponseHeaders() 0014 headerNames is empty");
+		}
+		for (String n : headerNames) {
+			Collection<String> headerValues = response.getHeaders(n);
+			if (headerValues.isEmpty()) {
+				System.out.println("com.yardi.QSECOFR.EditUserProfileService showResponseHeaders() 0015 "
+						+ "\n"
+						+ "   Response header name="
+						+ n
+						+ "   no headerValues");
+			}
+			for (String v :  headerValues) {
+				System.out.println("com.yardi.QSECOFR.EditUserProfileService showResponseHeaders() 0016 "
+						+ "\n"
+						+ "   Response header name="
+						+ n
+						+ "   Value="
+						+ v
+						);
+			}
+		}
+		//debug
 	}
 }
