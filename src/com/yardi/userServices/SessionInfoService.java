@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Collection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -46,7 +47,7 @@ public class SessionInfoService extends HttpServlet {
         	useAttribute = true;
         }
                 
-        System.out.println("com.yardi.userServices SessionInfoService doGet() 0000 " 
+        System.out.println("com.yardi.userServices.SessionInfoService doGet() 0000 " 
            	+ "\n"
         	+ "  formData=" 
         	+ formData
@@ -62,11 +63,13 @@ public class SessionInfoService extends HttpServlet {
 		}
 		
 		formData = mapper.writeValueAsString(sessionInfo);
-        System.out.println("com.yardi.userServices SessionInfoService doGet() 0001 " 
+        System.out.println("com.yardi.userServices.SessionInfoService doGet() 0001 " 
             	+ "\n"
             	+ "  formData=" 
         		+ formData);
-		response.reset(); 
+        showResponseHeaders(response);
+		response.resetBuffer(); 
+        showResponseHeaders(response);
 		response.setContentType("application/json"); 
 		PrintWriter out = response.getWriter();
 
@@ -85,4 +88,31 @@ public class SessionInfoService extends HttpServlet {
 		doGet(request, response);
 	}
 
+	private void showResponseHeaders(HttpServletResponse response) {
+		//debug 
+		Collection<String> headerNames = response.getHeaderNames();
+		if (headerNames.isEmpty()) {
+			System.out.println("com.yardi.userServices.SessionInfoService showResponseHeaders() 0002 headerNames is empty");
+		}
+		for (String n : headerNames) {
+			Collection<String> headerValues = response.getHeaders(n);
+			if (headerValues.isEmpty()) {
+				System.out.println("com.yardi.userServices.SessionInfoService showResponseHeaders() 0003 "
+						+ "\n"
+						+ "   Response header name="
+						+ n
+						+ "   no headerValues");
+			}
+			for (String v :  headerValues) {
+				System.out.println("com.yardi.userServices.SessionInfoService showResponseHeaders() 0004 "
+						+ "\n"
+						+ "   Response header name="
+						+ n
+						+ "   Value="
+						+ v
+						);
+			}
+		}
+		//debug
+	}
 }
