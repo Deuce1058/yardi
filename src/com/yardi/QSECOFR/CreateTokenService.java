@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Collection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -41,7 +42,7 @@ public class CreateTokenService extends HttpServlet {
         	formData = br.readLine();
         }
         
-		System.out.println("com.yardi.QSECOFR CreateTokenService doGet() 0000 formData=" + formData);
+		System.out.println("com.yardi.QSECOFR.CreateTokenService doGet() 0000 formData=" + formData);
 		ObjectMapper mapper = new ObjectMapper();
 		TokenRequest tokenRequest = new TokenRequest();
 		tokenRequest = mapper.readValue(formData, TokenRequest.class);
@@ -58,7 +59,9 @@ public class CreateTokenService extends HttpServlet {
 			tokenRequest.setPassword(userToken);
 		}
 		
-		response.reset();
+		showResponseHeaders(response);
+		response.resetBuffer();
+		showResponseHeaders(response);
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
 		formData = mapper.writeValueAsString(tokenRequest); //convert the feedback to json 
@@ -72,5 +75,33 @@ public class CreateTokenService extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
+	}
+
+	private void showResponseHeaders(HttpServletResponse response) {
+		//debug 
+		Collection<String> headerNames = response.getHeaderNames();
+		if (headerNames.isEmpty()) {
+			System.out.println("com.yardi.QSECOFR.CreateTokenService showResponseHeaders() 0001 headerNames is empty");
+		}
+		for (String n : headerNames) {
+			Collection<String> headerValues = response.getHeaders(n);
+			if (headerValues.isEmpty()) {
+				System.out.println("com.yardi.QSECOFR.CreateTokenService showResponseHeaders() 0002 "
+						+ "\n"
+						+ "   Response header name="
+						+ n
+						+ "   no headerValues");
+			}
+			for (String v :  headerValues) {
+				System.out.println("com.yardi.QSECOFR.CreateTokenService showResponseHeaders() 0003 "
+						+ "\n"
+						+ "   Response header name="
+						+ n
+						+ "   Value="
+						+ v
+						);
+			}
+		}
+		//debug
 	}
 }
