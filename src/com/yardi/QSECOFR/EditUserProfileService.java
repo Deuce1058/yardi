@@ -24,7 +24,6 @@ import com.yardi.ejb.UserProfile;
 @WebServlet(description = "Handle edit user profile requests", urlPatterns = { "/editUserProfile" })
 public class EditUserProfileService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private User_Profile userProfile;
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -36,6 +35,7 @@ public class EditUserProfileService extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		User_Profile userProfile = null;
 		HttpSession session = request.getSession(false);
 		InitialContext ctx;
 		UserProfile userProfileBean = (UserProfile)session.getAttribute("userProfileBean");
