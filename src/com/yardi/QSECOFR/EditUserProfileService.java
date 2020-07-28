@@ -36,6 +36,7 @@ public class EditUserProfileService extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0019 ");
 		User_Profile userProfile = null;
 		HttpSession session = request.getSession(false);
 		InitialContext ctx;
@@ -76,7 +77,8 @@ public class EditUserProfileService extends HttpServlet {
 		editRequest = mapper.readValue(formData, EditUserProfileRequest.class);
 		
 		if (   editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_FIND)
-			|| editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_DELETE)) {
+			|| editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_DELETE)
+			|| editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_REMOVE)) {
 			/*
 			 * The web page is giving us more than we need. We just need a user name for find and delete so
 			 * clear out the other fields. Also, for find and delete, the other fields we dont need will have 
@@ -326,6 +328,12 @@ public class EditUserProfileService extends HttpServlet {
 			out.flush();
 			return;
 		}
+		
+		if (editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_REMOVE)) {
+			System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0018");
+			remove(session, response, new EditUserProfileRequest());
+			return;
+		}
 	}
 
 	/**
@@ -333,6 +341,30 @@ public class EditUserProfileService extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
+	}
+	
+	private void remove(HttpSession session, HttpServletResponse response, EditUserProfileRequest editRequest) throws IOException {
+		//debug
+		System.out.println("com.yardi.QSECOFR.EditUserProfileService remove() 0017 ");
+		//debug
+		UserProfile userProfileBean = (UserProfile)session.getAttribute("userProfileBean");
+		session.setAttribute("userProfileBean", null);
+		userProfileBean.removeBean();
+		String feedback [] = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
+		editRequest.setMsgID(feedback[0]);
+		feedback = com.yardi.rentSurvey.YardiConstants.YRD0014.split("=");
+		editRequest.setMsgDescription(feedback[1]);
+		showResponseHeaders(response);
+		response.resetBuffer();
+		showResponseHeaders(response);
+		response.setContentType("application/json");
+		PrintWriter out = response.getWriter();
+		String formData = new String();
+		formData = "";
+		ObjectMapper mapper = new ObjectMapper();
+		formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
+		out.print(formData);
+		out.flush();
 	}
 	
 	private void showResponseHeaders(HttpServletResponse response) {

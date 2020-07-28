@@ -492,7 +492,9 @@ public class EditUserProfileRequest {
 
 	public void specialInzsr() {
 		if (	action.equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_FIND) 
-			|| 	action.equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_DELETE)) {
+				|| 	action.equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_DELETE)
+				|| 	action.equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_REMOVE)
+			) {
 			/*
 			 * The web page is giving us more than we need. We just need a user name for find and delete so
 			 * clear out the other fields. Also, for find and delete, the other fields we dont need will have 

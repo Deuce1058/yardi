@@ -42,12 +42,12 @@ public class UserProfileBean implements UserProfile {
 	@EJB PasswordPolicy passwordPolicyBean;
 
     public UserProfileBean() {
-    	System.out.println("com.yardi.ejb UserProfileBean UserProfileBean() 0015");
+    	System.out.println("com.yardi.ejb.UserProfileBean UserProfileBean() 0015");
     }
 
     @PostConstruct
     private void postConstructCallback() {
-    	System.out.println("com.yardi.ejb UserProfileBean postConstructCallback() 0016");
+    	System.out.println("com.yardi.ejb.UserProfileBean postConstructCallback() 0016");
     	getPwdPolicy();
     }
 
@@ -62,12 +62,12 @@ public class UserProfileBean implements UserProfile {
 				.setParameter("userName", userName)
 				.getSingleResult();
 		} catch (Exception e) {
-			System.out.println("com.yardi.ejb UserProfileBean find() 0005 exception");
+			System.out.println("com.yardi.ejb.UserProfileBean find() 0005 exception");
 	    	userProfile = null;
 			e.printStackTrace();
 		}
 		//debug
-		System.out.println("com.yardi.ejb UserProfileBean find() 0000 "
+		System.out.println("com.yardi.ejb.UserProfileBean find() 0000 "
 				+ "\n "
 				+ "  userName=" + userName
 				+ "\n "
@@ -92,7 +92,7 @@ public class UserProfileBean implements UserProfile {
     			.setParameter("userName"   , userName)
     			.executeUpdate();
 		//debug
-		System.out.println("com.yardi.ejb UserProfileBean setUpPwdAttempts() 0001 "
+		System.out.println("com.yardi.ejb.UserProfileBean setUpPwdAttempts() 0001 "
 				+ "\n "
 				+ "  userName=" + userName
 				+ "\n "
@@ -122,7 +122,7 @@ public class UserProfileBean implements UserProfile {
     		.setParameter("userName"    , userName)
     		.executeUpdate();
 		//debug
-		System.out.println("com.yardi.ejb UserProfileBean disable() 0002 "
+		System.out.println("com.yardi.ejb.UserProfileBean disable() 0002 "
 				+ "\n "
 				+ "  userName=" + userName
 				+ "\n "
@@ -161,7 +161,7 @@ public class UserProfileBean implements UserProfile {
     		.setParameter("userName" , userName)
     		.executeUpdate();
 		//debug
-		System.out.println("com.yardi.ejb UserProfileBean loginSuccess() 0003 "
+		System.out.println("com.yardi.ejb.UserProfileBean loginSuccess() 0003 "
 				+ "\n "
 				+ "  userName=" + userName
 				+ "\n "
@@ -202,7 +202,7 @@ public class UserProfileBean implements UserProfile {
         	.setParameter("userName", userName)
         	.executeUpdate();
 		//debug
-		System.out.println("com.yardi.ejb UserProfileBean changeUserToken() 0004 "
+		System.out.println("com.yardi.ejb.UserProfileBean changeUserToken() 0004 "
 				+ "\n "
 				+ "  userName=" + userName
 				+ "\n "
@@ -402,7 +402,7 @@ public class UserProfileBean implements UserProfile {
 	 *          update user profile upPwdAttempts=0, upDisabledDate=null, upLastLoginDate
 	 */
 	public boolean authenticate(String userName, String password, boolean userIsChangingPassword) {
-		System.out.println("com.yardi.ejb UserProfileBean authenticate() 0013");
+		System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0013");
 		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
 		java.sql.Timestamp today = new java.sql.Timestamp(new java.util.Date().getTime());
 		User_Profile userProfile = find(userName); 
@@ -410,7 +410,7 @@ public class UserProfileBean implements UserProfile {
 		//if (getPwdPolicy()== null) { //get the password policy
 		if (pwdPolicy==null) { //get the password policy
 			//debug
-			System.out.println("com.yardi.ejb UserProfileBean authenticate() 0010 pwdPolicy == null");
+			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0010 pwdPolicy == null");
 			//debug
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD000B;
 			return false;
@@ -418,19 +418,19 @@ public class UserProfileBean implements UserProfile {
 
 		if (userProfile == null) {
 			//debug
-			System.out.println("com.yardi.ejb UserProfileBean authenticate() 0006 userProfile == null");
+			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0006 userProfile == null");
 			//debug
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0001;
 			return false;
 		}
 
 		//debug
-		System.out.println("com.yardi.ejb UserProfileBean authenticate() 0007 userProfile =" + userProfile + "\n");
+		System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0007 userProfile =" + userProfile + "\n");
 		//debug
 
 		if (userProfile.getUpDisabledDate() != null) {
 			//debug
-			System.out.println("com.yardi.ejb UserProfileBean authenticate() 0008 userProfile.getUpDisabledDate() != null\n");
+			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0008 userProfile.getUpDisabledDate() != null\n");
 			//debug
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0003;
 			return false;
@@ -438,7 +438,7 @@ public class UserProfileBean implements UserProfile {
 
 		if (userProfile.getUpActiveYn().equals("N")) {
 			//debug
-			System.out.println("com.yardi.ejb UserProfileBean authenticate() 0009 userProfile.getUpActiveYn().equals(N)");
+			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0009 userProfile.getUpActiveYn().equals(N)");
 			//debug
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD0004;
 			return false;
@@ -451,12 +451,12 @@ public class UserProfileBean implements UserProfile {
 		boolean pwdValid = passwordAuthentication.authenticate(password.toCharArray(), userProfile.getUptoken());
 
 		if (pwdValid == false) {
-			System.out.println("com.yardi.ejb UserProfileBean authenticate() 0017");
+			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0017");
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD000F;
 			signonAttempts++;
 			int rows = setUpPwdAttempts(userName, signonAttempts);
 			//debug
-			System.out.println("com.yardi.ejb UserProfileBean authenticate() 0012"
+			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0012"
 					+ "\n "
 					+ "  feedback =" + feedback  
 					+ "\n "
@@ -473,7 +473,7 @@ public class UserProfileBean implements UserProfile {
 			if (signonAttempts == maxSignonAttempts) {
 				rows = disable(userName);
 				//debug
-				System.out.println("com.yardi.ejb UserProfileBean authenticate() 000C"
+				System.out.println("com.yardi.ejb.UserProfileBean authenticate() 000C"
 						+ "\n "
 						+ "  signonAttempts == maxSignonAttempts"  
 						+ "\n "
@@ -487,7 +487,7 @@ public class UserProfileBean implements UserProfile {
 
 				feedback = com.yardi.rentSurvey.YardiConstants.YRD000C;
 				//debug
-				System.out.println("com.yardi.ejb UserProfileBean authenticate() 000D"
+				System.out.println("com.yardi.ejb.UserProfileBean authenticate() 000D"
 						+ "feedback =" + feedback + "\n");
 				//debug
 			}
@@ -503,7 +503,7 @@ public class UserProfileBean implements UserProfile {
 				 */
 				feedback = com.yardi.rentSurvey.YardiConstants.YRD0002;
 				//debug
-				System.out.println("com.yardi.ejb UserProfileBean authenticate() 000E"
+				System.out.println("com.yardi.ejb.UserProfileBean authenticate() 000E"
 						+ "\n "
 						+ "  userIsChangingPassword =" + userIsChangingPassword   
 						+ "\n "
@@ -524,7 +524,7 @@ public class UserProfileBean implements UserProfile {
 				 */
 				int rows = loginSuccess(userName);
 				//debug
-				System.out.println("com.yardi.ejb UserProfileBean authenticate() 000F"
+				System.out.println("com.yardi.ejb.UserProfileBean authenticate() 000F"
 						+ "\n "
 						+ "  userIsChangingPassword == false"
 						+ "\n "
@@ -551,7 +551,7 @@ public class UserProfileBean implements UserProfile {
 		}
 		
 		//debug
-		System.out.println("com.yardi.ejb UserProfileBean getPwdPolicy() 000A"
+		System.out.println("com.yardi.ejb.UserProfileBean getPwdPolicy() 000A"
 			+ "\n"
 			+ "   pwdPolicy="
 			+ pwdPolicy
@@ -562,7 +562,7 @@ public class UserProfileBean implements UserProfile {
 
 	private void setPwdPolicy() {
 		//debug
-		System.out.println("com.yardi.ejb UserProfileBean setPwdPolicy() 0014"
+		System.out.println("com.yardi.ejb.UserProfileBean setPwdPolicy() 0014"
 				+ "\n"
 				+ "   passwordPolicyBean="
 				+ passwordPolicyBean
@@ -572,11 +572,11 @@ public class UserProfileBean implements UserProfile {
 		
 		if (pwdPolicy == null) {
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD000B;
-			System.out.println("com.yardi.ejb UserProfileBean setPwdPolicy() pwdPolicy==null 0011");
+			System.out.println("com.yardi.ejb.UserProfileBean setPwdPolicy() pwdPolicy==null 0011");
 			return;
 		}
 		//debug
-		System.out.println("com.yardi.ejb UserProfileBean setPwdPolicy() 000B"
+		System.out.println("com.yardi.ejb.UserProfileBean setPwdPolicy() 000B"
 			+ "\n"
 			+ "   pwdPolicy="
 			+ pwdPolicy
@@ -588,6 +588,7 @@ public class UserProfileBean implements UserProfile {
 
 	@Remove
 	public void removeBean() {
+		System.out.println("com.yardi.ejb.UserProfileBean removeBean() 0018 ");
 	}
 	
 	public String stringify() {

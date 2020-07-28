@@ -23,6 +23,8 @@ public class YardiConstants {
 	public static final String YRD0011 = "YRD0011=New password must not contain user name in any case";
 	public static final String YRD0012 = "YRD0012=New password has too many repeated charaters";
 	public static final String YRD0013 = "YRD0013=Invalid session. The ID returned from the request is not the same ID stored in UserServicesBean";
+	public static final String YRD0014 = "YRD0014=Remove stateful beans. User requested a new page and session resorces must be released. Set HttpSession attributes"
+			                             + " corresponding to stateful beans to null";
 	public static final Pattern PATTERN_UPPER    = Pattern.compile(".*?\\p{Lu}");
 	public static final Pattern PATTERN_LOWER    = Pattern.compile(".*?[\\p{L}&&[^\\p{Lu}]]");
 	public static final Pattern PATTERN_NUMBER   = Pattern.compile(".*\\d.*");
@@ -31,6 +33,7 @@ public class YardiConstants {
 	public static final String EDIT_USER_PROFILE_REQUEST_ACTION_ADD = "add";
 	public static final String EDIT_USER_PROFILE_REQUEST_ACTION_UPDATE = "update";
 	public static final String EDIT_USER_PROFILE_REQUEST_ACTION_DELETE = "delete";
+	public static final String EDIT_USER_PROFILE_REQUEST_ACTION_REMOVE = "remove";
 	public static final String USER_SELECT_GROUP_PAGE = "views/selectGroup.html";
 	public static final String REQUEST_SESSION_INFO = "sessionInfo";
 	public static final String UPDATE_SESSION_INFO = "updateSession";

@@ -585,55 +585,55 @@
       }
     }); 
     $('.navbar-brand').click(function() {
-      newFrame('views/QSECOFR_Main.html');
+      remove('views/QSECOFR_Main.html');
     }); 
     $('#UPView').click(function() {
-      newFrame('views/userProfile_CRUD.html?mode=view');
+      remove('views/userProfile_CRUD.html?mode=view');
     });
     $('#UPChange').click(function() {
-      newFrame('views/userProfile_CRUD.html');
+      remove('views/userProfile_CRUD.html');
     });
     $('#STView').click(function() {
-      newFrame('views/sessions_CRUD.html?mode=view');
+      remove('views/sessions_CRUD.html?mode=view');
     });
     $('#STChange').click(function() {
-      newFrame('views/sessions_CRUD.html');
+      remove('views/sessions_CRUD.html');
     });
     $('#UP1View').click(function() {
-      newFrame('views/uniqueTokens_CRUD.html?mode=view');
+      remove('views/uniqueTokens_CRUD.html?mode=view');
     });
     $('#UP1Change').click(function() {
-      newFrame('views/uniqueTokens_CRUD.html');
+      remove('views/uniqueTokens_CRUD.html');
     });
     $('#UGView').click(function() {
-      newFrame('views/userGroups_CRUD.html?mode=view');
+      remove('views/userGroups_CRUD.html?mode=view');
     });
     $('#UGChange').click(function() {
-      newFrame('views/userGroups_CRUD.html');
+      remove('views/userGroups_CRUD.html');
     });
     $('#PMView').click(function() {
-      newFrame('views/permissionsMaster_CRUD.html?mode=view');
+      remove('views/permissionsMaster_CRUD.html?mode=view');
     });
     $('#PMChange').click(function() {
-      newFrame('views/permissionsMaster_CRUD.html');
+      remove('views/permissionsMaster_CRUD.html');
     });
     $('#GPView').click(function() {
-      newFrame('views/groupPermissions_CRUD.html?mode=view');
+      remove('views/groupPermissions_CRUD.html?mode=view');
     });
     $('#GPChange').click(function() {
-      newFrame('views/groupPermissions_CRUD.html');
+      remove('views/groupPermissions_CRUD.html');
     });
     $('#GMView').click(function() {
-      newFrame('views/groupMaster_CRUD.html?mode=view');
+      remove('views/groupMaster_CRUD.html?mode=view');
     });
     $('#GMChange').click(function() {
-      newFrame('views/groupMaster_CRUD.html');
+      remove('views/groupMaster_CRUD.html');
     });
     $('#PPView').click(function() {
-      newFrame('views/passwordPolicy_CRUD.html?mode=view');
+      remove('views/passwordPolicy_CRUD.html?mode=view');
     });
     $('#PPChange').click(function() {
-      newFrame('views/passwordPolicy_CRUD.html');
+      remove('views/passwordPolicy_CRUD.html');
     });
 
   function getAllUrlParams(url) {
@@ -873,13 +873,17 @@
         || action === 'add'
         || action === 'update'
         || action === 'delete'
+        || action === 'remove'
        ) {
       formItems = {
         /*
-         * To simplify the logic just use the the current screen values as is to construct formItems. For find and delete 
-         * operations we will send the server more than it needs and also send garbage left from the previous search. We
-         * just need a user name for find and delete. The server will take care of clearing the uneeded values from the 
-         * request object for find and delete.
+         * To simplify the logic just use the the current screen values as is to construct formItems. For find, delete 
+         * and remove operations we will send the server more than it needs and also send garbage left from the previous 
+         * search. We just need a user name for find and delete. The server will take care of clearing the uneeded 
+         * values from the request object for find, delete and remove.
+         *
+         * remove indicates that the user is requesting a new page. Tell the server to remove any stateful session beans 
+         * and release session resorces. When the server responds YRD0000, tell the parent to load the new page 
          */
         "action"         : action,
         "findUser"       : $('#username')     .val(),
@@ -1130,6 +1134,23 @@
       $('#loginSec')     .val('00');
   }
   
+  function remove(nextFrame) {
+    setFormItems('remove', ajaxData);
+    setFormData();
+    $.ajax({
+      type:     'POST',
+      url:      '../editUserProfile',
+      data:     formData,
+      async:    false,
+      dataType: "json", 
+      success:  function (data) {
+                  if (data.msgID === 'YRD0000') {
+                    newFrame(nextFrame);
+                  }
+                }
+    });
+  }
+
   function newFrame(newFrame) {
     $('html').html(newFrame);
     console.log(' nextFrame=' + newFrame);
