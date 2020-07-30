@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Collection;
 
+import javax.annotation.Resource;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
@@ -14,6 +15,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.User_Profile;
@@ -25,12 +32,23 @@ import com.yardi.ejb.UserProfile;
 @WebServlet(description = "Handle edit user profile requests", urlPatterns = { "/editUserProfile" })
 public class EditUserProfileService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	@Resource UserTransaction tx;
+
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
     public EditUserProfileService() {
         super();
     }
+
+	private void commit(UserTransaction tx) {
+		try {
+			tx.commit();
+		} catch (SecurityException | IllegalStateException | RollbackException | HeuristicMixedException
+				| HeuristicRollbackException | SystemException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -131,12 +149,143 @@ public class EditUserProfileService extends HttpServlet {
 	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0008 FIND"
 	        	+ "\n"
 	        	+ "   editRequest.getFindUser()=" + editRequest.getFindUser());
-			userProfile = null;
-			userProfile = userProfileBean.find(editRequest.getFindUser());
-			
-			if (userProfile == null) {
-		        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0009 userProfile == null");
-				feedback = com.yardi.rentSurvey.YardiConstants.YRD000D.split("="); 
+	        try {
+				tx.begin();
+				userProfile = null;
+				userProfile = userProfileBean.find(editRequest.getFindUser());
+
+				if (userProfile == null) {
+					System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0009 userProfile == null");
+					feedback = com.yardi.rentSurvey.YardiConstants.YRD000D.split("="); 
+					editRequest.setMsgID(feedback[0]);
+					editRequest.setMsgDescription(feedback[1]);
+					showResponseHeaders(response);
+					response.resetBuffer();
+					showResponseHeaders(response);
+					response.setContentType("application/json");
+					PrintWriter out = response.getWriter();
+					formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
+					out.print(formData);
+					out.flush();
+					return;
+				}
+
+				System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000E"
+						+ "\n"
+						+ "   userProfile=" 
+						+ userProfile
+						);
+				feedback = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
+				editRequest.setMsgID         (feedback[0]);
+				editRequest.setMsgDescription(feedback[1]);
+				editRequest.setFirstName     (userProfile.getUpFirstName());
+				editRequest.setLastName      (userProfile.getUpLastName());
+				editRequest.setAddress1      (userProfile.getUpAddress1());
+
+				if (userProfile.getUpAddress2()==null) {
+					editRequest.setAddress2  ("");
+				} else {
+					editRequest.setAddress2  (userProfile.getUpAddress2());
+				}
+
+				editRequest.setCity          (userProfile.getUpCity());
+				editRequest.setState         (userProfile.getUpState());
+				editRequest.setZip           (userProfile.getUpZip());
+
+				if (userProfile.getUpZip4()==null) {
+					editRequest.setZip4      ("");
+				} else {
+					editRequest.setZip4      (userProfile.getUpZip4());
+				}
+
+				editRequest.setPhone         (userProfile.getUpPhone());
+
+				if (userProfile.getUpFax()==null) {
+					editRequest.setFax       ("");
+				} else {
+					editRequest.setFax       (userProfile.getUpFax());
+				} 
+
+				if (userProfile.getUpEmail()==null) {
+					editRequest.setEmail     ("");
+				} else {
+					editRequest.setEmail     (userProfile.getUpEmail());
+				}
+
+				editRequest.setSsn           (userProfile.getUpssn());
+				editRequest.setDob           (editRequest.stringify(userProfile        .getUpdob()));
+				editRequest.setHomeMarket    (new Short(userProfile.getUpHomeMarket()) .toString());
+				editRequest.setActiveYN      (userProfile.getUpActiveYn());
+				editRequest.setPwdExpDate    (editRequest.stringify(userProfile        .getUpPwdexpd()));
+				String dateTime[] = new String[2];
+
+				if (userProfile.getUpDisabledDate()==null) {
+					editRequest.setDisabledDate("");
+					editRequest.setDisabledTime("");
+				} else {
+					dateTime = editRequest.stringify(userProfile      .getUpDisabledDate());
+					editRequest.setDisabledDate(dateTime[0]);
+					editRequest.setDisabledTime(dateTime[1]);
+				}
+
+				editRequest.setPwdAttempts   (new Short(userProfile.getUpPwdAttempts()).toString());
+				editRequest.setCurrentToken  (userProfile.getUptoken());
+				dateTime = editRequest.stringify(userProfile        .getUpLastLoginDate());
+				editRequest.setLastLogin     (dateTime[0]);
+				editRequest.setLastLoginTime (dateTime[1]);
+				System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000A FIND"
+						+ "\n"
+						+ "   editRequest=" + editRequest);
+				showResponseHeaders(response);
+				response.resetBuffer();
+				showResponseHeaders(response);
+				response.setContentType("application/json");
+				PrintWriter out = response.getWriter();
+				formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
+				out.print(formData);
+				out.flush();
+				System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000F"
+						+ "\n"
+						+ "   formData=" + formData);
+				commit(tx);
+			} catch (NotSupportedException e) {
+				e.printStackTrace();
+			} catch (SystemException e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+		
+		if (editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_ADD)) {
+	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000B ADD" 
+	        	+ "\n"
+	        	+ "editRequest=" + editRequest);
+	        try {
+				tx.begin();
+				int rows = userProfileBean.persist(
+						editRequest  .getFindUser(),
+						editRequest  .getCurrentToken(),
+						editRequest  .getUpHomeMarket(),
+						editRequest  .getFirstName(), 
+						editRequest  .getLastName(), 
+						editRequest  .getAddress1(), 
+						editRequest  .getAddress2(), 
+						editRequest  .getCity(), 
+						editRequest  .getState(), 
+						editRequest  .getZip(), 
+						editRequest  .getZip4(), 
+						editRequest  .getPhone(), 
+						editRequest  .getFax(), 
+						editRequest  .getEmail(), 
+						editRequest  .getSsn(),
+						editRequest  .getBirthDate(),
+						editRequest  .getActiveYN(),
+						editRequest  .getPasswordExpirationDate(),
+						editRequest  .getProfileDisabledDate(),
+						editRequest  .getLastLoginDate(),
+						editRequest  .getPasswordAttempts()
+						);
+				feedback = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
 				editRequest.setMsgID(feedback[0]);
 				editRequest.setMsgDescription(feedback[1]);
 				showResponseHeaders(response);
@@ -147,144 +296,33 @@ public class EditUserProfileService extends HttpServlet {
 				formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
 				out.print(formData);
 				out.flush();
-				return;
+				commit(tx);
+			} catch (NotSupportedException | SystemException e) {
+				e.printStackTrace();
 			}
-
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000E"
-		        	+ "\n"
-	        		+ "   userProfile=" 
-		        	+ userProfile
-	        );
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
-			editRequest.setMsgID         (feedback[0]);
-			editRequest.setMsgDescription(feedback[1]);
-			editRequest.setFirstName     (userProfile.getUpFirstName());
-			editRequest.setLastName      (userProfile.getUpLastName());
-			editRequest.setAddress1      (userProfile.getUpAddress1());
-			
-			if (userProfile.getUpAddress2()==null) {
-				editRequest.setAddress2  ("");
-			} else {
-				editRequest.setAddress2  (userProfile.getUpAddress2());
-			}
-			
-			editRequest.setCity          (userProfile.getUpCity());
-			editRequest.setState         (userProfile.getUpState());
-			editRequest.setZip           (userProfile.getUpZip());
-			
-			if (userProfile.getUpZip4()==null) {
-				editRequest.setZip4      ("");
-			} else {
-				editRequest.setZip4      (userProfile.getUpZip4());
-			}
-			
-			editRequest.setPhone         (userProfile.getUpPhone());
-			
-			if (userProfile.getUpFax()==null) {
-				editRequest.setFax       ("");
-			} else {
-				editRequest.setFax       (userProfile.getUpFax());
-			} 
-			
-			if (userProfile.getUpEmail()==null) {
-				editRequest.setEmail     ("");
-			} else {
-				editRequest.setEmail     (userProfile.getUpEmail());
-			}
-			
-			editRequest.setSsn           (userProfile.getUpssn());
-			editRequest.setDob           (editRequest.stringify(userProfile        .getUpdob()));
-			editRequest.setHomeMarket    (new Short(userProfile.getUpHomeMarket()) .toString());
-			editRequest.setActiveYN      (userProfile.getUpActiveYn());
-			editRequest.setPwdExpDate    (editRequest.stringify(userProfile        .getUpPwdexpd()));
-			String dateTime[] = new String[2];
-			
-			if (userProfile.getUpDisabledDate()==null) {
-				editRequest.setDisabledDate("");
-				editRequest.setDisabledTime("");
-			} else {
-				dateTime = editRequest.stringify(userProfile      .getUpDisabledDate());
-				editRequest.setDisabledDate(dateTime[0]);
-				editRequest.setDisabledTime(dateTime[1]);
-			}
-			
-			editRequest.setPwdAttempts   (new Short(userProfile.getUpPwdAttempts()).toString());
-			editRequest.setCurrentToken  (userProfile.getUptoken());
-			dateTime = editRequest.stringify(userProfile        .getUpLastLoginDate());
-			editRequest.setLastLogin     (dateTime[0]);
-			editRequest.setLastLoginTime (dateTime[1]);
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000A FIND"
-		        	+ "\n"
-		        	+ "   editRequest=" + editRequest);
-	        showResponseHeaders(response);
-			response.resetBuffer();
-			showResponseHeaders(response);
-			response.setContentType("application/json");
-			PrintWriter out = response.getWriter();
-			formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
-			out.print(formData);
-			out.flush();
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000F"
-		        	+ "\n"
-		        	+ "   formData=" + formData);
-			return;
-		}
-		
-		if (editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_ADD)) {
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000B ADD" 
-	        	+ "\n"
-	        	+ "editRequest=" + editRequest);
-			int rows = userProfileBean.persist(
-				editRequest  .getFindUser(),
-				editRequest  .getCurrentToken(),
-				editRequest  .getUpHomeMarket(),
-				editRequest  .getFirstName(), 
-				editRequest  .getLastName(), 
-				editRequest  .getAddress1(), 
-				editRequest  .getAddress2(), 
-				editRequest  .getCity(), 
-				editRequest  .getState(), 
-				editRequest  .getZip(), 
-				editRequest  .getZip4(), 
-				editRequest  .getPhone(), 
-				editRequest  .getFax(), 
-				editRequest  .getEmail(), 
-				editRequest  .getSsn(),
-				editRequest  .getBirthDate(),
-				editRequest  .getActiveYN(),
-				editRequest  .getPasswordExpirationDate(),
-				editRequest  .getProfileDisabledDate(),
-				editRequest  .getLastLoginDate(),
-				editRequest  .getPasswordAttempts()
-				);
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
-			editRequest.setMsgID(feedback[0]);
-			editRequest.setMsgDescription(feedback[1]);
-			showResponseHeaders(response);
-			response.resetBuffer();
-			showResponseHeaders(response);
-			response.setContentType("application/json");
-			PrintWriter out = response.getWriter();
-			formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
-			out.print(formData);
-			out.flush();
 			return;
 		}
 
 		if (editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_DELETE)) {
 	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000C DELETE");
-			userProfileBean.remove(editRequest.getFindUser());
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
-			editRequest.setMsgID(feedback[0]);
-			editRequest.setMsgDescription(feedback[1]);
-			showResponseHeaders(response);
-			response.resetBuffer();
-			showResponseHeaders(response);
-			response.setContentType("application/json");
-			PrintWriter out = response.getWriter();
-			formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
-			out.print(formData);
-			out.flush();
+	        try {
+				tx.begin();
+				userProfileBean.remove(editRequest.getFindUser());
+				feedback = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
+				editRequest.setMsgID(feedback[0]);
+				editRequest.setMsgDescription(feedback[1]);
+				showResponseHeaders(response);
+				response.resetBuffer();
+				showResponseHeaders(response);
+				response.setContentType("application/json");
+				PrintWriter out = response.getWriter();
+				formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
+				out.print(formData);
+				out.flush();
+				commit(tx);
+			} catch (NotSupportedException | SystemException e) {
+				e.printStackTrace();
+			}
 			return;
 		}
 			
@@ -292,40 +330,46 @@ public class EditUserProfileService extends HttpServlet {
 	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000D UPDATE"
 	        	+ "\n"
 	        	+ "   editRequest=" + editRequest);
-			int rows = userProfileBean.updateAll(
-				editRequest  .getFindUser(),
-				editRequest  .getCurrentToken(),
-				editRequest  .getUpHomeMarket(),
-				editRequest  .getFirstName(), 
-				editRequest  .getLastName(), 
-				editRequest  .getAddress1(), 
-				editRequest  .getAddress2(), 
-				editRequest  .getCity(), 
-				editRequest  .getState(), 
-				editRequest  .getZip(), 
-				editRequest  .getZip4(), 
-				editRequest  .getPhone(), 
-				editRequest  .getFax(), 
-				editRequest  .getEmail(), 
-				editRequest  .getSsn(),
-				editRequest  .getBirthDate(),
-				editRequest  .getActiveYN(),
-				editRequest  .getPasswordExpirationDate(),
-				editRequest  .getProfileDisabledDate(),
-				editRequest  .getLastLoginDate(),
-				editRequest  .getPasswordAttempts()
-				);
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
-			editRequest.setMsgID(feedback[0]);
-			editRequest.setMsgDescription(feedback[1]);
-			showResponseHeaders(response);
-			response.resetBuffer();
-			showResponseHeaders(response);
-			response.setContentType("application/json");
-			PrintWriter out = response.getWriter();
-			formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
-			out.print(formData);
-			out.flush();
+	        try {
+				tx.begin();
+				int rows = userProfileBean.updateAll(
+						editRequest  .getFindUser(),
+						editRequest  .getCurrentToken(),
+						editRequest  .getUpHomeMarket(),
+						editRequest  .getFirstName(), 
+						editRequest  .getLastName(), 
+						editRequest  .getAddress1(), 
+						editRequest  .getAddress2(), 
+						editRequest  .getCity(), 
+						editRequest  .getState(), 
+						editRequest  .getZip(), 
+						editRequest  .getZip4(), 
+						editRequest  .getPhone(), 
+						editRequest  .getFax(), 
+						editRequest  .getEmail(), 
+						editRequest  .getSsn(),
+						editRequest  .getBirthDate(),
+						editRequest  .getActiveYN(),
+						editRequest  .getPasswordExpirationDate(),
+						editRequest  .getProfileDisabledDate(),
+						editRequest  .getLastLoginDate(),
+						editRequest  .getPasswordAttempts()
+						);
+				feedback = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
+				editRequest.setMsgID(feedback[0]);
+				editRequest.setMsgDescription(feedback[1]);
+				showResponseHeaders(response);
+				response.resetBuffer();
+				showResponseHeaders(response);
+				response.setContentType("application/json");
+				PrintWriter out = response.getWriter();
+				formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
+				out.print(formData);
+				out.flush();
+				commit(tx);
+			} catch (NotSupportedException | SystemException e) {
+				e.printStackTrace();
+			}
 			return;
 		}
 		
