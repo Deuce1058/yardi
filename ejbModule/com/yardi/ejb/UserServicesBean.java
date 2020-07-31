@@ -1,7 +1,5 @@
 package com.yardi.ejb;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import javax.annotation.Resource;
@@ -12,18 +10,12 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.transaction.UserTransaction;
 
-import com.yardi.ejb.Unique_Tokens;
-import com.yardi.ejb.UniqueTokens;
-import com.yardi.ejb.UserProfile;
 import com.yardi.ejb.UserServices;
 import com.yardi.userServices.InitialPage;
 import com.yardi.userServices.LoginRequest;
 import com.yardi.userServices.LoginResponse;
 import com.yardi.userServices.PasswordAuthentication;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yardi.ejb.PasswordPolicy;
-import com.yardi.ejb.Pwd_Policy;
-import com.yardi.ejb.User_Profile;
 
 
 /**
@@ -511,6 +503,7 @@ public class UserServicesBean implements UserServices {
 	@Override
 	@Remove
 	public void remove() {
+		System.out.println("com.yardi.ejb.UserServicesBean remove() 0002 ");
 		userGroupsBean.removeBean();
 		userProfileBean.removeBean();		
 	}

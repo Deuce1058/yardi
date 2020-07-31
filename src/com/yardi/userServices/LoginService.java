@@ -196,6 +196,9 @@ public class LoginService extends HttpServlet {
 			out.print(formData);
 			out.flush();
 	    	//debug xyzzy
+			userSvcBean.remove();
+			HttpSession session = request.getSession();
+			session.setAttribute("userSvcBean", null);
 			System.out.println("com.yardi.userServices LoginService doGet() 0007 "
 					+ "\n "
 					+ "  loginRequest = " + loginRequest
