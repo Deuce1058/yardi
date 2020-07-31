@@ -77,8 +77,6 @@ public class UserProfileBean implements UserProfile {
 				+ em
 				);
 		//debug
-		em.flush();
-		em.clear();
     	return userProfile;
     }
     
@@ -105,8 +103,6 @@ public class UserProfileBean implements UserProfile {
 				+ em
 				);
 		//debug
-		em.flush();
-		em.clear();
     	return rows;
     }
     
@@ -137,8 +133,6 @@ public class UserProfileBean implements UserProfile {
 				+ em
 				);
 		//debug
-		em.flush();
-		em.clear();
     	return rows;
     }
     
@@ -178,8 +172,6 @@ public class UserProfileBean implements UserProfile {
 				+ em
 				);
 		//debug
-		em.flush();
-		em.clear();
     	return rows;
     }
     
@@ -214,8 +206,6 @@ public class UserProfileBean implements UserProfile {
 				+ rows
 				);
 		//debug
-		em.flush();
-		em.clear();
         return rows;
     }
 
