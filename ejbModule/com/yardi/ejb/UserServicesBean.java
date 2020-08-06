@@ -11,6 +11,7 @@ import javax.ejb.TransactionManagementType;
 import javax.transaction.UserTransaction;
 
 import com.yardi.ejb.UserServices;
+import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.userServices.InitialPage;
 import com.yardi.userServices.LoginRequest;
 import com.yardi.userServices.LoginResponse;

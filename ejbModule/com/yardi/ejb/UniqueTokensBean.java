@@ -11,6 +11,8 @@ import javax.persistence.Query;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
+import com.yardi.ejb.model.Pwd_Policy;
+
 /**
  * Session Bean implementation class UniqueTokensBean
  */

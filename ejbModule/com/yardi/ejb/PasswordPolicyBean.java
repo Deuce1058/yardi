@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.userServices.PasswordAuthentication;
 import com.yardi.userServices.PasswordStatistics;
 
@@ -275,10 +276,12 @@ public class PasswordPolicyBean implements PasswordPolicy {
 			.setParameter("rrn", rrn)
 			.getSingleResult();
 		if (!(pwdPolicy==null)) {
-			pwdPolicy.setPpUpperRqd();
-			pwdPolicy.setPpLowerRqd();
-			pwdPolicy.setPpNumberRqd();
-			pwdPolicy.setPpSpecialRqd();
+			pwdPolicy.setPp_upper_rqd(pwdPolicy.getPp_upper_rqd());
+			pwdPolicy.setPp_lower_rqd(pwdPolicy.getPp_lower_rqd());
+			pwdPolicy.setPp_number_rqd(pwdPolicy.getPp_number_rqd());
+			pwdPolicy.setPp_special_rqd(pwdPolicy.getPp_special_rqd());
+			pwdPolicy.setPp_cant_contain_id(pwdPolicy.getPp_cant_contain_id());
+			pwdPolicy.setPp_cant_contain_pwd(pwdPolicy.getPp_cant_contain_pwd());
 		}
 		//debug
 		System.out.println("com.yardi.ejb.PasswordPolicyBean find() 0000 "
