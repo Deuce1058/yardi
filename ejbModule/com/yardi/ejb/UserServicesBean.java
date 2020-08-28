@@ -228,7 +228,7 @@ public class UserServicesBean implements UserServices {
 						);
 			}
 			//debug				
-			if (passwordPolicyBean.enforce(new String(newPassword), userTokens) == false ) {
+			if (passwordPolicyBean.enforce(new String(newPassword), userName, userProfile.getUptoken(), userTokens) == false ) {
 				//apply password policy to the new password
 				//debug
 				System.out.println("com.yardi.ejb UserServicesBean chgPwd() 0010 "

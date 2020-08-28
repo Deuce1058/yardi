@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
@@ -55,7 +56,7 @@ public class PasswordPolicyBean implements PasswordPolicy {
 	 * @param password
 	 * @return Boolean
 	 */
-	public boolean enforce(final String password, final Vector<Unique_Tokens> userTokens) {
+	public boolean enforce(final String password, final String userName, final String userToken, final Vector<Unique_Tokens> userTokens) {
 		/* implement these new rules:
 		 *   Minimum length
 		 *   Max length
@@ -66,6 +67,21 @@ public class PasswordPolicyBean implements PasswordPolicy {
 		 *   No fewer than N special
 		 *   Can not contain the user name (in any case)
 		 */
+		//debug
+		System.out.println("com.yardi.ejb.PasswordPolicyBean enforce() 0015 "
+				+ "\n "
+				+ "   password="
+				+ password
+				+ "\n "
+				+ "   userName="
+				+ userName
+				+ "\n "
+				+ "   userToken="
+				+ "\n "
+				+ "   userTokens="
+				+ userTokens.toString()
+				);
+		//debug
 		boolean hasUpper = false;
 		boolean hasLower = false;
 		boolean hasNumber = false;
@@ -195,9 +211,54 @@ public class PasswordPolicyBean implements PasswordPolicy {
 			}
 
 			if (pwdStatistics.getPwdLength() < pwdPolicy.getPpPwdMinLen()) {
-				feedback = com.yardi.rentSurvey.YardiConstants.YRD0005;
+				String [] s = com.yardi.rentSurvey.YardiConstants.YRD0005.split("%n");
+				feedback = s[0] + pwdPolicy.getPpPwdMinLen() + s[1];
 				return false;
 			}
+
+			if (!(pwdPolicy.getPpMaxPwdLen()==null) && pwdStatistics.getPwdLength() > pwdPolicy.getPpMaxPwdLen()) {
+				String [] s = com.yardi.rentSurvey.YardiConstants.YRD0015.split("%n");
+				feedback = s[0] + pwdPolicy.getPpMaxPwdLen() + s[1];
+				return false;
+			}
+			
+			if (!(pwdPolicy.getPpMaxRepeatChar()==null) && pwdStatistics.getPwdNbrRepeatedChar() > pwdPolicy.getPpMaxRepeatChar()) {
+				String [] s = com.yardi.rentSurvey.YardiConstants.YRD0016.split("%n");
+				feedback = s[0] + pwdPolicy.getPpMaxRepeatChar() + s[1];
+				return false;
+			}			
+			
+			if (!(pwdPolicy.getPpNbrDigits()==null) && pwdStatistics.getPwdNbrNbr() < pwdPolicy.getPpNbrDigits()) {
+				String [] s = com.yardi.rentSurvey.YardiConstants.YRD0017.split("%n");
+				feedback = s[0] + pwdPolicy.getPpNbrDigits() + s[1];
+				return false;
+			}
+			
+			if (!(pwdPolicy.getPpNbrUpper()==null) && pwdStatistics.getPwdNbrUpper() < pwdPolicy.getPpNbrUpper()) {
+				String [] s = com.yardi.rentSurvey.YardiConstants.YRD0018.split("%n");
+				feedback = s[0] + pwdPolicy.getPpNbrUpper() + s[1];
+				return false;
+			}
+			
+			if (!(pwdPolicy.getPpNbrLower()==null) && pwdStatistics.getPwdNbrLower() < pwdPolicy.getPpNbrLower()) {
+				String [] s = com.yardi.rentSurvey.YardiConstants.YRD0019.split("%n");
+				feedback = s[0] + pwdPolicy.getPpNbrLower() + s[1];
+				return false;
+			}
+			
+			if (!(pwdPolicy.getPpNbrSpecial()==null) && pwdStatistics.getPwdNbrSpecial() < pwdPolicy.getPpNbrSpecial()) {
+				String [] s = com.yardi.rentSurvey.YardiConstants.YRD001A.split("%n");
+				feedback = s[0] + pwdPolicy.getPpNbrSpecial() + s[1];
+				return false;
+			}
+			
+			if (pwdPolicy.isPpCantContainId() && passwordConatinsUserName(userName, password)) {
+				return false;
+			}
+			
+			if (pwdPolicy.isPpCantContainPwd() && passwordContainsCurrent(userName, password, userToken)) {
+				return false;
+			}			
 		}
 		
 		short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
@@ -255,7 +316,7 @@ public class PasswordPolicyBean implements PasswordPolicy {
 					return false;
 				}
 				//debug
-				System.out.println("com.yardi.ejb.PasswordPolicyBean.enforce() 000B"
+				System.out.println("com.yardi.ejb.PasswordPolicyBean enforce() 000B"
 					+ "\n"
 					+ "   i="
 					+ i  
@@ -272,9 +333,14 @@ public class PasswordPolicyBean implements PasswordPolicy {
 			  "SELECT p from Pwd_Policy p "
 			+ "WHERE p.ppRrn = :rrn ",
 			Pwd_Policy.class);
-		pwdPolicy = qry
-			.setParameter("rrn", rrn)
-			.getSingleResult();
+		try {
+			pwdPolicy = qry
+				.setParameter("rrn", rrn)
+				.getSingleResult();
+		} catch (NoResultException e) {
+			System.out.println("com.yardi.ejb.PasswordPolicyBean find() exception 0016 ");
+			e.printStackTrace();
+		}
 		if (!(pwdPolicy==null)) {
 			pwdPolicy.setPp_upper_rqd(pwdPolicy.getPp_upper_rqd());
 			pwdPolicy.setPp_lower_rqd(pwdPolicy.getPp_lower_rqd());
@@ -300,18 +366,18 @@ public class PasswordPolicyBean implements PasswordPolicy {
 	
     public Pwd_Policy getPwdPolicy() {
 		//debug
-		System.out.println("com.yardi.ejb.PasswordPolicyBean.getPwdPolicy() 000C ");
+		System.out.println("com.yardi.ejb.PasswordPolicyBean getPwdPolicy() 000C ");
 		//debug
 		
 		if (pwdPolicy == null) {
 			//debug
-			System.out.println("com.yardi.ejb.PasswordPolicyBean.getPwdPolicy() 0014 ");
+			System.out.println("com.yardi.ejb.PasswordPolicyBean getPwdPolicy() 0014 ");
 			//debug
 			setPwdPolicy();
 		}
 		
 		//debug
-		System.out.println("com.yardi.ejb.PasswordPolicyBean.getPwdPolicy() 000F "
+		System.out.println("com.yardi.ejb.PasswordPolicyBean getPwdPolicy() 000F "
 			+ "\n"
 			+ "   pwdPolicy="
 			+ pwdPolicy);
@@ -343,7 +409,7 @@ public class PasswordPolicyBean implements PasswordPolicy {
 				return true;
 			}
 			
-			System.out.println("com.yardi.ejb.PasswordPolicyBean.passwordConatinsUserName() 0013 "
+			System.out.println("com.yardi.ejb.PasswordPolicyBean passwordConatinsUserName() 0013 "
 					+ "\n   "
 					+ "   substr="
 					+ substr
@@ -379,7 +445,7 @@ public class PasswordPolicyBean implements PasswordPolicy {
 				return true;
 			}
 			
-			System.out.println("com.yardi.ejb.PasswordPolicyBean.passwordContainsCurrent() 0011"
+			System.out.println("com.yardi.ejb.PasswordPolicyBean passwordContainsCurrent() 0011 "
 					+ "\n   "
 					+ "   substr="
 					+ substr
@@ -391,24 +457,24 @@ public class PasswordPolicyBean implements PasswordPolicy {
 	
 	@PostConstruct
     private void postConstructCallback() {
-    	System.out.println("com.yardi.ejb.PasswordPolicyBean postConstructCallback()");
+    	System.out.println("com.yardi.ejb.PasswordPolicyBean postConstructCallback() ");
     	getPwdPolicy();
     }
 	
 	private void setPwdPolicy() {
 		//debug
-		System.out.println("com.yardi.ejb.PasswordPolicyBean.setPwdPolicy() 0010 ");
+		System.out.println("com.yardi.ejb.PasswordPolicyBean setPwdPolicy() 0010 ");
 		//debug
 		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
 		pwdPolicy = find(1L);
 		
 		if (pwdPolicy == null) {
-			System.out.println("com.yardi.ejb.PasswordPolicyBean.setPwdPolicy() 000E ");
+			System.out.println("com.yardi.ejb.PasswordPolicyBean setPwdPolicy() 000E ");
 			feedback = com.yardi.rentSurvey.YardiConstants.YRD000B;
 			return;
 		}
 		//debug
-		System.out.println("com.yardi.ejb.PasswordPolicyBean.setPwdPolicy() 000D "
+		System.out.println("com.yardi.ejb.PasswordPolicyBean setPwdPolicy() 000D "
 			+ "\n"
 			+ "   pwdPolicy="
 			+ pwdPolicy.toString()

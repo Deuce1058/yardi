@@ -8,7 +8,7 @@ public class YardiConstants {
 	public static final String YRD0002 = "YRD0002=Password expired";
 	public static final String YRD0003 = "YRD0003=This account is disabled";
 	public static final String YRD0004 = "YRD0004=This account is not active";
-	public static final String YRD0005 = "YRD0005=Password is too short";
+	public static final String YRD0005 = "YRD0005=Password must be at least %n characters long";
 	public static final String YRD0006 = "YRD0006=Password must contain at least 1 upper case";
 	public static final String YRD0007 = "YRD0007=Password must contain at least 1 lower case";
 	public static final String YRD0008 = "YRD0008=Password must contain at least 1 number";
@@ -25,10 +25,19 @@ public class YardiConstants {
 	public static final String YRD0013 = "YRD0013=Invalid session. The ID returned from the request is not the same ID stored in UserServicesBean";
 	public static final String YRD0014 = "YRD0014=Remove stateful beans. User requested a new page and session resorces must be released. Set HttpSession attributes"
 			                             + " corresponding to stateful beans to null";
+	public static final String YRD0015 = "YRD0015=Password must not be longer than %n characters";
+	public static final String YRD0016 = "YRD0016=Password contains more than %n repeated characters";
+	public static final String YRD0017 = "YRD0017=Password must contain at least %n numbers";
+	public static final String YRD0018 = "YRD0018=Password must contain at least %n upper case characters";
+	public static final String YRD0019 = "YRD0019=Password must contain at least %n lower case characters";
+	public static final String YRD001A = "YRD001A=Password must contain at least %n special characters";
 	public static final Pattern PATTERN_UPPER    = Pattern.compile(".*?\\p{Lu}");
 	public static final Pattern PATTERN_LOWER    = Pattern.compile(".*?[\\p{L}&&[^\\p{Lu}]]");
 	public static final Pattern PATTERN_NUMBER   = Pattern.compile(".*\\d.*");
 	public static final Pattern PATTERN_SPECIAL1 = Pattern.compile(".*[~`!@#$%^&*=()--+_{}\\[\\]\\\\|;:'\"<>,./?].*");
+	public static final String EDIT_PASSWORD_POLICY_REQUEST_ACTION_FIND = "find";
+	public static final String EDIT_PASSWORD_POLICY_REQUEST_ACTION_ADD = "add";
+	public static final String EDIT_PASSWORD_POLICY_REQUEST_ACTION_UPDATE = "update";
 	public static final String EDIT_USER_PROFILE_REQUEST_ACTION_FIND = "find";
 	public static final String EDIT_USER_PROFILE_REQUEST_ACTION_ADD = "add";
 	public static final String EDIT_USER_PROFILE_REQUEST_ACTION_UPDATE = "update";
