@@ -640,6 +640,13 @@
 		});
 		$('.newToken').each(function(k, v) {
 			if ($(this).find('.userToken1').val() !== '' && $(this).find('.tokenDate').val() !=='') {
+        var uniqueToken = {
+													up1UserName:	$('#username').val(),
+  												up1Token:			$(this).find('.userToken1').val(),
+  												up1DateAdded:	$(this).find('.tokenDate').val(),
+  												up1Rrn:				$(this).find('.tokenRRN').text(),
+													deleteToken:	$(this).find('.dlt').is(':checked')
+												};
 				uniqueTokens.push(uniqueToken);
 				console.log('doUpdate2: k=' + k + ' | v=' + v);
 			}
