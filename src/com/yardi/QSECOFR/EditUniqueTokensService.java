@@ -319,10 +319,43 @@ public class EditUniqueTokensService extends HttpServlet {
 	
 	private void updateTokens(UniqueTokens uniqueTokenBean, Vector<Unique_Tokens> uniqueTokens, Vector<EditUniqueTokensRequest> updatedTokens) {
 		//debug
-		System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 0018 ");
+		System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 0018 \n   EditUniqueTokensRequest");
+		
+		for (EditUniqueTokensRequest r : updatedTokens) {
+			System.out.println("   " + r);
+		}
+		
+		System.out.println("   uniqueTokens");
+		
+		for (Unique_Tokens t : uniqueTokens) {
+			System.out.println("   " + t);
+		}
 		//debug
 		for (EditUniqueTokensRequest r : updatedTokens) {
+			//debug
+			System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 0023 "
+					+ "\n "
+					+ r
+					);
+			//debug
 			for (int i=0; i < uniqueTokens.size(); i++) {
+				//debug
+				System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 0024 "
+						+ "\n "
+						+ "   Long.parseLong(r.getUp1Rrn()="
+						+ Long.parseLong(r.getUp1Rrn())
+						+ "\n "
+						+ "  uniqueTokens.get("
+						+ i
+						+ ").getUp1Rrn()="
+						+ uniqueTokens.get(i).getUp1Rrn()
+						+ "\n "
+						+ "   uniqueTokens.get("
+						+ i
+						+ ").getUp1Token()="
+						+ uniqueTokens.get(i).getUp1Token()
+						);
+				//debug
 				String [] s = r.getUp1DateAdded().split("-");
 				Calendar c = Calendar.getInstance();
 				c.set(Integer.parseInt(s[2]),
@@ -331,7 +364,7 @@ public class EditUniqueTokensService extends HttpServlet {
 					  0, 0, 0
 					 );	
 				if ((Long.parseLong(r.getUp1Rrn()) > 0L) && 
-					(Long.parseLong(r.getUp1Rrn()) == uniqueTokens.get(i).getUp1Rrn()) ) {
+					(Long.parseLong(r.getUp1Rrn()) == uniqueTokens.get(i).getUp1Rrn())) {
 					//debug
 					System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 0019 ");
 					//debug
@@ -357,27 +390,27 @@ public class EditUniqueTokensService extends HttpServlet {
 								new java.util.Date(c.getTimeInMillis()));
 					}
 				}
-				if (Long.parseLong(r.getUp1Rrn()) < 0L) {
+			}			
+			if (Long.parseLong(r.getUp1Rrn()) < 0L) {
+				//debug
+				System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 0021 ");
+				//debug
+				if	(!(r.getUp1Token().isEmpty()) && 
+					 !(r.getUp1DateAdded().isEmpty()) 
+					 
+					) {
+					String [] s = r.getUp1DateAdded().split("-");
+					Calendar c = Calendar.getInstance();
+					c.set(Integer.parseInt(s[2]),
+						  Integer.parseInt(s[1]) - 1,
+						  Integer.parseInt(s[0]),
+						  0, 0, 0
+						 );	
 					//debug
-					System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 0021 ");
+					System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 0022 ");
 					//debug
-					if	(!(r.getUp1Token().isEmpty()) && 
-						 !(r.getUp1DateAdded().isEmpty()) 
-						 
-						) {
-						s = r.getUp1DateAdded().split("-");
-						c = Calendar.getInstance();
-						c.set(Integer.parseInt(s[2]),
-							  Integer.parseInt(s[1]) - 1,
-							  Integer.parseInt(s[0]),
-							  0, 0, 0
-							 );	
-						//debug
-						System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 0022 ");
-						//debug
-						uniqueTokenBean.persist(r.getUp1UserName(), r.getUp1Token(), c.getTime());
-					} 
-				}
+					uniqueTokenBean.persist(r.getUp1UserName(), r.getUp1Token(), c.getTime());
+				} 
 			}
 		}
 	}
