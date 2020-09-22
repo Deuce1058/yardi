@@ -19,7 +19,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -120,47 +119,22 @@ public class EditUniqueTokensService extends HttpServlet {
 		EditUniqueTokensRequest editRequest;
 		Vector<EditUniqueTokensRequest> updatedTokens = new Vector<EditUniqueTokensRequest>();
 		Vector<Unique_Tokens> uniqueTokens = new Vector<Unique_Tokens>();
-		HttpSession session = request.getSession(false);
 		InitialContext ctx;
-		UserProfile userProfileBean = (UserProfile)session.getAttribute("userProfileBean");
-		UniqueTokens uniqueTokenBean = (UniqueTokens)session.getAttribute("uniqueTokenBean");
+		UserProfile userProfileBean = null;
+		UniqueTokens uniqueTokenBean = null;
 		
-		if (userProfileBean == null) {
-			try {
-				ctx = new InitialContext();
-				userProfileBean = (UserProfile)ctx.lookup("java:global/yardiWeb/UserProfileBean");
-				//debug
-				System.out.println("com.yardi.QSECOFR.EditUniqueTokensService doGet() 0016");
-				//debug
-			} catch (NamingException e) {
-				//debug
-				System.out.println("com.yardi.QSECOFR.EditUniqueTokensService doGet() 0017");
-				//debug
-				e.printStackTrace();
-			}
-			session.setAttribute("userProfileBean", userProfileBean);
-			//debug
-			System.out.println("com.yardi.QSECOFR.EditUniqueTokensService doGet() 001B");
-			//debug
-		}
-		
-		if (uniqueTokenBean == null) {
-			try {
-				ctx = new InitialContext();
-				uniqueTokenBean = (UniqueTokens)ctx.lookup("java:global/yardiWeb/UniqueTokensBean");
-				//debug
-				System.out.println("com.yardi.QSECOFR.EditUniqueTokensService doGet() 0018");
-				//debug
-			} catch (NamingException e) {
-				e.printStackTrace();
-				//debug
-				System.out.println("com.yardi.QSECOFR.EditUniqueTokensService doGet() 0019");
-				//debug
-			}
-			session.setAttribute("uniqueTokenBean", uniqueTokenBean);
-			//debug
-			System.out.println("com.yardi.QSECOFR.EditUniqueTokensService doGet() 001A");
-			//debug
+		try {
+			ctx = new InitialContext();
+			userProfileBean = (UserProfile) ctx.lookup("java:global/yardiWeb/UserProfileBean");
+			uniqueTokenBean = (UniqueTokens)ctx.lookup("java:global/yardiWeb/UniqueTokensBean");
+			// debug
+			System.out.println("com.yardi.QSECOFR.EditUniqueTokensService doGet() 0016");
+			// debug
+		} catch (NamingException e) {
+			// debug
+			System.out.println("com.yardi.QSECOFR.EditUniqueTokensService doGet() 0017");
+			// debug
+			e.printStackTrace();
 		}
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
@@ -344,6 +318,9 @@ public class EditUniqueTokensService extends HttpServlet {
 	}	
 	
 	private void updateTokens(UniqueTokens uniqueTokenBean, Vector<Unique_Tokens> uniqueTokens, Vector<EditUniqueTokensRequest> updatedTokens) {
+		//debug
+		System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 0018 ");
+		//debug
 		for (EditUniqueTokensRequest r : updatedTokens) {
 			for (int i=0; i < uniqueTokens.size(); i++) {
 				String [] s = r.getUp1DateAdded().split("-");
@@ -355,20 +332,35 @@ public class EditUniqueTokensService extends HttpServlet {
 					 );	
 				if ((Long.parseLong(r.getUp1Rrn()) > 0L) && 
 					(Long.parseLong(r.getUp1Rrn()) == uniqueTokens.get(i).getUp1Rrn()) ) {
+					//debug
+					System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 0019 ");
+					//debug
 					if (Boolean.valueOf(r.getDeleteToken())) {
+						//debug
+						System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 001A ");
+						//debug
 						uniqueTokenBean.remove(uniqueTokens.get(i).getUp1Rrn());
 						continue;
 					}
 					if (! (r.getUp1Token().equals(uniqueTokens.get(i).getUp1Token()))) {
+						//debug
+						System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 001B ");
+						//debug
 						uniqueTokenBean.updateToken(uniqueTokens.get(i).getUp1Rrn(), 
 								r.getUp1Token());
 					}
 					if (c.getTimeInMillis() != r.getTokenAddedDate().getTime()) {
+						//debug
+						System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 0020 ");
+						//debug
 						uniqueTokenBean.updateDateAdded(uniqueTokens.get(i).getUp1Rrn(), 
 								new java.util.Date(c.getTimeInMillis()));
 					}
 				}
 				if (Long.parseLong(r.getUp1Rrn()) < 0L) {
+					//debug
+					System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 0021 ");
+					//debug
 					if	(!(r.getUp1Token().isEmpty()) && 
 						 !(r.getUp1DateAdded().isEmpty()) 
 						 
@@ -380,6 +372,9 @@ public class EditUniqueTokensService extends HttpServlet {
 							  Integer.parseInt(s[0]),
 							  0, 0, 0
 							 );	
+						//debug
+						System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 0022 ");
+						//debug
 						uniqueTokenBean.persist(r.getUp1UserName(), r.getUp1Token(), c.getTime());
 					} 
 				}
