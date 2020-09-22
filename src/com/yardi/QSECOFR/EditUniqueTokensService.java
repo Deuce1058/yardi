@@ -356,7 +356,7 @@ public class EditUniqueTokensService extends HttpServlet {
 						+ uniqueTokens.get(i).getUp1Token()
 						);
 				//debug
-				String [] s = r.getUp1DateAdded().split("-");
+				String [] s = r.getUp1DateAdded().split("/");
 				Calendar c = Calendar.getInstance();
 				c.set(Integer.parseInt(s[2]),
 					  Integer.parseInt(s[1]) - 1,
@@ -399,7 +399,7 @@ public class EditUniqueTokensService extends HttpServlet {
 					 !(r.getUp1DateAdded().isEmpty()) 
 					 
 					) {
-					String [] s = r.getUp1DateAdded().split("-");
+					String [] s = r.getUp1DateAdded().split("/");
 					Calendar c = Calendar.getInstance();
 					c.set(Integer.parseInt(s[2]),
 						  Integer.parseInt(s[1]) - 1,
