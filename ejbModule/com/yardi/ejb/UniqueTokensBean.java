@@ -29,7 +29,7 @@ public class UniqueTokensBean implements UniqueTokens {
 	@EJB PasswordPolicy passwordPolicyBean;
 
     public UniqueTokensBean() {
-    	System.out.println("com.yardi.ejb.UniqueTokensSessionBean UniqueTokensBean() 0015 ");
+    	System.out.println("com.yardi.ejb.UniqueTokensBean UniqueTokensBean() 0015 ");
     }
 
     public Unique_Tokens find(long rrn) {
@@ -44,11 +44,11 @@ public class UniqueTokensBean implements UniqueTokens {
 				.setParameter("rrn", rrn)
 				.getSingleResult();
 		} catch (Exception e) {
-			System.out.println("com.yardi.ejb.UniqueTokenSessionBean find() 0004 exception ");
+			System.out.println("com.yardi.ejb.UniqueTokensBean find() 0004 exception ");
 			e.printStackTrace();
 		}
 		//debug
-		System.out.println("com.yardi.ejb.UniqueTokenSessionBean find() 0001 "
+		System.out.println("com.yardi.ejb.UniqueTokensBean find() 0001 "
 			+ "\n "
 			+ "  rrn=" + rrn
 			+ "\n "
@@ -69,12 +69,12 @@ public class UniqueTokensBean implements UniqueTokens {
 			.setParameter("userName", userName)
 			.getResultList();
 		//debug
-		System.out.println("com.yardi.ejb.UniqueTokenSessionBean findTokens() 0000 "
+		System.out.println("com.yardi.ejb.UniqueTokensBean findTokens() 0000 "
 				+ "\n "
 				+ "  userName=" + userName
 				+ "\n "
 				);
-		System.out.println("com.yardi.ejb.UniqueTokenSessionBean findTokens() 0005 ");
+		System.out.println("com.yardi.ejb.UniqueTokensBean findTokens() 0005 ");
 		for (Unique_Tokens t : userTokens) {
 			System.out.println(
 				  "\n "
@@ -109,7 +109,7 @@ public class UniqueTokensBean implements UniqueTokens {
 	} 
     
     public int persist(String userName, String token, java.util.Date dateAdded) {
-		System.out.println("com.yardi.ejb.UniqueTokenSessionBean persist() 0011 ");
+		System.out.println("com.yardi.ejb.UniqueTokensBean persist() 0011 ");
     	Query qry = em.createNativeQuery("INSERT INTO DB2ADMIN.UNIQUE_TOKENS "
     		+ "(UP1_USER_NAME, UP1_TOKEN, UP1_DATE_ADDED) "
     		+ "VALUES(?, ?, ?)");
@@ -119,7 +119,7 @@ public class UniqueTokensBean implements UniqueTokens {
     		.setParameter(3, dateAdded, TemporalType.DATE)
     		.executeUpdate();
 		//debug
-		System.out.println("com.yardi.ejb.UniqueTokenSessionBean persist() 0002 "
+		System.out.println("com.yardi.ejb.UniqueTokensBean persist() 0002 "
 			+ "\n "
 			+ "  userName=" + userName
 			+ "\n "
@@ -135,7 +135,7 @@ public class UniqueTokensBean implements UniqueTokens {
 
     @PostConstruct
     private void postConstructCallback() {
-    	System.out.println("com.yardi.ejb.UniqueTokensSessionBean postConstructCallback() 0016 ");
+    	System.out.println("com.yardi.ejb.UniqueTokensBean postConstructCallback() 0016 ");
     	getPwdPolicy();
     }
 
@@ -146,7 +146,7 @@ public class UniqueTokensBean implements UniqueTokens {
     		.setParameter("rrn", rrn)
     		.executeUpdate();
 		//debug
-		System.out.println("com.yardi.ejb.UniqueTokenSessionBean remove() 0003 "
+		System.out.println("com.yardi.ejb.UniqueTokensBean remove() 0003 "
 			+ "\n "
 			+ "  rrn=" + rrn
 			+ "\n "
@@ -171,12 +171,12 @@ public class UniqueTokensBean implements UniqueTokens {
 		short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
 		
 		if (pwdPolicy==null) {
-			System.out.println("com.yardi.ejb.UniqueTokensSessionBean removeExtraTokens() passwordPolicy==null 000C ");
+			System.out.println("com.yardi.ejb.UniqueTokensBean removeExtraTokens() passwordPolicy==null 000C ");
 		}
 		
 		//debug
 		if (!(userTokens==null)) {
-			System.out.println("com.yardi.ejb.UniqueTokensSessionBean removeExtraTokens() 0006 "
+			System.out.println("com.yardi.ejb.UniqueTokensBean removeExtraTokens() 0006 "
 					+ "\n"
 					+ "   Vector<Unique_Tokens>="
 					+ userTokens
@@ -189,7 +189,7 @@ public class UniqueTokensBean implements UniqueTokens {
 			
 			if (!(userTokens == null)) { // do they have any stored tokens?
 				//debug
-				System.out.println("com.yardi.ejb.UniqueTokensSessionBean removeExtraTokens() 0007 ");
+				System.out.println("com.yardi.ejb.UniqueTokensBean removeExtraTokens() 0007 ");
 				for (Unique_Tokens u : userTokens) {
 					System.out.println(
 						  "\n"
@@ -201,7 +201,7 @@ public class UniqueTokensBean implements UniqueTokens {
 				nbrOfStoredTokens = userTokens.size();
 				for(int i=maxUniqueTokens, tokenToRemove=maxUniqueTokens; i<nbrOfStoredTokens; i++) {
 					//debug
-					System.out.println("com.yardi.ejb.UniqueTokensSessionBean removeExtraTokens() 0008 "
+					System.out.println("com.yardi.ejb.UniqueTokensBean removeExtraTokens() 0008 "
 							+ "\n "
 							+ "   uniqueToken="
 							+ userTokens.get(tokenToRemove).toString()
@@ -236,7 +236,7 @@ public class UniqueTokensBean implements UniqueTokens {
 					// The vector elements after the one that was removed move up and occupy the position that was removed
 				}
 				//debug
-				System.out.println("com.yardi.ejb.UniqueTokensSessionBean removeExtraTokens() 0009 "
+				System.out.println("com.yardi.ejb.UniqueTokensBean removeExtraTokens() 0009 "
 						+ "\n"
 						+ "   Vector<Unique_Tokens>="
 						+ userTokens
@@ -257,19 +257,19 @@ public class UniqueTokensBean implements UniqueTokens {
 	 */
 	public void removeOldestToken(Vector<Unique_Tokens> userTokens) {
 		//debug
-		System.out.println("com.yardi.ejb.UniqueTokensSessionBean removeOldestToken() 0014 ");
+		System.out.println("com.yardi.ejb.UniqueTokensBean removeOldestToken() 0014 ");
 		//debug
     	//getPwdPolicy();
 		Unique_Tokens uniqueToken;
 		short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
 		
 		if (pwdPolicy==null) {
-			System.out.println("com.yardi.ejb.UniqueTokensSessionBean removeOldestToken() passwordPolicy==null 000D ");
+			System.out.println("com.yardi.ejb.UniqueTokensBean removeOldestToken() passwordPolicy==null 000D ");
 		}
 		
 		//debug
 		if (!(userTokens==null)) {
-			System.out.println("com.yardi.ejb.UniqueTokensSessionBean removeOldestToken() 000A "
+			System.out.println("com.yardi.ejb.UniqueTokensBean removeOldestToken() 000A "
 					+ "\n"
 					+ "   maxUniqueTokens="
 					+ maxUniqueTokens
@@ -295,7 +295,7 @@ public class UniqueTokensBean implements UniqueTokens {
 			 *  then remove oldest token 
 			 */
 			//debug
-			System.out.println("com.yardi.ejb.UniqueTokensSessionBean removeOldestToken() 0013 ");
+			System.out.println("com.yardi.ejb.UniqueTokensBean removeOldestToken() 0013 ");
 			//debug
 			int tokenToRemove = maxUniqueTokens - 1;
 			uniqueToken = userTokens.get(tokenToRemove);
@@ -303,7 +303,7 @@ public class UniqueTokensBean implements UniqueTokens {
 			remove(rrn); // Delete the extra row. A new row will be inserted 
 			userTokens.remove(tokenToRemove);
 			//debug
-			System.out.println("com.yardi.ejb.UniqueTokensSessionBean removeOldestToken() 000B "
+			System.out.println("com.yardi.ejb.UniqueTokensBean removeOldestToken() 000B "
 					+ "\n"
 					+ "   tokenToRemove="
 					+ tokenToRemove
@@ -347,6 +347,9 @@ public class UniqueTokensBean implements UniqueTokens {
 	}
     
     public int updateDateAdded(Long rrn, java.util.Date addDate) {
+		//debug
+		System.out.println("com.yardi.ejb.UniqueTokensBean updateDateAdded() 0020 ");
+		//debug
         Query qry = em.createQuery("UPDATE Unique_Tokens " 
         + "SET up1DateAdded = :addDate "
         + "WHERE up1rrn = :rrn");
@@ -358,6 +361,9 @@ public class UniqueTokensBean implements UniqueTokens {
     }
     
 	public int updateToken(Long rrn, String token) {
+		//debug
+		System.out.println("com.yardi.ejb.UniqueTokensBean updateToken() 0019 ");
+		//debug
         Query qry = em.createQuery("UPDATE Unique_Tokens " 
         + "SET up1token = :token "
         + "WHERE up1rrn = :rrn");
