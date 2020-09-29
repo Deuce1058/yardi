@@ -359,8 +359,8 @@ public class EditUniqueTokensService extends HttpServlet {
 				String [] s = r.getUp1DateAdded().split("/");
 				Calendar c = Calendar.getInstance();
 				c.set(Integer.parseInt(s[2]),
-					  Integer.parseInt(s[1]) - 1,
-					  Integer.parseInt(s[0]),
+					  Integer.parseInt(s[0]) - 1,
+					  Integer.parseInt(s[1]),
 					  0, 0, 0
 					 );	
 				if ((Long.parseLong(r.getUp1Rrn()) > 0L) && 
@@ -402,8 +402,8 @@ public class EditUniqueTokensService extends HttpServlet {
 					String [] s = r.getUp1DateAdded().split("/");
 					Calendar c = Calendar.getInstance();
 					c.set(Integer.parseInt(s[2]),
-						  Integer.parseInt(s[1]) - 1,
-						  Integer.parseInt(s[0]),
+						  Integer.parseInt(s[0]) - 1,
+						  Integer.parseInt(s[1]),
 						  0, 0, 0
 						 );	
 					//debug
