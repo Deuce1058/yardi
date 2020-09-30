@@ -343,12 +343,16 @@ public class EditUniqueTokensService extends HttpServlet {
 			//debug
 			String [] s = r.getUp1DateAdded().split("/");
 			Calendar c = Calendar.getInstance();
-			c.set(Integer.parseInt(s[2]),
-				  Integer.parseInt(s[0]) - 1,
-				  Integer.parseInt(s[1]),
-				  0, 0, 0
-				 );	
 
+			if (Boolean.valueOf(r.getDeleteToken()) == false) {
+				//HTML does not edit up1DateAdded if the token is being deleted. up1DateAdded might be an empty string 
+				c.set(Integer.parseInt(s[2]),
+						  Integer.parseInt(s[0]) - 1,
+						  Integer.parseInt(s[1]),
+						  0, 0, 0
+						 );	
+			}
+			
 			if (Boolean.valueOf(r.getDeleteToken())) {
 				//debug
 				System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 001A ");
