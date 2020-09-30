@@ -640,10 +640,13 @@
 		});
 		$('.newToken').each(function(k, v) {
 			if ($(this).find('.userToken1').val() !== '' && $(this).find('.tokenDate').val() !=='') {
+        var user      = $('#username').val().replace(/\s/g, '');
+        var token     = $(this).find('.userToken1').val().replace(/\s/g, '');
+        var dateAdded = $(this).find('.tokenDate').val().replace(/\s/g, '');
         var uniqueToken = {
-													up1UserName:	$('#username').val(),
-  												up1Token:			$(this).find('.userToken1').val(),
-  												up1DateAdded:	$(this).find('.tokenDate').val(),
+													up1UserName:	user,
+  												up1Token:			$(this).find('.userToken1').val().replace(/\s/g, ''),
+  												up1DateAdded:	dateAdded,
   												up1Rrn:				$(this).find('.tokenRRN').text(),
 													deleteToken:	$(this).find('.dlt').is(':checked')
 												};
