@@ -230,7 +230,10 @@ public class EditUniqueTokensService extends HttpServlet {
     		 * http://www.baeldung.com/jackson-map see 4.1. Map<String, String> Deserialization
     		 * TypeReference is part of Jackson core
     		 */
-			findTokens(editRequest.getFindUser(), userProfileBean, uniqueTokenBean, uniqueTokens, editRequest);
+    		if (findTokens(editRequest.getFindUser(), userProfileBean, uniqueTokenBean, uniqueTokens, editRequest) == false) {
+    			feedback = com.yardi.rentSurvey.YardiConstants.YRD000D;
+    		} 
+			
 			String msg[] = feedback.split("=");
 			editRequest.setMsgID(msg[0]);
 			editRequest.setMsgDescription(msg[1]);
@@ -350,14 +353,14 @@ public class EditUniqueTokensService extends HttpServlet {
 				//debug
 				System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 001A ");
 				//debug
-				uniqueTokenBean.remove(r.getRrn());
+				uniqueTokenBean.remove(Long.parseLong(r.getUp1Rrn()));
 			}
 
 			if ((Long.parseLong(r.getUp1Rrn()) > 0L) && (Boolean.valueOf(r.getDeleteToken())==false)) {
 				//debug
 				System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 001B ");
 				//debug
-				uniqueTokenBean.updateToken(r.getRrn(),	r.getUp1Token());
+				uniqueTokenBean.updateToken(Long.parseLong(r.getUp1Rrn()), r.getUp1Token(), c.getTimeInMillis());
 			}
 			
 			if (Long.parseLong(r.getUp1Rrn()) < 0L) {
