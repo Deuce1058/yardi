@@ -7,8 +7,8 @@ import javax.ejb.Remote;
 @Remote
 public interface UniqueTokens {
 	Unique_Tokens find(long rrn);
-	int persist(String userName, String token, java.util.Date dateAdded);
-	int remove(long rrn);
+	void persist(String userName, String token, java.util.Date dateAdded);
+	void remove(long rrn);
 	Vector<Unique_Tokens> findTokens(String userName);
 	String stringify();
 	/**
@@ -31,19 +31,11 @@ public interface UniqueTokens {
 	 */
 	void removeOldestToken(Vector<Unique_Tokens> userTokens);
 	/**
-	 * Update the token add date
-	 * 
-	 * @param rrn 
-	 * @param addDate
-	 * @return count of updated rows
-	 */
-	int updateDateAdded(Long rrn, java.util.Date addDate);
-	/**
 	 * Update the unique token
 	 * 
 	 * @param rrn
 	 * @param token
 	 * @return count of updated rows
 	 */
-	int updateToken(Long rrn, String token);
+	int updateToken(Long rrn, String token, Long time);
 	}

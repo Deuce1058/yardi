@@ -8,7 +8,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
 import com.yardi.ejb.model.Pwd_Policy;
@@ -108,29 +107,18 @@ public class UniqueTokensBean implements UniqueTokens {
 		return pwdPolicy;
 	} 
     
-    public int persist(String userName, String token, java.util.Date dateAdded) {
-		System.out.println("com.yardi.ejb.UniqueTokensBean persist() 0011 ");
-    	Query qry = em.createNativeQuery("INSERT INTO DB2ADMIN.UNIQUE_TOKENS "
-    		+ "(UP1_USER_NAME, UP1_TOKEN, UP1_DATE_ADDED) "
-    		+ "VALUES(?, ?, ?)");
-    	int rows = qry
-    		.setParameter(1, userName)
-    		.setParameter(2, token)
-    		.setParameter(3, dateAdded, TemporalType.DATE)
-    		.executeUpdate();
+    public void persist(String userName, String token, java.util.Date dateAdded) {
 		//debug
-		System.out.println("com.yardi.ejb.UniqueTokensBean persist() 0002 "
+		System.out.println("com.yardi.ejb.UniqueTokensBean persist() 0011 "
 			+ "\n "
 			+ "  userName=" + userName
 			+ "\n "
 			+ "  token=" + token
 			+ "\n "
 			+ "  dateAdded=" + dateAdded
-			+ "\n "
-			+ "  rows=" + rows
 			);
 		//debug
-    	return rows;
+		em.persist(new Unique_Tokens(userName, token, dateAdded));
     }
 
     @PostConstruct
@@ -139,21 +127,14 @@ public class UniqueTokensBean implements UniqueTokens {
     	getPwdPolicy();
     }
 
-	public int remove(long rrn) {
-    	Query qry = em.createQuery("DELETE FROM Unique_Tokens "
-    		+ "WHERE up1Rrn = :rrn");
-    	int rows = qry
-    		.setParameter("rrn", rrn)
-    		.executeUpdate();
+	public void remove(long rrn) {
 		//debug
 		System.out.println("com.yardi.ejb.UniqueTokensBean remove() 0003 "
 			+ "\n "
 			+ "  rrn=" + rrn
-			+ "\n "
-			+ "  rows=" + rows
 			);
 		//debug
-    	return rows;
+		em.remove(em.find(Unique_Tokens.class, rrn));
     }
 
 	/**
@@ -167,7 +148,6 @@ public class UniqueTokensBean implements UniqueTokens {
 	 */
 	public Vector<Unique_Tokens> removeExtraTokens(Vector<Unique_Tokens> userTokens) {
     	//getPwdPolicy();
-		Unique_Tokens uniqueToken;
 		short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
 		
 		if (pwdPolicy==null) {
@@ -229,9 +209,7 @@ public class UniqueTokensBean implements UniqueTokens {
 					 * Next, remove the oldest stored token
 					 * Finally, insert the new token
 					 */
-					uniqueToken = userTokens.get(tokenToRemove);
-					long rrn = uniqueToken.getUp1Rrn();
-					remove(rrn); // Delete the extra row. A new row will be inserted 
+					remove(userTokens.get(tokenToRemove).getUp1Rrn()); // Delete the extra row. A new row will be inserted 
 					userTokens.remove(tokenToRemove);
 					// The vector elements after the one that was removed move up and occupy the position that was removed
 				}
@@ -259,8 +237,6 @@ public class UniqueTokensBean implements UniqueTokens {
 		//debug
 		System.out.println("com.yardi.ejb.UniqueTokensBean removeOldestToken() 0014 ");
 		//debug
-    	//getPwdPolicy();
-		Unique_Tokens uniqueToken;
 		short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
 		
 		if (pwdPolicy==null) {
@@ -298,18 +274,19 @@ public class UniqueTokensBean implements UniqueTokens {
 			System.out.println("com.yardi.ejb.UniqueTokensBean removeOldestToken() 0013 ");
 			//debug
 			int tokenToRemove = maxUniqueTokens - 1;
-			uniqueToken = userTokens.get(tokenToRemove);
-      		long rrn = uniqueToken.getUp1Rrn();
-			remove(rrn); // Delete the extra row. A new row will be inserted 
-			userTokens.remove(tokenToRemove);
+			remove(userTokens.get(tokenToRemove).getUp1Rrn()); // Delete the extra row. A new row will be inserted 
 			//debug
 			System.out.println("com.yardi.ejb.UniqueTokensBean removeOldestToken() 000B "
 					+ "\n"
 					+ "   tokenToRemove="
 					+ tokenToRemove
 					+ "\n"
-					+ "   rrn="
-					+ rrn);
+					+ "   userTokens.get(tokenToRemove).getUp1Rrn()="
+					+ userTokens.get(tokenToRemove).getUp1Rrn());
+			//debug
+			userTokens.remove(tokenToRemove);
+
+			//debug
 			for (Unique_Tokens u : userTokens) {
 				System.out.println(
 					  "\n"
@@ -346,31 +323,23 @@ public class UniqueTokensBean implements UniqueTokens {
 				+ this;
 	}
     
-    public int updateDateAdded(Long rrn, java.util.Date addDate) {
+	public int updateToken(Long up1Rrn, String up1Token, Long time) {
 		//debug
-		System.out.println("com.yardi.ejb.UniqueTokensBean updateDateAdded() 0020 ");
+		System.out.println("com.yardi.ejb.UniqueTokensBean updateToken() 0019 "
+				+ "\n "
+				+ "   up1rrn="
+				+ up1Rrn
+				+ "\n "
+				+ "   up1Token="
+				+ up1Token
+				+ "\n "
+				+ "   time="
+				+ time
+				);
 		//debug
-        Query qry = em.createQuery("UPDATE Unique_Tokens " 
-        + "SET up1DateAdded = :addDate "
-        + "WHERE up1rrn = :rrn");
-        int rows = qry
-                .setParameter("addDate", addDate)
-                .setParameter("rrn", rrn)
-                .executeUpdate();
-        return rows;
-    }
-    
-	public int updateToken(Long rrn, String token) {
-		//debug
-		System.out.println("com.yardi.ejb.UniqueTokensBean updateToken() 0019 ");
-		//debug
-        Query qry = em.createQuery("UPDATE Unique_Tokens " 
-        + "SET up1token = :token "
-        + "WHERE up1rrn = :rrn");
-        int rows = qry
-                .setParameter("token", token)
-                .setParameter("rrn", rrn)
-                .executeUpdate();
-        return rows;
+        Unique_Tokens t = em.find(Unique_Tokens.class, up1Rrn);
+        t.setUp1Token(up1Token);
+        t.setUp1DateAdded(new java.util.Date(time));
+        return 1;
     }
 }
