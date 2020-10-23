@@ -56,7 +56,13 @@ public class UniqueTokensBean implements UniqueTokens {
 		//debug
     	return uniqueToken;
     }
-
+    
+    /**
+     *  Find all the tokens for the user. 
+     *  
+     *  The qry result is ordered by data added (descending) and rrn (descending) because date 2020 (newer) > 2019 and on the same day rrn 7 (newer) > 3. The returned Vector is ordered 
+     *  newest to oldest  
+     */
     public Vector<Unique_Tokens> findTokens(String userName) {
     	Vector<Unique_Tokens> userTokens = new Vector<Unique_Tokens>();
 		TypedQuery<Unique_Tokens> qry = em.createQuery(
