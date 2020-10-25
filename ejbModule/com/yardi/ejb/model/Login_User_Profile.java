@@ -53,6 +53,9 @@ public class Login_User_Profile implements Serializable {
 	private Login_Sessions_Table ugSessionTable;
 
 	public Login_Sessions_Table getUgSessionTable() {
+		/*debug*/
+		System.out.println("com.yardi.ejb.Login_User_Profile.getUgSessionTable() 0000 ");
+		/*debug*/
 		return ugSessionTable;
 	}
 
