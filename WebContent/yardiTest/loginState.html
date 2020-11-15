@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+	<meta HTTP-EQUIV="Expires" CONTENT="-1">
+	<meta charset="utf-8">
+	<title>Login State</title>
+  <link href="../resources/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="../resources/scripts/jquery-3.4.1.min.js"></script>
+  <script src="../resources/scripts/bootstrap.min.js"></script>
+  <style>
+    .preserveWhiteSpace {
+      white-space: pre;
+    }
+    .formElementPadLeft {
+      padding-left: 5px;
+    }
+    .white {
+      color: white;
+    }
+    .green {
+      color:green;
+    }
+    .blue {
+      color: cornflowerblue;
+    }
+    .align-center {
+      text-align: center;
+    }
+    .background-red {
+      background-color:red;
+    }
+    tr {
+      line-height: 12px;
+      min-height: 12px;
+      height: 12px;
+    }
+    .verticalLine {
+      border-left: thin solid;
+      border-color: darkgrey;
+    }
+    .not-allowed {
+      cursor: not-allowed;
+    }
+    .pointer {
+      cursor: pointer;
+    }
+    .table-nonfluid {
+      width:auto !important;
+    }
+    #uniqueTokensContainer {
+      height: 340.2px;
+      overflow-y: scroll;
+    }
+    .sticky {
+      position: sticky;
+      top: 0;
+      background: white;
+    }
+    #userGroupsContainer {
+      height: 228.2px;
+      overflow-y: scroll;
+    }
+  </style>
+  <h4 class="white align-center background-red">
+    <noscript>This site requires JavaScript. Ensure that this is enabled on your browser.</noscript>
+  </h4>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-bottom">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Quick Links<span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu  multi-level" role="menu" aria-labelledby="dropdownMenu">
+                    <li class="dropdown-submenu">
+                        <a tabindex="-1" href="#">User Tables</a>
+                        <ul class="dropdown-menu" style="width: 250px;">
+                            <li id="UPView"><a href="#">View User Profile</a></li>
+                            <li id="UPChange"><a href="#">User Profile Maintenance</a></li>
+                            <li id="STView"><a href="#">View Sessions Table</a></li>
+                            <li id="STChange"><a href="#">Sessions Table Maintenance</a></li>
+                            <li id="UP1View"><a href="#">View Unique Tokens Table</a></li>
+                            <li id="UP1Change"><a href="#">Unique Tokens Table Maintenance</a></li>
+                            <li id="UGView"><a href="#">View User Groups Table</a></li>
+                            <li id="UGChange"><a href="#">User Groups Table Maintenance</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown-submenu">
+                        <a href="#">Permissions</a>
+                        <ul class="dropdown-menu" style="width: 250px;">
+                            <li id="PMView"><a href="#">View Permissions Master</a></li>
+                            <li id="PMChange"><a href="#">Permissions Master Maintenance</a></li>
+                            <li id="GPView"><a href="#">View Group Permissions</a></li>
+                            <li id="GPChange"><a href="#">Group Permissions Maintenance</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown-submenu">
+                        <a href="#">Misc.</a>
+                        <ul class="dropdown-menu" style="width: 250px;">
+                            <li id="GMView"><a href="#">View Group Master</a></li>
+                            <li id="GMChange"><a href="#">Group Master Maintenance</a></li>
+                            <li id="PPView"><a href="#">View Password Policy</a></li>
+                            <li id="PPChange"><a href="#">Password Policy Maintenance</a></li>
+                            <li id="STView"><a href="#">View Sessions Table</a></li>
+                            <li id="STChange"><a href="#">Sessions Table Maintenance</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <form class="form-inline pl-2">
+            <div class="form-group px-sm-1">
+                <label for="username" class="control-label preserveWhiteSpace" style="padding-left: 20px;"><strong>Username </strong></label>
+                <input type="search" class="form-control" name="username" id="username" required placeholder="User Name" aria-label="Username">
+            </div>
+            <div class="px-sm-1">
+              <button type="submit" class="btn btn-success" id="findBtn">Find</button>
+              <button type="button" class="btn btn-secondary" id="nextBtn">Next</button>
+            </div>
+        </form>
+        <div id="title-loginID" class="formElementPadLeft preserveWhiteSpace"></div>
+        <div id="form-feedback" class="formElementPadLeft" style="color:red;">XXX</div> <!--90 char-->
+    </div>
+  </nav>
+  <div class='d-flex justify-content-sm-between' id="mainHeader">
+    <div id='sysDate'>xyzzy</div>
+    <h1>Login State</h1>
+    <div></div>
+  </div>
+  <hr>
+  <div class="container" id="pwdPolicyContainer" style="margin-left: 5px;">
+    <div>
+      <h6><strong>Password Policy</strong></h6>
+    </div>
+    <div class="d-sm-flex" id="pwdPolicy">
+      <div class="px-sm-1 blue" id="pwdLife"></div>
+      <div class="px-sm-1">Password life in days</div>
+      <div class="px-sm-1 blue" id="nbrUnique"></div>
+      <div class="px-sm-1">Number of unique tokens</div>
+      <div class="px-sm-1 blue" id="maxLoginAttempts"></div>
+      <div class="px-sm-1">Max number of login attempts</div>
+      <div class="px-sm-1 blue" id="minPwdLen"></div>
+      <div class="px-sm-1">Minimum password length</div>
+      <div class="px-sm-1 blue" id="maxPwdLen"></div>
+      <div class="px-sm-1">Maximum password length</div>
+      <div class="px-sm-1 blue" id="maxRepeatChar"></div>
+      <div class="px-sm-1">Maximum repeated characters</div>
+      <div class="px-sm-1 blue" id="nbrDigits"></div>
+      <div class="px-sm-1">Number of digits</div>
+      <div class="px-sm-1 blue" id="nbrUpper"></div>
+      <div class="px-sm-1">Number of upper case</div>
+      <div class="px-sm-1 blue" id="nbrLower"></div>
+      <div class="px-sm-1">Number of lower case</div>
+      <div class="px-sm-1 blue" id="nbrSpecial"></div>
+      <div class="px-sm-1">Number of special characters</div>
+      <div class="px-sm-1 blue" id="upperRqd"></div>
+      <div class="px-sm-1">Upper case required</div>
+      <div class="px-sm-1 blue" id="lowerRqd"></div>
+      <div class="px-sm-1">Lower case required</div>
+      <div class="px-sm-1 blue" id="nbrRqd"></div>
+      <div class="px-sm-1">Number required</div>
+      <div class="px-sm-1 blue" id="specialRqd"></div>
+      <div class="px-sm-1">Special character required</div>
+      <div class="px-sm-1 blue" id="cantContainUsrNam"></div>
+      <div class="px-sm-1">Cant contain user name</div>
+      <div class="px-sm-1 blue" id="cantContainPwd"></div>
+      <div class="px-sm-1">Cant contain current password</div>
+    </div>
+  </div>
+  <hr>
+  <div class="d-flex flex-row pb-sm-1" id="userProfileAndUniqueTokens" style="margin-left: 5px;">
+    <div id="userProfile">
+      <h6><strong>User Profile</strong></h6>
+      <table class="table table-striped" id="usrPrf">
+        <tr>
+          <td>User token</td>
+          <td id="userToken" class="blue"></td>
+        </tr>
+        <tr>
+          <td>Password expiration date</td>
+          <td id="pwdExpD" class="blue"></td>
+        </tr>
+        <tr>
+          <td>Password attempts</td>
+          <td id="pwdAttempts" class="blue"></td>
+        </tr>
+        <tr>
+          <td>Disabled date</td>
+          <td id="disabledDate" class="blue"></td>
+        </tr>
+        <tr>
+          <td>Time disabled</td>
+          <td id="disabledTime" class="blue"></td>
+        </tr>
+        <tr>
+          <td>Last login date</td>
+          <td id="lastLoginDate" class="blue"></td>
+        </tr>
+        <tr>
+          <td>Last login time</td>
+          <td id="lastLoginTime" class="blue"></td>
+        </tr>
+        <tr>
+          <td>Active</td>
+          <td id="activeYN" class="blue"></td>
+        </tr>
+      </table>
+    </div>
+    <div class="verticalLine"></div>
+    <div id="uniqueTokensContainer">
+      <h6><strong>Unique Tokens</strong></h6>
+      <table class="table table-striped" id="uniqueTokens">
+      </table>
+    </div>
+  </div>
+  <hr>
+  <div class="d-flex flex-row pb-sm-1" style="margin-left: 5px;" id="sessionsTableAndUserGroupsContainer">
+    <div id="sessionsTable">
+      <h6><strong>Sessions Table</strong></h6>
+      <table class="table" id="sessionsTable">
+        <tr>
+          <td>Session ID</td>
+          <td class="blue" id="sessionID"></td>
+        </tr>
+        <tr>
+          <td>Session token</td>
+          <td class="blue" id="sessionToken"></td>
+        </tr>
+        <tr>
+          <td>Last request</td>
+          <td class="blue" id="lastRqs"></td>
+        </tr>
+        <tr>
+          <td>Last active date</td>
+          <td class="blue" id="lastActiveDate"></td>
+        </tr>
+        <tr>
+          <td>Last active time</td>
+          <td class="blue" id="lastActiveTime"></td>
+        </tr>
+      </table>
+    </div>
+    <div class="verticalLine"></div>
+    <div class="pl-sm-2" style="margin-left: 5px;" id="userGroupsContainer">
+      <h6><strong>User Groups</strong></h6>
+      <table class="table table-striped" id="userGroupsTable">
+      </table>
+    </div>
+  </div>
+  <hr>
+  <div class="modal fade" id="jsCookiesAlert" tabindex="-1" role="dialog" aria-labelledby="jsCookiesAlert" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Notice:</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          This site requires cookies and JavaScript. Ensure that these are enabled on your browser.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    var findButtonDisabled = false;
+
+    $(function () {
+      console.log('loginState.html main 0000 ');
+      var formItems;
+      var d = new Date();
+      $('#sysDate').text(d.getFullYear() + ' ' + (d.getMonth() + 1) + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds());
+      configureButtons();
+
+      $('#findBtn').click(function(e) {
+        console.log('loginState.html main 0001 ');
+        findButtonDisabled = true;
+        configureButtons();
+
+        if ($('#username').val()==='') { 
+          console.log('loginState.html main 0002 ');
+          e.preventDefault;
+        } else {
+          formItems = {"userName" : $('#username').val()};
+          console.log('loginState.html main 0003 \n' + '    formItems=');
+
+          for ([k, v] of Object.entries(formItems)) {
+            console.log(`${k}: ${v}`);
+          }
+
+          doPost(formItems);
+        }
+      });
+
+      $('#nextBtn').click(function() {
+        findButtonDisabled = false;
+        configureButtons();
+        clearScreen();
+      });
+    });
+
+    function doPost(formItems) {
+      console.log('loginState.html doPost() 0000 ');
+      var ajaxData;
+      console.log(JSON.stringify(formItems));
+
+      $.ajax({
+        type: 'POST',
+        url: '../LoginState',
+        data: JSON.stringify(formItems),
+        dataType: "json",
+        success: function (ajaxData) {
+          console.log('loginState.html doPost() 0001 ');
+
+          if (ajaxData.msgid==='YRD0000') {
+            console.log('loginState.html doPost() 0002 ');
+            configureButtons();
+            buildPage(ajaxData);
+          } else {
+            console.log('loginState.html doPost() 0003 ');
+            formItems = {
+              "msgd" : ajaxData.msgd
+            }
+            $('#form-feedback').text(formItems.msgd);
+          }
+        }
+      });
+    }
+  
+    function buildPage(formItems) {
+      buildPwdPolicyPanel(formItems);
+      buildUsrPrfPanel(formItems);
+      buildUniqueTokensPanel(formItems);
+      buildSessionsTablePanel(formItems);
+      buildUsrGroupsPanel(formItems);
+    }
+
+    function buildPwdPolicyPanel(formItems) {
+      $('#pwdLife')          .text(formItems.ppDays);
+      $('#nbrUnique')        .text(formItems.ppNbrUnique);
+      $('#maxLoginAttempts') .text(formItems.ppMaxSignonAttempts);
+      $('#minPwdLen')        .text(formItems.ppPwdMinLen);
+      $('#maxPwdLen')        .text(formItems.ppMaxPwdLen);
+      $('#maxRepeatChar')    .text(formItems.ppMaxRepeatChar);
+      $('#nbrDigits')        .text(formItems.ppNbrDigits);
+      $('#nbrUpper')         .text(formItems.ppNbrUpper);
+      $('#nbrLower')         .text(formItems.ppNbrLower);
+      $('#nbrSpecial')       .text(formItems.ppNbrSpecial);
+      $('#upperRqd')         .text(formItems.pp_upper_rqd);
+      $('#lowerRqd')         .text(formItems.pp_lower_rqd);
+      $('#nbrRqd')           .text(formItems.pp_number_rqd);
+      $('#specialRqd')       .text(formItems.pp_special_rqd);
+      $('#cantContainUsrNam').text(formItems.pp_cant_contain_id);
+      $('#cantContainPwd')   .text(formItems.pp_cant_contain_pwd);
+    }
+
+    function buildUsrPrfPanel(formItems) {
+      $('#userToken')        .text(formItems.uptoken);
+      $('#pwdExpD')          .text(formItems.upPwdexpd);
+      $('#pwdAttempts')      .text(formItems.upPwdAttempts);
+      $('#disabledDate')     .text(formItems.upDisabledDate);
+      $('#disabledTime')     .text(formItems.upDisabledTime);
+      $('#lastLoginDate')    .text(formItems.upLastLoginDate);
+      $('#lastLoginTime')    .text(formItems.upLastLoginTime);
+      $('#activeYN')         .text(formItems.upActiveYn);
+    }
+
+    function buildUniqueTokensPanel(formItems) {
+      $('#uniqueTokens').html('');
+       $('#uniqueTokens').append(
+          '<thead>'
+        + '  <tr id="tableHeaders">'
+        + '    <th class="sticky">Token</th>'
+        + '    <th class="sticky">Date</th>'
+        + '    <th class="sticky">RRN</th>'
+        + '  </tr>'
+        + '</thead>'
+        + '<tbody>'
+      );
+      $.each(JSON.parse(formItems.uniqueTokensString), function(key, value) {
+        $('#uniqueTokens').append(
+            '<tr class="blue" id="tableRow"> '
+          + '  <td id="userToken"> ' 
+          + value.up1Token
+          + '  </td> '
+          + '  <td id="dateAdded"> '
+          + value.up1DateAdded
+          + '  </td>'
+          + '  <td id="tokenRRN"> '
+          + value.up1Rrn
+          + '  </td>'
+          + '<tr>'
+        );
+      } );
+      $('#uniqueTokens').append('</tbody>');
+    }
+
+    function buildSessionsTablePanel(formItems) {
+      $('#sessionID')     .text(formItems.stSesssionId);
+      $('#sessionToken')  .text(formItems.stSessionToken);
+      $('#lastRqs')       .text(formItems.stLastRequest);
+      $('#lastActiveDate').text(formItems.stLastActiveDate);
+      $('#lastActiveTime').text(formItems.stLastActiveTime);
+    }
+
+    function buildUsrGroupsPanel(formItems) {
+      $('#userGroupsTable').html('');
+      $('#userGroupsTable').append(
+          '<thead> '
+        + '  <tr> '
+        + '    <th class="sticky">Group</th> '
+        + '    <th class="sticky">Description</th> '
+        + '    <th class="sticky">Initial Page</th> '
+        + '  </tr> '
+        + '</thead> '
+        + '<tbody>'
+      );
+      $.each(JSON.parse(formItems.userGroups), function(key, value) { 
+        var s = value.page.split(';');
+        $('#userGroupsTable').append(
+            '<tr class="blue"> '
+          + '  <td id="ugGroup">'
+          + s[0]
+          + '  </td> '
+          + '  <td id="ugDescription">'
+          + s[1]
+          + '  </td>'
+          + '  <td> '
+          + value.url
+          + '  </td> '
+           + '</tr> '
+        );
+      });
+      $('#userGroupsTable').append('</tbody>');
+   }
+
+    function clearScreen() {
+      $('#username')         .val('');
+      $('#form-feedback')    .text('');
+      $('#pwdLife')          .text('');
+      $('#nbrUnique')        .text('');
+      $('#maxLoginAttempts') .text('');
+      $('#minPwdLen')        .text('');
+      $('#maxPwdLen')        .text('');
+      $('#maxRepeatChar')    .text('');
+      $('#nbrDigits')        .text('');
+      $('#nbrLower')         .text('');
+      $('#nbrSpecial')       .text('');
+      $('#upperRqd')         .text('');
+      $('#lowerRqd')         .text('');
+      $('#nbrUpper')         .text('');
+      $('#nbrRqd')           .text('');
+      $('#specialRqd')       .text('');
+      $('#cantContainUsrNam').text('');
+      $('#cantContainPwd')   .text('');
+      $('#userToken')        .text('');
+      $('#pwdExpD')          .text('');
+      $('#pwdAttempts')      .text('');
+      $('#disabledDate')     .text('');
+      $('#disabledTime')     .text('');
+      $('#lastLoginDate')    .text('');
+      $('#lastLoginTime')    .text('');
+      $('#activeYN')         .text('');
+      $('#uniqueTokens')     .html('');
+      $('#sessionID')        .text('');
+      $('#sessionToken')     .text('');
+      $('#lastRqs')          .text('');
+      $('#lastActiveDate')   .text('');
+      $('#lastActiveTime')   .text('');
+      $('#userGroupsTable')  .html('');
+    }
+
+    function configureButtons() {
+       if (findButtonDisabled) {
+        $('#username').addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
+        $('#findBtn') .addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
+        $('#nextBtn') .addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
+      } else {
+        $('#username').addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
+        $('#findBtn') .addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
+        $('#nextBtn') .addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
+      }
+    }
+  </script>
+</body>
+</html>
