@@ -49,6 +49,7 @@ public class UserServicesBean implements UserServices {
 	@EJB PasswordPolicy passwordPolicyBean;
 	@EJB UserGroups userGroupsBean;
 	@EJB SessionsTable sessionsBean;
+	@EJB PwdCompositionRules pwdCompRulesBean;
 	@Resource UserTransaction tx;
 
 	public UserServicesBean() {
@@ -228,12 +229,12 @@ public class UserServicesBean implements UserServices {
 						);
 			}
 			//debug				
-			if (passwordPolicyBean.enforce(new String(newPassword), userName, userProfile.getUptoken(), userTokens) == false ) {
+			if (pwdCompRulesBean.enforce(new String(newPassword), userName, userProfile.getUptoken(), userTokens) == false ) {
 				//apply password policy to the new password
 				//debug
 				System.out.println("com.yardi.ejb UserServicesBean chgPwd() 0010 "
 						+ "\n "
-						+ "  passwordPolicy().enforce() == false"
+						+ "  pwdCompRulesBean.enforce() == false"
 						);   
 				//debug
 				feedback = passwordPolicyBean.getFeedback();
@@ -506,7 +507,8 @@ public class UserServicesBean implements UserServices {
 	public void remove() {
 		System.out.println("com.yardi.ejb.UserServicesBean remove() 0002 ");
 		userGroupsBean.removeBean();
-		userProfileBean.removeBean();		
+		userProfileBean.removeBean();	
+		pwdCompRulesBean.removeBean();
 	}
 	
 	@Override
