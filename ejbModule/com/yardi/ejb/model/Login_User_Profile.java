@@ -1,12 +1,18 @@
 package com.yardi.ejb.model;
+/*
+ * 2020 1104
+ * remove attribute for Login_Sessions_Table. This is attribute is now defined in Login_User_Groups
+ * remove getUgSessionTable() 
+ * added bidirectional OneToMany association with Login_User_Groups
+ */
 
 import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -44,20 +50,9 @@ public class Login_User_Profile implements Serializable {
 
 	@Column(name="UP_ACTIVE_YN")
 	private String upActiveYn;
-
-	@OneToOne(fetch=FetchType.LAZY)
-	//@JoinColumn(name = "UP_USERID", referencedColumnName = "ST_USER_ID", nullable=false) 
-	//Multiple writable mappings exist for UP_USERID because this is also mapped to Login_User_Profile by UP_USERID
-	//The only way around the multiple writable mappings is to use updatable=false, insertable=false to join to Login_Sessions_Table
-	@JoinColumn(name = "UP_USERID", referencedColumnName = "ST_USER_ID", nullable=false, updatable=false, insertable=false)
-	private Login_Sessions_Table ugSessionTable;
-
-	public Login_Sessions_Table getUgSessionTable() {
-		/*debug*/
-		System.out.println("com.yardi.ejb.Login_User_Profile.getUgSessionTable() 0000 ");
-		/*debug*/
-		return ugSessionTable;
-	}
+	
+	@OneToMany(mappedBy = "ugUserProfile")
+	private List<Login_User_Groups> upLoginUserGroups;
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;

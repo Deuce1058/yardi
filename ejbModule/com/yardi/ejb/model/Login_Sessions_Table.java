@@ -1,9 +1,15 @@
 package com.yardi.ejb.model;
 
+/*
+ * 2020 1104
+ * added bidirectional OneToMany association with Login_User_Groups
+ * removed association for Login_User_Profile
+ */
 import java.io.Serializable;
 import javax.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 
 /**
@@ -39,10 +45,10 @@ public class Login_Sessions_Table implements Serializable {
 	@GeneratedValue(generator="sessionsTableSeq")
 	@Column(name="ST_RRN")
 	private long stRrn;
-
-	@OneToOne(mappedBy = "ugSessionTable", fetch=FetchType.LAZY)
-	private Login_User_Profile stUserProfile;
-
+	
+	@OneToMany(mappedBy = "ugSessionsTable")
+	private List<Login_User_Groups> stUserGroups;
+	
 	public Login_Sessions_Table() {
 	}
 
