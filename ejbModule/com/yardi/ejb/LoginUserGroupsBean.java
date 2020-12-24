@@ -195,12 +195,23 @@ public class LoginUserGroupsBean implements LoginUserGroups {
 	}
 
 	private boolean isManaged(Login_Sessions_Table loginSessionsTable) {
-  		System.out.println("com.yardi.ejb.LoginUserGroupsBean isManaged() 0011 "
-  				+ "\n"
-  				+ "   em.contains(loginSessionsTable)="
-  				+ em.contains(loginSessionsTable)
-  				);
-		return em.contains(loginSessionsTable);
+  		System.out.println("com.yardi.ejb.LoginUserGroupsBean isManaged() 0011 ");
+  		
+  		if (!(loginSessionsTable==null)) {
+  	  		System.out.println(
+  	  				  "\n"
+  	  				+ "   em.contains(loginSessionsTable)="
+  	  				+ em.contains(loginSessionsTable)
+  	  				);
+  			return em.contains(loginSessionsTable);  			
+  		} 
+  		else {
+  	  		System.out.println(
+  	  				  "\n"
+  	  				+ "   em.contains(loginSessionsTable)=false"
+  	  				);
+  	  		return false;
+  		}
 	}
 
 	private boolean isManaged(Login_User_Groups loginUserGroups) {
