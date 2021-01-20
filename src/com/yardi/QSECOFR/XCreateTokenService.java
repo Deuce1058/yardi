@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 
 import javax.servlet.ServletException;
@@ -47,7 +48,12 @@ public class XCreateTokenService extends HttpServlet {
 		TokenRequest tokenRequest = new TokenRequest();
 		tokenRequest = mapper.readValue(formData, TokenRequest.class);
 		tokenRequest.setPasswordSave(tokenRequest.getPassword());
-		String userToken = passwordAuthentication.hash(tokenRequest.passwordToChar());
+		String userToken="";
+		try {
+			userToken = passwordAuthentication.hash(tokenRequest.passwordToChar());
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 		tokenRequest.setMsgID("");
 		tokenRequest.setMsgDescription("");
 		tokenRequest.setPassword("");

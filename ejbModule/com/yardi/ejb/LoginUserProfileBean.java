@@ -1,5 +1,6 @@
 package com.yardi.ejb;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -199,7 +200,12 @@ public class LoginUserProfileBean implements LoginUserProfile {
     	//debug
 		isJoined();
 		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
-		String userToken = passwordAuthentication.hash(newPassword); //hash of new password
+		String userToken="";
+		try {
+			userToken = passwordAuthentication.hash(newPassword); //hash new password
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} 
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.set(Calendar.HOUR, 0);
 		gc.set(Calendar.MINUTE, 0);

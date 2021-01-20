@@ -1,5 +1,7 @@
 package com.yardi.ejb;
 
+import java.security.NoSuchAlgorithmException;
+
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 import javax.persistence.EntityManager;
@@ -58,7 +60,12 @@ public class LoginSessionsTableBean implements LoginSessionsTable {
 		isJoined();
 		//debug
 		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
-		String sessionToken = passwordAuthentication.hash(sessionID.toCharArray());
+		String sessionToken="";
+		try {
+			sessionToken = passwordAuthentication.hash(sessionID.toCharArray());
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 		Login_Sessions_Table sessionsTable = new Login_Sessions_Table(
 				userID, 
 				sessionID, 
@@ -110,7 +117,12 @@ public class LoginSessionsTableBean implements LoginSessionsTable {
 		//debug
 		isJoined();
 		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
-		String sessionToken = passwordAuthentication.hash(sessionID.toCharArray());
+		String sessionToken="";
+		try {
+			sessionToken = passwordAuthentication.hash(sessionID.toCharArray());
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 		sessionsTable.setStSesssionId(sessionID);
 		sessionsTable.setStSessionToken(sessionToken);
 		sessionsTable.setStLastRequest(lastRequest);
