@@ -1,5 +1,6 @@
 package com.yardi.ejb;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Vector;
 
 import javax.annotation.Resource;
@@ -79,7 +80,12 @@ public class UserServicesBean implements UserServices {
 		initialPageList = userGroupsBean.getInitialPageList();
 		//tokenize the session ID
 		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
-		String sessionToken = passwordAuthentication.hash(loginRequest.getSessionID().toCharArray());
+		String sessionToken="";
+		try {
+			sessionToken = passwordAuthentication.hash(loginRequest.getSessionID().toCharArray());
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 		//fetch the session table row for the session
 		Sessions_Table sessionsTable = null;
 		sessionsTable = sessionsBean.findSession(loginRequest.getSessionID()); 
