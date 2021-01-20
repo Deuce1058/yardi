@@ -22,24 +22,14 @@ import javax.crypto.spec.PBEKeySpec;
  * @see <a href="http://stackoverflow.com/a/2861125/3474">StackOverflow</a>
  */
 public class PasswordAuthentication {
-
-	  /**
-	   * Each token produced by this class uses this identifier as a prefix.
-	   */
-	  public static final String ID = "$31$";
-
-	  /**
+	/**
 	   * The minimum recommended cost, used by default
 	   */
 	  public static final int DEFAULT_COST = 16;
 
-	  private static final String ALGORITHM = "PBKDF2WithHmacSHA1";
+	  private static final String ALGORITHM = "PBKDF2WithHmacSHA512";
 
-	  private static final int SIZE = 128;
-
-	  private static final Pattern LAYOUT = Pattern.compile("\\$31\\$(\\d\\d?)\\$(.{43})");
-
-	  private final SecureRandom random;
+	  private static final int SIZE = 512;
 
 	  private final int cost;
 
@@ -57,7 +47,6 @@ public class PasswordAuthentication {
 	  {
 	    iterations(cost); /* Validate cost */
 	    this.cost = cost;
-	    this.random = new SecureRandom();
 	  }
 
 	  private static int iterations(int cost)
@@ -71,17 +60,23 @@ public class PasswordAuthentication {
 	   * Hash a password for storage.
 	   * 
 	   * @return a secure authentication token to be stored for later authentication 
+	 * @throws NoSuchAlgorithmException 
 	   */
-	  public String hash(char[] password)
+	  public String hash(char[] password) throws NoSuchAlgorithmException
 	  {
+		// SHA512 512 bits 64 bytes
+		//   salt size = 64  bytes
+		//   PBEKeySpec key size is 512 bits
+		//   dk size = 64 bytes
 	    byte[] salt = new byte[SIZE / 8];
+	    SecureRandom random = SecureRandom.getInstanceStrong();
 	    random.nextBytes(salt);
 	    byte[] dk = pbkdf2(password, salt, 1 << cost);
 	    byte[] hash = new byte[salt.length + dk.length];
 	    System.arraycopy(salt, 0, hash, 0, salt.length);
 	    System.arraycopy(dk, 0, hash, salt.length, dk.length);
 	    Base64.Encoder enc = Base64.getUrlEncoder().withoutPadding();
-	    return ID + cost + '$' + enc.encodeToString(hash);
+	    return cost + '$' + enc.encodeToString(hash);
 	  }
 
 	  /**
@@ -91,17 +86,6 @@ public class PasswordAuthentication {
 	   */
 	  public boolean authenticate(char[] password, String token)
 	  {
-		/*
-		 * token = $31$16$Sly_rumhk6xv9oZBKGUjLwmxIhu2ftqzu2vjQ5zPX5M
-		 *   m.group(1) = 16
-         *   m.group(2) = Sly_rumhk6xv9oZBKGUjLwmxIhu2ftqzu2vjQ5zPX5M
-		 * LAYOUT = \$31\$(\d\d?)\$(.{43})
-		 * The pattern is $31$ + 2 digits for cost + $ + hash
-		 *   hash consists of salt + decrypt key
-		 *     salt is some random bytes
-		 *     decrypt key comes from SecretKeyFactory
-		 * Store the entire token in the database  
-		 */
 		//debug
 		System.out.println("com.yardi.userServices PasswordAuthentication authenticate() 0000"
 			+ "\n"
@@ -112,17 +96,16 @@ public class PasswordAuthentication {
 			+ token
 			);
 		//debug
-	    Matcher m = LAYOUT.matcher(token);
-	    if (!m.matches())
-	      throw new IllegalArgumentException("Invalid token format");
-	    int iterations = iterations(Integer.parseInt(m.group(1)));
-	    byte[] hash = Base64.getUrlDecoder().decode(m.group(2));
-	    byte[] salt = Arrays.copyOfRange(hash, 0, SIZE / 8);
+		String t1 = token.substring(0, 2); 
+		String t2 = token.substring(3);
+	    int iterations = iterations(Integer.parseInt(t1));
+	    byte[] hash = Base64.getUrlDecoder().decode(t2);
+	    byte[] salt = new byte[SIZE / 8];
+	    byte[] dk = new byte[SIZE / 8];
+	    System.arraycopy(hash,           0, salt,           0, salt.length);
+	    System.arraycopy(hash, salt.length,   dk,           0, dk.length);
 	    byte[] check = pbkdf2(password, salt, iterations);
-	    int zero = 0;
-	    for (int idx = 0; idx < check.length; ++idx)
-	      zero |= hash[salt.length + idx] ^ check[idx];
-	    return zero == 0;
+	    return Arrays.equals(dk, check);
 	  }
 
 	  private static byte[] pbkdf2(char[] password, byte[] salt, int iterations)
@@ -145,11 +128,12 @@ public class PasswordAuthentication {
 	   * 
 	   * <p>Passwords should be stored in a {@code char[]} so that it can be filled 
 	   * with zeros after use instead of lingering on the heap and elsewhere.
+	 * @throws NoSuchAlgorithmException 
 	   * 
 	   * @deprecated Use {@link #hash(char[])} instead
 	   */
 	  @Deprecated
-	  public String hash(String password)
+	  public String hash(String password) throws NoSuchAlgorithmException
 	  {
 	    return hash(password.toCharArray());
 	  }
