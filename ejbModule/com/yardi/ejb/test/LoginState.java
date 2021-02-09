@@ -2,7 +2,7 @@ package com.yardi.ejb.test;
 
 import javax.ejb.Remote;
 
-import com.yardi.test.LoginStateRequest;
+import com.yardi.shared.test.LoginStateRequest;
 
 @Remote
 public interface LoginState {

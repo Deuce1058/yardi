@@ -14,9 +14,9 @@ import javax.transaction.UserTransaction;
 
 import com.yardi.ejb.model.Login_Sessions_Table;
 import com.yardi.ejb.model.Pwd_Policy;
-import com.yardi.userServices.LoginInitialPage;
-import com.yardi.userServices.LoginRequest;
-import com.yardi.userServices.LoginResponse;
+import com.yardi.shared.userServices.LoginInitialPage;
+import com.yardi.shared.userServices.LoginRequest;
+import com.yardi.shared.userServices.LoginResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -110,7 +110,7 @@ public class LoginUserServicesBean implements LoginUserServices {
 				//debug
 				System.out.println("com.yardi.ejb.LoginUserServicesBean authenticate() 0009 ");
 				//debug
-				feedback = com.yardi.rentSurvey.YardiConstants.YRD0001;
+				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0001;
 			} else {
 				//debug
 				System.out.println("com.yardi.ejb.LoginUserServicesBean authenticate() 000A ");
@@ -159,8 +159,8 @@ public class LoginUserServicesBean implements LoginUserServices {
 				System.out.println("com.yardi.ejb.LoginUserServicesBean authenticate() 002A");
 				//debug
 
-				if (feedback.equals(com.yardi.rentSurvey.YardiConstants.YRD000C) ||
-						feedback.equals(com.yardi.rentSurvey.YardiConstants.YRD000F)) {
+				if (feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD000C) ||
+						feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD000F)) {
 					/*
 					 * Need to distinguish between invalid password and invalid user name. If its invalid password 
 					 * set feedback to YRD0001 because html does not distinguish between invalid password and invalid 
@@ -169,8 +169,8 @@ public class LoginUserServicesBean implements LoginUserServices {
 					//debug
 					System.out.println("com.yardi.ejb.LoginUserServicesBean authenticate() 002B");
 					//debug
-					if (feedback.equals(com.yardi.rentSurvey.YardiConstants.YRD000F)) {
-						feedback = com.yardi.rentSurvey.YardiConstants.YRD0001;
+					if (feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD000F)) {
+						feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0001;
 					}
 					
 					if (loginRequest.getChangePwd()==false) {
@@ -224,7 +224,7 @@ public class LoginUserServicesBean implements LoginUserServices {
 		txStatus();
 		userProfileBean.changeUserToken(newPassword); //store new token in user profile
 		userProfileBean.loginSuccess();
-		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
+		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
 	}
 
 	/**
@@ -275,8 +275,8 @@ public class LoginUserServicesBean implements LoginUserServices {
 				//debug
 				System.out.println("com.yardi.ejb.LoginUserServicesBean chgPwd() 000E ");
 				//debug
-				if (feedback.equals(com.yardi.rentSurvey.YardiConstants.YRD000C) ||
-						feedback.equals(com.yardi.rentSurvey.YardiConstants.YRD000F)) {
+				if (feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD000C) ||
+						feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD000F)) {
 					//debug
 					System.out.println("com.yardi.ejb.LoginUserServicesBean chgPwd() 0012 ");
 					//debug
@@ -492,7 +492,7 @@ public class LoginUserServicesBean implements LoginUserServices {
 				+ "    feedback="
 				+ feedback
 				);
-		if (feedback.equals(com.yardi.rentSurvey.YardiConstants.YRD000E)) {
+		if (feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD000E)) {
 			for (LoginInitialPage i : initialPageList) {
 				System.out.println(
 					  "\n"
@@ -579,7 +579,7 @@ public class LoginUserServicesBean implements LoginUserServices {
 		pwdPolicy = passwordPolicyBean.getPwdPolicy();
 		
 		if (pwdPolicy == null) {
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD000B;
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
 		}
 		//debug
 		System.out.println("com.yardi.ejb.LoginUserServicesBean setPwdPolicy 001F"

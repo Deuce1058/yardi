@@ -23,7 +23,7 @@ public class PasswordPolicyBean implements PasswordPolicy {
 	 */
 	@PersistenceContext(unitName="yardi")
 	private EntityManager emgr;
-	private String feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
+	private String feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
 	private Pwd_Policy pwdPolicy;
 	
     public PasswordPolicyBean() {
@@ -120,12 +120,12 @@ public class PasswordPolicyBean implements PasswordPolicy {
 		//debug
 		System.out.println("com.yardi.ejb.PasswordPolicyBean setPwdPolicy() 0010 ");
 		//debug
-		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
+		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
 		pwdPolicy = find(1L);
 		
 		if (pwdPolicy == null) {
 			System.out.println("com.yardi.ejb.PasswordPolicyBean setPwdPolicy() 000E ");
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD000B;
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
 			return;
 		}
 		//debug

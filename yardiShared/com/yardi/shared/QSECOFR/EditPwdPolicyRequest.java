@@ -1,4 +1,4 @@
-package com.yardi.QSECOFR;
+package com.yardi.shared.QSECOFR;
 
 public class EditPwdPolicyRequest {
 	private String action;

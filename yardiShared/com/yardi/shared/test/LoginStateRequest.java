@@ -1,4 +1,4 @@
-package com.yardi.test;
+package com.yardi.shared.test;
 
 public class LoginStateRequest {
 	private String msgid;

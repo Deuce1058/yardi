@@ -6,8 +6,8 @@ import javax.ejb.Remote;
 
 import com.yardi.ejb.model.Login_Sessions_Table;
 import com.yardi.ejb.model.Login_User_Profile;
-import com.yardi.userServices.LoginInitialPage;
-import com.yardi.userServices.LoginUserGroupsGraph;
+import com.yardi.shared.userServices.LoginInitialPage;
+import com.yardi.shared.userServices.LoginUserGroupsGraph;
 
 @Remote
 public interface LoginUserGroups {

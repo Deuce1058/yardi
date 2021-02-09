@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import com.yardi.ejb.model.Login_Sessions_Table;
-import com.yardi.userServices.PasswordAuthentication;
+import com.yardi.shared.userServices.PasswordAuthentication;
 
 /**
  * Session Bean implementation class SessionsTableBean

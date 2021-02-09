@@ -1,4 +1,4 @@
-package com.yardi.userServices;
+package com.yardi.shared.userServices;
 
 public class UserGroupsGraph  implements Comparable<UserGroupsGraph> {
 	private String ugUserId;

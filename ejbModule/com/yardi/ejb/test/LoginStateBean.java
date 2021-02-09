@@ -16,8 +16,8 @@ import com.yardi.ejb.PasswordPolicy;
 import com.yardi.ejb.UniqueTokens;
 import com.yardi.ejb.Unique_Tokens;
 import com.yardi.ejb.model.Pwd_Policy;
-import com.yardi.test.LoginStateRequest;
-import com.yardi.userServices.LoginInitialPage;
+import com.yardi.shared.test.LoginStateRequest;
+import com.yardi.shared.userServices.LoginInitialPage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -47,7 +47,7 @@ public class LoginStateBean implements LoginState {
 			//debug
 	    	System.out.println("com.yardi.ejb.test.LoginStateBean findUserID() 0001 ");
 			//debug
-			String [] s = com.yardi.rentSurvey.YardiConstants.YRD000D.split("=");
+			String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD000D.split("=");
 			loginStateRequest.setMsgid(s[0]);
 			loginStateRequest.setMsgd(s[1]);
 	    	return false;
@@ -87,7 +87,7 @@ public class LoginStateBean implements LoginState {
 		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0004 ");
 		//debug
-		String [] s = com.yardi.rentSurvey.YardiConstants.YRD0000.split("=");
+		String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("=");
 		loginStateRequest.setMsgid(s[0]);
 		loginStateRequest.setMsgd(s[1]);
 		
@@ -290,7 +290,7 @@ public class LoginStateBean implements LoginState {
 		pwdPolicy = passwordPolicyBean.getPwdPolicy();
 		
 		if (pwdPolicy == null) {
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD000B;
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
 		}
 		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean setPwdPolicy() 000D "

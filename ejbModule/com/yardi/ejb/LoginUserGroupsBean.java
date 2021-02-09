@@ -14,8 +14,8 @@ import javax.persistence.PersistenceContextType;
 import com.yardi.ejb.model.Login_Sessions_Table;
 import com.yardi.ejb.model.Login_User_Groups;
 import com.yardi.ejb.model.Login_User_Profile;
-import com.yardi.userServices.LoginInitialPage;
-import com.yardi.userServices.LoginUserGroupsGraph;
+import com.yardi.shared.userServices.LoginInitialPage;
+import com.yardi.shared.userServices.LoginUserGroupsGraph;
 
 /**
  * Session Bean implementation class UserGroupsBean
@@ -94,7 +94,7 @@ public class LoginUserGroupsBean implements LoginUserGroups {
     		System.out.println("com.yardi.ejb.LoginUserGroupsBean find() 000C ");
     		//debug
     		loginUserProfile = null;
-    		feedback = com.yardi.rentSurvey.YardiConstants.YRD000D;
+    		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000D;
     		return userGroupsVector;
     	}
     	
@@ -133,7 +133,7 @@ public class LoginUserGroupsBean implements LoginUserGroups {
 	}
 
 	public String getInitialPage(String userName) {
-    	feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
+    	feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
 		initialPage = userGroups.get(0).getGmInitialPage(); //GM_INITIAL_PAGE from GROUPS_MASTER
 		//debug
 		System.out.println("com.yardi.ejb.LoginUserGroupsBean 0001 getInitialPage()  " 
@@ -153,8 +153,8 @@ public class LoginUserGroupsBean implements LoginUserGroups {
 
 		if (userGroups.size()>1) {
 			// user is in multiple groups. Set ST_LAST_REQUEST to the html select group page. User picks the initial page
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD000E;
-			initialPage = com.yardi.rentSurvey.YardiConstants.USER_SELECT_GROUP_PAGE;
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000E;
+			initialPage = com.yardi.shared.rentSurvey.YardiConstants.USER_SELECT_GROUP_PAGE;
 			//debug
 			System.out.println("com.yardi.ejb.LoginUserGroupsBean getInitialPage() 0003 " 
 					+ "\n"
