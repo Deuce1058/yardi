@@ -4,9 +4,9 @@ import java.util.Vector;
 
 import javax.ejb.Remote;
 
-import com.yardi.userServices.InitialPage;
-import com.yardi.userServices.LoginRequest;
-import com.yardi.userServices.LoginResponse;
+import com.yardi.shared.userServices.InitialPage;
+import com.yardi.shared.userServices.LoginRequest;
+import com.yardi.shared.userServices.LoginResponse;
 
 /**
  * Specifies methods implemented by UserServicesBean.

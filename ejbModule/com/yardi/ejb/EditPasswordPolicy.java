@@ -2,8 +2,8 @@ package com.yardi.ejb;
 
 import javax.ejb.Remote;
 
-import com.yardi.QSECOFR.EditPwdPolicyRequest;
 import com.yardi.ejb.model.Pwd_Policy;
+import com.yardi.shared.QSECOFR.EditPwdPolicyRequest;
 
 @Remote
 public interface EditPasswordPolicy {

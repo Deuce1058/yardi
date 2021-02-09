@@ -8,8 +8,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import com.yardi.QSECOFR.EditPwdPolicyRequest;
 import com.yardi.ejb.model.Pwd_Policy;
+import com.yardi.shared.QSECOFR.EditPwdPolicyRequest;
 
 /**
  * Session Bean implementation class EditUserProfileBean
@@ -80,14 +80,14 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
     	System.out.println("com.yardi.ejb.EditPasswordPolicyBean newEditPwdPolicyReqest() 0005 ");
     	//debug
     	EditPwdPolicyRequest editPwdPolicyRequest = new EditPwdPolicyRequest();
-    	String s[] = com.yardi.rentSurvey.YardiConstants.YRD0000.split("=");
+    	String s[] = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("=");
     	editPwdPolicyRequest.setMsgId(s[0]);
     	editPwdPolicyRequest.setMsgDescription(s[1]);
 
     	if (pwdPolicy == null) {
-    		editPwdPolicyRequest.setAction(com.yardi.rentSurvey.YardiConstants.EDIT_PASSWORD_POLICY_REQUEST_ACTION_ADD);
+    		editPwdPolicyRequest.setAction(com.yardi.shared.rentSurvey.YardiConstants.EDIT_PASSWORD_POLICY_REQUEST_ACTION_ADD);
     	} else {
-    		editPwdPolicyRequest.setAction(com.yardi.rentSurvey.YardiConstants.EDIT_PASSWORD_POLICY_REQUEST_ACTION_UPDATE);
+    		editPwdPolicyRequest.setAction(com.yardi.shared.rentSurvey.YardiConstants.EDIT_PASSWORD_POLICY_REQUEST_ACTION_UPDATE);
     		editPwdPolicyRequest.setPwdLifeInDays    (new Short(pwdPolicy.getPpDays()).toString());
     		editPwdPolicyRequest.setNbrUnique        (new Short(pwdPolicy.getPpNbrUnique()).toString());
     		editPwdPolicyRequest.setMaxSignonAttempts(new Short(pwdPolicy.getPpMaxSignonAttempts()).toString()); 

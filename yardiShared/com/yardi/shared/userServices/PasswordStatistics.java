@@ -1,4 +1,4 @@
-package com.yardi.userServices;
+package com.yardi.shared.userServices;
 
 import java.util.Arrays;
 import java.util.HashMap;

@@ -11,8 +11,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.TypedQuery;
 
-import com.yardi.userServices.InitialPage;
-import com.yardi.userServices.UserGroupsGraph;
+import com.yardi.shared.userServices.InitialPage;
+import com.yardi.shared.userServices.UserGroupsGraph;
 
 /**
  * Session Bean implementation class UserGroupsBean
@@ -80,7 +80,7 @@ public class UserGroupsBean implements UserGroups {
 	}
 	
     public String getInitialPage(String userName) {
-    	feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
+    	feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
     	userGroups = find(userName);
 		initialPage = userGroups.get(0).getGmInitialPage(); //GM_INITIAL_PAGE from GROUPS_MASTER
 		//debug
@@ -101,8 +101,8 @@ public class UserGroupsBean implements UserGroups {
 
 		if (userGroups.size()>1) {
 			// user is in multiple groups. Set ST_LAST_REQUEST to the html select group page. User picks the initial page
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD000E;
-			initialPage = com.yardi.rentSurvey.YardiConstants.USER_SELECT_GROUP_PAGE;
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000E;
+			initialPage = com.yardi.shared.rentSurvey.YardiConstants.USER_SELECT_GROUP_PAGE;
 			//debug
 			System.out.println("com.yardi.ejb UserGroupsBean getInitialPage() 0003" 
 					+ "\n"

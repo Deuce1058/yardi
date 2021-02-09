@@ -17,7 +17,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
 import com.yardi.ejb.model.Pwd_Policy;
-import com.yardi.userServices.PasswordAuthentication;
+import com.yardi.shared.userServices.PasswordAuthentication;
 
 /**
  * Session Bean implementation class UserProfileBean
@@ -400,7 +400,7 @@ public class UserProfileBean implements UserProfile {
 	 */
 	public boolean authenticate(String userName, String password, boolean userIsChangingPassword) {
 		System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0013");
-		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
+		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
 		java.sql.Timestamp today = new java.sql.Timestamp(new java.util.Date().getTime());
 		User_Profile userProfile = find(userName); 
 
@@ -409,7 +409,7 @@ public class UserProfileBean implements UserProfile {
 			//debug
 			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0010 pwdPolicy == null");
 			//debug
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD000B;
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
 			return false;
 		}
 
@@ -417,7 +417,7 @@ public class UserProfileBean implements UserProfile {
 			//debug
 			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0006 userProfile == null");
 			//debug
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD0001;
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0001;
 			return false;
 		}
 
@@ -429,7 +429,7 @@ public class UserProfileBean implements UserProfile {
 			//debug
 			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0008 userProfile.getUpDisabledDate() != null\n");
 			//debug
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD0003;
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0003;
 			return false;
 		}
 
@@ -437,7 +437,7 @@ public class UserProfileBean implements UserProfile {
 			//debug
 			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0009 userProfile.getUpActiveYn().equals(N)");
 			//debug
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD0004;
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0004;
 			return false;
 		}
 
@@ -449,7 +449,7 @@ public class UserProfileBean implements UserProfile {
 
 		if (pwdValid == false) {
 			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0017");
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD000F;
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000F;
 			signonAttempts++;
 			int rows = setUpPwdAttempts(userName, signonAttempts);
 			//debug
@@ -482,7 +482,7 @@ public class UserProfileBean implements UserProfile {
 					int z = rows;
 				}
 
-				feedback = com.yardi.rentSurvey.YardiConstants.YRD000C;
+				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000C;
 				//debug
 				System.out.println("com.yardi.ejb.UserProfileBean authenticate() 000D"
 						+ "feedback =" + feedback + "\n");
@@ -498,7 +498,7 @@ public class UserProfileBean implements UserProfile {
 				 * expected) as long as all of the other criteria (they have provided valid credentials, they are active and 
 				 * the password is not disabled) have been met. For this reason, the expired password test happens last. 
 				 */
-				feedback = com.yardi.rentSurvey.YardiConstants.YRD0002;
+				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0002;
 				//debug
 				System.out.println("com.yardi.ejb.UserProfileBean authenticate() 000E"
 						+ "\n "
@@ -568,7 +568,7 @@ public class UserProfileBean implements UserProfile {
 		pwdPolicy = passwordPolicyBean.getPwdPolicy();
 		
 		if (pwdPolicy == null) {
-			feedback = com.yardi.rentSurvey.YardiConstants.YRD000B;
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
 			System.out.println("com.yardi.ejb.UserProfileBean setPwdPolicy() pwdPolicy==null 0011");
 			return;
 		}

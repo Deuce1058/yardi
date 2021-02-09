@@ -4,8 +4,8 @@ import java.util.Vector;
 
 import javax.ejb.Remote;
 
-import com.yardi.userServices.InitialPage;
-import com.yardi.userServices.UserGroupsGraph;
+import com.yardi.shared.userServices.InitialPage;
+import com.yardi.shared.userServices.UserGroupsGraph;
 
 @Remote
 public interface UserGroups {
