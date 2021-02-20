@@ -2,9 +2,9 @@ package com.yardi.ejb;
 
 import java.util.Vector;
 
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
-@Remote
+@Local
 public interface UniqueTokens {
 	Unique_Tokens find(long rrn);
 	void persist(String userName, String token, java.util.Date dateAdded);

@@ -4,7 +4,6 @@ import java.util.Vector;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.ejb.Remote;
 import javax.ejb.Remove;
 import javax.ejb.Stateful;
 
@@ -16,7 +15,6 @@ import com.yardi.shared.userServices.PasswordStatistics;
  * Implementation of password policy rules for password composition
  */
 @Stateful
-@Remote
 public class PwdCompositionRulesBean implements PwdCompositionRules {
 	private Pwd_Policy pwdPolicy;
 	@EJB PasswordPolicy passwordPolicyBean;

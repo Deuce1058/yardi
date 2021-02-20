@@ -2,12 +2,12 @@ package com.yardi.ejb;
 
 import java.util.Vector;
 
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
 import com.yardi.shared.userServices.InitialPage;
 import com.yardi.shared.userServices.UserGroupsGraph;
 
-@Remote
+@Local
 public interface UserGroups {
 	Vector<UserGroupsGraph> find(String userID);
 	String getFeedback();
