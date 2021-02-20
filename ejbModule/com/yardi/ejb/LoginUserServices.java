@@ -1,6 +1,6 @@
 package com.yardi.ejb;
 
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
 import com.yardi.shared.userServices.LoginRequest;
 import com.yardi.shared.userServices.LoginResponse;
@@ -11,7 +11,7 @@ import com.yardi.shared.userServices.LoginResponse;
  * @author Jim
  *
  */
-@Remote
+@Local
 public interface LoginUserServices {
 	boolean authenticate();
 	boolean chgPwd();

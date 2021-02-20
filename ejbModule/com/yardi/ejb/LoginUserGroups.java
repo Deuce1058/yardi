@@ -2,14 +2,14 @@ package com.yardi.ejb;
 
 import java.util.Vector;
 
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
 import com.yardi.ejb.model.Login_Sessions_Table;
 import com.yardi.ejb.model.Login_User_Profile;
 import com.yardi.shared.userServices.LoginInitialPage;
 import com.yardi.shared.userServices.LoginUserGroupsGraph;
 
-@Remote
+@Local
 public interface LoginUserGroups {
 	Vector<LoginUserGroupsGraph> find(String userID);
 	String getFeedback();

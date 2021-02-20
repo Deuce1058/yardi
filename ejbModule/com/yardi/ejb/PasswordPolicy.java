@@ -1,12 +1,10 @@
 package com.yardi.ejb;
 
-import java.util.Vector;
-
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
 import com.yardi.ejb.model.Pwd_Policy;
 
-@Remote
+@Local
 public interface PasswordPolicy {
 	Pwd_Policy find(Long rrn);
 	String getFeedback();

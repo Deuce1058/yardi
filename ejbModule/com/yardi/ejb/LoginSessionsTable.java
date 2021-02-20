@@ -1,10 +1,10 @@
 package com.yardi.ejb;
 
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
 import com.yardi.ejb.model.Login_Sessions_Table;
 
-@Remote
+@Local
 public interface LoginSessionsTable {
 	int clear();
 	void persist(

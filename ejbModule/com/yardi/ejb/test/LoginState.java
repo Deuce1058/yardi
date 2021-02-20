@@ -1,10 +1,10 @@
 package com.yardi.ejb.test;
 
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
 import com.yardi.shared.test.LoginStateRequest;
 
-@Remote
+@Local
 public interface LoginState {
 	String getFeedback();
 	LoginStateRequest getLoginStateRequest();

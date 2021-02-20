@@ -1,10 +1,10 @@
 package com.yardi.ejb;
 
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
 import com.yardi.ejb.model.Login_User_Profile;
 
-@Remote
+@Local
 public interface LoginUserProfile {
 	boolean authenticate(String userName, String password, boolean userIsChangingPassword);
 	void changeUserToken(final char [] newPassword);

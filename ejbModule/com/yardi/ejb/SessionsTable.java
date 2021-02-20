@@ -1,8 +1,8 @@
 package com.yardi.ejb;
 
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
-@Remote
+@Local
 public interface SessionsTable {
 	int clear();
 	Sessions_Table findSession(String sessionID);
