@@ -12,6 +12,47 @@
     .preserveWhiteSpace {
       white-space: pre;
     }
+    .dropdown-submenu {
+      position: relative;
+    }
+    .dropdown-submenu>.dropdown-menu {
+      top: 0;
+      left: 100%;
+      margin-top: -6px;
+      margin-left: -1px;
+      -webkit-border-radius: 0 6px 6px 6px;
+      -moz-border-radius: 0 6px 6px;
+      border-radius: 0 6px 6px 6px;
+    }
+    .dropdown-submenu:hover>.dropdown-menu {
+      display: block;
+    }
+    .dropdown-submenu>a:after {
+      display: block;
+      content: " ";
+      float: right;
+      width: 0;
+      height: 0;
+      border-color: transparent;
+      border-style: solid;
+      border-width: 5px 0 5px 5px;
+      border-left-color: #ccc;
+      margin-top: 5px;
+      margin-right: -10px;
+    }
+    .dropdown-submenu:hover>a:after {
+      border-left-color: #fff;
+    }
+    .dropdown-submenu.pull-left {
+      float: none;
+    }
+    .dropdown-submenu.pull-left>.dropdown-menu {
+      left: -100%;
+      margin-left: 10px;
+      -webkit-border-radius: 6px 0 6px 6px;
+      -moz-border-radius: 6px 0 6px 6px;
+      border-radius: 6px 0 6px 6px;
+    }
     .formElementPadLeft {
       padding-left: 5px;
     }
@@ -179,9 +220,9 @@
   </div>
   <hr>
   <div class="d-flex flex-row pb-sm-1" id="userProfileAndUniqueTokens" style="margin-left: 5px;">
-    <div id="userProfile">
+    <div class="w-50 table-responsive" id="userProfileContainer">
       <h6><strong>User Profile</strong></h6>
-      <table class="table table-striped" id="usrPrf">
+      <table class="table table-striped mb-sm-0" id="usrPrf">
         <tr>
           <td>User token</td>
           <td id="userToken" class="blue"></td>
@@ -217,24 +258,24 @@
       </table>
     </div>
     <div class="verticalLine"></div>
-    <div id="uniqueTokensContainer">
+    <div class="w-50 table-responsive" id="uniqueTokensContainer">
       <h6><strong>Unique Tokens</strong></h6>
-      <table class="table table-striped" id="uniqueTokens">
+      <table class="table table-striped mb-sm-0" id="uniqueTokens">
       </table>
     </div>
   </div>
-  <hr>
+  <hr class="mt-sm-0">
   <div class="d-flex flex-row pb-sm-1" style="margin-left: 5px;" id="sessionsTableAndUserGroupsContainer">
-    <div id="sessionsTable">
+    <div class="w-50 table-responsive" id="sessionsTableContainer">
       <h6><strong>Sessions Table</strong></h6>
-      <table class="table" id="sessionsTable">
+      <table class="table table-striped mb-sm-0" id="sessionsTable">
         <tr>
           <td>Session ID</td>
           <td class="blue" id="sessionID"></td>
         </tr>
         <tr>
           <td>Session token</td>
-          <td class="blue" id="sessionToken"></td>
+          <td class="blue" id="sessionToken" ></td>
         </tr>
         <tr>
           <td>Last request</td>
@@ -251,9 +292,9 @@
       </table>
     </div>
     <div class="verticalLine"></div>
-    <div class="pl-sm-2" style="margin-left: 5px;" id="userGroupsContainer">
+    <div class="w-50  table-responsive pl-sm-2" style="margin-left: 5px;" id="userGroupsContainer">
       <h6><strong>User Groups</strong></h6>
-      <table class="table table-striped" id="userGroupsTable">
+      <table class="table table-striped mb-sm-0" id="userGroupsTable">
       </table>
     </div>
   </div>
@@ -276,225 +317,6 @@
       </div>
     </div>
   </div>
-  <script>
-    var findButtonDisabled = false;
-
-    $(function () {
-      console.log('loginState.html main 0000 ');
-      var formItems;
-      var d = new Date();
-      $('#sysDate').text(d.getFullYear() + ' ' + (d.getMonth() + 1) + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds());
-      configureButtons();
-
-      $('#findBtn').click(function(e) {
-        console.log('loginState.html main 0001 ');
-        findButtonDisabled = true;
-        configureButtons();
-
-        if ($('#username').val()==='') { 
-          console.log('loginState.html main 0002 ');
-          e.preventDefault;
-        } else {
-          formItems = {"userName" : $('#username').val()};
-          console.log('loginState.html main 0003 \n' + '    formItems=');
-
-          for ([k, v] of Object.entries(formItems)) {
-            console.log(`${k}: ${v}`);
-          }
-
-          doPost(formItems);
-        }
-      });
-
-      $('#nextBtn').click(function() {
-        findButtonDisabled = false;
-        configureButtons();
-        clearScreen();
-      });
-    });
-
-    function doPost(formItems) {
-      console.log('loginState.html doPost() 0000 ');
-      var ajaxData;
-      console.log(JSON.stringify(formItems));
-
-      $.ajax({
-        type: 'POST',
-        url: '../LoginState',
-        data: JSON.stringify(formItems),
-        dataType: "json",
-        success: function (ajaxData) {
-          console.log('loginState.html doPost() 0001 ');
-
-          if (ajaxData.msgid==='YRD0000') {
-            console.log('loginState.html doPost() 0002 ');
-            configureButtons();
-            buildPage(ajaxData);
-          } else {
-            console.log('loginState.html doPost() 0003 ');
-            formItems = {
-              "msgd" : ajaxData.msgd
-            }
-            $('#form-feedback').text(formItems.msgd);
-          }
-        }
-      });
-    }
-  
-    function buildPage(formItems) {
-      buildPwdPolicyPanel(formItems);
-      buildUsrPrfPanel(formItems);
-      buildUniqueTokensPanel(formItems);
-      buildSessionsTablePanel(formItems);
-      buildUsrGroupsPanel(formItems);
-    }
-
-    function buildPwdPolicyPanel(formItems) {
-      $('#pwdLife')          .text(formItems.ppDays);
-      $('#nbrUnique')        .text(formItems.ppNbrUnique);
-      $('#maxLoginAttempts') .text(formItems.ppMaxSignonAttempts);
-      $('#minPwdLen')        .text(formItems.ppPwdMinLen);
-      $('#maxPwdLen')        .text(formItems.ppMaxPwdLen);
-      $('#maxRepeatChar')    .text(formItems.ppMaxRepeatChar);
-      $('#nbrDigits')        .text(formItems.ppNbrDigits);
-      $('#nbrUpper')         .text(formItems.ppNbrUpper);
-      $('#nbrLower')         .text(formItems.ppNbrLower);
-      $('#nbrSpecial')       .text(formItems.ppNbrSpecial);
-      $('#upperRqd')         .text(formItems.pp_upper_rqd);
-      $('#lowerRqd')         .text(formItems.pp_lower_rqd);
-      $('#nbrRqd')           .text(formItems.pp_number_rqd);
-      $('#specialRqd')       .text(formItems.pp_special_rqd);
-      $('#cantContainUsrNam').text(formItems.pp_cant_contain_id);
-      $('#cantContainPwd')   .text(formItems.pp_cant_contain_pwd);
-    }
-
-    function buildUsrPrfPanel(formItems) {
-      $('#userToken')        .text(formItems.uptoken);
-      $('#pwdExpD')          .text(formItems.upPwdexpd);
-      $('#pwdAttempts')      .text(formItems.upPwdAttempts);
-      $('#disabledDate')     .text(formItems.upDisabledDate);
-      $('#disabledTime')     .text(formItems.upDisabledTime);
-      $('#lastLoginDate')    .text(formItems.upLastLoginDate);
-      $('#lastLoginTime')    .text(formItems.upLastLoginTime);
-      $('#activeYN')         .text(formItems.upActiveYn);
-    }
-
-    function buildUniqueTokensPanel(formItems) {
-      $('#uniqueTokens').html('');
-       $('#uniqueTokens').append(
-          '<thead>'
-        + '  <tr id="tableHeaders">'
-        + '    <th class="sticky">Token</th>'
-        + '    <th class="sticky">Date</th>'
-        + '    <th class="sticky">RRN</th>'
-        + '  </tr>'
-        + '</thead>'
-        + '<tbody>'
-      );
-      $.each(JSON.parse(formItems.uniqueTokensString), function(key, value) {
-        $('#uniqueTokens').append(
-            '<tr class="blue" id="tableRow"> '
-          + '  <td id="userToken"> ' 
-          + value.up1Token
-          + '  </td> '
-          + '  <td id="dateAdded"> '
-          + value.up1DateAdded
-          + '  </td>'
-          + '  <td id="tokenRRN"> '
-          + value.up1Rrn
-          + '  </td>'
-          + '<tr>'
-        );
-      } );
-      $('#uniqueTokens').append('</tbody>');
-    }
-
-    function buildSessionsTablePanel(formItems) {
-      $('#sessionID')     .text(formItems.stSesssionId);
-      $('#sessionToken')  .text(formItems.stSessionToken);
-      $('#lastRqs')       .text(formItems.stLastRequest);
-      $('#lastActiveDate').text(formItems.stLastActiveDate);
-      $('#lastActiveTime').text(formItems.stLastActiveTime);
-    }
-
-    function buildUsrGroupsPanel(formItems) {
-      $('#userGroupsTable').html('');
-      $('#userGroupsTable').append(
-          '<thead> '
-        + '  <tr> '
-        + '    <th class="sticky">Group</th> '
-        + '    <th class="sticky">Description</th> '
-        + '    <th class="sticky">Initial Page</th> '
-        + '  </tr> '
-        + '</thead> '
-        + '<tbody>'
-      );
-      $.each(JSON.parse(formItems.userGroups), function(key, value) { 
-        var s = value.page.split(';');
-        $('#userGroupsTable').append(
-            '<tr class="blue"> '
-          + '  <td id="ugGroup">'
-          + s[0]
-          + '  </td> '
-          + '  <td id="ugDescription">'
-          + s[1]
-          + '  </td>'
-          + '  <td> '
-          + value.url
-          + '  </td> '
-           + '</tr> '
-        );
-      });
-      $('#userGroupsTable').append('</tbody>');
-   }
-
-    function clearScreen() {
-      $('#username')         .val('');
-      $('#form-feedback')    .text('');
-      $('#pwdLife')          .text('');
-      $('#nbrUnique')        .text('');
-      $('#maxLoginAttempts') .text('');
-      $('#minPwdLen')        .text('');
-      $('#maxPwdLen')        .text('');
-      $('#maxRepeatChar')    .text('');
-      $('#nbrDigits')        .text('');
-      $('#nbrLower')         .text('');
-      $('#nbrSpecial')       .text('');
-      $('#upperRqd')         .text('');
-      $('#lowerRqd')         .text('');
-      $('#nbrUpper')         .text('');
-      $('#nbrRqd')           .text('');
-      $('#specialRqd')       .text('');
-      $('#cantContainUsrNam').text('');
-      $('#cantContainPwd')   .text('');
-      $('#userToken')        .text('');
-      $('#pwdExpD')          .text('');
-      $('#pwdAttempts')      .text('');
-      $('#disabledDate')     .text('');
-      $('#disabledTime')     .text('');
-      $('#lastLoginDate')    .text('');
-      $('#lastLoginTime')    .text('');
-      $('#activeYN')         .text('');
-      $('#uniqueTokens')     .html('');
-      $('#sessionID')        .text('');
-      $('#sessionToken')     .text('');
-      $('#lastRqs')          .text('');
-      $('#lastActiveDate')   .text('');
-      $('#lastActiveTime')   .text('');
-      $('#userGroupsTable')  .html('');
-    }
-
-    function configureButtons() {
-       if (findButtonDisabled) {
-        $('#username').addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
-        $('#findBtn') .addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
-        $('#nextBtn') .addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
-      } else {
-        $('#username').addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
-        $('#findBtn') .addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
-        $('#nextBtn') .addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
-      }
-    }
-  </script>
+  <script src='..\resources\scripts\min\loginState.min.js'></script>
 </body>
 </html>
