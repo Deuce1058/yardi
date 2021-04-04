@@ -476,7 +476,7 @@ public class LoginUserServicesBean implements LoginUserServices {
 		} else {
 			sessionsBean.update(
 					sessionsTable,
-					loginRequest.getSessionID(), 
+					sessionID, 
 					initialPage, 
 					new java.sql.Timestamp(new java.util.Date().getTime()));
 			//debug

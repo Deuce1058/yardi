@@ -113,7 +113,17 @@ public class LoginSessionsTableBean implements LoginSessionsTable {
 			java.sql.Timestamp lastActive
 			) {
 		//debug
-		System.out.println("com.yardi.ejb.LoginSessionsTableBean update() 0007 ");
+		System.out.println("com.yardi.ejb.LoginSessionsTableBean update() 0007 "
+				+ "\n"
+				+ "    sessionID="
+				+ sessionID
+				+ "\n"
+				+ "    lastRequest="
+				+ lastRequest
+				+ "\n"
+				+ "    lastActive="
+				+ lastActive
+		);
 		//debug
 		isJoined();
 		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();

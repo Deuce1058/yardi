@@ -136,11 +136,14 @@ public class PasswordAuthentication {
 		//debug
 		System.out.println("com.yardi.shared.userServices.PasswordAuthentication hash() 0000 "
 					+ "\n"
-					+ "DEFAULT_COST="
+					+ "    DEFAULT_COST="
 					+ DEFAULT_COST
 					+ "\n"
-					+ "cost="
+					+ "    cost="
 					+ cost
+					+ "\n"
+					+ "    password="
+					+ password.toString()
 		);
 		//debug
 	    byte[] salt = new byte[SIZE / 8];
