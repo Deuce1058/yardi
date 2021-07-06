@@ -36,6 +36,9 @@ public class Sessions_Table implements Serializable {
 	private long stRrn;
 
 	public Sessions_Table() {
+		/*debug*/
+		System.out.println("com.yardi.ejb.Sessions_Table.Sessions_Table() 0000");
+		/*debug*/
 	}
 
 	public String getStSesssionId() {
@@ -43,6 +46,9 @@ public class Sessions_Table implements Serializable {
 	}
 
 	public void setStSesssionId(String stSesssionId) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setStSesssionId() 0000");
+		/*debug*/
 		this.stSesssionId = stSesssionId;
 	}
 
@@ -51,6 +57,9 @@ public class Sessions_Table implements Serializable {
 	}
 
 	public void setStLastActive(Timestamp stLastActive) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setStLastActive() 0000");
+		/*debug*/
 		this.stLastActive = stLastActive;
 	}
 
@@ -59,6 +68,9 @@ public class Sessions_Table implements Serializable {
 	}
 
 	public void setStLastRequest(String stLastRequest) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setStLastRequest() 0000");
+		/*debug*/
 		this.stLastRequest = stLastRequest;
 	}
 
@@ -67,6 +79,9 @@ public class Sessions_Table implements Serializable {
 	}
 
 	public void setStRrn(long stRrn) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setStRrn() 0000");
+		/*debug*/
 		this.stRrn = stRrn;
 	}
 
@@ -75,6 +90,9 @@ public class Sessions_Table implements Serializable {
 	}
 
 	public void setStSessionToken(String stSessionToken) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setStSessionToken() 0000");
+		/*debug*/
 		this.stSessionToken = stSessionToken;
 	}
 
@@ -83,6 +101,9 @@ public class Sessions_Table implements Serializable {
 	}
 
 	public void setStUserId(String stUserId) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setStUserId() 0000");
+		/*debug*/
 		this.stUserId = stUserId;
 	}
 }

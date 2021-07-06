@@ -22,6 +22,9 @@ public class Yardi_Seq implements Serializable {
 	private long seqValue;
 
 	public Yardi_Seq() {
+		/*debug*/
+		System.out.println("com.yardi.ejb.Yardi_Seq.Yardi_Seq() 0000");
+		/*debug*/
 	}
 
 	public String getSeqName() {
@@ -29,6 +32,9 @@ public class Yardi_Seq implements Serializable {
 	}
 
 	public void setSeqName(String seqName) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setSeqName() 0000");
+		/*debug*/
 		this.seqName = seqName;
 	}
 
@@ -37,6 +43,9 @@ public class Yardi_Seq implements Serializable {
 	}
 
 	public void setSeqValue(long seqValue) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setSeqValue() 0000");
+		/*debug*/
 		this.seqValue = seqValue;
 	}
 }

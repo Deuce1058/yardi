@@ -31,6 +31,9 @@ public class User_Groups implements Serializable {
 	
 	
 	public User_Groups() {
+		/*debug*/
+		System.out.println("com.yardi.ejb.User_Groups.User_Groups() 0000");
+		/*debug*/
 	}
 
 	public long getUgRrn() {
@@ -38,6 +41,9 @@ public class User_Groups implements Serializable {
 	}
 
 	public void setUgRrn(long ugRrn) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUgRrn() 0000");
+		/*debug*/
 		this.ugRrn = ugRrn;
 	}
 
@@ -46,6 +52,9 @@ public class User_Groups implements Serializable {
 	}
 
 	public void setUgGroup(int ugGroup) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUgGroup() 0000");
+		/*debug*/
 		this.ugGroup = ugGroup;
 	}
 
@@ -54,6 +63,9 @@ public class User_Groups implements Serializable {
 	}
 
 	public void setUgUserId(String ugUserId) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUgUserId() 0000");
+		/*debug*/
 		this.ugUserId = ugUserId;
 	}
 
@@ -62,6 +74,9 @@ public class User_Groups implements Serializable {
 	}
 
 	public void setUgGroupsMaster(Groups_Master ugGroupsMaster) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUgGroupsMaster() 0000");
+		/*debug*/
 		this.ugGroupsMaster = ugGroupsMaster;
 	}
 

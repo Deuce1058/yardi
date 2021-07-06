@@ -38,9 +38,15 @@ public class Unique_Tokens implements Serializable {
 	private long up1Rrn;
 
 	public Unique_Tokens() {
+		/*debug*/
+		System.out.println("com.yardi.ejb.Unique_Tokens.Unique_Tokens() 0000");
+		/*debug*/
 	}
 
 	public Unique_Tokens(String up1UserName, String up1Token, Date up1DateAdded) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.Unique_Tokens.Unique_Tokens() 0001");
+		/*debug*/
 		this.up1UserName = up1UserName;
 		this.up1Token = up1Token;
 		this.up1DateAdded = up1DateAdded;
@@ -51,6 +57,9 @@ public class Unique_Tokens implements Serializable {
 	}
 
 	public void setUp1Rrn(long up1Rrn) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUp1Rrn() 0000");
+		/*debug*/
 		this.up1Rrn = up1Rrn;
 	}
 
@@ -59,6 +68,9 @@ public class Unique_Tokens implements Serializable {
 	}
 
 	public void setUp1DateAdded(Date up1DateAdded) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUp1DateAdded() 0000");
+		/*debug*/
 		this.up1DateAdded = up1DateAdded;
 	}
 
@@ -67,6 +79,9 @@ public class Unique_Tokens implements Serializable {
 	}
 
 	public void setUp1Token(String up1Token) {
+		/*debug*/
+		System.out.println("com.yardi.setUp1Token() 0000");
+		/*debug*/
 		this.up1Token = up1Token;
 	}
 
@@ -75,6 +90,9 @@ public class Unique_Tokens implements Serializable {
 	}
 
 	public void setUp1UserName(String up1UserName) {
+		/*debug*/
+		System.out.println("com.yardi.setUp1UserName() 0000");
+		/*debug*/
 		this.up1UserName = up1UserName;
 	}
 

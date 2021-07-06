@@ -33,6 +33,9 @@ public class Groups_Master implements Serializable {
 	private List<User_Groups> gmUserGroups;
 
 	public Groups_Master() {
+		/*debug*/
+		System.out.println("com.yardi.ejb.Groups_Master.Groups_Master() 0000");
+		/*debug*/
 	}
 
 	public int getGmType() {
@@ -40,6 +43,9 @@ public class Groups_Master implements Serializable {
 	}
 
 	public void setGmType(int gmType) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.Groups_Master.setGmType() 0000");
+		/*debug*/
 		this.gmType = gmType;
 	}
 
@@ -48,6 +54,9 @@ public class Groups_Master implements Serializable {
 	}
 
 	public void setGmDescription(String gmDescription) {
+		/*debug*/
+		System.out.println("com.yardi.setGmDescription() 0000");
+		/*debug*/
 		this.gmDescription = gmDescription;
 	}
 
@@ -56,6 +65,9 @@ public class Groups_Master implements Serializable {
 	}
 
 	public void setGmInitialPage(String gmInitialPage) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.Groups_Master.setGmInitialPage() 0000");
+		/*debug*/
 		this.gmInitialPage = gmInitialPage;
 	}
 
@@ -64,6 +76,9 @@ public class Groups_Master implements Serializable {
 	}
 
 	public void setGmRrn(long gmRrn) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.Groups_Master.setGmRrn() 0000");
+		/*debug*/
 		this.gmRrn = gmRrn;
 	}
 
@@ -72,6 +87,9 @@ public class Groups_Master implements Serializable {
 	}
 
 	public void setGmUserGroups(List<User_Groups> gmUserGroups) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.Groups_Master.setGmUserGroups() 0000");
+		/*debug*/
 		this.gmUserGroups = gmUserGroups;
 	}
 

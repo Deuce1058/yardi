@@ -90,6 +90,9 @@ public class Pwd_Policy implements Serializable {
 			String pp_special_rqd, short ppMaxPwdLen, short ppMaxRepeatChar, short ppNbrDigits,
 			short ppNbrUpper, short ppNbrLower, short ppNbrSpecial, String pp_cant_contain_id, String pp_cant_contain_pwd
 			) {
+		//debug
+		System.out.println("com.yardi.ejb.model.Pwd_Policy Pwd_Policy() 0000 ");
+		//debug
 		this.ppDays = ppDays;
 		this.ppNbrUnique = ppNbrUnique;
 		this.ppMaxSignonAttempts = ppMaxSignonAttempts;
