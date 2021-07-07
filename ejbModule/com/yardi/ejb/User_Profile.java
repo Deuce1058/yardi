@@ -92,6 +92,9 @@ public class User_Profile implements Serializable {
 	private long uprrn;
 
 	public User_Profile() {
+		/*debug*/
+		System.out.println("com.yardi.ejb.User_Profile.User_Profile() 0000");
+		/*debug*/
 	}
 
 	public String getUpUserid() {
@@ -99,6 +102,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpUserid(String upUserid) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpUserid() 0000");
+		/*debug*/
 		this.upUserid = upUserid;
 	}
 
@@ -107,6 +113,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpActiveYn(String upActiveYn) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpActiveYn() 0000");
+		/*debug*/
 		this.upActiveYn = upActiveYn;
 	}
 
@@ -115,6 +124,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpAddress1(String upAddress1) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpAddress1() 0000");
+		/*debug*/
 		this.upAddress1 = upAddress1;
 	}
 
@@ -123,6 +135,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpAddress2(String upAddress2) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpAddress2() 0000");
+		/*debug*/
 		this.upAddress2 = upAddress2;
 	}
 
@@ -131,6 +146,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpCity(String upCity) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpCity() 0000");
+		/*debug*/
 		this.upCity = upCity;
 	}
 
@@ -139,6 +157,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpDisabledDate(java.util.Date upDisabledDate) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpDisabledDate() 0000");
+		/*debug*/
 		this.upDisabledDate.setTime(upDisabledDate.getTime()); 
 	}
 
@@ -147,6 +168,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpDisabledYn(String upDisabledYn) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpDisabledYn() 0000");
+		/*debug*/
 		this.upDisabledYn = upDisabledYn;
 	}
 
@@ -155,6 +179,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpEmail(String upEmail) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpEmail() 0000");
+		/*debug*/
 		this.upEmail = upEmail;
 	}
 
@@ -163,6 +190,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpFax(String upFax) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpFax() 0000");
+		/*debug*/
 		this.upFax = upFax;
 	}
 
@@ -171,6 +201,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpFirstName(String upFirstName) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpFirstName() 0000");
+		/*debug*/
 		this.upFirstName = upFirstName;
 	}
 
@@ -179,6 +212,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpHomeMarket(short upHomeMarket) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpHomeMarket() 0000");
+		/*debug*/
 		this.upHomeMarket = upHomeMarket;
 	}
 
@@ -187,6 +223,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpLastLoginDate(java.util.Date upLastLoginDate) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpLastLoginDate() 0000");
+		/*debug*/
 		this.upLastLoginDate.setTime(upLastLoginDate.getTime()); 
 	}
 
@@ -195,6 +234,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpLastName(String upLastName) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpLastName() 0000");
+		/*debug*/
 		this.upLastName = upLastName;
 	}
 
@@ -203,6 +245,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpPhone(String upPhone) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpPhone() 0000");
+		/*debug*/
 		this.upPhone = upPhone;
 	}
 
@@ -211,6 +256,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpPwdAttempts(short upPwdAttempts) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpPwdAttempts() 0000");
+		/*debug*/
 		this.upPwdAttempts = upPwdAttempts;
 	}
 
@@ -219,6 +267,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpPwdexpd(java.util.Date upPwdexpd) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpPwdexpd() 0000");
+		/*debug*/
 		this.upPwdexpd = upPwdexpd;
 	}
 
@@ -227,6 +278,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpState(String upState) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpState() 0000");
+		/*debug*/
 		this.upState = upState;
 	}
 
@@ -235,6 +289,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpZip(String upZip) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpZip() 0000");
+		/*debug*/
 		this.upZip = upZip;
 	}
 
@@ -243,6 +300,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpZip4(String upZip4) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpZip4() 0000");
+		/*debug*/
 		this.upZip4 = upZip4;
 	}
 
@@ -251,6 +311,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpdob(java.util.Date updob) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpdob() 0000");
+		/*debug*/
 		this.updob = updob;
 	}
 
@@ -259,6 +322,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUprrn(long uprrn) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUprrn() 0000");
+		/*debug*/
 		this.uprrn = uprrn;
 	}
 
@@ -267,6 +333,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUpssn(String upssn) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUpssn() 0000");
+		/*debug*/
 		this.upssn = upssn;
 	}
 
@@ -275,6 +344,9 @@ public class User_Profile implements Serializable {
 	}
 
 	public void setUptoken(String uptoken) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setUptoken() 0000");
+		/*debug*/
 		this.uptoken = uptoken;
 	}
 

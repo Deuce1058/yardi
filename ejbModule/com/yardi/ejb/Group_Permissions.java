@@ -26,6 +26,9 @@ public class Group_Permissions implements Serializable {
 	private long gpRrn;
 
 	public Group_Permissions() {
+		/*debug*/
+		System.out.println("com.yardi.ejb.Group_Permissions.Group_Permissions() 0000");
+		/*debug*/
 	}
 
 	public long getGpRrn() {
@@ -33,6 +36,9 @@ public class Group_Permissions implements Serializable {
 	}
 
 	public void setGpRrn(long gpRrn) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setGpRrn() 0000");
+		/*debug*/
 		this.gpRrn = gpRrn;
 	}
 
@@ -41,6 +47,9 @@ public class Group_Permissions implements Serializable {
 	}
 
 	public void setGpGroupType(int gpGroupType) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setGpGroupType() 0000");
+		/*debug*/
 		this.gpGroupType = gpGroupType;
 	}
 
@@ -49,6 +58,9 @@ public class Group_Permissions implements Serializable {
 	}
 
 	public void setGpPermission(int gpPermission) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setGpPermission() 0000");
+		/*debug*/
 		this.gpPermission = gpPermission;
 	}
 }

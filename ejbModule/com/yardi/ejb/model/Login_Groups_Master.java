@@ -32,6 +32,9 @@ public class Login_Groups_Master implements Serializable {
 	private List<Login_User_Groups> gmUserGroups;
 
 	public Login_Groups_Master() {
+		/*debug*/
+		System.out.println("com.yardi.ejb.model.Login_Groups_Master.Login_Groups_Master() 0000");
+		/*debug*/
 	}
 
 	public String getGmDescription() {

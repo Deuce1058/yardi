@@ -87,22 +87,37 @@ public class Login_User_Profile implements Serializable {
 	}
 
 	public void setUpDisabledDate(java.sql.Timestamp upDisabledDate) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.model.Login_User_Profile.setUpDisabledDate() 0000");
+		/*debug*/
 		this.upDisabledDate = upDisabledDate;
 	}
 
 	public void setUpLastLoginDate(java.sql.Timestamp upLastLoginDate) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.model.Login_User_Profile.setUpLastLoginDate() 0000");
+		/*debug*/
 		this.upLastLoginDate = upLastLoginDate;
 	}
 
 	public void setUpPwdAttempts(short upPwdAttempts) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.model.Login_User_Profile.setUpPwdAttempts() 0000");
+		/*debug*/
 		this.upPwdAttempts = upPwdAttempts;
 	}
 
 	public void setUpPwdexpd(java.util.Date upPwdexpd) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.model.Login_User_Profile.setUpPwdexpd() 0000");
+		/*debug*/
 		this.upPwdexpd = upPwdexpd;
 	}
 
 	public void setUptoken(String uptoken) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.model.Login_User_Profile.setUptoken() 0000");
+		/*debug*/
 		this.uptoken = uptoken;
 	}
 }

@@ -26,6 +26,9 @@ public class Permissions_Master implements Serializable {
 	private long pmRrn;
 
 	public Permissions_Master() {
+		/*debug*/
+		System.out.println("com.yardi.ejb.Permissions_Master.Permissions_Master() 0000");
+		/*debug*/
 	}
 
 	public int getPmType() {
@@ -33,6 +36,9 @@ public class Permissions_Master implements Serializable {
 	}
 
 	public void setPmType(int pmType) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setPmType() 0000");
+		/*debug*/
 		this.pmType = pmType;
 	}
 
@@ -41,6 +47,9 @@ public class Permissions_Master implements Serializable {
 	}
 
 	public void setPmDescription(String pmDescription) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setPmDescription() 0000");
+		/*debug*/
 		this.pmDescription = pmDescription;
 	}
 
@@ -49,6 +58,9 @@ public class Permissions_Master implements Serializable {
 	}
 
 	public void setPmRrn(long pmRrn) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.setPmRrn() 0000");
+		/*debug*/
 		this.pmRrn = pmRrn;
 	}
 }

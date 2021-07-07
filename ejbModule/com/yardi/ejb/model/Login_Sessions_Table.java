@@ -50,6 +50,9 @@ public class Login_Sessions_Table implements Serializable {
 	private List<Login_User_Groups> stUserGroups;
 	
 	public Login_Sessions_Table() {
+		/*debug*/
+		System.out.println("com.yardi.ejb.model.Login_Sessions_Table.Login_Sessions_Table() 0001");
+		/*debug*/
 	}
 
 	public Login_Sessions_Table(
@@ -59,6 +62,9 @@ public class Login_Sessions_Table implements Serializable {
 			String lastRequest, 
 			java.sql.Timestamp lastActive
 			) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.model.Login_Sessions_Table.Login_Sessions_Table() 0000");
+		/*debug*/
 		stUserId       = userID;
 		stSesssionId   = sessionID;
 		stSessionToken = sessionToken;
@@ -91,22 +97,37 @@ public class Login_Sessions_Table implements Serializable {
 	}
 
 	public void setStLastActive(java.sql.Timestamp stLastActive) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.model.Login_Sessions_Table.setStLastActive() 0000");
+		/*debug*/
 		this.stLastActive = stLastActive;
 	}
 
 	public void setStLastRequest(String stLastRequest) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.model.Login_Sessions_Table.setStLastRequest() 0000");
+		/*debug*/
 		this.stLastRequest = stLastRequest;
 	}
 
 	public void setStSessionToken(String stSessionToken) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.model.Login_Sessions_Table.setStSessionToken() 0000");
+		/*debug*/
 		this.stSessionToken = stSessionToken;
 	}
 
 	public void setStSesssionId(String stSesssionId) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.model.Login_Sessions_Table.setStSesssionId() 0000");
+		/*debug*/
 		this.stSesssionId = stSesssionId;
 	}
 
 	public void setStUserId(String stUserId) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.model.Login_Sessions_Table.setStUserId() 0000");
+		/*debug*/
 		this.stUserId = stUserId;
 	}
 }
