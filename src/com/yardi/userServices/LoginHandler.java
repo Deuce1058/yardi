@@ -17,7 +17,8 @@ import javax.servlet.http.HttpSession;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.LoginUserServices;
-
+import com.yardi.shared.userServices.LoginRequest;
+import com.yardi.shared.userServices.LoginResponse;
 
 import java.util.Collection;
 
@@ -92,7 +93,7 @@ public class LoginHandler extends HttpServlet {
 	/**
 	 * Give feedback from the change password process
 	 */
-	private void chgPwdFeedback(HttpServletResponse response, LoginUserServices userSvcBean, LoginRequest loginRequest, ObjectMapper mapper) throws IOException, JsonProcessingException {
+	private void chgPwdFeedback(HttpServletRequest request, HttpServletResponse response, LoginUserServices userSvcBean, LoginRequest loginRequest, ObjectMapper mapper) throws IOException, JsonProcessingException {
 		//debug
 		System.out.println("com.yardi.ejb.LoginHandler chgPwdFeedback() 002D ");
 		//debug
@@ -105,12 +106,12 @@ public class LoginHandler extends HttpServlet {
 					msg[0],
 					msg[1]
 		)); 
-		webResponse(response, formData);
-		//debug
 		System.out.println("com.yardi.userServices.LoginHandler chgPwdFeedback() 0004 "
 				+ "\n "
 				+ "  formData = " + formData
 				);
+		//debug
+		webResponse(request, response, formData, userSvcBean);
 		//debug
 	}
 
@@ -197,8 +198,8 @@ public class LoginHandler extends HttpServlet {
     	/*
     	 * They have either successfully logged in without changing the password or they successfully changed the password
     	 */
-		if (userSvcBean.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0000) || 
-			userSvcBean.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD000E)) {
+		if (userSvcBean.getFeedback().equals(com.yardi.shared.rentSurvey.YardiConstants.YRD0000) || 
+			userSvcBean.getFeedback().equals(com.yardi.shared.rentSurvey.YardiConstants.YRD000E)) {
 			//debug
 			System.out.println("com.yardi.ejb.LoginHandler doGet() 0028 ");
 			//debug
@@ -207,7 +208,7 @@ public class LoginHandler extends HttpServlet {
 			return;
 		}
 				
-		if (loginRequest.getChangePwd() || userSvcBean.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0002)) {
+		if (loginRequest.getChangePwd() || userSvcBean.getFeedback().equals(com.yardi.shared.rentSurvey.YardiConstants.YRD0002)) {
     		//debug
     		System.out.println("com.yardi.userServices.LoginHandler doGet() 0002 "
     				+ "\n "
@@ -224,7 +225,7 @@ public class LoginHandler extends HttpServlet {
 				//debug
 				System.out.println("com.yardi.ejb.LoginHandler doget() 002B ");
 				//debug
-				informChgPwd(response, userSvcBean, mapper, loginRequest);
+				informChgPwd(request, response, userSvcBean, mapper, loginRequest);
 				return;
 			} 
 			
@@ -232,7 +233,7 @@ public class LoginHandler extends HttpServlet {
 			//debug
 			System.out.println("com.yardi.ejb.LoginHandler doget() 002C ");
 			//debug
-			chgPwdFeedback(response, userSvcBean, loginRequest, mapper);
+			chgPwdFeedback(request, response, userSvcBean, loginRequest, mapper);
 			return;
 		}
 		
@@ -248,11 +249,11 @@ public class LoginHandler extends HttpServlet {
 		//YRD000B$Password policy is missing
 		//YRD000C$Maximum signon attempts exceeded. The user profile has been disabled
 		
-		if (userSvcBean.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0000)==false) {
+		if (userSvcBean.getFeedback().equals(com.yardi.shared.rentSurvey.YardiConstants.YRD0000)==false) {
 			//debug
 			System.out.println("com.yardi.ejb.LoginHandler doget() 002E ");
 			//debug
-			otherFeedback(response, userSvcBean, loginRequest, mapper);
+			otherFeedback(request, response, userSvcBean, loginRequest, mapper);
 			return;
 		}		
 	}
@@ -264,7 +265,7 @@ public class LoginHandler extends HttpServlet {
 		doGet(request, response);
 	}
 
-	private void informChgPwd(HttpServletResponse response, LoginUserServices userSvcBean, ObjectMapper mapper, LoginRequest loginRequest) throws IOException, JsonProcessingException {
+	private void informChgPwd(HttpServletRequest request, HttpServletResponse response, LoginUserServices userSvcBean, ObjectMapper mapper, LoginRequest loginRequest) throws IOException, JsonProcessingException {
 		//debug
 		System.out.println("com.yardi.ejb.LoginHandler informChgPwd() 002A ");
 		//debug
@@ -276,7 +277,7 @@ public class LoginHandler extends HttpServlet {
 								  msg[0], 
 								  "views/changePwd.html"
 		));
-		webResponse(response, formData);
+		webResponse(request, response, formData, userSvcBean);
 		//debug
 		System.out.println("com.yardi.userServices.LoginHandler respondChgPwd() 0003 "
 				+ "\n "
@@ -314,13 +315,6 @@ public class LoginHandler extends HttpServlet {
 		
 		//store the userID in the session
 		request.getSession(false).setAttribute("userID", loginRequest.getUserName()); 
-		
-	    /*
-		 * Respond to yardiLogin.html/changePwd.html. The page sees that the login request is successful (YRD0000) or 
-		 * that the user is in multiple groups (YRD000E) and looks at the 5th parm (initialPage) in loginResponse to 
-		 * get the next page to load. yardiLogin.html/changePwd.html tells index.html to load the initialPage page.
-		 */
-		webResponse(response, mapper.writeValueAsString(userSvcBean.getLoginResponse()));
 		//debug
 		System.out.println("com.yardi.userServices.LoginHandler loginSuccess() 0007 "
 				+ "\n "
@@ -330,12 +324,15 @@ public class LoginHandler extends HttpServlet {
 				+ mapper.writeValueAsString(userSvcBean.getLoginResponse()) 
 				);
 		//debug
-		userSvcBean.remove();
-		HttpSession session = request.getSession();
-		session.setAttribute("userSvcBean", null);
+	    /*
+		 * Respond to yardiLogin.html/changePwd.html. The page sees that the login request is successful (YRD0000) or 
+		 * that the user is in multiple groups (YRD000E) and looks at the 5th parm (initialPage) in loginResponse to 
+		 * get the next page to load. yardiLogin.html/changePwd.html tells index.html to load the initialPage page.
+		 */
+		webResponse(request, response, mapper.writeValueAsString(userSvcBean.getLoginResponse()), userSvcBean);
 	}
 
-	private void otherFeedback(HttpServletResponse response, LoginUserServices userSvcBean, LoginRequest loginRequest, ObjectMapper mapper) throws IOException, JsonProcessingException {
+	private void otherFeedback(HttpServletRequest request, HttpServletResponse response, LoginUserServices userSvcBean, LoginRequest loginRequest, ObjectMapper mapper) throws IOException, JsonProcessingException {
 		//debug
 		System.out.println("com.yardi.ejb.LoginHandler otherFeedback() 002F "
 				+ "\n"
@@ -352,7 +349,6 @@ public class LoginHandler extends HttpServlet {
 								   msg[0],
 								   msg[1]
 		));
-		webResponse(response, formData);
 		//debug
 		System.out.println("com.yardi.userServices.LoginHandler otherFeedback() 0015"
 				+ " "
@@ -363,6 +359,7 @@ public class LoginHandler extends HttpServlet {
 				+ "\n "
 				);
 		//debug
+		webResponse(request, response, formData, userSvcBean);
 	}
 	
 	private void resetBuffer(HttpServletResponse response) {
@@ -419,7 +416,7 @@ public class LoginHandler extends HttpServlet {
 		//debug
 	}
 
-	private void webResponse(HttpServletResponse response, String formData) throws IOException {
+	private void webResponse(HttpServletRequest request, HttpServletResponse response, String formData, LoginUserServices userSvcBean) throws IOException {
 		//debug
 		System.out.println("com.yardi.userServices.LoginHandler webResponse() 0000 ");
 		//debug
@@ -428,5 +425,8 @@ public class LoginHandler extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.print(formData);
 		out.flush();
+		userSvcBean.remove();
+		HttpSession session = request.getSession();
+		session.setAttribute("userSvcBean", null);
 	}
 }
