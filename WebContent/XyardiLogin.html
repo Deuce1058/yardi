@@ -193,6 +193,7 @@
             async:    false,
             dataType: "json", 
             success:  function(data) {
+              parent.userName = data.userName;
               $('#form-feedback').text(data.msgDescription);
             
               if (data.msgID === 'YRD0001') {
@@ -247,7 +248,6 @@
                   parent.initialPageList = data.newPassword;
                 } 
 
-                parent.userName = data.userName;
                 $('html').html(data.msgDescription);
                 console.log('nextFrame ' + data.msgDescription);
                 parent.frame = data.msgDescription;

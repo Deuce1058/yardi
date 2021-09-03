@@ -271,7 +271,7 @@ public class LoginHandler extends HttpServlet {
 		//debug
 		String msg[] = userSvcBean.getFeedback().split("=");
 		String formData = mapper.writeValueAsString(
-				new LoginResponse("", 
+				new LoginResponse(loginRequest.getUserName(), 
 								  "", 
 								  "", 
 								  msg[0], 
