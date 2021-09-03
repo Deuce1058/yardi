@@ -151,12 +151,20 @@ public class LoginUserProfileBean implements LoginUserProfile {
 
 			if (userIsChangingPassword == false && passwordExpiration <= today.getTime()) {
 				/*
-				 * Password expired. Use chgPwd() in this class to change it
-				 * 
-				 * If the password is being changed because it expired then the expired password error should be ignored (it is
-				 * expected) as long as all of the other criteria (they have provided valid credentials, they are active and 
-				 * the password is not disabled) have been met. For this reason, the expired password test happens last. 
+				 * there is pwdPolicy
+				 * there is userProfile
+				 * user profile is active
+				 * user profile is not disabled
+				 * password is valid 
+				 * Password expired. Use chgUserToken() in this class to change it
+				 * They made it this far so give them credit and reset password attempts. 
+				 * Still return false so no session table row is created.
+				 * com.yardi.ejb.LoginUserServicesBean.authenticate() makes an exception for YRD0002 and will commit instead of rollback
 				 */
+				//debug
+				System.out.println("com.yardi.ejb.LoginUserProfileBean authenticate() 0021");
+				//debug
+				setUpPwdAttempts((short) 0);
 				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0002;
 				//debug
 				System.out.println("com.yardi.ejb.LoginUserProfileBean authenticate() 000E"

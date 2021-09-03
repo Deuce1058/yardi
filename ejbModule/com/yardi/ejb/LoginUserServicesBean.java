@@ -160,7 +160,8 @@ public class LoginUserServicesBean implements LoginUserServices {
 				//debug
 
 				if (feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD000C) ||
-						feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD000F)) {
+					feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD000F) ||
+					feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD0002)	) {
 					/*
 					 * Need to distinguish between invalid password and invalid user name. If its invalid password 
 					 * set feedback to YRD0001 because html does not distinguish between invalid password and invalid 
@@ -276,7 +277,7 @@ public class LoginUserServicesBean implements LoginUserServices {
 				System.out.println("com.yardi.ejb.LoginUserServicesBean chgPwd() 000E ");
 				//debug
 				if (feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD000C) ||
-						feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD000F)) {
+						feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD0001)) {
 					//debug
 					System.out.println("com.yardi.ejb.LoginUserServicesBean chgPwd() 0012 ");
 					//debug
