@@ -49,7 +49,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="fa-user"><i class="fas fa-user fa-sm" aria-hidden="true"></i></span>
                         </div>
-                        <input type="text" required class="form-control-sm border" name="username" id="username" placeholder="User name" aria-describedby="fa-user" />
+                        <input type="text" required disabled class="form-control-sm border" name="username" id="username" placeholder="User name" aria-describedby="fa-user" />
                         <div class="input-group-append1">
                             <span><i class="append-icon" aria-hidden="true"></i></span>
                         </div>
@@ -135,6 +135,7 @@
 <script>
   //var feedback = ${feedback};
   $(function () {
+    $('#username').val(parent.userName);
     window.parent.document.title = 'Yardi Change Password';
 
     if (navigator.cookieEnabled == false) {
@@ -201,7 +202,7 @@
       } //form valid
       
       if (formValid) {
-        var userName = $('#username').val();
+        var userName    = $('#username').val();
         var oldPassword = $('#oldPassword').val();
         var newPassword = $('#newPassword').val();
         var formItems = {
@@ -216,7 +217,7 @@
         var formData = JSON.stringify(formItems);
         $.ajax({
           type:     'POST',
-          url:      '../doLogin',
+          url:      '../XdoLogin',
           data:     formData,
           async:    false,
           dataType: "json", 
