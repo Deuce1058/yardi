@@ -2,19 +2,19 @@ package com.yardi.ejb;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
-import java.util.Date;
+//import java.util.Date;
 import java.util.GregorianCalendar;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.Query;
-import javax.persistence.TemporalType;
-import javax.persistence.TypedQuery;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Remove;
+import jakarta.ejb.Stateful;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContextType;
+import jakarta.persistence.Query;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.TypedQuery;
 
 import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.shared.userServices.PasswordAuthentication;
@@ -190,7 +190,7 @@ public class UserProfileBean implements UserProfile {
 		gc.set(Calendar.MINUTE, 0);
 		gc.set(Calendar.SECOND, 0);
 		gc.set(Calendar.HOUR_OF_DAY, 0);
-		gc.add(Calendar.DAY_OF_MONTH, new Short(pwdPolicy.getPpDays()).intValue()); //new password expiration date
+		gc.add(Calendar.DAY_OF_MONTH, Short.valueOf(pwdPolicy.getPpDays()).intValue()); //new password expiration date
     	Query qry = em.createQuery("UPDATE User_Profile " 
         		+ "SET uptoken    = :token,"
         		+ "upPwdexpd      = :pwdExpirationDate "

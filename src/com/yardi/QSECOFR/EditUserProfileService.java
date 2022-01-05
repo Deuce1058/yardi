@@ -6,21 +6,21 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Collection;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.User_Profile;
@@ -94,9 +94,9 @@ public class EditUserProfileService extends HttpServlet {
 		EditUserProfileRequest editRequest = new EditUserProfileRequest();
 		editRequest = mapper.readValue(formData, EditUserProfileRequest.class);
 		
-		if (   editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_FIND)
-			|| editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_DELETE)
-			|| editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_REMOVE)) {
+		if (   editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_FIND)
+			|| editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_DELETE)
+			|| editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_REMOVE)) {
 			/*
 			 * The web page is giving us more than we need. We just need a user name for find and delete so
 			 * clear out the other fields. Also, for find and delete, the other fields we dont need will have 
@@ -106,7 +106,7 @@ public class EditUserProfileService extends HttpServlet {
 			editRequest.specialInzsr();
 		}
 		
-		String feedback [] = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
+		String feedback [] = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
 		editRequest.setMsgID(feedback[0]);
 		editRequest.setMsgDescription(feedback[1]);
         System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0001 "
@@ -145,7 +145,7 @@ public class EditUserProfileService extends HttpServlet {
 	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0007 ");
 		} 
 		
-		if (editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_FIND)) {
+		if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_FIND)) {
 	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0008 FIND"
 	        	+ "\n"
 	        	+ "   editRequest.getFindUser()=" + editRequest.getFindUser());
@@ -156,7 +156,7 @@ public class EditUserProfileService extends HttpServlet {
 
 				if (userProfile == null) {
 					System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0009 userProfile == null");
-					feedback = com.yardi.rentSurvey.YardiConstants.YRD000D.split("="); 
+					feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000D.split("="); 
 					editRequest.setMsgID(feedback[0]);
 					editRequest.setMsgDescription(feedback[1]);
 					showResponseHeaders(response);
@@ -175,7 +175,7 @@ public class EditUserProfileService extends HttpServlet {
 						+ "   userProfile=" 
 						+ userProfile
 						);
-				feedback = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
+				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
 				editRequest.setMsgID         (feedback[0]);
 				editRequest.setMsgDescription(feedback[1]);
 				editRequest.setFirstName     (userProfile.getUpFirstName());
@@ -214,7 +214,7 @@ public class EditUserProfileService extends HttpServlet {
 
 				editRequest.setSsn           (userProfile.getUpssn());
 				editRequest.setDob           (editRequest.stringify(userProfile        .getUpdob()));
-				editRequest.setHomeMarket    (new Short(userProfile.getUpHomeMarket()) .toString());
+				editRequest.setHomeMarket    (Short.toString(userProfile.getUpHomeMarket()));
 				editRequest.setActiveYN      (userProfile.getUpActiveYn());
 				editRequest.setPwdExpDate    (editRequest.stringify(userProfile        .getUpPwdexpd()));
 				String dateTime[] = new String[2];
@@ -228,7 +228,7 @@ public class EditUserProfileService extends HttpServlet {
 					editRequest.setDisabledTime(dateTime[1]);
 				}
 
-				editRequest.setPwdAttempts   (new Short(userProfile.getUpPwdAttempts()).toString());
+				editRequest.setPwdAttempts   (Short.toString(userProfile.getUpPwdAttempts()));
 				editRequest.setCurrentToken  (userProfile.getUptoken());
 				dateTime = editRequest.stringify(userProfile        .getUpLastLoginDate());
 				editRequest.setLastLogin     (dateTime[0]);
@@ -256,7 +256,7 @@ public class EditUserProfileService extends HttpServlet {
 			return;
 		}
 		
-		if (editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_ADD)) {
+		if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_ADD)) {
 	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000B ADD" 
 	        	+ "\n"
 	        	+ "editRequest=" + editRequest);
@@ -285,7 +285,7 @@ public class EditUserProfileService extends HttpServlet {
 						editRequest  .getLastLoginDate(),
 						editRequest  .getPasswordAttempts()
 						);
-				feedback = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
+				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
 				editRequest.setMsgID(feedback[0]);
 				editRequest.setMsgDescription(feedback[1]);
 				showResponseHeaders(response);
@@ -303,12 +303,12 @@ public class EditUserProfileService extends HttpServlet {
 			return;
 		}
 
-		if (editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_DELETE)) {
+		if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_DELETE)) {
 	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000C DELETE");
 	        try {
 				tx.begin();
 				userProfileBean.remove(editRequest.getFindUser());
-				feedback = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
+				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
 				editRequest.setMsgID(feedback[0]);
 				editRequest.setMsgDescription(feedback[1]);
 				showResponseHeaders(response);
@@ -326,7 +326,7 @@ public class EditUserProfileService extends HttpServlet {
 			return;
 		}
 			
-		if (editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_UPDATE)) {
+		if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_UPDATE)) {
 	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000D UPDATE"
 	        	+ "\n"
 	        	+ "   editRequest=" + editRequest);
@@ -355,7 +355,7 @@ public class EditUserProfileService extends HttpServlet {
 						editRequest  .getLastLoginDate(),
 						editRequest  .getPasswordAttempts()
 						);
-				feedback = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
+				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
 				editRequest.setMsgID(feedback[0]);
 				editRequest.setMsgDescription(feedback[1]);
 				showResponseHeaders(response);
@@ -373,7 +373,7 @@ public class EditUserProfileService extends HttpServlet {
 			return;
 		}
 		
-		if (editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_REMOVE)) {
+		if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_REMOVE)) {
 			System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0018");
 			remove(session, response, new EditUserProfileRequest());
 			return;
@@ -394,9 +394,9 @@ public class EditUserProfileService extends HttpServlet {
 		UserProfile userProfileBean = (UserProfile)session.getAttribute("userProfileBean");
 		session.setAttribute("userProfileBean", null);
 		userProfileBean.removeBean();
-		String feedback [] = com.yardi.rentSurvey.YardiConstants.YRD0000.split("="); 
+		String feedback [] = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
 		editRequest.setMsgID(feedback[0]);
-		feedback = com.yardi.rentSurvey.YardiConstants.YRD0014.split("=");
+		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0014.split("=");
 		editRequest.setMsgDescription(feedback[1]);
 		showResponseHeaders(response);
 		response.resetBuffer();
