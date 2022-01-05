@@ -1,12 +1,12 @@
 package com.yardi.ejb;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import jakarta.annotation.PostConstruct;
+//import jakarta.ejb.EJB;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 
 import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.shared.QSECOFR.EditPwdPolicyRequest;
@@ -88,10 +88,10 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
     		editPwdPolicyRequest.setAction(com.yardi.shared.rentSurvey.YardiConstants.EDIT_PASSWORD_POLICY_REQUEST_ACTION_ADD);
     	} else {
     		editPwdPolicyRequest.setAction(com.yardi.shared.rentSurvey.YardiConstants.EDIT_PASSWORD_POLICY_REQUEST_ACTION_UPDATE);
-    		editPwdPolicyRequest.setPwdLifeInDays    (new Short(pwdPolicy.getPpDays()).toString());
-    		editPwdPolicyRequest.setNbrUnique        (new Short(pwdPolicy.getPpNbrUnique()).toString());
-    		editPwdPolicyRequest.setMaxSignonAttempts(new Short(pwdPolicy.getPpMaxSignonAttempts()).toString()); 
-    		editPwdPolicyRequest.setPwdMinLen        (new Short(pwdPolicy.getPpPwdMinLen()).toString());
+    		editPwdPolicyRequest.setPwdLifeInDays    (Short.toString(pwdPolicy.getPpDays()));
+    		editPwdPolicyRequest.setNbrUnique        (Short.toString(pwdPolicy.getPpNbrUnique()));
+    		editPwdPolicyRequest.setMaxSignonAttempts(Short.toString(pwdPolicy.getPpMaxSignonAttempts())); 
+    		editPwdPolicyRequest.setPwdMinLen        (Short.toString(pwdPolicy.getPpPwdMinLen()));
     		editPwdPolicyRequest.setUpperRqd         (pwdPolicy.getPp_upper_rqd());
     		editPwdPolicyRequest.setLowerRqd         (pwdPolicy.getPp_lower_rqd());
     		editPwdPolicyRequest.setNbrRqd           (pwdPolicy.getPp_number_rqd());
@@ -148,17 +148,17 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
     }
     
     /**
-     * Construct a new Pwd_Policy request by mapping EditPwdPolicyRequest to Pwd_Policy. Several columns in PWD_POLICY may contain null. To map these correctly from EditPwdPolicyRequest
-     * test for a String with a value of "null". If the field from EditPwdPolicyRequest is "null" set the corresponding field in Pwd_Policy to null. Otherwise, the corresponding field
-     * in Pwd_policy is mapped to String or Short
+	 * Construct a new Pwd_Policy request by mapping EditPwdPolicyRequest to Pwd_Policy. Several columns in PWD_POLICY may contain null. To map these correctly from EditPwdPolicyRequest
+	 * test for a String with a value of "null". If the field from EditPwdPolicyRequest is "null" set the corresponding field in Pwd_Policy to null. Otherwise, the corresponding field
+	 * in Pwd_policy is mapped to String or Short
 	 * @param editPwdPolicyRequest2 
-     * 
-     * @return Pwd_Policy
-     */
-
-    public Pwd_Policy newPwdPolicy(EditPwdPolicyRequest editPwdPolicyRequest) {
-    	System.out.println("com.yardi.ejb.EditPasswordPolicyBean newPwdPolicy() 0002 ");
-    	Pwd_Policy newPwdPolicy = new Pwd_Policy();
+	 * 
+	 * @return Pwd_Policy
+	 */
+	
+	public Pwd_Policy newPwdPolicy(EditPwdPolicyRequest editPwdPolicyRequest) {
+		System.out.println("com.yardi.ejb.EditPasswordPolicyBean newPwdPolicy() 0002 ");
+		Pwd_Policy newPwdPolicy = new Pwd_Policy();
 		newPwdPolicy.setPpDays(Short.parseShort(editPwdPolicyRequest.getPwdLifeInDays()));
 		newPwdPolicy.setPpNbrUnique(Short.parseShort(editPwdPolicyRequest.getNbrUnique()));
 		newPwdPolicy.setPpMaxSignonAttempts(Short.parseShort(editPwdPolicyRequest.getMaxSignonAttempts()));
@@ -207,13 +207,13 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
 		newPwdPolicy.setPp_cant_contain_id(editPwdPolicyRequest.getCantContainId());
 		newPwdPolicy.setPp_cant_contain_pwd(editPwdPolicyRequest.getCantContainPwd());
 		newPwdPolicy.setPpRrn(1L);
-    	System.out.println("com.yardi.ejb.EditPasswordPolicyBean newPwdPolicy() 0004 "
-    			+ "\n   "
-    			+ newPwdPolicy.toString());
+		System.out.println("com.yardi.ejb.EditPasswordPolicyBean newPwdPolicy() 0004 "
+				+ "\n   "
+				+ newPwdPolicy.toString());
 		return newPwdPolicy;
 	}
-    
-    public void persist(EditPwdPolicyRequest editPwdPolicyRequest) {
+
+	public void persist(EditPwdPolicyRequest editPwdPolicyRequest) {
     	System.out.println("com.yardi.ejb.EditPasswordPolicyBean persist() 0001 ");
     	Pwd_Policy newPwdPolicy = newPwdPolicy(editPwdPolicyRequest);
     	newPwdPolicy.setPpRrnNull();

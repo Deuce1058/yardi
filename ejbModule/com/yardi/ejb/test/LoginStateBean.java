@@ -5,10 +5,19 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Vector;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Remove;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.TransactionManagement;
+import jakarta.ejb.TransactionManagementType;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 
 import com.yardi.ejb.LoginUserGroups;
 import com.yardi.ejb.LoginUserProfile;
@@ -22,6 +31,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Stateful
+@TransactionManagement(TransactionManagementType.BEAN)
 public class LoginStateBean implements LoginState {
 	private LoginStateRequest loginStateRequest;
 	private Pwd_Policy pwdPolicy = null;
@@ -30,6 +40,7 @@ public class LoginStateBean implements LoginState {
 	@EJB UniqueTokens uniqueTokensBean;
 	@EJB PasswordPolicy passwordPolicyBean;
 	@EJB LoginUserGroups userGroupsBean;
+	@Resource UserTransaction tx;
 	
     public LoginStateBean() {
 		//debug
@@ -87,27 +98,67 @@ public class LoginStateBean implements LoginState {
 		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0004 ");
 		//debug
-		String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("=");
-		loginStateRequest.setMsgid(s[0]);
-		loginStateRequest.setMsgd(s[1]);
+		try {
+			tx.begin();
+			String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("=");
+			loginStateRequest.setMsgid(s[0]);
+			loginStateRequest.setMsgd(s[1]);
 		
-		if (findUserID()) {
-			mapPwdPolicy();
-			mapUserProfile();
-			mapUniqueTokens();
-			mapSessionsTable();
-			mapUserGroups();
+			if (findUserID()) {
+				mapPwdPolicy();
+				mapUserProfile();
+				mapUniqueTokens();
+				mapSessionsTable();
+				mapUserGroups();
+			}
+
+			tx.commit();
+		} catch (NotSupportedException e) {
+			//debug
+			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0000 ");
+			//debug
+			e.printStackTrace();
+		} catch (SystemException e) {
+			//debug
+			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0001 ");
+			//debug
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			//debug
+			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0002 ");
+			//debug
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			//debug
+			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0003 ");
+			//debug
+			e.printStackTrace();
+		} catch (RollbackException e) {
+			//debug
+			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0005 ");
+			//debug
+			e.printStackTrace();
+		} catch (HeuristicMixedException e) {
+			//debug
+			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0006 ");
+			//debug
+			e.printStackTrace();
+		} catch (HeuristicRollbackException e) {
+			//debug
+			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0007 ");
+			//debug
+			e.printStackTrace();
 		}
 	}
-
+	
 	private void mapPwdPolicy() {
 		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean mapPwdPolicy() 0005 ");
 		//debug
-		loginStateRequest.setPpDays(new Short(pwdPolicy.getPpDays()).toString());
-		loginStateRequest.setPpNbrUnique(new Short(pwdPolicy.getPpNbrUnique()).toString());
-		loginStateRequest.setPpMaxSignonAttempts(new Short(pwdPolicy.getPpMaxSignonAttempts()).toString());
-		loginStateRequest.setPpPwdMinLen(new Short(pwdPolicy.getPpPwdMinLen()).toString());
+		loginStateRequest.setPpDays(Short.toString(pwdPolicy.getPpDays()));
+		loginStateRequest.setPpNbrUnique(Short.toString(pwdPolicy.getPpNbrUnique()));
+		loginStateRequest.setPpMaxSignonAttempts(Short.toString(pwdPolicy.getPpMaxSignonAttempts()));
+		loginStateRequest.setPpPwdMinLen(Short.toString(pwdPolicy.getPpPwdMinLen()));
 		loginStateRequest.setPpMaxPwdLen("null");
 		loginStateRequest.setPpMaxRepeatChar("null");
 		loginStateRequest.setPpNbrDigits("null");
@@ -122,27 +173,27 @@ public class LoginStateBean implements LoginState {
 		loginStateRequest.setPp_cant_contain_pwd("FALSE");
 		
 		if (!(pwdPolicy.getPpMaxPwdLen() == null)) {
-			loginStateRequest.setPpMaxPwdLen(new Short(pwdPolicy.getPpMaxPwdLen()).toString());
+			loginStateRequest.setPpMaxPwdLen(Short.toString(pwdPolicy.getPpMaxPwdLen()));
 		}
 		
 		if (!(pwdPolicy.getPpMaxRepeatChar() == null)) {
-			loginStateRequest.setPpMaxRepeatChar(new Short(pwdPolicy.getPpMaxRepeatChar()).toString());
+			loginStateRequest.setPpMaxRepeatChar(Short.toString(pwdPolicy.getPpMaxRepeatChar()));
 		}
 		
 		if (!(pwdPolicy.getPpNbrDigits() == null)) {
-			loginStateRequest.setPpNbrDigits(new Short(pwdPolicy.getPpNbrDigits()).toString());
+			loginStateRequest.setPpNbrDigits(Short.toString(pwdPolicy.getPpNbrDigits()));
 		}
 		
 		if (!(pwdPolicy.getPpNbrUpper() == null)) {
-			loginStateRequest.setPpNbrUpper(new Short(pwdPolicy.getPpNbrUpper()).toString());
+			loginStateRequest.setPpNbrUpper(Short.toString(pwdPolicy.getPpNbrUpper()));
 		}
 	
 		if (!(pwdPolicy.getPpNbrLower() == null)) {
-			loginStateRequest.setPpNbrLower(new Short(pwdPolicy.getPpNbrLower()).toString());
+			loginStateRequest.setPpNbrLower(Short.toString(pwdPolicy.getPpNbrLower()));
 		}
 		
 		if (!(pwdPolicy.getPpNbrSpecial() == null)) {
-			loginStateRequest.setPpNbrSpecial(new Short(pwdPolicy.getPpNbrSpecial()).toString());
+			loginStateRequest.setPpNbrSpecial(Short.toString(pwdPolicy.getPpNbrSpecial()));
 		}
 		
 		if (pwdPolicy.getPpUpperRqd()) {
@@ -243,7 +294,7 @@ public class LoginStateBean implements LoginState {
 		String [] ts = new String [2]; 
 		loginStateRequest.setUptoken(userGroupsBean.getLoginUserProfile().getUptoken());
 		loginStateRequest.setUpPwdexpd(stringifyDate(userGroupsBean.getLoginUserProfile().getUpPwdexpd()));
-		loginStateRequest.setUpPwdAttempts(new Short(userGroupsBean.getLoginUserProfile().getUpPwdAttempts()).toString());
+		loginStateRequest.setUpPwdAttempts(Short.toString(userGroupsBean.getLoginUserProfile().getUpPwdAttempts()));
 		loginStateRequest.setUpDisabledDate("");
 		loginStateRequest.setUpDisabledTime("");
 		
@@ -306,21 +357,21 @@ public class LoginStateBean implements LoginState {
 	private String [] stringifyDate(java.sql.Timestamp ts) {
 		String r []       = new String [2];
 		LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(ts.getTime()), ZoneId.systemDefault());
-		String mm         = new Integer(ldt.getMonthValue()).toString();
-		String d          = new Integer(ldt.getDayOfMonth()).toString();
-		String h          = new Integer(ldt.getHour()).toString();
-		String min        = new Integer(ldt.getMinute()).toString();
-		String sec        = new Integer(ldt.getSecond()).toString();
+		String mm         = Integer.toString(ldt.getMonthValue());
+		String d          = Integer.toString(ldt.getDayOfMonth());
+		String h          = Integer.toString(ldt.getHour());
+		String min        = Integer.toString(ldt.getMinute());
+		String sec        = Integer.toString(ldt.getSecond());
 		
 		if (ldt.getMonthValue() < 10 ) {
-			mm = "0" + new Integer(ldt.getMonthValue()).toString();
+			mm = "0" + Integer.toString(ldt.getMonthValue());
 		}
 		
 		if (ldt.getDayOfMonth() < 10) {
-			d = "0" + new Integer(ldt.getDayOfMonth()).toString();
+			d = "0" + Integer.toString(ldt.getDayOfMonth());
 		} 
 		
-		r[0] =   new Integer(ldt.getYear()).toString() 
+		r[0] =   Integer.toString(ldt.getYear()) 
 			   + " "
 			   + mm
 			   + d;
@@ -330,17 +381,17 @@ public class LoginStateBean implements LoginState {
 	
 	private String stringifyDate(java.util.Date date) {
 		LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
-		String m = new Integer(ldt.getMonthValue()).toString();
-		String d = new Integer(ldt.getDayOfMonth()).toString();
+		String m = Integer.toString(ldt.getMonthValue());
+		String d = Integer.toString(ldt.getDayOfMonth());
 		
 		if (ldt.getMonthValue() < 10 ) {
-			m = "0" + new Integer(ldt.getMonthValue()).toString();
+			m = "0" + Integer.toString(ldt.getMonthValue());
 		}
 		
 		if (ldt.getDayOfMonth() < 10) {
-			d = "0" + new Integer(ldt.getDayOfMonth()).toString();
+			d = "0" + Integer.toString(ldt.getDayOfMonth());
 		} 
 		
-		return new String(new Integer(ldt.getYear()).toString() + " " + m + d);
+		return new String(Integer.toString(ldt.getYear()) + " " + m + d);
 	}
 }

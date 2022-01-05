@@ -4,13 +4,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Remove;
+import jakarta.ejb.Stateful;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContextType;
 
 import com.yardi.ejb.model.Login_User_Profile;
 import com.yardi.ejb.model.Pwd_Policy;
@@ -219,7 +219,7 @@ public class LoginUserProfileBean implements LoginUserProfile {
 		gc.set(Calendar.MINUTE, 0);
 		gc.set(Calendar.SECOND, 0);
 		gc.set(Calendar.HOUR_OF_DAY, 0);
-		gc.add(Calendar.DAY_OF_MONTH, new Short(pwdPolicy.getPpDays()).intValue()); //new password expiration date
+		gc.add(Calendar.DAY_OF_MONTH, Short.valueOf(pwdPolicy.getPpDays()).intValue()); //new password expiration date
 		//debug
 		System.out.println("com.yardi.ejb.LoginUserProfileBean changeUserToken() 0004 "
 				+ "\n "
