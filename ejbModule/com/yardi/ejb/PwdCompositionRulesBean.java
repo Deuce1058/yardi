@@ -2,10 +2,10 @@ package com.yardi.ejb;
 
 import java.util.Vector;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Remove;
+import jakarta.ejb.Stateful;
 
 import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.shared.userServices.PasswordAuthentication;

@@ -1,9 +1,9 @@
 package com.yardi.system;
 
-import javax.ejb.EJB;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
+import jakarta.ejb.EJB;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.annotation.WebListener;
 
 import com.yardi.ejb.SessionsTable;
 

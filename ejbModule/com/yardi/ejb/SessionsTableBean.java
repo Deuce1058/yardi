@@ -1,11 +1,11 @@
 package com.yardi.ejb;
 
-import javax.ejb.Stateless;
-import javax.persistence.Query;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TemporalType;
-import javax.persistence.TypedQuery;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.TypedQuery;
 
 /**
  * Session Bean implementation class SessionsTableBean

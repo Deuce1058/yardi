@@ -5,26 +5,25 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.util.Collection;
+//import java.util.Collection;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+//import jakarta.servlet.http.HttpSession;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+//import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.EditPasswordPolicy;
-import com.yardi.ejb.EditPasswordPolicyBean;
-import com.yardi.ejb.LoginUserServices;
-import com.yardi.ejb.UserProfile;
-import com.yardi.userServices.InvalidSessionException;
-
-import com.yardi.QSECOFR.EditPwdPolicyRequest;
+//import com.yardi.ejb.EditPasswordPolicyBean;
+//import com.yardi.ejb.LoginUserServices;
+//import com.yardi.ejb.UserProfile;
+import com.yardi.shared.QSECOFR.EditPwdPolicyRequest;
+//import com.yardi.userServices.InvalidSessionException;
 
 /**
  * Servlet implementation class EditPwdPolicyService
@@ -60,7 +59,7 @@ public class EditPwdPolicyService extends HttpServlet implements Serializable {
 		ObjectMapper mapper = new ObjectMapper();
 		EditPwdPolicyRequest editRequest = mapper.readValue(formData, EditPwdPolicyRequest.class);
 				
-		if (editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_PASSWORD_POLICY_REQUEST_ACTION_FIND)) {
+		if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_PASSWORD_POLICY_REQUEST_ACTION_FIND)) {
 			//debug
 			System.out.println("com.yardi.QSECOFR.EditPwdPolicyService doGet() 0008 ");
 			//debug
@@ -68,7 +67,7 @@ public class EditPwdPolicyService extends HttpServlet implements Serializable {
 			return;
 		}
 		
-		if (editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_PASSWORD_POLICY_REQUEST_ACTION_ADD)) {
+		if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_PASSWORD_POLICY_REQUEST_ACTION_ADD)) {
 			//debug
 			System.out.println("com.yardi.QSECOFR.EditPwdPolicyService doGet() 000A ");
 			//debug
@@ -77,7 +76,7 @@ public class EditPwdPolicyService extends HttpServlet implements Serializable {
 			return;
 		}
 		
-		if (editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_PASSWORD_POLICY_REQUEST_ACTION_UPDATE)) {
+		if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_PASSWORD_POLICY_REQUEST_ACTION_UPDATE)) {
 			//debug
 			System.out.println("com.yardi.QSECOFR.EditPwdPolicyService doGet() 000B ");
 			//debug

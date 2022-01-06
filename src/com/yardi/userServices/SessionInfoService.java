@@ -6,11 +6,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Collection;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -58,7 +58,7 @@ public class SessionInfoService extends HttpServlet {
 		SessionInfo sessionInfo = new SessionInfo();
 		sessionInfo = mapper.readValue(formData, SessionInfo.class);
 		
-		if (sessionInfo.getRequest().equals(com.yardi.rentSurvey.YardiConstants.REQUEST_SESSION_INFO)) {
+		if (sessionInfo.getRequest().equals(com.yardi.shared.rentSurvey.YardiConstants.REQUEST_SESSION_INFO)) {
 			sessionInfo.setUserID((String) request.getSession().getAttribute("userID"));
 		}
 		

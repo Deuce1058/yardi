@@ -2,7 +2,7 @@ package com.yardi.ejb;
 
 import java.util.Vector;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 import com.yardi.shared.userServices.InitialPage;
 import com.yardi.shared.userServices.LoginRequest;

@@ -3,15 +3,15 @@ package com.yardi.ejb;
 import java.security.NoSuchAlgorithmException;
 import java.util.Vector;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.transaction.UserTransaction;
+import jakarta.annotation.Resource;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Remove;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.TransactionManagement;
+import jakarta.ejb.TransactionManagementType;
+import jakarta.transaction.UserTransaction;
 
-import com.yardi.ejb.UserServices;
+//import com.yardi.ejb.UserServices;
 import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.shared.userServices.InitialPage;
 import com.yardi.shared.userServices.LoginRequest;
