@@ -2,10 +2,10 @@ package com.yardi.ejb;
 
 import java.security.NoSuchAlgorithmException;
 
-import javax.ejb.Stateless;
-import javax.persistence.Query;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import com.yardi.ejb.model.Login_Sessions_Table;
 import com.yardi.shared.userServices.PasswordAuthentication;

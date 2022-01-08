@@ -1,6 +1,6 @@
 package com.yardi.ejb.test;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 import com.yardi.shared.test.LoginStateRequest;
 

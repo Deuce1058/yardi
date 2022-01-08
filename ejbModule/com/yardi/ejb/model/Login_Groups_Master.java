@@ -3,7 +3,7 @@ package com.yardi.ejb.model;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 
 /**

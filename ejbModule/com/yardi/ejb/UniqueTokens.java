@@ -2,7 +2,7 @@ package com.yardi.ejb;
 
 import java.util.Vector;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 @Local
 public interface UniqueTokens {

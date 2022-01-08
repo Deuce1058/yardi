@@ -1,6 +1,6 @@
 package com.yardi.ejb;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 import com.yardi.ejb.model.Login_User_Profile;
 

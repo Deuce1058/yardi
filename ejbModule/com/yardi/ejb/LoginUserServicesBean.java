@@ -3,14 +3,14 @@ package com.yardi.ejb;
 import java.util.Arrays;
 import java.util.Vector;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
+import jakarta.annotation.Resource;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Remove;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.TransactionManagement;
+import jakarta.ejb.TransactionManagementType;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 
 import com.yardi.ejb.model.Login_Sessions_Table;
 import com.yardi.ejb.model.Pwd_Policy;
@@ -612,34 +612,34 @@ public class LoginUserServicesBean implements LoginUserServices {
 		
 		try {
 			switch(tx.getStatus()) {
-			case javax.transaction.Status.STATUS_ACTIVE:
+			case jakarta.transaction.Status.STATUS_ACTIVE:
 				status = "active";
 				break;
-			case javax.transaction.Status.STATUS_COMMITTED:
+			case jakarta.transaction.Status.STATUS_COMMITTED:
 				status = "committed";
 				break;
-			case javax.transaction.Status.STATUS_COMMITTING:
+			case jakarta.transaction.Status.STATUS_COMMITTING:
 				status = "committing";
 				break;
-			case javax.transaction.Status.STATUS_MARKED_ROLLBACK:
+			case jakarta.transaction.Status.STATUS_MARKED_ROLLBACK:
 				status = "marked rollback";
 				break;
-			case javax.transaction.Status.STATUS_NO_TRANSACTION:
+			case jakarta.transaction.Status.STATUS_NO_TRANSACTION:
 				status = "no transaction";
 				break;
-			case javax.transaction.Status.STATUS_PREPARED:
+			case jakarta.transaction.Status.STATUS_PREPARED:
 				status = "prepared";
 				break;
-			case javax.transaction.Status.STATUS_PREPARING:
+			case jakarta.transaction.Status.STATUS_PREPARING:
 				status = "prepairing";
 				break;
-			case javax.transaction.Status.STATUS_ROLLEDBACK:
+			case jakarta.transaction.Status.STATUS_ROLLEDBACK:
 				status = "rolled back";
 				break;
-			case javax.transaction.Status.STATUS_ROLLING_BACK:
+			case jakarta.transaction.Status.STATUS_ROLLING_BACK:
 				status = "rolling back";
 				break;
-			case javax.transaction.Status.STATUS_UNKNOWN:
+			case jakarta.transaction.Status.STATUS_UNKNOWN:
 				status = "unknown";
 				break;
 			default:

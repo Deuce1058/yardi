@@ -7,16 +7,17 @@ import java.io.PrintWriter;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.UserServices;
-
+import com.yardi.shared.userServices.LoginRequest;
+import com.yardi.shared.userServices.LoginResponse;
 
 import java.util.Collection;
 
@@ -118,7 +119,7 @@ public class LoginService extends HttpServlet {
         	userSvcBean.chgPwd();
     	}
     	
-		if (userSvcBean.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0000)) {
+		if (userSvcBean.getFeedback().equals(com.yardi.shared.rentSurvey.YardiConstants.YRD0000)) {
 			/*
 			 * Successful login.
 			 * 1 lookup initial page with join Groups_Masterr and User_Groupss
@@ -210,7 +211,7 @@ public class LoginService extends HttpServlet {
 			return;
 		}
 				
-		if (loginRequest.getChangePwd() || userSvcBean.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0002)) {
+		if (loginRequest.getChangePwd() || userSvcBean.getFeedback().equals(com.yardi.shared.rentSurvey.YardiConstants.YRD0002)) {
     		//debug
     		System.out.println("com.yardi.userServices LoginService doGet() 0002 "
     				+ "\n "
@@ -382,7 +383,7 @@ public class LoginService extends HttpServlet {
 		//YRD000B$Password policy is missing
 		//YRD000C$Maximum signon attempts exceeded. The user profile has been disabled
 		
-		if (userSvcBean.getFeedback().equals(com.yardi.rentSurvey.YardiConstants.YRD0000)==false) {
+		if (userSvcBean.getFeedback().equals(com.yardi.shared.rentSurvey.YardiConstants.YRD0000)==false) {
 			//debug 
 			Collection<String> headerNames = response.getHeaderNames();
 			if (headerNames.isEmpty()) {

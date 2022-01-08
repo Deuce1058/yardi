@@ -1,6 +1,6 @@
 package com.yardi.ejb;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 import com.yardi.shared.userServices.LoginRequest;
 import com.yardi.shared.userServices.LoginResponse;

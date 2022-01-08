@@ -14,11 +14,11 @@ import java.util.Vector;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -152,7 +152,7 @@ public class EditUniqueTokensService extends HttpServlet {
 				+ formData
 				);
 		//debug
-		feedback = com.yardi.rentSurvey.YardiConstants.YRD0000;
+		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
         ObjectMapper mapper = new ObjectMapper();
         editRequest = new EditUniqueTokensRequest();
         editRequest = mapper.readValue(formData, EditUniqueTokensRequest.class);
@@ -164,7 +164,7 @@ public class EditUniqueTokensService extends HttpServlet {
 				);
 		//debug
 
-		if (editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_UPDATE)) {
+		if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_UPDATE)) {
 			/*
 			 * How to iterate all subnodes of a json object? 
 			 * https://stackoverflow.com/questions/48642450/how-to-iterate-all-subnodes-of-a-json-object 
@@ -206,7 +206,7 @@ public class EditUniqueTokensService extends HttpServlet {
 			updateTokens(uniqueTokenBean, uniqueTokens, updatedTokens);
 		}
 		
-        if (editRequest.getAction().equals(com.yardi.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_FIND)) {
+        if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_FIND)) {
     		//debug
     		System.out.println("com.yardi.QSECOFR.EditUniqueTokensService doGet() 0002");
     		//debug
@@ -231,7 +231,7 @@ public class EditUniqueTokensService extends HttpServlet {
     		 * TypeReference is part of Jackson core
     		 */
     		if (findTokens(editRequest.getFindUser(), userProfileBean, uniqueTokenBean, uniqueTokens, editRequest) == false) {
-    			feedback = com.yardi.rentSurvey.YardiConstants.YRD000D;
+    			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000D;
     		} 
 			
 			String msg[] = feedback.split("=");

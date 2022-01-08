@@ -7,14 +7,14 @@ import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yardi.userServices.PasswordAuthentication;
+import com.yardi.shared.userServices.PasswordAuthentication;
 
 /**
  * Servlet implementation class CreateTokenService
@@ -59,7 +59,7 @@ public class XCreateTokenService extends HttpServlet {
 		tokenRequest.setPassword("");
 
 		if (!(userToken==null) && !(userToken.equals("")) ) {
-			String s [] = com.yardi.rentSurvey.YardiConstants.YRD0000.split("=");
+			String s [] = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("=");
 			tokenRequest.setMsgID(s[0]);
 			tokenRequest.setMsgDescription(s[1]);
 			tokenRequest.setPassword(userToken);

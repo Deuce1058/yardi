@@ -4,12 +4,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.TypedQuery;
+import jakarta.ejb.Remove;
+import jakarta.ejb.Stateful;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContextType;
+import jakarta.persistence.TypedQuery;
 
 import com.yardi.shared.userServices.InitialPage;
 import com.yardi.shared.userServices.UserGroupsGraph;
