@@ -346,7 +346,7 @@ public class LoginUserServicesBean implements LoginUserServices {
 						+ "  pwdCompRulesBean.enforce()== false"
 						);   
 				//debug
-				feedback = passwordPolicyBean.getFeedback();
+				feedback = pwdCompRulesBean.getFeedback();
 				rollback(tx);
 				return false;
 			}
