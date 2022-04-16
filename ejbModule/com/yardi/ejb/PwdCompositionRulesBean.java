@@ -320,6 +320,10 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 		}
 		return true;
 	}
+
+	public String getFeedback() {
+		return feedback;
+	}
 	
     private Pwd_Policy getPwdPolicy() {
     	//debug
