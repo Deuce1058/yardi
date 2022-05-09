@@ -114,6 +114,12 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0018 ");
 				//debug
 				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0007;
+				
+				if (!(pwdPolicy.getPpNbrLower()==null)) {
+				    String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD0019.split("%n");
+				    feedback = s[0] + pwdPolicy.getPpNbrLower() + s[1];
+				}
+				
 				return false;
 			}
 		}
@@ -134,6 +140,12 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enfo0rce() 0019 ");
 				//debug
 				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0006;
+				
+				if (!(pwdPolicy.getPpNbrUpper()==null)) {
+				    String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD0018.split("%n");
+				    feedback = s[0] + pwdPolicy.getPpNbrUpper() + s[1];
+				}
+				
 				return false;
 			}
 		}
@@ -154,6 +166,12 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 001A ");
 				//debug
 				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0008;
+
+				if (!(pwdPolicy.getPpNbrDigits()==null)) {
+					    String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD0017.split("%n");
+					    feedback = s[0] + pwdPolicy.getPpNbrDigits() + s[1];
+				}
+
 				return false;
 			}
 		}
@@ -174,6 +192,12 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 001B ");
 				//debug
 				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0009;
+				
+				if (!(pwdPolicy.getPpNbrSpecial()==null)) {
+					String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD001A.split("%n");
+					feedback = s[0] + pwdPolicy.getPpNbrSpecial() + s[1];
+				}
+				
 				return false;
 			}
 		}
