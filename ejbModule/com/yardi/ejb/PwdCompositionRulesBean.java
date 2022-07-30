@@ -25,7 +25,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 
 	public boolean enforce(final String password, final String userName, final String userToken, final Vector<Unique_Tokens> userTokens) {
 		//debug
-		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0009 "
+		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0000 "
 				+ "\n "
 				+ "   password="
 				+ password
@@ -54,7 +54,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 		
 		if (pwdPolicy==null) {
 			//debug 
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() pwdPolicy==null 000A ");
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() pwdPolicy==null 0001 ");
 			//debug
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
 			return false;
@@ -65,7 +65,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 		numberRqd  = pwdPolicy.getPpNumberRqd();
 		specialRqd = pwdPolicy.getPpSpecialRqd();
 		//debug
-		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 000B "
+		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0002 "
 				+ "\n "
 				+ "  upperRqd="
 				+ upperRqd 
@@ -92,7 +92,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 		
 		pwdStatistics = new PasswordStatistics(password.toCharArray());
 		//debug
-		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 000C "
+		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0003 "
 				+ "\n   "
 				+ pwdStatistics.toString1());
 		//debug
@@ -101,7 +101,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 		if (lowerRqd && pwdStatistics.getPwdNbrLower() > 0) {
 			hasLower = true;
 			//debug
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 000D "
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0004 "
 					+ "\n   "
 					+ "  hasLower="
 					+ hasLower 
@@ -111,7 +111,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 
 			if (lowerRqd) {
 				//debug
-				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0018 ");
+				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0005 ");
 				//debug
 				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0007;
 				
@@ -127,7 +127,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 		if (upperRqd && pwdStatistics.getPwdNbrUpper() > 0) {
 			hasUpper = true;
 			//debug
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 000E "
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0006 "
 					+ "\n "
 					+ "  hasUpper="
 					+ hasUpper 
@@ -137,7 +137,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 
 			if (upperRqd) {
 				//debug
-				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enfo0rce() 0019 ");
+				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enfo0rce() 0007 ");
 				//debug
 				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0006;
 				
@@ -153,7 +153,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 		if (numberRqd && pwdStatistics.getPwdNbrNbr() > 0) {
 			hasNumber = true;
 			//debug
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 000F "
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0008 "
 					+ "\n "
 					+ "  hasNumber="
 					+ hasNumber 
@@ -163,7 +163,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 
 			if (numberRqd) {
 				//debug
-				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 001A ");
+				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0009 ");
 				//debug
 				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0008;
 
@@ -179,7 +179,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 		if (specialRqd && pwdStatistics.getPwdNbrSpecial() > 0) {
 			hasSpecial = true;
 			//debug
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0010 "
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 000A "
 					+ "\n "
 					+ "  hasSpecial="
 					+ hasSpecial 
@@ -189,7 +189,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 
 			if (specialRqd) {
 				//debug
-				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 001B ");
+				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 000B ");
 				//debug
 				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0009;
 				
@@ -204,7 +204,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 
 		if (pwdStatistics.getPwdLength() < pwdPolicy.getPpPwdMinLen()) {
 			//debug
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 001C ");
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 000C ");
 			//debug
 			String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD0005.split("%n");
 			feedback = s[0] + pwdPolicy.getPpPwdMinLen() + s[1];
@@ -213,7 +213,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 
 		if (!(pwdPolicy.getPpMaxPwdLen()==null) && pwdStatistics.getPwdLength() > pwdPolicy.getPpMaxPwdLen()) {
 			//debug
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 001D ");
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 000D ");
 			//debug
 			String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD0015.split("%n");
 			feedback = s[0] + pwdPolicy.getPpMaxPwdLen() + s[1];
@@ -222,7 +222,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 
 		if (!(pwdPolicy.getPpMaxRepeatChar()==null) && pwdStatistics.getPwdNbrRepeatedChar() > pwdPolicy.getPpMaxRepeatChar()) {
 			//debug
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 001E ");
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 000E ");
 			//debug
 			String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD0016.split("%n");
 			feedback = s[0] + pwdPolicy.getPpMaxRepeatChar() + s[1];
@@ -231,7 +231,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 
 		if (!(pwdPolicy.getPpNbrDigits()==null) && pwdStatistics.getPwdNbrNbr() < pwdPolicy.getPpNbrDigits()) {
 			//debug
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 001F ");
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 000F ");
 			//debug
 			String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD0017.split("%n");
 			feedback = s[0] + pwdPolicy.getPpNbrDigits() + s[1];
@@ -240,7 +240,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 
 		if (!(pwdPolicy.getPpNbrUpper()==null) && pwdStatistics.getPwdNbrUpper() < pwdPolicy.getPpNbrUpper()) {
 			//debug
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0020 ");
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0010 ");
 			//debug
 			String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD0018.split("%n");
 			feedback = s[0] + pwdPolicy.getPpNbrUpper() + s[1];
@@ -249,7 +249,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 
 		if (!(pwdPolicy.getPpNbrLower()==null) && pwdStatistics.getPwdNbrLower() < pwdPolicy.getPpNbrLower()) {
 			//debug
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0021 ");
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0011 ");
 			//debug
 			String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD0019.split("%n");
 			feedback = s[0] + pwdPolicy.getPpNbrLower() + s[1];
@@ -258,7 +258,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 
 		if (!(pwdPolicy.getPpNbrSpecial()==null) && pwdStatistics.getPwdNbrSpecial() < pwdPolicy.getPpNbrSpecial()) {
 			//debug
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0022 ");
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0012 ");
 			//debug
 			String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD001A.split("%n");
 			feedback = s[0] + pwdPolicy.getPpNbrSpecial() + s[1];
@@ -267,14 +267,14 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 
 		if (pwdPolicy.isPpCantContainId() && passwordConatinsUserName(userName, password)) {
 			//debug
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0023 ");
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0013 ");
 			//debug
 			return false;
 		}
 
 		if (pwdPolicy.isPpCantContainPwd() && passwordContainsCurrent(userName, password, userToken)) {
 			//debug
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0024 ");
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0014 ");
 			//debug
 			return false;
 		}			
@@ -283,7 +283,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 		
 		if (maxUniqueTokens > 0 && !(userTokens==null)) { //If unique tokens being enforced and they have stored tokens
 			//debug
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0011 ");
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0015 ");
 			for (Unique_Tokens u : userTokens) {
 				System.out.println(
 					  "\n"
@@ -295,7 +295,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 			int nbrOfStoredTokens = userTokens.size();
 			Unique_Tokens uniqueToken; //single element from userTokens which is an ArrayList of UniqueToken.class 
 			//debug
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0012 "
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0016 "
 				+ "\n"
 				+ "   nbrOfStoredTokens="
 				+ nbrOfStoredTokens 
@@ -304,7 +304,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 			for(int i=0; i<nbrOfStoredTokens; i++) {
 				uniqueToken = userTokens.get(i);
 				//debug
-				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0013 "
+				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0017 "
 					+ "\n"
 					+ "   uniqueToken="
 					+ uniqueToken  
@@ -319,7 +319,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 					 */
 					feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000A;
 					//debug
-					System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0014 "
+					System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0018 "
 							+ "\n "
 							+ "  newPassword="
 							+ password
@@ -334,7 +334,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 					return false;
 				}
 				//debug
-				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0015 "
+				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.enforce() 0019 "
 					+ "\n"
 					+ "   i="
 					+ i  
@@ -351,31 +351,38 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 	
     private Pwd_Policy getPwdPolicy() {
     	//debug
-    	System.out.println("com.yardi.ejb.PwdCompositionRulesBean.getPwdPolicy() 0001 ");
+    	System.out.println("com.yardi.ejb.PwdCompositionRulesBean.getPwdPolicy() 001A ");
     	//debug
 		
 		if (pwdPolicy==null) {
 	    	//debug
-	    	System.out.println("com.yardi.ejb.PwdCompositionRulesBean.getPwdPolicy() 0002 ");
+	    	System.out.println("com.yardi.ejb.PwdCompositionRulesBean.getPwdPolicy() 001B ");
 	    	//debug
 			setPwdPolicy();
 		}
 		
 		//debug
-		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.getPwdPolicy() 0003 "
+		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.getPwdPolicy() 001C "
 			+ "\n"
 			+ "   pwdPolicy="
 			+ pwdPolicy.toString()
 			);
 
-		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.getPwdPolicy() 0004 ");
+		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.getPwdPolicy() 001D ");
 		//debug
 		return pwdPolicy;
 	}
 
     private boolean passwordConatinsUserName(final String userName, final String password) {
     	//debug
-    	System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordConatinsUserName() 0025 ");
+    	System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordConatinsUserName() 001E "
+    			+ "\n    "
+    			+ "userName="
+    			+ userName
+    			+ "\n    "
+    			+ "password="
+    			+ password
+    			);
     	//debug
 		int passwordLength = password.length();
 		int lengthToExtract;
@@ -383,36 +390,124 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 		int endPosition;
 		String substr = "";
 		
-		for(lengthToExtract=1, startPosition=0, endPosition=startPosition+lengthToExtract; 
+		if (userName.length()==password.length() && password.equalsIgnoreCase(userName)  ) {
+	    	//debug
+	    	System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordConatinsUserName() 001F "
+	    			+ "\n    "
+	    			+ "userName="
+	    			+ userName
+	    			+ "\n    "
+	    			+ "password="
+	    			+ password
+	    			);
+			//debug
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0011;
+			return true;
+		} else {
+
+			if (userName.length()==password.length()) {
+		    	//debug
+		    	System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordConatinsUserName() 0020 ");
+				//debug
+				return false;
+			}
+		}
+		
+		if (password.length() < userName.length()) {
+			//if new password is shorter than the user name then the new password can never contain the user name
+	    	//debug
+	    	System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordConatinsUserName() 0021 "
+	    			+ "\n    "
+	    			+ "userName="
+	    			+ userName
+	    			+ "\n    "
+	    			+ "password="
+	    			+ password
+	    			);
+			//debug
+			return false;
+		}		
+		
+		for(lengthToExtract=userName.length(), startPosition=0, endPosition=startPosition+lengthToExtract; 
 				lengthToExtract<passwordLength;
 				endPosition++) {
+	    	//debug
+	    	System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordConatinsUserName() 0022 "
+	    			+ "\n    "
+	    			+ "lengthToExtract="
+	    			+ lengthToExtract
+	    			+ "\n    "
+	    			+ "startPosition="
+	    			+ startPosition
+	    			+ "\n    "
+	    			+ "endPosition="
+	    			+ endPosition
+	    			+ "\n    "
+	    			+ "passwordLength="
+	    			+ passwordLength
+	    			);
+	    	//debug
 			substr = password.substring(startPosition, endPosition);
+	    	//debug
+	    	System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordConatinsUserName() 0023 "
+	    			+ "\n    "
+	    			+ "substr="
+	    			+ substr
+	    			);
+	    	//debug
+
+	    	if (substr.equalsIgnoreCase(userName)) {
+				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0011;
+				//debug
+				System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordConatinsUserName() 0024 ");
+				//debug
+				return true;
+			}
+			
 			startPosition++;
+	    	//debug
+	    	System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordConatinsUserName() 0025 "
+	    			+ "\n    "
+	    			+ "startPosition="
+	    			+ startPosition
+	    			);
+	    	//debug
 			
 			if (startPosition+lengthToExtract > passwordLength) {
 				startPosition = 0;
 				endPosition = startPosition+lengthToExtract;
 				lengthToExtract++;
+		    	//debug
+		    	System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordConatinsUserName() 0026 "
+		    			+ "\n    "
+		    			+ "startPosition="
+		    			+ startPosition
+		    			+ "\n    "
+		    			+ "endPosition="
+		    			+ endPosition
+		    			+ "\n    "
+		    			+ "lengthToExtract="
+		    			+ lengthToExtract
+		    			);
+		    	//debug
 			}
 			
-			if (substr.equalsIgnoreCase(password)) {
-				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0011;
-				return true;
-			}
-			
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordConatinsUserName() 0016 "
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordConatinsUserName() 0027 "
 					+ "\n   "
 					+ "   substr="
 					+ substr
 					);
 		}
 		
+		//debug
+		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordConatinsUserName() 0028 ");
+		//debug
 		return false;
 	}
     
 	private boolean passwordContainsCurrent(final String userName, final String password, final String userToken) {
 		//debug
-		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordContainsCurrent() 0026 ");
+		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordContainsCurrent() 0029 ");
 		//debug
 		int passwordLength = password.length();
 		int lengthToExtract;
@@ -439,7 +534,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 				return true;
 			}
 			
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordContainsCurrent() 0017 "
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.passwordContainsCurrent() 002A "
 					+ "\n   "
 					+ "   substr="
 					+ substr
@@ -452,7 +547,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 	@PostConstruct
 	private void postConstructCallback() {
 		//debug
-		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.postConstructCallback() 0000 ");
+		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.postConstructCallback() 002B ");
 		//debug
     	getPwdPolicy();
     	feedback  = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
@@ -461,23 +556,23 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 	@Remove
 	public void removeBean() {
 		//debug
-		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.removeBean() 0008 ");
+		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.removeBean() 002C ");
 		//debug
 	}
 
 	private void setPwdPolicy() {
 		//debug
-		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.setPwdPolicy() 0005 ");
+		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.setPwdPolicy() 002D ");
 		//debug
 		pwdPolicy = passwordPolicyBean.getPwdPolicy();
 		
 		if (pwdPolicy == null) {
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
-			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.setPwdPolicy() pwdPolicy==null 0006 ");
+			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.setPwdPolicy() pwdPolicy==null 002E ");
 			return;
 		}
 		//debug
-		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.setPwdPolicy() 0007 "
+		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.setPwdPolicy() 002F "
 			+ "\n"
 			+ "   pwdPolicy="
 			+ pwdPolicy.toString()
