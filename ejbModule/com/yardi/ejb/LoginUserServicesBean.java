@@ -455,8 +455,7 @@ public class LoginUserServicesBean implements LoginUserServices {
 		System.out.println("com.yardi.ejb.LoginUserServicesBean loginSuccess() 0005  ");
 		//debug
         txStatus();
-		Login_Sessions_Table sessionsTable = null;
-		sessionsTable = userGroupsBean.getLoginSessionTable(); 
+        Login_Sessions_Table sessionsTable = sessionsBean.find(sessionID); 
 
 		if (sessionsTable == null) {
 			sessionsBean.persist(

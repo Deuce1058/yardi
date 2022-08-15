@@ -7,6 +7,7 @@ import com.yardi.ejb.model.Login_Sessions_Table;
 @Local
 public interface LoginSessionsTable {
 	int clear();
+	Login_Sessions_Table find(String id);
 	void persist(
 			String userID, 
 			String sessionID, 
