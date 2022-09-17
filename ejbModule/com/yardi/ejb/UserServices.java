@@ -1,10 +1,7 @@
 package com.yardi.ejb;
 
-import java.util.Vector;
-
 import jakarta.ejb.Local;
 
-import com.yardi.shared.userServices.InitialPage;
 import com.yardi.shared.userServices.LoginRequest;
 import com.yardi.shared.userServices.LoginResponse;
 
@@ -20,7 +17,7 @@ public interface UserServices {
 	boolean chgPwd();
 	String getFeedback();
 	String getInitialPage();
-	Vector<InitialPage> getInitialPageList();
+	//Vector<LoginInitialPage> getInitialPageList();
 	LoginRequest getLoginRequest();
 	LoginResponse getLoginResponse();
 	String getSessionID();

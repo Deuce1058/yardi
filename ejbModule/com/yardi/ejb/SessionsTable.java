@@ -2,24 +2,23 @@ package com.yardi.ejb;
 
 import jakarta.ejb.Local;
 
+import com.yardi.ejb.model.Sessions_Table;
+
 @Local
 public interface SessionsTable {
 	int clear();
-	Sessions_Table findSession(String sessionID);
-	Sessions_Table findUser(String userID);
-	int persist(
+	Sessions_Table find(String id);
+	void persist(
 			String userID, 
 			String sessionID, 
-			String sessionToken, 
 			String lastRequest, 
-			java.util.Date lastActive
+			java.sql.Timestamp lastActive
 			);
 	int resetSeq();
-	int update(
-			String userID,
+	void update(
+			Sessions_Table sessionsTable,
 			String sessionID,
-			String sessionToken, 
 			String lastRequest, 
-			java.util.Date lastActive
+			java.sql.Timestamp lastActive
 			);
 }

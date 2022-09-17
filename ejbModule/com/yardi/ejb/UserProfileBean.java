@@ -2,7 +2,6 @@ package com.yardi.ejb;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
-//import java.util.Date;
 import java.util.GregorianCalendar;
 
 import jakarta.annotation.PostConstruct;
@@ -12,10 +11,8 @@ import jakarta.ejb.Stateful;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceContextType;
-import jakarta.persistence.Query;
-import jakarta.persistence.TemporalType;
-import jakarta.persistence.TypedQuery;
 
+import com.yardi.ejb.model.User_Profile;
 import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.shared.userServices.PasswordAuthentication;
 
@@ -41,343 +38,13 @@ public class UserProfileBean implements UserProfile {
 	private EntityManager em;
 	private String feedback = "";
 	private Pwd_Policy pwdPolicy;
+	private User_Profile userProfile;
 	@EJB PasswordPolicy passwordPolicyBean;
 
     public UserProfileBean() {
     	System.out.println("com.yardi.ejb.UserProfileBean UserProfileBean() 0015");
     }
 
-    @PostConstruct
-    private void postConstructCallback() {
-    	System.out.println("com.yardi.ejb.UserProfileBean postConstructCallback() 0016");
-    	getPwdPolicy();
-    }
-
-    public User_Profile find(String userName) {
-    	User_Profile userProfile = null;
-    	TypedQuery<User_Profile> qry = em.createQuery(
-    		  "SELECT u from User_Profile u "
-    		+ "WHERE u.upUserid = :userName ",
-    		User_Profile.class);
-    	try {
-			userProfile = qry
-				.setParameter("userName", userName)
-				.getSingleResult();
-		} catch (Exception e) {
-			System.out.println("com.yardi.ejb.UserProfileBean find() 0005 exception");
-	    	userProfile = null;
-			e.printStackTrace();
-		}
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean find() 0000 "
-				+ "\n "
-				+ "  userName=" + userName
-				+ "\n "
-				+ "  userProfile=" + userProfile
-				+ "\n "
-				+ "  em="
-				+ em
-				);
-		//debug
-    	return userProfile;
-    }
-    
-    public int setUpPwdAttempts(String userName, short pwdAttempts) {
-    	//upPwdAttempts
-    	Query qry = em.createQuery("UPDATE User_Profile " 
-    		+ "SET upPwdAttempts = :pwdAttempts " 
-    		+ "WHERE upUserid    = :userName");
-    	int rows = qry
-    			.setParameter("pwdAttempts", pwdAttempts)
-    			.setParameter("userName"   , userName)
-    			.executeUpdate();
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean setUpPwdAttempts() 0001 "
-				+ "\n "
-				+ "  userName=" + userName
-				+ "\n "
-				+ "  pwdAttempts=" + pwdAttempts
-				+ "\n "
-				+ "  rows=" 
-				+ rows
-				+ "\n "
-				+ "  em="
-				+ em
-				);
-		//debug
-    	return rows;
-    }
-    
-    private int disable(String userName) {
-    	//upDisabledDate, upPwdAttempts
-    	Query qry = em.createQuery("UPDATE User_Profile "  
-    	    + "SET upPwdAttempts = :pwdAttempts, "
-    		+ "upDisabledDate    = :disabledDate "
-    		+ "WHERE upUserid    = :userName");
-    	int rows = qry
-    		.setParameter("pwdAttempts" , pwdPolicy.getPpMaxSignonAttempts())
-    		.setParameter("disabledDate", new java.sql.Timestamp(new java.util.Date().getTime()), TemporalType.TIMESTAMP)
-    		.setParameter("userName"    , userName)
-    		.executeUpdate();
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean disable() 0002 "
-				+ "\n "
-				+ "  userName=" + userName
-				+ "\n "
-				+ "  disabledDate=" + new java.util.Date().getTime()
-				+ "\n "
-				+ "  pwdAttempts=" + pwdPolicy.getPpMaxSignonAttempts()
-				+ "\n "
-				+ "  rows=" 
-				+ rows
-				+ "\n "
-				+ "  em="
-				+ em
-				);
-		//debug
-    	return rows;
-    }
-    
-    /**
-     * Update the user profile to reflect successful login. Password attempts is set to zero, disabled date is set to null,
-     * last login date is today. 
-     * 
-     * @param userName
-     */
-    public int loginSuccess(String userName) {
-    	//upDisabledDate, upPwdAttempts, upLastLoginDate
-    	java.sql.Timestamp loginDate = new java.sql.Timestamp(new java.util.Date().getTime());
-    	Query qry = em.createQuery("UPDATE User_Profile " 
-    		+ "SET upPwdAttempts =  0, "
-    		+ "upDisabledDate    =  null, "
-    		+ "upLastLoginDate   = :loginDate "
-    		+ "WHERE upUserid    = :userName");
-    	int rows = qry
-    		.setParameter("loginDate", loginDate, TemporalType.TIMESTAMP)
-    		.setParameter("userName" , userName)
-    		.executeUpdate();
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean loginSuccess() 0003 "
-				+ "\n "
-				+ "  userName=" + userName
-				+ "\n "
-				+ "  upPwdAttempts =0"
-				+ "\n "
-				+ "  upDisabledDate=null"
-				+ "\n "
-				+ "  loginDate=" + loginDate
-				+ "\n "
-				+ "  rows=" 
-				+ rows
-				+ "\n "
-				+ "  em="
-				+ em
-				);
-		//debug
-    	return rows;
-    }
-    
-    public int changeUserToken(String userName, final char [] newPassword) {
-		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
-		String userToken="";
-		try {
-			userToken = passwordAuthentication.hash(newPassword);  //hash of new password
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} 
-		GregorianCalendar gc = new GregorianCalendar();
-		gc.set(Calendar.HOUR, 0);
-		gc.set(Calendar.MINUTE, 0);
-		gc.set(Calendar.SECOND, 0);
-		gc.set(Calendar.HOUR_OF_DAY, 0);
-		gc.add(Calendar.DAY_OF_MONTH, Short.valueOf(pwdPolicy.getPpDays()).intValue()); //new password expiration date
-    	Query qry = em.createQuery("UPDATE User_Profile " 
-        		+ "SET uptoken    = :token,"
-        		+ "upPwdexpd      = :pwdExpirationDate "
-        		+ "WHERE upUserid = :userName");
-        int rows = qry
-        	.setParameter("token", userToken)
-        	.setParameter("pwdExpirationDate", new java.util.Date(gc.getTimeInMillis()), TemporalType.DATE)
-        	.setParameter("userName", userName)
-        	.executeUpdate();
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean changeUserToken() 0004 "
-				+ "\n "
-				+ "  userName=" + userName
-				+ "\n "
-				+ "  uptoken=" + userToken
-				+ "\n "
-				+ "  upPwdexpd=" + gc
-				+ "\n "
-				+ "  rows=" 
-				+ rows
-				);
-		//debug
-        return rows;
-    }
-
-	public int persist(
-		String userId, 
-		String token,
-		short homeMarket,
-		String firstName,
-		String lastName,
-		String address1,
-		String address2,
-		String city,
-		String state,
-		String zip,
-		String zip4,
-		String phone,
-		String fax,
-		String email,
-		String ssn,
-		java.util.Date birthdate,
-		String activeYN,
-		java.util.Date passwordExpirationDate,
-		java.sql.Timestamp disabledDate,
-		java.sql.Timestamp lastLoginDate,
-		short pwdAttempts
-		) {
-		String disabledYN = "N";
-    	Query qry = em.createNativeQuery("INSERT INTO DB2ADMIN.USER_PROFILE "
-    		+ "("
-    		+ "UP_USERID, "
-    		+ "UPTOKEN, "
-    		+ "UP_HOME_MARKET, "
-    		+ "UP_FIRST_NAME, "
-    		+ "UP_LAST_NAME, "
-    		+ "UP_ADDRESS1, "
-    		+ "UP_ADDRESS2, "
-    		+ "UP_CITY, "
-    		+ "UP_STATE, "
-    		+ "UP_ZIP, "
-    		+ "UP_ZIP4, "
-    		+ "UP_PHONE, "
-    		+ "UP_FAX, "
-    		+ "UP_EMAIL, "
-    		+ "UPSSN, "
-    		+ "UPDOB, "
-    		+ "UP_ACTIVE_YN, "
-    		+ "UP_PWDEXPD, "
-    		+ "UP_DISABLED_YN, "
-    		+ "UP_DISABLED_DATE, "
-    		+ "UP_LAST_LOGIN_DATE, "
-    		+ "UP_PWD_ATTEMPTS"
-    		+ ") VALUES("
-    		+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-    		+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
-    		+ ")"
-    		);
-    	int rows = qry
-       		.setParameter(1, userId)
-       		.setParameter(2, token)
-       		.setParameter(3, homeMarket)
-       		.setParameter(4, firstName)
-       		.setParameter(5, lastName)
-       		.setParameter(6, address1)
-       		.setParameter(7, address2)
-       		.setParameter(8, city)
-       		.setParameter(9, state)
-       		.setParameter(10, zip)
-       		.setParameter(11, zip4)
-       		.setParameter(12, phone)
-       		.setParameter(13, fax)
-       		.setParameter(14, email)
-       		.setParameter(15, ssn)
-       		.setParameter(16, birthdate, TemporalType.DATE)
-       		.setParameter(17, activeYN)
-       		.setParameter(18, passwordExpirationDate, TemporalType.DATE)
-       		.setParameter(19, disabledYN)
-       		.setParameter(20, disabledDate, TemporalType.TIMESTAMP)
-       		.setParameter(21, lastLoginDate, TemporalType.TIMESTAMP)
-       		.setParameter(22, pwdAttempts)
-       		.executeUpdate();
-    	return rows;
-	}
-  
-	public int remove(String userID) {
-    	Query qry = em.createQuery("DELETE FROM User_Profile "
-    		+ "WHERE upUserid = :userID");
-    	int rows = qry
-    		.setParameter("userID", userID)
-    		.executeUpdate();
-    	return rows;
-	}
-	
-	public int updateAll(
-		String userId, 
-		String token,
-		short homeMarket,
-		String firstName,
-		String lastName,
-		String address1,
-		String address2,
-		String city,
-		String state,
-		String zip,
-		String zip4,
-		String phone,
-		String fax,
-		String email,
-		String ssn,
-		java.util.Date birthdate,
-		String activeYN,
-		java.util.Date passwordExpirationDate,
-		java.sql.Timestamp disabledDate,
-		java.sql.Timestamp lastLoginDate,
-		short pwdAttempts
-		) {
-		String disabledYN = "N";
-	   	Query qry = em.createQuery("UPDATE User_Profile "
-    	    + "SET uptoken     = :token, "
-    		+ "upHomeMarket    = :homeMarket, "
-    		+ "upFirstName     = :firstName, "
-    		+ "upLastName      = :lastName, "
-    		+ "upAddress1      = :address1, "
-    		+ "upAddress2      = :address2, "
-    		+ "upCity          = :city, "
-    		+ "upState         = :state, "
-    		+ "upZip           = :zip, "
-    		+ "upZip4          = :zip4, "
-    		+ "upPhone         = :phone, "
-    		+ "upFax           = :fax, "
-    		+ "upEmail         = :email, "
-    		+ "upssn           = :ssn, "
-    		+ "updob           = :birthdate, "
-    		+ "upActiveYn      = :activeYN, "
-    		+ "upPwdexpd       = :passwordExpirationDate, "
-    		+ "upDisabledYn    = :disabledYN, "
-    		+ "upDisabledDate  = :disabledDate, "
-    		+ "upLastLoginDate = :lastLoginDate, "
-    		+ "upPwdAttempts   = :pwdAttempts "
-    		+ "WHERE upUserid  = :userId");
-	   	int rows = qry
-	   		.setParameter(1, token)
-	   		.setParameter(2, homeMarket)
-	   		.setParameter(3, firstName)
-	   		.setParameter(4, lastName)
-	   		.setParameter(5, address1)
-	   		.setParameter(6, address2)
-	   		.setParameter(7, city)
-	   		.setParameter(8, state)
-	   		.setParameter(9, zip)
-	   		.setParameter(10, zip4)
-	   		.setParameter(11, phone)
-	   		.setParameter(12, fax)
-	   		.setParameter(13, email)
-	   		.setParameter(14, ssn)
-	   		.setParameter(15, birthdate, TemporalType.DATE)
-	   		.setParameter(16, activeYN)
-	   		.setParameter(17, passwordExpirationDate, TemporalType.DATE)
-	   		.setParameter(18, disabledYN)
-	   		.setParameter(19, disabledDate, TemporalType.TIMESTAMP)
-	   		.setParameter(20, lastLoginDate, TemporalType.TIMESTAMP)
-	   		.setParameter(21, pwdAttempts)
-	   		.executeUpdate();
-		return rows;
-	}
-	 
 	/*
 	 * findUserProfile(userName);
 	 * if userProfile == null
@@ -399,12 +66,14 @@ public class UserProfileBean implements UserProfile {
 	 *          update user profile upPwdAttempts=0, upDisabledDate=null, upLastLoginDate
 	 */
 	public boolean authenticate(String userName, String password, boolean userIsChangingPassword) {
+		//debug
 		System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0013");
+		//debug
+		isJoined();
+		isManaged(userProfile);
 		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
 		java.sql.Timestamp today = new java.sql.Timestamp(new java.util.Date().getTime());
-		User_Profile userProfile = find(userName); 
 
-		//if (getPwdPolicy()== null) { //get the password policy
 		if (pwdPolicy==null) { //get the password policy
 			//debug
 			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0010 pwdPolicy == null");
@@ -420,10 +89,6 @@ public class UserProfileBean implements UserProfile {
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0001;
 			return false;
 		}
-
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0007 userProfile =" + userProfile + "\n");
-		//debug
 
 		if (userProfile.getUpDisabledDate() != null) {
 			//debug
@@ -451,36 +116,24 @@ public class UserProfileBean implements UserProfile {
 			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0017");
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000F;
 			signonAttempts++;
-			int rows = setUpPwdAttempts(userName, signonAttempts);
+			setUpPwdAttempts(signonAttempts);
 			//debug
 			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0012"
 					+ "\n "
 					+ "  feedback =" + feedback  
 					+ "\n "
 					+ "  signonAttempts = " + signonAttempts
-					+ "\n "
-					+ "  rows =" + rows
 					);
 			//debug
 
-			if (rows != 1) {
-				int z = rows;
-			}
-
 			if (signonAttempts == maxSignonAttempts) {
-				rows = disable(userName);
+				disable();
 				//debug
 				System.out.println("com.yardi.ejb.UserProfileBean authenticate() 000C"
 						+ "\n "
 						+ "  signonAttempts == maxSignonAttempts"  
-						+ "\n "
-						+ "  rows =" + rows
 						);
 				//debug
-
-				if (rows != 1) {
-					int z = rows;
-				}
 
 				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000C;
 				//debug
@@ -492,12 +145,20 @@ public class UserProfileBean implements UserProfile {
 
 			if (userIsChangingPassword == false && passwordExpiration <= today.getTime()) {
 				/*
-				 * Password expired. Use chgPwd() in this class to change it
-				 * 
-				 * If the password is being changed because it expired then the expired password error should be ignored (it is
-				 * expected) as long as all of the other criteria (they have provided valid credentials, they are active and 
-				 * the password is not disabled) have been met. For this reason, the expired password test happens last. 
+				 * there is pwdPolicy
+				 * there is userProfile
+				 * user profile is active
+				 * user profile is not disabled
+				 * password is valid 
+				 * Password expired. Use chgUserToken() in this class to change it
+				 * They made it this far so give them credit and reset password attempts. 
+				 * Still return false so no session table row is created.
+				 * com.yardi.ejb.UserServicesBean.authenticate() makes an exception for YRD0002 and will commit instead of rollback
 				 */
+				//debug
+				System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0021");
+				//debug
+				setUpPwdAttempts((short) 0);
 				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0002;
 				//debug
 				System.out.println("com.yardi.ejb.UserProfileBean authenticate() 000E"
@@ -519,77 +180,264 @@ public class UserProfileBean implements UserProfile {
 				 * They have successfully logged in at this point only if they are not changing the password so only set 
 				 * last login date when they are not changing the password 
 				 */
-				int rows = loginSuccess(userName);
 				//debug
 				System.out.println("com.yardi.ejb.UserProfileBean authenticate() 000F"
 						+ "\n "
-						+ "  userIsChangingPassword == false"
+						+ "   userIsChangingPassword="
+						+ userIsChangingPassword
 						+ "\n "
-						+ "  rows =" + rows
+						+ "   feedback="
+						+ feedback
 						);   
 				//debug
-
-				if (rows != 1) {
-					int z = rows;
-				}
+				loginSuccess();
 			}
 		}
 		return pwdValid;
 	}
-	
-	public String getFeedback() {
+
+	public void changeUserToken(final char [] newPassword) {
+    	//debug
+    	System.out.println("com.yardi.ejb.UserProfileBean changeUserToken() 0002 ");
+    	//debug
+		isJoined();
+		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
+		String userToken="";
+		try {
+			userToken = passwordAuthentication.hash(newPassword); //hash new password
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} 
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.set(Calendar.HOUR, 0);
+		gc.set(Calendar.MINUTE, 0);
+		gc.set(Calendar.SECOND, 0);
+		gc.set(Calendar.HOUR_OF_DAY, 0);
+		gc.add(Calendar.DAY_OF_MONTH, Short.valueOf(pwdPolicy.getPpDays()).intValue()); //new password expiration date
+		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean changeUserToken() 0004 "
+				+ "\n "
+				+ "  userName=" + userProfile.getUpUserid()
+				+ "\n "
+				+ "  userToken="
+				+ userToken
+				+ "\n "
+				+ "  gc="
+				+ gc.toString()
+				+ "\n "
+				+ "  check USER PROFILE"
+				);
+		//debug
+		userProfile.setUptoken(userToken);
+		userProfile.setUpPwdexpd(new java.util.Date(gc.getTimeInMillis()));
+		isJoined();
+		User_Profile managedUserProfile = em.merge(userProfile);
+		managedUserProfile.setUptoken(userProfile.getUptoken());
+		managedUserProfile.setUpPwdexpd(userProfile.getUpPwdexpd());
+		isJoined();
+    	isManaged(managedUserProfile);
+    }
+
+    private void disable() {
+    	//debug
+    	System.out.println("com.yardi.ejb.UserProfileBean disable() 001A ");
+    	//debug
+		isJoined();
+    	userProfile.setUpPwdAttempts(pwdPolicy.getPpMaxSignonAttempts());
+    	userProfile.setUpDisabledDate(new java.sql.Timestamp(new java.util.Date().getTime()));
+    	User_Profile managedUserProfile = em.merge(userProfile);
+    	managedUserProfile.setUpPwdAttempts(userProfile.getUpPwdAttempts());
+    	managedUserProfile.setUpDisabledDate(userProfile.getUpDisabledDate());
+		isJoined();
+    	isManaged(managedUserProfile);
+		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean disable() 001B "
+				+ "\n "
+				+ "  userName=" 
+				+ userProfile.getUpUserid()
+				+ "\n "
+				+ "  disabledDate=" 
+				+ userProfile.getUpDisabledDate()
+				+ "\n "
+				+ "  pwdAttempts=" 
+				+ userProfile.getUpPwdAttempts()
+				);
+		//debug
+    }
+    
+    /**
+     * Return the User_Profile entity specified by userName or null if it is not in the persistence context or the database
+     * @param userName specifies the entity ID
+     * @return a User_Profile entity 
+     */
+    public User_Profile find(String userName) {
+    	return em.find(User_Profile.class, userName);
+    }
+    
+    public String getFeedback() {
 		return feedback;
 	}
-
-	private Pwd_Policy getPwdPolicy() {
+    
+    private Pwd_Policy getPwdPolicy() {
+    	//debug
+    	System.out.println("com.yardi.ejb.UserProfileBean getPwdPolicy() 001C ");
+    	//debug
+    	isJoined();
 		
 		if (pwdPolicy==null) {
+	    	//debug
+	    	System.out.println("com.yardi.ejb.UserProfileBean getPwdPolicy() 0020 ");
+	    	//debug
 			setPwdPolicy();
 		}
 		
 		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean getPwdPolicy() 000A"
+		System.out.println("com.yardi.ejb.UserProfileBean getPwdPolicy() 000A "
 			+ "\n"
 			+ "   pwdPolicy="
-			+ pwdPolicy
+			+ pwdPolicy.toString()
 			);
+
+		System.out.println("com.yardi.ejb.UserProfileBean getPwdPolicy() 001E ");
 		//debug
+    	isManaged(pwdPolicy);
 		return pwdPolicy;
 	}
+    
+    public User_Profile getUserProfile() {
+		return userProfile;
+	}
+    
+    private boolean isJoined() {
+  		System.out.println("com.yardi.ejb.UserProfileBean isJoined() 0019 "
+  				+ "\n"
+  				+ "   isJoined="
+  				+ em.isJoinedToTransaction()
+  				);
+		return em.isJoinedToTransaction();
+	}
 
-	private void setPwdPolicy() {
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean setPwdPolicy() 0014"
-				+ "\n"
-				+ "   passwordPolicyBean="
-				+ passwordPolicyBean
+	private boolean isManaged(Pwd_Policy pwdPolicy) {
+		System.out.println("com.yardi.ejb.UserProfileBean isManaged() 001D "
+				+ "\n "
+				+ "   em.contains(pwdPolicy)="
+				+ em.contains(pwdPolicy)
+				);
+    	return em.contains(pwdPolicy);
+	}
+	
+	private boolean isManaged(User_Profile userProfile) {
+		System.out.println("com.yardi.ejb.UserProfileBean isManaged() 0018 "
+				+ "\n "
+				+ "   em.contains(userProfile)="
+				+ em.contains(userProfile)
+				);
+    	return em.contains(userProfile);
+	}
+	
+	/**
+     * Update the user profile to reflect successful login. Password attempts is set to zero, disabled date is set to null,
+     * last login date is today. 
+     * 
+     * @param userName
+     */
+    public void loginSuccess() {
+    	//debug
+    	System.out.println("com.yardi.ejb.UserProfileBean loginSuccess() 0000 ");
+    	//debug
+		isJoined();
+    	isManaged(userProfile);
+    	userProfile.setUpPwdAttempts((short) 0);
+    	userProfile.setUpDisabledDate(null);
+    	userProfile.setUpLastLoginDate(new java.sql.Timestamp(new java.util.Date().getTime()));
+    	User_Profile managedUserProfile = em.merge(userProfile);
+    	managedUserProfile.setUpPwdAttempts(  userProfile.getUpPwdAttempts());
+    	managedUserProfile.setUpDisabledDate( userProfile.getUpDisabledDate());
+    	managedUserProfile.setUpLastLoginDate(userProfile.getUpLastLoginDate());
+    	//debug
+		System.out.println("com.yardi.ejb.UserProfileBean loginSuccess() 0003 "
+				+ "\n "
+				+ "   userName=" 
+				+ userProfile.getUpUserid()
+				+ "\n "
+				+ "   upPwdAttempts="
+				+ userProfile.getUpPwdAttempts()
+				+ "\n "
+				+ "   upDisabledDate="
+				+ userProfile.getUpDisabledDate()
+				+ "\n "
+				+ "   loginDate=" 
+				+ userProfile.getUpLastLoginDate()
+				+ "\n "
+				+ "   isManaged(managedUserProfile)="
+				+ isManaged(managedUserProfile)
 				);
 		//debug
+		isJoined();
+    	isManaged(managedUserProfile);
+    }
+	
+	@PostConstruct
+    private void postConstructCallback() {
+    	System.out.println("com.yardi.ejb.UserProfileBean postConstructCallback() 0016");
+    	getPwdPolicy();
+    }
+
+	@Remove
+	public void removeBean() {
+		System.out.println("com.yardi.ejb.UserProfileBean removeBean() 0007 ");
+	}
+	
+	private void setPwdPolicy() {
+		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean setPwdPolicy() 0014 ");
+		//debug
+		isJoined();
 		pwdPolicy = passwordPolicyBean.getPwdPolicy();
 		
 		if (pwdPolicy == null) {
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
-			System.out.println("com.yardi.ejb.UserProfileBean setPwdPolicy() pwdPolicy==null 0011");
+			System.out.println("com.yardi.ejb.UserProfileBean setPwdPolicy() pwdPolicy==null 0011 ");
 			return;
 		}
 		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean setPwdPolicy() 000B"
+		System.out.println("com.yardi.ejb.UserProfileBean setPwdPolicy() 000B "
 			+ "\n"
 			+ "   pwdPolicy="
-			+ pwdPolicy
+			+ pwdPolicy.toString()
 			+ "\n"
 			+ "   feedback="
 			+ feedback);
 		//debug
-	}
-
-	@Remove
-	public void removeBean() {
-		System.out.println("com.yardi.ejb.UserProfileBean removeBean() 0018 ");
+		isManaged(pwdPolicy);
 	}
 	
-	public String stringify() {
-		return "UserProfileBean="
-				+ this;
+	public void setUpPwdAttempts(short pwdAttempts) {
+    	//debug
+    	System.out.println("com.yardi.ejb.UserProfileBean setUpPwdAttempts() 0005 ");
+    	//debug
+		isJoined();
+    	userProfile.setUpPwdAttempts(pwdAttempts);
+    	User_Profile managedUserProfile = em.merge(userProfile);
+    	managedUserProfile.setUpPwdAttempts(pwdAttempts);
+		isJoined();
+    	isManaged(managedUserProfile);
+		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean setUpPwdAttempts() 0001 "
+				+ "\n "
+				+ "  userName=" + userProfile.getUpUserid()
+				+ "\n "
+				+ "  pwdAttempts=" + userProfile.getUpPwdAttempts()
+				);
+		//debug
+    }
+
+	public void setUserProfile(User_Profile userProfile) {
+		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean setUserProfile() 001F ");
+		//debug
+		isJoined();
+		this.userProfile = userProfile;
+		isManaged(this.userProfile);
 	}
 }

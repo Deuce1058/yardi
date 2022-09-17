@@ -2,61 +2,22 @@ package com.yardi.ejb;
 
 import jakarta.ejb.Local;
 
+import com.yardi.ejb.model.User_Profile;
+
 @Local
 public interface UserProfile {
 	boolean authenticate(String userName, String password, boolean userIsChangingPassword);
-	int changeUserToken(String userName, char [] newPassword);
-	User_Profile find(String userName);
+	void changeUserToken(final char [] newPassword);
+    /**
+     * Return the User_Profile entity specified by userName or null if it is not in the persistence context or the database
+     * @param userName specifies the entity ID
+     * @return a User_Profile entity 
+     */
+	public User_Profile find(String userName);
 	String getFeedback();
-	int loginSuccess(String userName);
-	int persist(
-			String userId, 
-			String token,
-			short homeMarket,
-			String firstName,
-			String lastName,
-			String address1,
-			String address2,
-			String city,
-			String state,
-			String zip,
-			String zip4,
-			String phone,
-			String fax,
-			String email,
-			String ssn,
-			java.util.Date birthdate,
-			String activeYN,
-			java.util.Date passwordExpirationDate,
-			java.sql.Timestamp disabledDate,
-			java.sql.Timestamp lastLoginDate,
-			short pwdAttempts
-			);
-	int remove(String userID);
+	User_Profile getUserProfile();
+	void loginSuccess();
 	void removeBean();
-	int setUpPwdAttempts(String userName, short pwdAttempts);
-	String stringify();
-	int updateAll(
-			String userId, 
-			String token,
-			short homeMarket,
-			String firstName,
-			String lastName,
-			String address1,
-			String address2,
-			String city,
-			String state,
-			String zip,
-			String zip4,
-			String phone,
-			String fax,
-			String email,
-			String ssn,
-			java.util.Date birthdate,
-			String activeYN,
-			java.util.Date passwordExpirationDate,
-			java.sql.Timestamp disabledDate,
-			java.sql.Timestamp lastLoginDate,
-			short pwdAttempts
-			);
+	void setUpPwdAttempts(short pwdAttempts);
+	void setUserProfile(User_Profile userProfile);
 }
