@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+  <meta HTTP-EQUIV="Expires" CONTENT="-1">
+  <title>Password Tester</title>
+  <!-- 
+  https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=scrollspy
+  https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-affix.php
+  https://www.tutorialrepublic.com/css-reference/css-top-property.php
+  -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="../resources/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="../resources/fontawesome-free-5.12.1-web/css/all.min.css" rel="stylesheet" />
+  <link href="../resources/fontawesome-free-5.12.1-web/css/fontawesome.min.css" rel="stylesheet">
+  <link href="../resources/fontawesome-free-5.12.1-web/css/brands.min.css" rel="stylesheet" />
+  <link href="../resources/fontawesome-free-5.12.1-web/css/solid.min.css" rel="stylesheet" />
+  <script defer src="../resources/fontawesome-free-5.12.1-web/js/all.min.js"></script>
+  <script defer src="../resources/fontawesome-free-5.12.1-web/js/brands.min.js"></script>
+  <script defer src="../resources/fontawesome-free-5.12.1-web/js/solid.min.js"></script>
+  <script defer src="../resources/fontawesome-free-5.12.1-web/js/fontawesome.min.js"></script>
+  <script src="../resources/scripts/jquery-3.4.1.min.js"></script>
+  <script src="../resources/scripts/bootstrap.min.js"></script>
+  <script src="../resources/scripts/momentJS/moment.min.js" type="text/javascript"></script>
+  <script src="../resources/scripts/bootstrap4-datetimepicker/tempusdominus-bootstrap-4.min.js" type="text/javascript"></script>
+  <link href="../resources/css/bootstrap4-datetimepicker/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+  <script src="../resources/scripts/globalizeJS/cldrjs/dist/cldr.js"></script>
+  <script src="../resources/scripts/globalizeJS/cldrjs/dist/cldr/event.js"></script>
+  <script src="../resources/scripts/globalizeJS/cldrjs/dist/cldr/supplemental.js"></script>
+  <script src="../resources/scripts/globalizeJS/globalize/dist/globalize.js"></script>
+  <script src="../resources/scripts/globalizeJS/globalize/dist/globalize/number.js"></script>
+  <script src="../resources/scripts/globalizeJS/globalize/dist/globalize/date.js"></script>
+  <script src="../resources/scripts/custom/enCldrDate.js"></script>
+<style type="text/css">
+/* Custom Styles */
+  body{
+    padding-top: 0px;
+  }
+  .userProfileForm {
+    margin-left: 0px;
+  }
+  .formElementPadBottom {
+    padding-bottom: 10px;
+  }
+  .formElementPadLeft {
+    padding-left: 5px;
+  }
+  .formElementPadBottomLeft {
+    padding-bottom: 10px;
+    padding-left: 5px;
+  }
+  .roundedCorners {
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+  }
+  .preserveWhiteSpace {
+    white-space: pre;
+  }  
+  .dropdown-submenu {
+    position: relative;
+  }
+  .dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+  }
+  .dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+  }
+  .dropdown-submenu>a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+  }
+  .dropdown-submenu:hover>a:after {
+    border-left-color: #fff;
+  }
+  .dropdown-submenu.pull-left {
+    float: none;
+  }
+  .dropdown-submenu.pull-left>.dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+  }  
+  .white {
+    color: white;
+  }
+  .align-center {
+    text-align: center;
+  }
+  .background-red {
+    background-color:red;
+  }
+  .verticalLine {
+      border-left: thin solid;
+      border-color: darkgrey;
+  }
+  .error-border {
+      border-style: solid;
+      border-color: red;
+      border-width: medium;
+  }
+</style>
+  <h4 class="white align-center background-red">
+    <noscript>This site requires JavaScript. Ensure that this is enabled on your browser.</noscript>
+  </h4>
+</head>
+<body>
+	    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-bottom">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Quick Links<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu  multi-level" style="width: 150px;" role="menu" aria-labelledby="dropdownMenu">
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" href="#">User Tables</a>
+                            <ul class="dropdown-menu" style="width: 250px;">
+                                <li id="UPView"><a href="#">View User Profile</a></li>
+                                <li id="UPChange"><a href="#">User Profile Maintenance</a></li>
+                                <li id="STView"><a href="#">View Sessions Table</a></li>
+                                <li id="STChange"><a href="#">Sessions Table Maintenance</a></li>
+                                <li id="UP1View"><a href="#">View Unique Tokens Table</a></li>
+                                <li id="UP1Change"><a href="#">Unique Tokens Table Maintenance</a></li>
+                                <li id="UGView"><a href="#">View User Groups Table</a></li>
+                                <li id="UGChange"><a href="#">User Groups Table Maintenance</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown-submenu">
+                            <a href="#">Permissions</a>
+                            <ul class="dropdown-menu" style="width: 250px;">
+                                <li id="PMView"><a href="#">View Permissions Master</a></li>
+                                <li id="PMChange"><a href="#">Permissions Master Maintenance</a></li>
+                                <li id="GPView"><a href="#">View Group Permissions</a></li>
+                                <li id="GPChange"><a href="#">Group Permissions Maintenance</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown-submenu">
+                            <a href="#">Misc.</a>
+                            <ul class="dropdown-menu" style="width: 250px;">
+                                <li id="GMView"><a href="#">View Group Master</a></li>
+                                <li id="GMChange"><a href="#">Group Master Maintenance</a></li>
+                                <li id="PPView"><a href="#">View Password Policy</a></li>
+                                <li id="PPChange"><a href="#">Password Policy Maintenance</a></li>
+                                <li id="STView"><a href="#">View Sessions Table</a></li>
+                                <li id="STChange"><a href="#">Sessions Table Maintenance</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="form-inline pl-2">
+                <div class="form-group px-sm-1">
+                    <label for="username" class="control-label preserveWhiteSpace" style="padding-left: 20px;"><strong>Username </strong></label>
+                    <input type="search" class="form-control" name="username" id="username" required placeholder="User Name" aria-label="Username">
+                </div>
+            </form>
+						<div class="d-inline-flex flex-sm-column">
+							<div id="title-loginID" class="formElementPadLeft preserveWhiteSpace"></div>
+            	<div id="form-feedback" class="formElementPadLeft" style="color:red; margin-left: 5px">
+								*...+ .. 1 .. + .. 2 .. + .. 3 .. + .. 4 .. + .. 5 .. + .. 6 .. + .. 7 .. + .. 8 .. + .. 9
+							</div> <!--90 char-->
+						</div>
+        </div>
+    </nav>	
+  <div class="container" style="margin-left: 5px;">
+    <form>
+      <div>
+				<div id="section3">
+          <h4>Password/Token Generator</h4>
+          <div class="d-sm-flex pb-sm-1">
+            <label for="password" class="control-label pr-sm-2" pwdFn>Password</label>
+            <input	type="text" class="roundedCorners form-control-sm border" name="password" id="password" placeholder="Password" pwdFn/>
+            <button type="button" class="btn btn-success pl-sm-2 ml-sm-2" id="enforceBtn" pwdFn>Enforce</button>
+          </div>
+          <div class="d-sm-flex pb-sm-1">
+						<label pwdFn style="font-weight: bold">New token=</label>
+            <label id="newToken" style="color:green;" pwdFn>$31$16$zBv5r6wXaLrlJ1iRF6-j79463_7AFER7LxMWxCzL4uY</label>
+          </div>
+        </div>
+      </div>
+		</form>
+</div> 
+<div id="separator1">
+  <hr class="mb-sm-0">
+</div>
+<div id="pwdOptions">
+  <h4 style="padding-left: 16px;" class="mb-sm-0">Password Policy</h4>
+  <form class="form-inline mt-sm-1" id="optionsForm">
+    <div class="form-group m-sm-3">
+      <input type="text" class="roundedCorners form-control-sm numeric gtzero pwdPolicy" id="PPDays" name="PPDays" maxlength="3"
+        size="1" required>
+      <label class="pl-sm-2" for="PPDays">Password life in days</label>
+    </div>
+    <div class="form-group m-sm-3">
+      <input type="text" class="roundedCorners form-control-sm numeric gezero pwdPolicy" id="PPNbrUnique" name="PPNbrUnique"
+        maxlength="3" size="1" required>
+      <label class="pl-sm-2" for="PPNbrUnique">Number of unique tokens</label>
+    </div>
+    <div class="form-group m-sm-3">
+      <input type="text" class="roundedCorners form-control-sm numeric gtzero pwdPolicy" id="PPMaxLoginTries"
+        name="PPMaxLoginTries" maxlength="2" size="1" required>
+      <label class="pl-sm-2" for="PPMaxLoginTries">Max number of login attempts</label>
+    </div>
+    <div class="form-group m-sm-3">
+      <input type="text" class="roundedCorners form-control-sm numeric gtzero pwdPolicy" id="PPPwdMinLen" name="PPPwdMinLen"
+        maxlength="3" size="1" required>
+      <label class="pl-sm-2" for="PPPwdMinLen">Minimum password length</label>
+    </div>
+    <div class="form-group m-sm-3">
+      <input type="text" class="roundedCorners form-control-sm gtzero null pwdPolicy" id="PPPwdMaxLen" name="PPPwdMaxLen"
+        maxlength="4" size="1" required>
+      <label class="pl-sm-2" for="PPPwdMAxLen">Maximum password length</label>
+    </div>
+    <div class="form-group m-sm-3">
+      <input type="text" class="roundedCorners form-control-sm gezero null pwdPolicy" id="PPNbrRepeats" name="PPNbrRepeats"
+        maxlength="4" size="1" required>
+      <label class="pl-sm-2" for="PPNbrRepeats">Maximum repeated characters</label>
+    </div>
+    <div class="form-group m-sm-3">
+      <input type="text" class="roundedCorners form-control-sm gtzero null pwdPolicy" id="PPNbrNbr" name="PPNbrNbr"
+        maxlength="4" size="1" required>
+      <label class="pl-sm-2" for="PPNbrNbr">Number of digits</label>
+    </div>
+    <div class="form-group m-sm-3">
+      <input type="text" class="roundedCorners form-control-sm gtzero null pwdPolicy" id="PPNbrUpper" name="PPNbrUpper"
+        maxlength="4" size="1" required>
+      <label class="pl-sm-2" for="PPNbrUpper">Number of upper case</label>
+    </div>
+    <div class="form-group m-sm-3">
+      <input type="text" class="roundedCorners form-control-sm gtzero null pwdPolicy" id="PPNbrLower" name="PPNbrLower"
+        maxlength="4" size="1" required>
+      <label class="pl-sm-2" for="PPNbrLower">Number of lower case</label>
+    </div>
+    <div class="form-group m-sm-3">
+      <input type="text" class="roundedCorners form-control-sm gtzero null pwdPolicy" id="PPNbrSpecial" name="PPNbrSpecial"
+        maxlength="4" size="1" required>
+      <label class="pl-sm-2" for="PPNbrSpecial">Number of special characters</label>
+    </div>
+    <div class="form-group custom-control custom-checkbox m-sm-3">
+      <input type="checkbox" class="custom-control-input" id="PPUpperRqd" name="PPUpperRqd" value="PPUpperRqd">
+      <label class="custom-control-label" for="PPUpperRqd">Upper case required</label>
+    </div>
+    <div class="form-group custom-control custom-checkbox m-sm-3">
+      <input type="checkbox" class="custom-control-input" id="PPLowerRqd" name="PPLowerRqd" value="PPLowerRqd">
+      <label class="custom-control-label" for="PPLowerRqd">Lower case required</label>
+    </div>
+    <div class="form-group custom-control custom-checkbox m-sm-3">
+      <input type="checkbox" class="custom-control-input" id="PPNbrRqd" name="PPNbrRqd" value="PPNbrRqd">
+      <label class="custom-control-label" for="PPNbrRqd">Number required</label>
+    </div>
+    <div class="form-group custom-control custom-checkbox m-sm-3">
+      <input type="checkbox" class="custom-control-input" id="PPSpecialRqd" name="PPSpecialRqd" value="PPSpecialRqd">
+      <label class="custom-control-label" for="PPSpecialRqd">Special character required</label>
+    </div>
+    <div class="form-group custom-control custom-checkbox m-sm-3">
+      <input type="checkbox" class="custom-control-input" id="PPContainsUser" name="PPContainsUser"
+        value="PPContainsUser">
+      <label class="custom-control-label" for="PPContainsUser">Cant contain user name</label>
+    </div>
+    <div class="form-group custom-control custom-checkbox m-sm-3">
+      <input type="checkbox" class="custom-control-input" id="PPContainsPwd" name="PPContainsPwd"
+        value="PPContainsPwd">
+      <label class="custom-control-label" for="PPContainsPwd">Cant contain current password</label>
+    </div>
+  </form>
+  <div class="flex-row mt-sm-0 ml-sm-3" id="buttonPanel" name="buttonPanel">
+    <button type="button" class="btn btn-success login-btn-margin" id="submitBtn">Submit</button>
+  </div>
+</div>
+<div id="separator2">
+  <hr class="mb-sm-0">
+</div>
+<div class="d-flex flex-row pb-sm-1" id="editAndViewTokensContainer">
+  <div class="w-50 table-responsive" id="editTokensContainer">
+    <div class="d-flex flex-row actionButtons" id="actionButtons">
+      <h4 style="padding-left: 16px;" class="mb-sm-3">Edit Tokens</h4>
+      <button type="button" class="btn btn-success ml-sm-3 mt-sm-2 mb-sm-2" id="updateTokensButton" style="background-color: darkturquoise;">Update</button>
+      <button type="button" class="btn btn-success ml-sm-1 mt-sm-2 mb-sm-2" id="cancelButon" style="background-color: red;">Cancel</button>
+      <button type="submit" class="btn btn-success ml-sm-1 mt-sm-2 mb-sm-2" id="findTokensBtn">Find</button>
+      <div class="ml-sm-3" id="editTokensTimeAndDate">12:59:59 mm/dd/yyyy</div>
+    </div>
+    <div style="padding-left: 16px;" id="tokensTableWrapperForSpacing">
+      <table class="table table-striped mb-sm-0" id='tokensTable'>
+        <thead>
+          <tr id="tableHeaders">
+            <th style="width: 60%; padding: 0rem;">Token</th>
+            <th style="width: 20%; padding: 0rem;">Date</th>
+            <th style="width: 10%; padding: 0rem;">RRN</th>
+            <th style="width: 10%; padding: 0rem;">DLT</th>
+          </tr>
+        </thead>
+  
+        <tbody>
+          <tr class="tableRow existingToken" id="tableRow">
+            <td id="userToken" style="width: 60%; padding: .75rem .75rem .75rem 0rem"> 
+              <input type="text" class="roundedCorners userToken1" name="userToken1" id="token111"
+                required size="92" value="*...+ .. 1 .. + .. 2 .. + .. 3 .. + .. 4"> 
+            </td>
+            
+            <td id="dateAdded" style="width: 10%; padding: .75rem .75rem .75rem 0rem">
+              <input type="text" class="roundedCorners tokenDate" name="tokenDate" required placeholder="mm/dd/yyyy"
+                size="7" value="01/01/2022">
+            </td>
+            
+            <td class="tokenRRN" style="width: 10%; padding: .75rem .75rem .75rem 0rem">
+              777
+            </td>
+            
+            <td id="tokenDLT" style="width: 10%; padding: .75rem .75rem .75rem 0rem">
+              <input class="dlt" type="checkbox" name="dlt" value=" ">
+            </td>
+          </tr>
+        </tbody>  
+      </table>
+    </div>
+  </div>
+
+  <div class="verticalLine"></div>
+
+  <div class="w-50 table-responsive" id="viewTokensContainer">
+    <div class="d-flex flex-row viewTokenRefreshButton" id="viewTokenRefreshButton">
+      <h4 style="padding-left: 16px;" class="mb-sm-3">View Tokens</h4>
+      <button type="button" class="btn btn-info ml-sm-3 mt-sm-2 mb-sm-2" id="viewTokensButton">View</button>
+      <div class="ml-sm-3" id="viewTokensTimeAndDate">12:59:59 mm/dd/yyyy</div>
+    </div>
+    <div style="padding-left: 16px;" id="tokensTableViewWrapperForSpacing">
+      <table class="table table-striped mb-sm-0" id='tokensTableView'>
+        <thead>
+          <tr id="tableHeaders">
+            <th style="width: 85%; padding: 0rem;">Token</th>
+            <th style="width: 10%; padding: 0rem;">Date</th>
+            <th style="width: 10%; padding: 0rem;">RRN</th>
+          </tr>
+        </thead>
+
+
+        <tbody>
+          <tr class="viewTokensTableRow" id="viewTokensTableRow">
+            <td id="userToken" style="width: 85%; padding: .75rem .75rem .75rem 0rem"> 
+              *...+ .. 1 .. + .. 2 .. + .. 3 .. + .. 4 .. + .. 5 .. 6 .. 7 .. + .. 8 .. + .. 9 .. + .. 0 .. + .. A .. + .. B .. + .. C .. + .. D .. + .. E .. + .. F .. + .. G....
+            </td>
+            
+            <td id="dateAdded" style="width: 10%; padding: .75rem .75rem .75rem 0rem">
+              01/01/2022
+            </td>
+            
+            <td class="tokenRRN" style="width: 10%; padding: .75rem .75rem .75rem 0rem">
+              777
+            </td>
+          </tr>
+        </tbody>  
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="jsCookiesAlert" tabindex="-1" role="dialog" aria-labelledby="jsCookiesAlert" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Notice:</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          This site requires cookies and JavaScript. Ensure that these are enabled on your browser.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+  var pwdPolicyAction = '';
+  var ajaxData = '';
+  var editTokens = false;
+  var viewTokens = false;
+  var enCldr = inzCldr();
+
+  $(function() {
+    
+    if (navigator.cookieEnabled == false) {
+      $('#jsCookiesAlert').modal('show');
+    }
+
+    if (pwdPolicyAction==='') {
+      doPost(pwdPolicyRequest('find', ''), '../PwdPolicy');
+    }
+
+    $('#enforceBtn').click(function (e) {
+			e.preventDefault();
+      if (validateTestPwdRequest()) {
+        doPost(testPwdRequest(), '../TestPwd');
+      } 
+    });
+    
+    $('#submitBtn').click(function (e) {
+      if(validatePwdPolicyRequest(e)) {
+        doPost(pwdPolicyRequest(pwdPolicyAction, ajaxData), '../PwdPolicy');
+      };
+    });
+
+    $('#findTokensBtn').click(function (e) {
+      $('#editTokensTimeAndDate').text(timeStampString());
+      editTokens = true;
+      viewTokens = false;
+      console.log('pwdTester 0000 editTokens=' + editTokens + ' viewTokens=' + viewTokens);
+      doPost(editTokensRequest('find', ''),'../editUniqueTokens');
+    });
+
+    $('#viewTokensButton').click(function () {
+      $('#viewTokensTimeAndDate').text(timeStampString());
+      editTokens = false;
+      viewTokens = true;
+      doPost(editTokensRequest('find', ''),'../editUniqueTokens');
+    });
+
+		$('#updateTokensButton').click(function() {
+      editTokens = true;
+      viewTokens = false;
+      console.log('pwdTester 0008 editTokens=' + editTokens +' viewTokens=' + viewTokens);
+			if (validateEditTokensTable()) {
+        $('#editTokensTimeAndDate').text(timeStampString());
+      	doPost(editTokensRequest('update', eachTokensTableRow()),'../editUniqueTokens');
+				$('#username').val('');
+				$('#form-feedback').text('');
+				$('#tokensTable').html('');
+			}
+		});
+
+    $('#cancelButon').click(function () {
+      $('#editTokensTimeAndDate').text(timeStampString());
+      editTokens = false;
+      viewTokens = false;
+			$('#username').val('');
+			$('#form-feedback').text('');
+			$('#tokensTable').html('');
+    });
+  });
+
+  function testPwdRequest() {
+    var formItems = {
+        "msgID"                         : '',
+        "msgDescription"                : '',
+        "pwdCompositionRulesBeanStatus" : '',
+        "userName"                      : $('#username').val(),
+        "password"                      : $("#password").val(),
+        "token"                         : ''
+    }
+
+    return formItems;
+  }
+
+  function doPost(formItems, url) {
+    var ajaxData;
+    console.log('pwdTester 0002 editTokens=' + editTokens + ' viewTokens=' + viewTokens);
+
+    $.ajax({
+      type:     'POST',
+      url:      url,
+      data:     JSON.stringify(formItems),
+      async:    false,
+      dataType: "json", 
+      success:  function (ajaxData) {
+                  if (url==='../TestPwd') {
+                    console.log('pwdTester 0003');
+                    testPwdResponse(ajaxData);
+                  }
+                  if (url==='../PwdPolicy') {
+                    console.log('pwdTester 0004');
+                    pwdPolicyAction = ajaxData.action;
+                    pwdPolicyResponse(pwdPolicyRequest('ajaxSuccess', ajaxData));
+                  }
+                  if (editTokens && url==='../editUniqueTokens') {
+                    console.log('pwdTester 0005');
+                    editTokensResponse(editTokensRequest('ajaxSuccess', ajaxData));
+                  }
+                  if (viewTokens && url==='../editUniqueTokens') {
+                    console.log('pwdTester 0006');
+                    viewTokensResponse(editTokensRequest('ajaxSuccess', ajaxData));
+                  }
+                }
+    });
+  }
+  
+  function validateTestPwdRequest() {
+    var formValid = true;
+    $('#username').removeClass('error-border');
+    $('#password').removeClass('error-border');
+
+    if ($('#username').val()==='') {
+      formValid = false;
+      $('#form-feedback').text('User name is required');
+      $('#username').addClass('error-border');
+    }
+
+    if ($('#password').val()==='') {
+      formValid = false;
+      $('#form-feedback').text('Password is required');
+      $('#password').addClass('error-border');
+    }
+
+    return formValid;
+  }
+
+  function testPwdResponse(ajaxData) {
+    if (ajaxData.msgID==='YRD0000') {
+      $('#form-feedback').text('');
+    } else {
+      $('#form-feedback').text(
+            ajaxData.pwdCompositionRulesBeanStatus 
+            + ' ' 
+            + ajaxData.msgDescription
+      );
+    }
+
+    $('#newToken').text(ajaxData.token);
+  }
+
+  function clearScreen() {
+    $('#form-feedback').text('');
+    $('#password')     .val(''); 
+    $("#currentToken") .val('');
+  } 
+
+  function pwdPolicyRequest(action, data) {
+    var formItems = '';
+
+    if (action === 'find') {
+      formItems = {
+          "action"           : "find",
+          "msgId"            : "",
+          "msgDescription"   : "",
+          "pwdLifeInDays"    : "",
+          "nbrUnique"        : "",
+          "maxSignonAttempts": "",
+          "pwdMinLen"        : "",
+          "upperRqd"         : "",
+          "lowerRqd"         : "",
+          "nbrRqd"           : "",
+          "specialRqd"       : "",
+          "maxPwdLen"        : "",
+          "maxRepeatChar"    : "",
+          "nbrDigits"        : "",
+          "nbrUpper"         : "",
+          "nbrLower"         : "",
+          "nbrSpecial"       : "",
+          "cantContainId"    : "",
+          "cantContainPwd"   : ""
+        }
+    } else {
+      if (action === 'ajaxSuccess') {
+        formItems = {
+            "action"           : data.action,
+            "msgId"            : data.msgId,
+            "msgDescription"   : data.msgDescription,
+            "pwdLifeInDays"    : data.pwdLifeInDays,
+            "nbrUnique"        : data.nbrUnique,
+            "maxSignonAttempts": data.maxSignonAttempts,
+            "pwdMinLen"        : data.pwdMinLen,
+            "upperRqd"         : data.upperRqd,
+            "lowerRqd"         : data.lowerRqd,
+            "nbrRqd"           : data.nbrRqd,
+            "specialRqd"       : data.specialRqd,
+            "maxPwdLen"        : data.maxPwdLen,
+            "maxRepeatChar"    : data.maxRepeatChar,
+            "nbrDigits"        : data.nbrDigits,
+            "nbrUpper"         : data.nbrUpper,
+            "nbrLower"         : data.nbrLower,
+            "nbrSpecial"       : data.nbrSpecial,
+            "cantContainId"    : data.cantContainId,
+            "cantContainPwd"   : data.cantContainPwd
+        }
+      } else {
+        formItems = {
+            "action"           : action,
+            "msgId"            : "",
+            "msgDescription"   : "",
+            "pwdLifeInDays"    : $('#PPDays').val(),
+            "nbrUnique"        : $('#PPNbrUnique').val(),
+            "maxSignonAttempts": $('#PPMaxLoginTries').val(),
+            "pwdMinLen"        : $('#PPPwdMinLen').val(),
+            "upperRqd"         : "n",
+            "lowerRqd"         : "n",
+            "nbrRqd"           : "n",
+            "specialRqd"       : "n",
+            "maxPwdLen"        : $('#PPPwdMaxLen').val(),
+            "maxRepeatChar"    : $('#PPNbrRepeats').val(),
+            "nbrDigits"        : $('#PPNbrNbr').val(),
+            "nbrUpper"         : $('#PPNbrUpper').val(),
+            "nbrLower"         : $('#PPNbrLower').val(),
+            "nbrSpecial"       : $('#PPNbrSpecial').val(),
+            "cantContainId"    : "n",
+            "cantContainPwd"   : "n"
+        }
+
+        if ($('#PPUpperRqd').is(':checked')) {
+          formItems.upperRqd = 'y';
+        }
+
+        if ($('#PPLowerRqd').is(':checked')) {
+          formItems.lowerRqd = 'y';
+        }
+
+        if ($('#PPNbrRqd').is(':checked')) {
+          formItems.nbrRqd = 'y';
+        }
+
+        if ($('#PPSpecialRqd').is(':checked')) {
+          formItems.specialRqd = 'y';
+        }
+
+        if ($('#PPContainsUser').is(':checked')) {
+          formItems.cantContainId = 'y';
+        }
+
+        if ($('#PPContainsPwd').is(':checked')) {
+          formItems.cantContainPwd = 'y';
+        }
+      }
+    }
+
+    return formItems;
+  }
+
+  function validatePwdPolicyRequest(e) {
+    var formValid = true;
+    $('#form-feedback').text('');
+
+    $('input').filter('.numeric, .null').each(function () {
+      //change to lower case and strip leading, trailing and embeded whitespace
+      $(this).val($(this).val().toLowerCase());
+      $(this).val($(this).val().replace(/\s/g, ''));
+    });
+
+    $('input').filter('.pwdPolicy').each(function () {
+      if (this.checkValidity()) {
+        $(this).removeClass('error-border');
+      } else {
+        $('#form-feedback').text('A value is required');
+        $(this).addClass('error-border');
+        formValid = false;
+      }
+    });
+
+    if (formValid) {
+      $('input').filter('.pwdPolicy').each(function () {
+        $(this).removeClass('error-border');
+
+        if ($(this).hasClass('numeric') && isNotNumeric($(this).val())) {
+          formValid = false;
+          $(this).addClass('error-border');
+          $('#form-feedback').text('A number is required');
+        }
+
+        if ($(this).hasClass('null') && !($(this).val() === 'null') && isNotNumeric($(this).val())) {
+          formValid = false;
+          $(this).addClass('error-border');
+          $('#form-feedback').text('A number is required');
+        }
+      });
+    }
+
+    if (formValid) {
+      $('input').filter('.pwdPolicy').each(function () {
+        $(this).removeClass('error-border');
+
+        if ($(this).hasClass('numeric') && isInt($(this).val()) === false) {
+          formValid = false;
+          $(this).addClass('error-border');
+          $('#form-feedback').text('Must be an integer value');
+        }
+
+        if ($(this).hasClass('null') && !($(this).val() === 'null') && isInt($(this).val()) === false) {
+          formValid = false;
+          $(this).addClass('error-border');
+          $('#form-feedback').text('Must be an integer value');
+        }
+      });
+    }
+
+    if (formValid) {
+      $('input').filter('.pwdPolicy').each(function () {
+        $(this).removeClass('error-border');
+
+        if ($(this).hasClass('numeric')) {
+
+          if (formValid && $(this).hasClass('gtzero') && $(this).val() <= 0) {
+            formValid = false;
+            $('#form-feedback').text('Value must be greater than zero');
+            $(this).addClass('error-border');
+          }
+
+          if (formValid && $(this).hasClass('gezero') && $(this).val() < 0) {
+            formValid = false;
+            $('#form-feedback').text('Value must be greater than or equal to zero');
+            $(this).addClass('error-border');
+          }
+        }
+
+        if ($(this).is('.null.gtzero') && !($(this).val() === 'null') && $(this).val() <= 0) {
+          $('#form-feedback').text('Value must be greater than zero');
+          $(this).addClass('error-border');
+          formValid = false;
+        }
+      });
+    }
+
+    if (formValid) {
+
+      if (!($('#PPPwdMaxLen').val() === 'null') && (parseInt($('#PPPwdMinLen').val()) > parseInt($('#PPPwdMaxLen').val()))) {
+        formValid = false;
+        $('#PPPwdMaxLen').addClass('error-border');
+        $('#PPPwdMinLen').addClass('error-border');
+        $('#form-feedback').text('Minimum password length must be <= maximum password length');
+      }
+
+      if (formValid && !($('#PPPwdMaxLen').val() === 'null') && (parseInt($('#PPPwdMaxLen').val()) < parseInt($('#PPPwdMinLen').val()))) {
+        formValid = false;
+        $('#PPPwdMaxLen').addClass('error-border');
+        $('#PPPwdMinLen').addClass('error-border');
+        $('#form-feedback').text('Maximum password length must be >= minimum password length');
+      }
+
+      if (formValid && !($('#PPNbrRepeats').val() === 'null') && !($('#PPPwdMaxLen').val() === 'null') && (parseInt($('#PPNbrRepeats').val()) > parseInt($('#PPPwdMaxLen').val()))) {
+        formValid = false;
+        $('#PPNbrRepeats').addClass('error-border');
+        $('#PPPwdMaxLen').addClass('error-border');
+        $('#form-feedback').text('Maximum repeated characters must be <= maximum password length');
+      }
+
+      if (formValid && !($('#PPNbrNbr').val() === 'null') && !($('#PPPwdMaxLen').val() === 'null') && (parseInt($('#PPNbrNbr').val()) > parseInt($('#PPPwdMaxLen').val()))) {
+        formValid = false;
+        $('#PPNbrNbr').addClass('error-border');
+        $('#PPPwdMaxLen').addClass('error-border');
+        $('#form-feedback').text('Number of digits must be <= maximum password length');
+      }
+
+      if (formValid && !($('#PPNbrUpper').val() === 'null') && !($('#PPPwdMaxLen').val() === 'null') && (parseInt($('#PPNbrUpper').val()) > parseInt($('#PPPwdMaxLen').val()))) {
+        formValid = false;
+        $('#PPNbrUpper').addClass('error-border');
+        $('#PPPwdMaxLen').addClass('error-border');
+        $('#form-feedback').text('Number of upper case must be <= maximum password length');
+      }
+
+      if (formValid && !($('#PPNbrLower').val() === 'null') && !($('#PPPwdMaxLen').val() === 'null') && (parseInt($('#PPNbrLower').val()) > parseInt($('#PPPwdMaxLen').val()))) {
+        formValid = false;
+        $('#PPNbrLower').addClass('error-border');
+        $('#PPPwdMaxLen').addClass('error-border');
+        $('#form-feedback').text('Number of lower case must be <= maximum password length');
+      }
+
+      if (formValid && !($('#PPNbrSpecial').val() === 'null') && !($('#PPPwdMaxLen').val() === 'null') && (parseInt($('#PPNbrSpecial').val()) > parseInt($('#PPPwdMaxLen').val()))) {
+        formValid = false;
+        $('#PPNbrSpecial').addClass('error-border');
+        $('#PPPwdMaxLen').addClass('error-border');
+        $('#form-feedback').text('Number of special characters must be <= maximum password length');
+      }
+    }
+
+    if (formValid) {
+      var n = 0;
+
+      if (!($('#PPPwdMaxLen').val() === 'null') && !($('#PPNbrRepeats').val() === 'null')) {
+        n += parseInt($('#PPNbrRepeats').val());
+      }
+
+      if (!($('#PPPwdMaxLen').val() === 'null') && !($('#PPNbrNbr').val() === 'null')) {
+        n += parseInt($('#PPNbrNbr').val());
+      }
+
+      if (!($('#PPPwdMaxLen').val() === 'null') && !($('#PPNbrUpper').val() === 'null')) {
+        n += parseInt($('#PPNbrUpper').val());
+      }
+
+      if (!($('#PPPwdMaxLen').val() === 'null') && !($('#PPNbrLower').val() === 'null')) {
+        n += parseInt($('#PPNbrLower').val());
+      }
+
+      if (!($('#PPPwdMaxLen').val() === 'null') && !($('#PPNbrSpecial').val() === 'null')) {
+        n += parseInt($('#PPNbrSpecial').val());
+      }
+
+      if (!($('#PPPwdMaxLen').val() === 'null') && n > parseInt($('#PPPwdMaxLen').val())) {
+        $('#PPPwdMaxLen').addClass('error-border');
+        $('#PPNbrRepeats').addClass('error-border');
+        $('#PPNbrNbr').addClass('error-border');
+        $('#PPNbrUpper').addClass('error-border');
+        $('#PPNbrLower').addClass('error-border');
+        $('#PPNbrSpecial').addClass('error-border');
+        formValid = false;
+        $('#form-feedback').text('Combined total must be <= maximum password length');
+      }
+    }
+
+    if (formValid && !($('#PPUpperRqd').is(':checked')) && !($('#PPNbrUpper').val() === 'null')) {
+      $('#PPUpperRqd').addClass('error-border');
+      $('#PPNbrUpper').addClass('error-border');
+      formValid = false;
+      $('#form-feedback').text('Number of upper case was specified but Upper case required was not checked');
+    }
+
+    if (formValid && !($('#PPLowerRqd').is(':checked')) && !($('#PPNbrLower').val() === 'null')) {
+      $('#PPLowerRqd').addClass('error-border');
+      $('#PPNbrLower').addClass('error-border');
+      formValid = false;
+      $('#form-feedback').text('Number of lower case was specified but Lower case required was not checked');
+    }
+
+    if (formValid && !($('#PPNbrRqd').is(':checked')) && !($('#PPNbrNbr').val() === 'null')) {
+      $('#PPNbrRqd').addClass('error-border');
+      $('#PPNbrNbr').addClass('error-border');
+      formValid = false;
+      $('#form-feedback').text('Number of digits was specified but Number required was not checked');
+    }
+
+    if (formValid && !($('#PPSpecialRqd').is(':checked')) && !($('#PPNbrSpecial').val() === 'null')) {
+      $('#PPSpecialRqd').addClass('error-border');
+      $('#PPNbrSpecial').addClass('error-border');
+      formValid = false;
+      $('#form-feedback').text('Number of special characters was specified but Special character required was not checked');
+    }
+
+    if (formValid === false) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    return formValid;
+  }
+
+  function isInt(i) {
+    /*
+    var x = "10.33";
+    var y = "123";
+    var z = "12.";
+    var w = "5.0";
+    if (x!=parseInt(x)) console.log("x is not an int"); // x is not an int
+    if (y==parseInt(y)) console.log("y is an int"); //y is an int
+    if (z==parseInt(z)) console.log("z is an int"); //z is an int
+    if (w==parseInt(w)) console.log("w is an int"); //w is an int
+    */
+    var n = i;
+
+    if (i == parseInt(n)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function isNotNumeric(n) {
+    /*
+    var a = "XXX";
+    var n = "111";
+    console.log(isNaN(a)); //true a is not numeric
+    console.log(isNan(n)); //false n is numeric
+    */
+    return isNaN(n);
+  }
+
+  function pwdPolicyResponse(formItems) {
+    $('#PPDays')         .val(formItems.pwdLifeInDays);
+    $('#PPNbrUnique')    .val(formItems.nbrUnique);
+    $('#PPMaxLoginTries').val(formItems.maxSignonAttempts);
+    $('#PPPwdMinLen')    .val(formItems.pwdMinLen);
+    $('#PPPwdMaxLen')    .val(formItems.maxPwdLen);
+    $('#PPNbrRepeats')   .val(formItems.maxRepeatChar);
+    $('#PPNbrNbr')       .val(formItems.nbrDigits);
+    $('#PPNbrUpper')     .val(formItems.nbrUpper);
+    $('#PPNbrLower')     .val(formItems.nbrLower);
+    $('#PPNbrSpecial')   .val(formItems.nbrSpecial);
+
+    if (formItems.upperRqd === 'y' || formItems.upperRqd === 'Y') {
+      $('#PPUpperRqd').attr('checked', 'checked');
+    } else {
+      $('#PPUpperRqd').removeAttr('checked');
+    }
+
+    if (formItems.lowerRqd === 'y' || formItems.lowerRqd === 'Y') {
+      $('#PPLowerRqd').attr('checked', 'checked');
+    } else {
+      $('#PPLowerRqd').removeAttr('checked');
+    }
+
+    if (formItems.nbrRqd === 'y' || formItems.nbrRqd === 'Y') {
+      $('#PPNbrRqd').attr('checked', 'checked');
+    } else {
+      $('#PPNbrRqd').removeAttr('checked');
+    }
+
+    if (formItems.specialRqd === 'y' || formItems.specialRqd === 'Y') {
+      $('#PPSpecialRqd').attr('checked', 'checked');
+    } else {
+      $('#PPSpecialRqd').removeAttr('checked');
+    }
+
+    if (formItems.cantContainId === 'y' || formItems.cantContainId === 'Y') {
+      $('#PPContainsUser').attr('checked', 'checked');
+    } else {
+      $('#PPContainsUser').removeAttr('checked');
+    }
+
+    if (formItems.cantContainPwd === 'y' || formItems.cantContainPwd === 'Y') {
+      $('#PPContainsPwd').attr('checked', 'checked');
+    } else {
+      $('#PPContainsPwd').removeAttr('checked');
+    }
+  }
+
+  function editTokensRequest(action, data) {
+    var formItems = '';
+
+    if (
+          action === 'find'
+       ){
+          console.log('pwdTester 000E');
+          formItems = {
+            "action"               : action,
+            "msgID"                : '',                      
+            "msgDescription"       : '',                       
+            "findUser"             : $('#username').val(),
+						"up1UserName"					 : '',
+            "up1Token"             : '',
+            "up1DateAdded" 				 : '',
+            "up1Rrn" 		           : '',
+            "deleteToken"          : '',
+            "uniqueTokensString"   : ''
+          } 
+          console.log('pwdTester 0001 formItems=' + formItems);
+          return formItems;
+        }
+    
+    if (action === 'ajaxSuccess') {
+      console.log('pwdTester 000D');
+      formItems = {
+        "action"                : action,
+        "msgID"                 : data.msgID,                      
+        "msgDescription"        : data.msgDescription,                       
+        "findUser"              : data.findUser,
+				"up1UserName"						: '',
+        "up1Token"              : '',
+        "up1DateAdded" 				  : '',
+        "up1Rrn"	              : '',
+        "deleteToken"           : '',
+        "uniqueTokensString"    : data.uniqueTokensString
+      }
+      return formItems;			
+		}
+		
+		if (action === 'update') {
+      console.log('pwdTester 000C');
+      formItems = {
+        "action"                : action,
+        "msgID"                 : '',                      
+        "msgDescription"        : '',                       
+        "findUser"              : $('#username').val(),
+				"up1UserName"						: '',
+        "up1Token"              : '',
+        "up1DateAdded" 				  : '',
+        "up1Rrn"	              : '',
+        "deleteToken"           : '',
+        "uniqueTokensString"    : data
+      }
+      return formItems;
+		}
+
+    return formItems;
+  }
+  
+  function editTokensResponse(data) {
+    console.log('pwdTester 0007');
+    $('#form-feedback').text('');
+		$('#tokensTable').html('');
+		$('#tokensTable').append(
+					   '<thead>'
+           + '<tr id="tableHeaders">'
+					 + '  <th style="width: 60%; padding: 0rem;">Token</th>'
+        	 + '  <th style="width: 20%; padding: 0rem;">Date</th>'
+					 + '  <th style="width: 10%; padding: 0rem;">RRN</th>'
+					 + '  <th style="width: 10%; padding: 0rem;">DLT</th>'
+        	 + '</tr>'
+        	 + '</thead>'
+        	 + '<tbody>'
+      	);
+		var tableRows = 0;
+		$.each(JSON.parse(data.uniqueTokensString), function(key, value) {
+			console.log('key:' + key 
+									+ ' | up1Token:' 
+									+ value.up1Token
+									+ ' | up1DateAdded:' 
+									+ value.up1DateAdded
+									+ ' | up1Rrn:'
+									+ value.up1Rrn
+							 	);
+			tableRows++;
+			$('#tokensTable').append(
+					'<tr class="tableRow existingToken" id="tableRow"> '
+         	+ '<td id="userToken" style="width: 60%; padding: .75rem .75rem .75rem 0rem"> '
+		  		+ '<input type="text" class="roundedCorners userToken1" name="userToken1" id="token'
+					+ value.up1Rrn
+					+ '" required size="92" value="'
+					+ value.up1Token
+					+ '"> '
+					+ '</td>'
+							
+					+ '<td id="dateAdded" style="width: 10%; padding: .75rem .75rem .75rem 0rem"> '
+         	+ '<input type="text" class="roundedCorners tokenDate" name="tokenDate" required ' 
+         	+ 'placeholder="mm/dd/yyyy" size="7" value="'
+         	+ value.up1DateAdded
+         	+ '">'
+         	+ '</td>'
+							
+         	+ '<td class="tokenRRN" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+         	+ value.up1Rrn
+         	+ '</td>'
+						
+         	+ '<td id="tokenDLT" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+         	+ '<input class="dlt" type="checkbox" name="dlt" value=" ">'
+         	+ '</td>'
+         	+ '</tr>'
+       	);
+		});
+		console.log('tableRows: ' + tableRows);
+		/*Add 10 extra rows for new tokens*/
+		var i = 0;
+		up1Rrn = -1;
+		for (	i=0; i<10; i++, up1Rrn--) {
+      console.log('pwdTester 0016');
+			$('#tokensTable').append(
+				'<tr class="tableRow newToken" id="tableRow"> '
+			+ '<td id="userToken" style="width: 60%; padding: .75rem .75rem .75rem 0rem"> '
+			+ '<input type="text" class="roundedCorners userToken1" name="userToken1" id="token'
+			+ up1Rrn
+			+ '" reqired size="92" value=""> '
+			+ '</td>'
+							
+			+ '<td id="dateAdded" style="width: 10%; padding: .75rem .75rem .75rem 0rem"> '
+      + '<input type="text" class="roundedCorners tokenDate" name="tokenDate" required ' 
+      + 'placeholder="mm/dd/yyyy" size="7" value="">'
+      + '</td>'
+							
+      + '<td class="tokenRRN" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+			+ up1Rrn
+      + '</td>'
+							
+      + '<td id="tokenDLT" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+      + '</td>'
+      + '</tr>'
+		  );
+		}
+    $('#tokensTable').append('</tbody>');
+    $('.tableRow').each(function(k, v) { 
+      console.log('pwdTester 0015'
+        + '\n'
+        + '    k=' 
+        + k 
+        + '\n'
+        + '    .userToken1='
+        + $(this).find('.userToken1').val()
+        + '\n'
+        + '    .tokenDate='
+        + $(this).find('.tokenDate').val()
+        + '\n'
+        + '    .tokenRRN='
+        + $(this).find('.tokenRRN').text()
+        + '\n'
+        + '    .dlt='
+        + $(this).find('.dlt').is(":checked")
+      );
+    })
+
+
+
+  }
+
+  function viewTokensResponse(data) {
+    $('#form-feedback').text('');
+		$('#tokensTableView').html('');
+		$('#tokensTableView').append(
+					   '<thead>'
+           + '<tr id="tableHeaders">'
+					 + '  <th style="width: 85%; padding: 0rem;">Token</th>'
+        	 + '  <th style="width: 10%; padding: 0rem;">Date</th>'
+					 + '  <th style="width: 10%; padding: 0rem;">RRN</th>'
+        	 + '</tr>'
+        	 + '</thead>'
+        	 + '<tbody>'
+      	);
+		var tableRows = 0;
+		$.each(JSON.parse(data.uniqueTokensString), function(key, value) {
+			console.log('key:' + key 
+									+ ' | up1Token:' 
+									+ value.up1Token
+									+ ' | up1DateAdded:' 
+									+ value.up1DateAdded
+									+ ' | up1Rrn:'
+									+ value.up1Rrn
+							 	);
+			tableRows++;
+			$('#tokensTableView').append(
+					'<tr class="viewTokensTableRow" id="viewTokensTableRow"> '
+         	+ '<td id="userToken" style="width: 85%; padding: .75rem .75rem .75rem 0rem"> '
+					+ value.up1Token          
+					+ '</td>'
+							
+					+ '<td id="dateAdded" style="width: 10%; padding: .75rem .75rem .75rem 0rem"> '
+         	+ value.up1DateAdded
+         	+ '</td>'
+							
+         	+ '<td class="tokenRRN" style="width: 10%; padding: .75rem .75rem .75rem 0rem">'
+         	+ value.up1Rrn
+         	+ '</td>'						
+         	+ '</tr>'
+       	);
+		});
+		console.log('tableRows: ' + tableRows);
+    $('#tokensTableView').append('</tbody>');
+  }
+
+	function validateEditTokensTable() {
+    console.log('pwdTester 0009');
+    $('.tableRow').each(function(k, v) { 
+      console.log('pwdTester 0014'
+        + '\n'
+        + '    k=' 
+        + k 
+        + '\n'
+        + '    .userToken1='
+        + $(this).find('.userToken1').val()
+        + '\n'
+        + '    .tokenDate='
+        + $(this).find('.tokenDate').val()
+        + '\n'
+        + '    .tokenRRN='
+        + $(this).find('.tokenRRN').text()
+        + '\n'
+        + '    .dlt='
+        + $(this).find('.dlt').is(":checked")
+      );
+    })
+		var isValid = true;
+		Globalize.locale("en");
+    console.log('pwdTester 000A');
+		var dateParser = Globalize.dateParser();
+    console.log('pwdTester 000F');
+		$('.tableRow').each(function(k, v) {
+			console.log('pwdTester 0010'
+        + '\n'
+        + '    k=' 
+        + k 
+        + '\n'
+        + '    .userToken1='
+        + $(this).find('.userToken1').val()
+        + '\n'
+        + '    .tokenDate='
+        + $(this).find('.tokenDate').val()
+        + '\n'
+        + '    .tokenRRN='
+        + $(this).find('.tokenRRN').text()
+        + '\n'
+        + '    .dlt='
+        + $(this).find('.dlt').is(":checked")
+        );
+			$(this).find('.userToken1').removeClass('error-border');
+			$(this).find('.tokenDate').removeClass('error-border');
+			
+			if (		$(this).find('.userToken1').val() === ''   						&&
+					  	$(this).find('.tokenDate') .val() === ''									) { 
+
+				if ($(this).find('.dlt').is(':checked') === false &&
+					 	$(this).hasClass('existingToken')) {
+					isValid = false;
+					$(this).find('.userToken1').addClass('error-border');
+					$(this).find('.tokenDate') .addClass('error-border');
+				}	
+			}
+			
+			if (		$(this).find('.userToken1').val() === ''   						&&
+						!($(this).find('.tokenDate') .val() === '')									) {
+
+				if ($(this).find('.dlt').is(':checked') === false) {
+					isValid = false;
+					$(this).find('.userToken1').addClass('error-border');
+
+					if (dateParser($(this).find('.tokenDate').val())===null) {
+            console.log('pwdTester 0012')
+						isValid = false;
+						$(this).find('.tokenDate').addClass('error-border');
+					}
+				}
+				
+				if ($(this).hasClass('newToken')) {
+					isValid = false;
+					$(this).find('.userToken1').addClass('error-border');
+
+					if (dateParser($(this).find('.tokenDate').val())===null) {
+            console.log('pwdTester 0011');
+						isValid = false;
+						$(this).find('.tokenDate').addClass('error-border');
+					}
+				}
+			}
+			
+			if (	!($(this).find('.userToken1').val() === '')   					&&
+							$(this).find('.tokenDate') .val() === ''									) {
+
+				if (	$(this).find('.dlt').is(':checked') === false || 
+							$(this).hasClass('newToken')) {
+					isValid = false;
+					$(this).find('.tokenDate').addClass('error-border');
+				}
+			}
+			
+			if (	!($(this).find('.userToken1').val() === '')   && 
+				 		!($(this).find('.tokenDate') .val() === '')							) {
+
+				if (	$(this).find('.dlt').is(':checked') === false || 
+							$(this).hasClass('newToken')) {
+
+					if (dateParser($(this).find('.tokenDate').val())===null) {
+            console.log('pwdTester 0013');
+						isValid = false;
+						$(this).find('.tokenDate').addClass('error-border');
+					}
+				}
+			}
+		});
+		return isValid;
+	}
+
+	function eachTokensTableRow() {
+		//https://stackoverflow.com/questions/17120633/loop-through-each-html-table-column-and-get-the-data-using-jquery
+    console.log('pwdTester 000B');
+		var uniqueTokens = [];
+		$('.existingToken').each(function(k, v) {
+			var uniqueToken = {
+													up1UserName:	$('#username').val().replace(/\s/g, ''),
+  												up1Token:			$(this).find('.userToken1').val(),
+  												up1DateAdded:	$(this).find('.tokenDate').val(),
+  												up1Rrn:				$(this).find('.tokenRRN').text(),
+													deleteToken:	$(this).find('.dlt').is(':checked')
+												};
+			uniqueTokens.push(uniqueToken);
+			console.log('doUpdate1: k=' + k + ' | v=' + v);
+		});
+		$('.newToken').each(function(k, v) {
+			if ($(this).find('.userToken1').val() !== '' && $(this).find('.tokenDate').val() !=='') {
+        var uniqueToken = {
+													up1UserName:	$('#username').val().replace(/\s/g, ''),
+  												up1Token:			$(this).find('.userToken1').val()  .replace(/\s/g, ''),
+  												up1DateAdded:	$(this).find('.tokenDate') .val()  .replace(/\s/g, ''),
+  												up1Rrn:				$(this).find('.tokenRRN')  .text(),
+													deleteToken:	$(this).find('.dlt').is(':checked')
+												};
+				uniqueTokens.push(uniqueToken);
+				console.log('doUpdate2: k=' + k + ' | v=' + v);
+			}
+		});
+		var x = JSON.stringify(uniqueTokens);
+		console.log('uniqueTokens[] as JSON=' + x);
+		return x;
+	}
+
+  function timeStampString() {
+    var date = new Date();
+    var mm = date.getMonth() + 1;
+    var ts = date.getHours() + ':';
+    
+    if (date.getHours()<10) {
+      ts = '0' + date.getHours() + ':';
+    }
+
+    if (date.getMinutes()<10) {
+      ts += '0' + date.getMinutes() + ':';
+    } else {
+      ts += date.getMinutes() + ':';
+    }
+
+    if (date.getSeconds()<10) {
+      ts += '0' + date.getSeconds() + ' ';
+    } else {
+      ts += date.getSeconds() + ' ';
+    }
+
+    if (mm<10) {
+      ts += '0' + mm + '/';
+    } else {
+      ts += mm + '/';
+    }
+
+    if (date.getDate()<10) {
+      ts += '0' + date.getDate() + '/';
+    } else {
+      ts += date.getDate() + '/';
+    }
+
+    if (date.getFullYear()<10) {
+      ts += '0' + date.getFullYear();
+    } else {
+      ts += date.getFullYear();
+    }
+
+    return ts;
+  }
+</script>
+</body>
+</html>
