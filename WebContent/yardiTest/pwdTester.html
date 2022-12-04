@@ -712,28 +712,15 @@
     }
 
     if (formValid) {
-      $('input').filter('.pwdPolicy').each(function () {
+      $('input').each(function () {
         $(this).removeClass('error-border');
 
-        if ($(this).hasClass('numeric')) {
-
-          if (formValid && $(this).hasClass('gtzero') && $(this).val() <= 0) {
-            formValid = false;
-            $('#form-feedback').text('Value must be greater than zero');
-            $(this).addClass('error-border');
-          }
-
-          if (formValid && $(this).hasClass('gezero') && $(this).val() < 0) {
-            formValid = false;
-            $('#form-feedback').text('Value must be greater than or equal to zero');
-            $(this).addClass('error-border');
-          }
+        if (formValid && $(this).hasClass('numeric')) {
+          formValid = gegtZero($(this));
         }
 
-        if ($(this).is('.null.gtzero') && !($(this).val() === 'null') && $(this).val() <= 0) {
-          $('#form-feedback').text('Value must be greater than zero');
-          $(this).addClass('error-border');
-          formValid = false;
+        if (formValid && $(this).hasClass('null') && !($(this).val() === 'null')) {
+          formValid = gegtZero($(this));
         }
       });
     }
@@ -793,10 +780,6 @@
     if (formValid) {
       var n = 0;
 
-      if (!($('#PPPwdMaxLen').val() === 'null') && !($('#PPNbrRepeats').val() === 'null')) {
-        n += parseInt($('#PPNbrRepeats').val());
-      }
-
       if (!($('#PPPwdMaxLen').val() === 'null') && !($('#PPNbrNbr').val() === 'null')) {
         n += parseInt($('#PPNbrNbr').val());
       }
@@ -815,7 +798,6 @@
 
       if (!($('#PPPwdMaxLen').val() === 'null') && n > parseInt($('#PPPwdMaxLen').val())) {
         $('#PPPwdMaxLen').addClass('error-border');
-        $('#PPNbrRepeats').addClass('error-border');
         $('#PPNbrNbr').addClass('error-border');
         $('#PPNbrUpper').addClass('error-border');
         $('#PPNbrLower').addClass('error-border');
@@ -860,6 +842,24 @@
 
     return formValid;
   }
+
+  function gegtZero(thisObj) {
+    var formValid = true;
+
+    if (thisObj.hasClass('gtzero') && thisObj.val() <= 0) {
+      formValid = false;
+      $('#form-feedback').text('Value must be greater than zero');
+      thisObj.addClass('error-border');
+    }
+
+    if (formValid && thisObj.hasClass('gezero') && thisObj.val() < 0) {
+      formValid = false;
+      $('#form-feedback').text('Value must be greater than or equal to zero');
+      thisObj.addClass('error-border');
+    }
+
+    return formValid;
+    }
 
   function isInt(i) {
     /*
