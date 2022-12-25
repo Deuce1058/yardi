@@ -17,15 +17,25 @@
 		.green {
 			color: lawngreen;
 		}
-        .white {
-            color: white;
-        }
-        .align-center {
-          text-align: center;
-        }
-        .background-red {
-          background-color:red;
-        }
+    .white {
+      color: white;
+    }
+    .align-center {
+      text-align: center;
+    }
+    .background-red {
+      background-color:red;
+    }
+    .popoverHeader {
+      color: white;
+      background-color: black;
+    }
+    .popoverBody {
+      background-color: rgb(247, 246, 246);
+    }
+    .popover-container {
+      border-radius: 10px;
+    }
 	</style>  
     <h4 class="white align-center background-red">
       <noscript>This site requires JavaScript. Ensure that this is enabled on your browser.</noscript>
@@ -37,7 +47,7 @@
   <script defer src="../resources/fontawesome-free-5.12.1-web/js/solid.min.js"></script>
   <script defer src="../resources/fontawesome-free-5.12.1-web/js/fontawesome.min.js"></script>
   <script src="../resources/scripts/jquery-3.4.1.min.js"></script>
-  <script src="../resources/scripts/bootstrap.min.js"></script>
+  <script src="../resources/scripts/bootstrap.bundle.min.js"></script>
     <div class="container">
         <div class="d-flex flex-column xx-flex-container-column">
             <form>
@@ -82,6 +92,14 @@
                             <span class="input-group-text" id="fa-lock"><i class="fas fa-lock fa-sm" aria-hidden="true"></i></span>
                         </div>
                         <input type="password" class="form-control-sm border" name="newPassword" id="newPassword" required placeholder="New Password" aria-describedby="fa-lock"/>
+                        <div>
+                          <span class="px-sm-2"  style="color: #04B8D2 ;" data-toggle="popover" title="Password Policy">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                              <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                            </svg>
+                          </span>
+                        </div>
                         <div class="input-group-append1">
                             <span><i class="append-icon" aria-hidden="true"></i></span>
                         </div>
@@ -133,7 +151,6 @@
     </div>
   </div>
 <script>
-  //var feedback = ${feedback};
   $(function () {
     $('#username').val(parent.userName);
     window.parent.document.title = 'Yardi Change Password';
@@ -142,6 +159,12 @@
       $('#jsCookiesAlert').modal('show');
     }
 
+    /*
+    See https://stackoverflow.com/questions/24580262/make-bootstrap-popover-work-with-custom-html-template Make bootstrap popover work with custom html template
+    https://www.codeply.com/go/bp/ICbHgauH3Y working example for above question
+    http://www.java2s.com/example/html-css/bootstrap/creating-custom-template-for-popovers.html another working example
+    */
+    doPost(rqsPwdPolicy(), '../PwdPolicy');
     $('#login').click(function (e) {
 
       if (navigator.cookieEnabled == false) {
@@ -149,149 +172,275 @@
       }
 
       $('#form-feedback').text('');
-      var formValid = true;
-      //iterate over all the input controls
-      $('input').each(function () {
-        var formGroup = $(this).parents('.form-group');
-        var glyphIcon = formGroup.find('.glyphicon');
-        var obj = $(this);
-        
-        if (this.checkValidity()) {
-					addAndRemoveClasses($(this), '.form-group', '.append-icon',
-																			 'is-valid', 'is-invalid', 
-                            					 'fas fa-check fa-lg green', 'fas fa-times fa-lg red');
-        } else {
-					addAndRemoveClasses($(this), '.form-group', '.append-icon',
-																			 'is-invalid', 'is-valid',
-                            					 'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
-          formValid = false;
-        }
-      }); // input each
-
-      var oldPwd = $('[name="oldPassword"]').val();
-      var newPwd = $('[name="newPassword"]').val();
-      var verifyPwd = $('[name="verifyPassword"]').val();
       
-      if (formValid) {
-        
-        if ($('[name="oldPassword"]').val() === $('[name="newPassword"]').val()) {
-					addAndRemoveClasses('[name="oldPassword"]', '.form-group', '.append-icon',
-															'is-invalid', 'is-valid',
-                            	'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
-
-					addAndRemoveClasses('[name="newPassword"]', '.form-group', '.append-icon',
-															'is-invalid', 'is-valid',
-                            	'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
-          $('#form-feedback').text('The new pasword is the same as the old password');
-          var formValid = false;
-        }
-      } //form valid
-      
-      if (formValid) {
-        
-        if ($('[name="newPassword"]').val() !== $('[name="verifyPassword"]').val()) {
-					addAndRemoveClasses('[name="newPassword"]', '.form-group', '.append-icon',
-															'is-invalid', 'is-valid',
-															'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
-					addAndRemoveClasses('[name="verifyPassword"]', '.form-group', '.append-icon',
-															'is-invalid', 'is-valid',
-															'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
-          $('#form-feedback').text('New pasword and verify passwords do not match');
-          var formValid = false;
-        }
-      } //form valid
-      
-      if (formValid) {
-        var userName    = $('#username').val();
-        var oldPassword = $('#oldPassword').val();
-        var newPassword = $('#newPassword').val();
-        var formItems = {
-          "userName"       : userName,
-          "password"       : oldPassword,
-          "newPassword"    : newPassword,
+      if (validityCheck() && relationshipCheck()) {
+        var ajaxData = {
+          "userName"       : $('#username').val(),
+          "password"       : $('#oldPassword').val(),
+          "newPassword"    : $('#newPassword').val(),
           "msgID"          : '',
           "msgDescription" : '',
           "chgPwd"         : 'true'
-        } // formItems =
+        } // ajaxData =
 
-        var formData = JSON.stringify(formItems);
-        $.ajax({
-          type:     'POST',
-          url:      '../doLogin',
-          data:     formData,
-          async:    false,
-          dataType: "json", 
-          success:  function(data) {
-            $('#form-feedback').text(data.msgDescription);
-            
-            if (data.msgID === 'YRD0001') {
-              $('input').each(function () {
-								addAndRemoveClasses('[name="username"]', '.form-group', '.append-icon',
-																		'is-invalid', 'is-valid',
-																		'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
-								addAndRemoveClasses('[name="oldPassword"]', '.form-group', '.append-icon',
-																		'is-invalid', 'is-valid',
-																		'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
-                formValid = false;
-              });
-            } //YRD0001
-          
-            if (   data.msgID === 'YRD0005' || data.msgID === 'YRD0006' 
-                || data.msgID === 'YRD0007' || data.msgID === 'YRD0008' 
-                || data.msgID === 'YRD0009' || data.msgID === 'YRD000A'  ) {
-							addAndRemoveClasses('[name="newPassword"]', '.form-group', '.append-icon',
-																	'is-invalid', 'is-valid',
-																	'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
-              formValid = false;
-            } //YRD0005
-
-            if (data.msgID === 'YRD000B' || data.msgID === 'YRD000C') {
-              $('input').each(function () {
-                formValid = false;
-                var formGroup = $(this).parents('.form-group');
-                var glyphIcon = formGroup.find('.append-icon');
-                var obj = $(this);
-								formGroup.removeClass('is-invalid');
-								formGroup.removeClass('is-valid');
-								glyphIcon.removeClass('fas fa-check fa-lg green');
-								glyphIcon.removeClass('fas fa-times fa-lg red');
-              });              
-            } //YRD000B
-            
-            if (data.msgID === 'YRD000E' || data.msgID === 'YRD000') {
-              
-              if (data.msgID === 'YRD000E') {
-                /**
-                  if user is a member of multiple groups newPassword contains the list of initial pages for each group they
-                  are a member of. This will be used by selectGroup.html to build a list of pages the user uses to decide
-                  which initial page to view
-                **/
-                parent.initialPageList = data.newPassword;
-              }
-              
-              $('html').html(data.msgDescription);
-              console.log('nextFrame ' + data.msgDescription);
-              parent.frame = data.msgDescription;
-              parent.nextFrame();
-            }             
-          } //end of function inside ajax
-        }); //end of ajax
-        
-      } //form valid
+        doPost(ajaxData, '../doLogin');
+      }
+      
       e.preventDefault();
     }); //#login click
   }); //document ready
   
-  function addAndRemoveClasses (
-    formGroupTarget, parentsTarget, glyphTarget,
-    formAddClass,  formRemoveClass, 
-    glyphAddClass, glyphRemoveClass) {
+function doPost(ajaxData, url) {
+  $.ajax({
+    type:     'POST',
+    url:      url,
+    data:     JSON.stringify(ajaxData),
+    dataType: "json", 
+    success:  function (responseData) {
+                if (url==='../PwdPolicy') {
+                  console.log('chgPwd 0001');
+                  pwdPolicyResponse(responseData);
+                }
+                if (url==='../doLogin') {
+                  console.log('chgPwd 0002');
+                  loginResponse(responseData);
+                }
+              }
+    });
+  }
+
+function validityCheck() {
+  //iterate over all the input controls and perform basic validiity checking
+  var formValid = true;
+  $('input').each(function () {
+        
+    if (this.checkValidity()) {
+	    addAndRemoveClasses($(this), '.form-group', '.append-icon',
+																	 'is-valid', 'is-invalid', 
+                         					 'fas fa-check fa-lg green', 'fas fa-times fa-lg red');
+    } else {
+			addAndRemoveClasses($(this), '.form-group', '.append-icon',
+																	 'is-invalid', 'is-valid',
+                         					 'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
+      formValid = false;
+    }
+
+  }); // input each
+  return formValid;
+}
+
+function relationshipCheck() {
+  if ($('[name="oldPassword"]').val() === $('[name="newPassword"]').val()) {
+		addAndRemoveClasses('[name="oldPassword"]', '.form-group', '.append-icon',
+												'is-invalid', 'is-valid',
+                       	'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
+
+		addAndRemoveClasses('[name="newPassword"]', '.form-group', '.append-icon',
+		  									'is-invalid', 'is-valid',
+                       	'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
+    $('#form-feedback').text('The new pasword is the same as the old password');
+    return false;
+  }
+      
+  if ($('[name="newPassword"]').val() !== $('[name="verifyPassword"]').val()) {
+		addAndRemoveClasses('[name="newPassword"]', '.form-group', '.append-icon',
+												'is-invalid', 'is-valid',
+												'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
+		addAndRemoveClasses('[name="verifyPassword"]', '.form-group', '.append-icon',
+												'is-invalid', 'is-valid',
+												'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
+    $('#form-feedback').text('New pasword and verify passwords do not match');
+    return false;
+  }
+
+  return true;
+}
+
+function loginResponse(data) {
+  $('#form-feedback').text(data.msgDescription);
+
+  if (data.msgID === 'YRD0001') {
+    $('input').each(function () {
+		addAndRemoveClasses('[name="username"]', '.form-group', '.append-icon',
+												'is-invalid', 'is-valid',
+												'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
+		addAndRemoveClasses('[name="oldPassword"]', '.form-group', '.append-icon',
+												'is-invalid', 'is-valid',
+												'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
+    });
+  } //YRD0001
+          
+  if (   data.msgID === 'YRD0005' || data.msgID === 'YRD0006' 
+      || data.msgID === 'YRD0007' || data.msgID === 'YRD0008' 
+      || data.msgID === 'YRD0009' || data.msgID === 'YRD000A'  ) {
+		addAndRemoveClasses('[name="newPassword"]', '.form-group', '.append-icon',
+												'is-invalid', 'is-valid',
+												'fas fa-times fa-lg red', 'fas fa-check fa-lg green');
+  } //YRD0005
+
+  if (data.msgID === 'YRD000B' || data.msgID === 'YRD000C') {
+      $('input').each(function () {
+        var formGroup = $(this).parents('.form-group');
+        var glyphIcon = formGroup.find('.append-icon');
+        var obj = $(this);
+		  	formGroup.removeClass('is-invalid');
+				formGroup.removeClass('is-valid');
+				glyphIcon.removeClass('fas fa-check fa-lg green');
+				glyphIcon.removeClass('fas fa-times fa-lg red');
+      });              
+    } //YRD000B
+            
+    if (data.msgID === 'YRD000E' || data.msgID === 'YRD000') {
+              
+      if (data.msgID === 'YRD000E') {
+          /**
+            if user is a member of multiple groups newPassword contains the list of initial pages for each group they
+            are a member of. This will be used by selectGroup.html to build a list of pages the user uses to decide
+            which initial page to view
+          **/
+          parent.initialPageList = data.newPassword;
+       }
+              
+      $('html').html(data.msgDescription);
+      console.log('chgPwd 0000 nextFrame ' + data.msgDescription);
+      parent.frame = data.msgDescription;
+      parent.nextFrame();
+    }             
+}
+
+function addAndRemoveClasses (
+  formGroupTarget, parentsTarget, glyphTarget,
+  formAddClass,  formRemoveClass, 
+  glyphAddClass, glyphRemoveClass) {
 
     var formGroup = $(formGroupTarget).parents(parentsTarget);
     var glyphIcon = formGroup.find(glyphTarget);  
     formGroup.removeClass(formRemoveClass).addClass(formAddClass);
     glyphIcon.removeClass(glyphRemoveClass).addClass(glyphAddClass);
+}
+
+function rqsPwdPolicy() {
+  var ajaxData = {
+        "action"           : "find",
+        "msgId"            : "",
+        "msgDescription"   : "",
+        "pwdLifeInDays"    : "",
+        "nbrUnique"        : "",
+        "maxSignonAttempts": "",
+        "pwdMinLen"        : "",
+        "upperRqd"         : "",
+        "lowerRqd"         : "",
+        "nbrRqd"           : "",
+        "specialRqd"       : "",
+        "maxPwdLen"        : "",
+        "maxRepeatChar"    : "",
+        "nbrDigits"        : "",
+        "nbrUpper"         : "",
+        "nbrLower"         : "",
+        "nbrSpecial"       : "",
+        "cantContainId"    : "",
+        "cantContainPwd"   : ""
   }
+
+  return ajaxData;
+}
+
+function pwdPolicyResponse(responseData) { 
+  /*map the response data from the password policy request to content[] which is used to init the new password help popover*/
+  console.log('chgPwd 0003 responseData=' + responseData);
+  $('#testULForPwdPolicy').text(responseData);
+  const content = ['<ul>'];
+
+  if ((responseData.maxPwdLen.toUpperCase()==='NULL')) {
+    content.push('<li>Password must be at least <strong>');
+    content.push(responseData.pwdMinLen);
+  } else {
+    content.push('<li>Password must be between <strong>');
+    content.push(responseData.pwdMinLen);
+    content.push('</strong> and <strong>');
+    content.push(responseData.maxPwdLen);
+  }
+
+  content.push('</strong> characters in length');
+
+  if (
+      (responseData.upperRqd.toUpperCase()   === 'Y')   ||
+      (responseData.lowerRqd.toUpperCase()   === 'Y')   ||
+      (responseData.nbrRqd.toUpperCase()     === 'Y')   ||
+      (responseData.specialRqd.toUpperCase() === 'Y')       
+  ) {
+    content.push(' consisting of:</li>');
+    content.push('<ul>');
+
+    if (responseData.upperRqd.toUpperCase() === 'Y') {
+      content.push('<li>At least <strong>');
+      if ((responseData.nbrUpper.toUpperCase()==='NULL')) {content.push('1');} else {content.push(responseData.nbrUpper);}
+      content.push('</strong> upper case characters</li>');
+    }
+
+    if (responseData.lowerRqd.toUpperCase()==='Y') {
+      content.push('<li>At least <strong>');
+      if (responseData.nbrLower.toUpperCase()==='NULL') {content.push('1');} else {content.push(responseData.nbrLower);}
+      content.push('</strong> lower case characters</li>');
+    }
+
+    if (responseData.nbrRqd.toUpperCase()==='Y') {
+      content.push('<li>At least <strong>');
+      if (responseData.nbrDigits.toUpperCase()==='NULL') {content.push('1');} else {content.push(responseData.nbrDigits);}
+      content.push('</strong> digits</li>');
+    }
+
+    if (responseData.specialRqd.toUpperCase()==='Y') {
+      content.push('<li>At least <strong>');
+      if (responseData.nbrSpecial.toUpperCase()==='NULL') {content.push('1');} else {content.push(responseData.nbrSpecial);}
+      content.push('</strong> special characters</li>');
+    }
+    //push end of embeded list for number of upper/lower/digits/special
+    content.push('</ul>');
+  } else {
+    content.push('</li>');
+  }
+
+  if (!(responseData.maxRepeatChar.toUpperCase()==='NULL')) {
+
+    if (responseData.maxRepeatChar==='0') {
+      content.push('<li>Password may not have any repeated characters.</li>');
+    } else {
+      content.push('<li>Password may not have more than <strong>' + responseData.maxRepeatChar + '</strong> repeated characters.</li>');
+    }
+  }
+
+  if (responseData.cantContainId.toUpperCase()==='Y') {
+    content.push('<li>Password may not contain your user name.</li>');
+  }
+
+  if (responseData.cantContainPwd.toUpperCase()==='Y') {
+    content.push('<li>Password may not contain current password.</li>');
+  }
+
+  console.log('chgPwd 0004');
+  content.push('<li>Password must be changed every <strong>' + responseData.pwdLifeInDays + '</strong> days.</li>');
+
+  console.log('chgPwd 0005 responseData.nbrUnique=' + responseData.nbrUnique);
+
+  if (!(responseData.nbrUnique.toUpperCase()==='0')) {
+    console.log('chgPwd 0006 responseData.nbrUnique=' + responseData.nbrUnique);
+    content.push('<li>The last <strong>' + responseData.nbrUnique + '</strong> passwords used must be unique.</li>');
+  }
+
+  content.push('</ul>');
+  var c=content.join('');
+  var t='<div class="popover popover-container"> <div class="arrow popoverBody"></div> <h3 class="popover-header popoverHeader"></h3> <div class="popover-body popoverBody"></div></div>';
+  $('[data-toggle="popover"]').popover({
+    content  : c,
+    template : t,
+    delay    : { "show": 1000, "hide": 0 },
+    trigger  : 'hover',
+    html     : true,
+    sanitize : false
+  });
+}
+
 </script>
 </body>
 </html>
