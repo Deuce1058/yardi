@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.yardi.ejb.Unique_Tokens;
+import com.yardi.shared.QSECOFR.MonthNameAbbr;
 
 /**
  * Data transfer object for holding request data coming from uniqueTokens_CRUD.html and response data going to 
