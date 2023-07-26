@@ -1,5 +1,6 @@
 package com.yardi.ejb;
 
+import java.util.Set;
 import java.util.Vector;
 
 import jakarta.annotation.PostConstruct;
@@ -8,28 +9,37 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.metamodel.EntityType;
 
 import com.yardi.ejb.model.Pwd_Policy;
 
 /**
- * Session Bean implementation class UniqueTokensBean
+ * Session Bean implementation of methods for working with user tokens. 
  */
 @Stateless
 public class UniqueTokensBean implements UniqueTokens {
-	/*
-	 * In the case of a RESOURCE_LOCAL, EntityManager.getTransaction().begin() and EntityManager.getTransaction().comit() 
-	 * are allowed. Here, the container is managing begin and commit and an attempt to begin will throw Cannot use an 
-	 * EntityTransaction while using JTA 
-	 */
 	@PersistenceContext(unitName="yardi")
 	private EntityManager em;
+	/**
+	 * Reference to com.yardi.ejb.model.Pwd_Policy entity. Although com.yardi.ejb.UniqueTokensBean is stateless, Pwd_Policy is a singleton 
+	 * so it can be safely stored on the bean.
+	 */
 	private Pwd_Policy pwdPolicy;
+	/**
+	 * Injected reference to EJB com.yardi.ejb.PasswordPolicyBean.
+	 */
 	@EJB PasswordPolicy passwordPolicyBean;
 
     public UniqueTokensBean() {
     	System.out.println("com.yardi.ejb.UniqueTokensBean UniqueTokensBean() 0015 ");
     }
 
+    /**
+     * Find the Unique_Tokens entity by relative record number.<p>
+     * @param rrn relative record number of the entity to find. 
+     * @return Unique_Tokens entity matching the given relative record number. Returns null if the persistence context does not contain a 
+     * Unique_Tokens entity for the given relative record number and the UNIQUE_TOKENS database table has no row matching the given relative record number.
+     */
     public Unique_Tokens find(long rrn) {
     	Unique_Tokens uniqueToken = null;
     	TypedQuery<Unique_Tokens> qry = em.createQuery(
@@ -57,12 +67,19 @@ public class UniqueTokensBean implements UniqueTokens {
     }
     
     /**
-     *  Find all the tokens for the user. 
+     *  Find all the tokens for the given userName.<p>
      *  
-     *  The qry result is ordered by data added (descending) and rrn (descending) because date 2020 (newer) > 2019 and on the same day rrn 7 (newer) > 3. The returned Vector is ordered 
-     *  newest to oldest  
+     *  The query result is ordered by date added (descending) and rrn (descending) because date 2020 (newer) &gt; 2019 and on the same day rrn 7 (newer) &gt; 3. 
+     *  Thus the returned Vector is ordered newest to oldest.
+     *  @param userName specifies which tokens will be found.
+     *  @return Vector of Unique_Tokens entities matching the given userName. Returns an empty Vector if the persistence context contains no Unique_Token 
+     *  entities for the given userName and the UNIQUE_TOKENS database table has no rows for the given userName.  
      */
     public Vector<Unique_Tokens> findTokens(String userName) {
+		/*debug*/
+		System.out.println("com.yardi.ejb.UniqueTokensBean findTokens() 0002 ");
+		/*debug*/
+		isJoined();
     	Vector<Unique_Tokens> userTokens = new Vector<Unique_Tokens>();
 		TypedQuery<Unique_Tokens> qry = em.createQuery(
 			  "SELECT t from Unique_Tokens t " 
@@ -78,19 +95,30 @@ public class UniqueTokensBean implements UniqueTokens {
 				+ "  userName=" + userName
 				+ "\n "
 				);
-		System.out.println("com.yardi.ejb.UniqueTokensBean findTokens() 0005 ");
+
 		for (Unique_Tokens t : userTokens) {
-			System.out.println(
-				  "\n "
+			/*debug*/
+			System.out.println("com.yardi.ejb.UniqueTokensBean findTokens() 0005 "
+				+  "\n "
 				+ "  uniqueToken=" 
 				+ t
 				);
+			isManaged(t);			
+			/*debug*/
 		}
 		//debug
     	return userTokens;
     }
-
-    private Pwd_Policy getPwdPolicy() {
+	
+    /**
+     * Returns a reference to the Pwd_Policy entity from com.yardi.ejb.PasswordPolicyBean.<p>
+     * 
+     * postConstructCallback() calls this method. On the initial call the <i>pwdPolicy</i> field is null so setPwdPolicy() is called to obtain a
+     * reference to password policy from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy().
+     * 
+     * @return reference to Pwd_Policy entity.
+     */
+	private Pwd_Policy getPwdPolicy() {
 		//debug
 		System.out.println("com.yerdi.ejb.UniqieTokensBean getPwdPolicy() 0017 ");
 		//debug
@@ -110,8 +138,88 @@ public class UniqueTokensBean implements UniqueTokens {
 			);
 		//debug
 		return pwdPolicy;
+	}
+			
+	/**
+	 * Test whether the instance is an entity.<p>
+	 * 
+	 * @param clazz the instance to test.
+	 * @return boolean indicating whether the instance is an entity.
+	 */
+	private boolean isEntity(Class<?> clazz) {
+		System.out.println("com.yardi.ejb.UniqueTokensBean.isEntity() 001C ");
+	    boolean foundEntity = false;
+	    Set<EntityType<?>> entities = em.getMetamodel().getEntities();
+	    
+	    for(EntityType<?> entityType :entities) {
+	        Class<?> entityClass = entityType.getJavaType();
+	        
+	        if(entityClass.equals(clazz)) {
+	            foundEntity = true;
+	        }
+	    }
+	    
+		System.out.println("com.yardi.ejb.UniqueTokensBean.isEntity() 001D " + foundEntity);
+	    return foundEntity;
+	}
+
+	/**
+     * Test whether the entity manager is participating in a transaction.<p>
+     * 
+     * @return boolean indicating whether the entity manager is joined to the current transaction. 
+     */
+	private boolean isJoined() {
+  		System.out.println("com.yardi.ejb.UniqueTokensBean isJoined() 001A "
+  				+ "\n"
+  				+ "   isJoined="
+  				+ em.isJoinedToTransaction()
+  				);
+		return em.isJoinedToTransaction();
+	}
+
+    /**
+	 * Test whether the given Unique_Tokens entity managed.<p>
+	 * 
+	 * @param token the entity to test.
+	 * @return boolean indicating whether the Unique_Tokens entity is being managed. Returns false if the given instance is null or if the given 
+	 * instance is not an entity.
+	 */
+	private boolean isManaged(Unique_Tokens token) {
+  		System.out.println("com.yardi.ejb.UniqueTokensBean isManaged() 001B ");
+  		
+  		if (token==null) {
+  	  		System.out.println(
+  	  				  "com.yardi.ejb.UniqueTokensBean.isManaged() 001F "
+	  				+ "\n"
+	  				+ "   em.contains(Unique_Tokens)=false"
+	  				);
+	  		return false;
+  		} 
+  		
+  		if (isEntity(token.getClass())==false) {
+  	  		System.out.println(
+	  				  "com.yardi.ejb.UniqueTokensBean.isManaged() 0020 "
+	  				+ "\n"
+	  				+ "   em.contains(sessionsTable)=false"
+	  				);
+	  		return false;
+  		}
+
+	  	System.out.println(
+	  			  "com.yardi.ejb.UniqueTokensBean.isManaged() 001E "
+	  			+ "\n"
+	  			+ "   em.contains(Unique_Tokens)="
+	  			+ em.contains(token)
+	  			);
+		return em.contains(token);  			
 	} 
     
+	/**
+	 * Persist a new Unique_Tokens entity constructed from the supplied parms.<p>
+	 * @param userName user's name
+	 * @param token hashed password
+	 * @param dateAdded date token was added
+	 */
     public void persist(String userName, String token, java.util.Date dateAdded) {
 		//debug
 		System.out.println("com.yardi.ejb.UniqueTokensBean persist() 0011 "
@@ -132,6 +240,10 @@ public class UniqueTokensBean implements UniqueTokens {
     	getPwdPolicy();
     }
 
+    /**
+     * Remove Unique_Tokens entities by relative record number.<p>
+     * @param rrn the relative record number of the entity to remove.
+     */
 	public void remove(long rrn) {
 		//debug
 		System.out.println("com.yardi.ejb.UniqueTokensBean remove() 0003 "
@@ -139,20 +251,23 @@ public class UniqueTokensBean implements UniqueTokens {
 			+ "  rrn=" + rrn
 			);
 		//debug
-		em.remove(em.find(Unique_Tokens.class, rrn));
+		isJoined();
+		Unique_Tokens t = em.find(Unique_Tokens.class, rrn);
+		em.remove(t);
+		isManaged(t);
     }
 
 	/**
-	 * Remove extra tokens in token history when the number of stored tokens exceeds the maximum defined in password 
-	 * policy. This can happen if the maximum number of tokens to store is changed. 
+	 * Remove Unique_Tokens entities when the number of stored tokens the user has exceeds the maximum defined in password policy.<p>
 	 * 
-	 * @param userTokens
-	 * @param uniqueToken
-	 * @param maxUniqueTokens
-	 * @param userName
+	 * Field <i>ppNbrUnique</i> in the Pwd_Policy entity defines the maximum number of stored tokens a user can have in UNIQUE_TOKENS database table. 
+	 * If the number of stored tokens the user has exceeds this number, remove these extra tokens. 
+	 * This can happen if the maximum number of tokens to store, as defined in password policy, is changed. 
+	 * 
+	 * @param userTokens Vector containing Unique_Tokens entities to remove. 
+	 * @return Vector containing, at most, the maximum number of stored tokens the user can have.
 	 */
 	public Vector<Unique_Tokens> removeExtraTokens(Vector<Unique_Tokens> userTokens) {
-    	//getPwdPolicy();
 		short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
 		
 		if (pwdPolicy==null) {
@@ -232,11 +347,17 @@ public class UniqueTokensBean implements UniqueTokens {
 
 	/**
 	 * Remove the oldest stored token in token history so that the number of stored tokens in token history will not
-	 * exceed the maximum defined in password policy when the new token is stored  
+	 * exceed the maximum defined in password policy when the new token is stored.<p>
 	 * 
-	 * @param userTokens
-	 * @param maxUniqueTokens
-	 * @param uniqueToken
+	 * When the user is changing their password, this is one of two times that tokens stored in UNIQUE_TOKENS database table are removed.<br><br>
+	 * First, if the user has more stored tokens in UNIQUE_TOKENS than the maximum defined in password policy, then remove these extra tokens. 
+	 * See removeExtraTokens().<br><br>
+	 * Second, this method will remove the oldest stored token so that when the next token is stored, the number of stored tokens the user has does not 
+	 * exceed the maximum number of stored tokens as defined in password policy.<br><br>
+	 * Field <i>ppNbrUnique</i> in the Pwd_Policy entity defines the maximum number of stored tokens a user can have.  
+	 * 
+	 * 
+	 * @param userTokens Vector containing Unique_Token entities to remove.
 	 */
 	public void removeOldestToken(Vector<Unique_Tokens> userTokens) {
 		//debug
@@ -303,6 +424,9 @@ public class UniqueTokensBean implements UniqueTokens {
 		}
 	}
 
+	/**
+	 * Set Pwd_Policy entity to the reference obtained from com.yardi.ejb.PasswordPoilcyBean
+	 */
 	private void setPwdPolicy() {
 		//debug
 		System.out.println("com.yardi.ejb.UniqueTokensBean setPwdPolicy() 0012 ");
@@ -321,13 +445,24 @@ public class UniqueTokensBean implements UniqueTokens {
 			);
 		//debug
 	}
-
+	
+	/**
+	 * Log the string representation of the class instance. 
+	 * @return string representation of the class instance.
+	 */
     public String stringify() {
 		return "UniqueTokensBean [emgr=" + em + "]"
 				+ "\n  "
 				+ this;
 	}
     
+    /**
+     * Update the Unique_Tokens entity with the specified relative record number using the given parms.<p>
+     * @param up1Rrn relative record number to update.
+     * @param up1Token new hashed password value.
+     * @param time new date added value in mills.
+     * @return 1
+     */
 	public int updateToken(Long up1Rrn, String up1Token, Long time) {
 		//debug
 		System.out.println("com.yardi.ejb.UniqueTokensBean updateToken() 0019 "

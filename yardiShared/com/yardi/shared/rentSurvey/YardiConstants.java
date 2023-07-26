@@ -46,6 +46,7 @@ public class YardiConstants {
 	public static final String USER_SELECT_GROUP_PAGE = "views/selectGroup.html";
 	public static final String REQUEST_SESSION_INFO = "sessionInfo";
 	public static final String UPDATE_SESSION_INFO = "updateSession";
+	public static final int DEFAULT_USER_GROUP = 11;
 	
 	public void testPassword(String pwd) {
 		// useful for testing password rules

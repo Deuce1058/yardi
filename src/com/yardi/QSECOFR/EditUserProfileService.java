@@ -15,19 +15,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.HeuristicMixedException;
-import jakarta.transaction.HeuristicRollbackException;
-import jakarta.transaction.NotSupportedException;
-import jakarta.transaction.RollbackException;
-import jakarta.transaction.SystemException;
+
 import jakarta.transaction.UserTransaction;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yardi.ejb.User_Profile;
-import com.yardi.ejb.UserProfile;
+import com.yardi.ejb.EditUserProfileCTRL;
+import com.yardi.shared.QSECOFR.EditUserProfileRequest;
 
 /**
- * Servlet implementation class EditUserProfileService
+ * Entry point for edit user profile.<p> Receive, process and respond to requests to edit the user profile.
  */
 @WebServlet(description = "Handle edit user profile requests", urlPatterns = { "/editUserProfile" })
 public class EditUserProfileService extends HttpServlet {
@@ -41,343 +38,69 @@ public class EditUserProfileService extends HttpServlet {
         super();
     }
 
-	private void commit(UserTransaction tx) {
-		try {
-			tx.commit();
-		} catch (SecurityException | IllegalStateException | RollbackException | HeuristicMixedException
-				| HeuristicRollbackException | SystemException e) {
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0019 ");
-		User_Profile userProfile = null;
+		System.out.println(
+				  "com.yardi.QSECOFR.EditUserProfileService doGet() 0019 " 
+				+ "\n    "
+				+ "JSESSIONID="
+				+ request.getSession(false).getId()
+				);
 		HttpSession session = request.getSession(false);
 		InitialContext ctx;
-		UserProfile userProfileBean = (UserProfile)session.getAttribute("userProfileBean");
+		EditUserProfileCTRL editUserProfileCTRL = (EditUserProfileCTRL)session.getAttribute("editUserProfileCTRL");
 		
-		if (userProfileBean == null) {
+		if (editUserProfileCTRL == null) {
 			try {
 				ctx = new InitialContext();
-				userProfileBean = (UserProfile)ctx.lookup("java:global/yardiWeb/UserProfileBean");
+				editUserProfileCTRL = (EditUserProfileCTRL)ctx.lookup("java:global/yardiWeb/EditUserProfileCTRLBean");
 				//debug
-				System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0011");
+				System.out.println(
+						 "com.yardi.QSECOFR.EditUserProfileService doGet() 0008 " 
+						+ "\n    "
+						+ "JSESSIONID="
+						+ session.getId()
+						);
 				//debug
 			} catch (NamingException e) {
 				//debug
-				System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0012");
+				System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0009 ");
 				//debug
 				e.printStackTrace();
 			}
-			session.setAttribute("userProfileBean", userProfileBean);
+			session.setAttribute("editUserProfileCTRL", editUserProfileCTRL);
 			//debug
-			System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0013");
+			System.out.println(
+					 "com.yardi.QSECOFR.EditUserProfileService doGet() 000A " 
+					+ "\n    "
+					+ "JSESSIONID="
+					+ session.getId()
+					);
 			//debug
 		}
 		
-		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
-		String formData = new String();
-		formData = "";
+		String formData = readBuffer(request);
+		EditUserProfileRequest editRequest = mapRequest(formData);
 		
-        if(br != null){
-        	formData = br.readLine();
-        }
-        
-        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0000 "
-        	+ "\n"
-        	+ "   formData=" + formData);
-        ObjectMapper mapper = new ObjectMapper();
-		EditUserProfileRequest editRequest = new EditUserProfileRequest();
-		editRequest = mapper.readValue(formData, EditUserProfileRequest.class);
-		
-		if (   editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_FIND)
-			|| editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_DELETE)
-			|| editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_REMOVE)) {
-			/*
-			 * The web page is giving us more than we need. We just need a user name for find and delete so
-			 * clear out the other fields. Also, for find and delete, the other fields we dont need will have 
-			 * garbage left over from the previous request.    
-			 */
-			System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0010");
-			editRequest.specialInzsr();
-		}
-		
-		String feedback [] = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
-		editRequest.setMsgID(feedback[0]);
-		editRequest.setMsgDescription(feedback[1]);
-        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0001 "
-            	+ "\n"
-            	+ "   editRequest=" + editRequest);
+		/*
+		 * When the user requests another page, the current page notifies this servlet so that it can call the remove method on 
+		 * stateful com.yardi.ejb.EditUserProfileCTRLBean and release session resources that are being used. Next this servlet responds
+		 * to the request with YRD0000 and the current page causes the requested page to load
+		 */
 
-		if (!(editRequest.getHomeMarket().equals(""))) {
-			editRequest.setUpHomeMarket(Short.parseShort(editRequest.getHomeMarket()));
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0002 ");
-		}
-		
-		if (!(editRequest.getPwdAttempts().equals(""))) {
-			editRequest.setPasswordAttempts(Short.parseShort(editRequest.getPwdAttempts()));
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0003 ");
-		}
-
-		if (!(editRequest.getDob().equals(""))) {
-			editRequest.setBirthDate(editRequest.toDate(editRequest.getDob(), "", false));
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0004 ");
-		}
-
-		if (!(editRequest.getPwdExpDate().equals(""))) {
-			editRequest.setPasswordExpirationDate(editRequest.toDate(editRequest.getPwdExpDate(), "", false));
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0005 ");
-		}
-		
-		if (!(editRequest.getDisabledDate().equals(""))) {
-			editRequest.setProfileDisabledDate(editRequest.toDate(editRequest.getDisabledDate(), 
-																  editRequest.getDisabledTime(), true));  
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0006 ");
-		}
-
-		if (!(editRequest.getLastLogin().equals(""))) {
-			editRequest.setLastLoginDate(editRequest.toDate(editRequest.getLastLogin(), 
-															editRequest.getLastLoginTime(), true));
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0007 ");
-		} 
-		
-		if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_FIND)) {
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0008 FIND"
-	        	+ "\n"
-	        	+ "   editRequest.getFindUser()=" + editRequest.getFindUser());
-	        try {
-				tx.begin();
-				userProfile = null;
-				userProfile = userProfileBean.find(editRequest.getFindUser());
-
-				if (userProfile == null) {
-					System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0009 userProfile == null");
-					feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000D.split("="); 
-					editRequest.setMsgID(feedback[0]);
-					editRequest.setMsgDescription(feedback[1]);
-					showResponseHeaders(response);
-					response.resetBuffer();
-					showResponseHeaders(response);
-					response.setContentType("application/json");
-					PrintWriter out = response.getWriter();
-					formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
-					out.print(formData);
-					out.flush();
-					return;
-				}
-
-				System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000E"
-						+ "\n"
-						+ "   userProfile=" 
-						+ userProfile
-						);
-				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
-				editRequest.setMsgID         (feedback[0]);
-				editRequest.setMsgDescription(feedback[1]);
-				editRequest.setFirstName     (userProfile.getUpFirstName());
-				editRequest.setLastName      (userProfile.getUpLastName());
-				editRequest.setAddress1      (userProfile.getUpAddress1());
-
-				if (userProfile.getUpAddress2()==null) {
-					editRequest.setAddress2  ("");
-				} else {
-					editRequest.setAddress2  (userProfile.getUpAddress2());
-				}
-
-				editRequest.setCity          (userProfile.getUpCity());
-				editRequest.setState         (userProfile.getUpState());
-				editRequest.setZip           (userProfile.getUpZip());
-
-				if (userProfile.getUpZip4()==null) {
-					editRequest.setZip4      ("");
-				} else {
-					editRequest.setZip4      (userProfile.getUpZip4());
-				}
-
-				editRequest.setPhone         (userProfile.getUpPhone());
-
-				if (userProfile.getUpFax()==null) {
-					editRequest.setFax       ("");
-				} else {
-					editRequest.setFax       (userProfile.getUpFax());
-				} 
-
-				if (userProfile.getUpEmail()==null) {
-					editRequest.setEmail     ("");
-				} else {
-					editRequest.setEmail     (userProfile.getUpEmail());
-				}
-
-				editRequest.setSsn           (userProfile.getUpssn());
-				editRequest.setDob           (editRequest.stringify(userProfile        .getUpdob()));
-				editRequest.setHomeMarket    (Short.toString(userProfile.getUpHomeMarket()));
-				editRequest.setActiveYN      (userProfile.getUpActiveYn());
-				editRequest.setPwdExpDate    (editRequest.stringify(userProfile        .getUpPwdexpd()));
-				String dateTime[] = new String[2];
-
-				if (userProfile.getUpDisabledDate()==null) {
-					editRequest.setDisabledDate("");
-					editRequest.setDisabledTime("");
-				} else {
-					dateTime = editRequest.stringify(userProfile      .getUpDisabledDate());
-					editRequest.setDisabledDate(dateTime[0]);
-					editRequest.setDisabledTime(dateTime[1]);
-				}
-
-				editRequest.setPwdAttempts   (Short.toString(userProfile.getUpPwdAttempts()));
-				editRequest.setCurrentToken  (userProfile.getUptoken());
-				dateTime = editRequest.stringify(userProfile        .getUpLastLoginDate());
-				editRequest.setLastLogin     (dateTime[0]);
-				editRequest.setLastLoginTime (dateTime[1]);
-				System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000A FIND"
-						+ "\n"
-						+ "   editRequest=" + editRequest);
-				showResponseHeaders(response);
-				response.resetBuffer();
-				showResponseHeaders(response);
-				response.setContentType("application/json");
-				PrintWriter out = response.getWriter();
-				formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
-				out.print(formData);
-				out.flush();
-				System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000F"
-						+ "\n"
-						+ "   formData=" + formData);
-				commit(tx);
-			} catch (NotSupportedException e) {
-				e.printStackTrace();
-			} catch (SystemException e) {
-				e.printStackTrace();
-			}
-			return;
-		}
-		
-		if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_ADD)) {
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000B ADD" 
-	        	+ "\n"
-	        	+ "editRequest=" + editRequest);
-	        try {
-				tx.begin();
-				int rows = userProfileBean.persist(
-						editRequest  .getFindUser(),
-						editRequest  .getCurrentToken(),
-						editRequest  .getUpHomeMarket(),
-						editRequest  .getFirstName(), 
-						editRequest  .getLastName(), 
-						editRequest  .getAddress1(), 
-						editRequest  .getAddress2(), 
-						editRequest  .getCity(), 
-						editRequest  .getState(), 
-						editRequest  .getZip(), 
-						editRequest  .getZip4(), 
-						editRequest  .getPhone(), 
-						editRequest  .getFax(), 
-						editRequest  .getEmail(), 
-						editRequest  .getSsn(),
-						editRequest  .getBirthDate(),
-						editRequest  .getActiveYN(),
-						editRequest  .getPasswordExpirationDate(),
-						editRequest  .getProfileDisabledDate(),
-						editRequest  .getLastLoginDate(),
-						editRequest  .getPasswordAttempts()
-						);
-				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
-				editRequest.setMsgID(feedback[0]);
-				editRequest.setMsgDescription(feedback[1]);
-				showResponseHeaders(response);
-				response.resetBuffer();
-				showResponseHeaders(response);
-				response.setContentType("application/json");
-				PrintWriter out = response.getWriter();
-				formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
-				out.print(formData);
-				out.flush();
-				commit(tx);
-			} catch (NotSupportedException | SystemException e) {
-				e.printStackTrace();
-			}
-			return;
-		}
-
-		if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_DELETE)) {
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000C DELETE");
-	        try {
-				tx.begin();
-				userProfileBean.remove(editRequest.getFindUser());
-				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
-				editRequest.setMsgID(feedback[0]);
-				editRequest.setMsgDescription(feedback[1]);
-				showResponseHeaders(response);
-				response.resetBuffer();
-				showResponseHeaders(response);
-				response.setContentType("application/json");
-				PrintWriter out = response.getWriter();
-				formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
-				out.print(formData);
-				out.flush();
-				commit(tx);
-			} catch (NotSupportedException | SystemException e) {
-				e.printStackTrace();
-			}
-			return;
-		}
-			
-		if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_UPDATE)) {
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000D UPDATE"
-	        	+ "\n"
-	        	+ "   editRequest=" + editRequest);
-	        try {
-				tx.begin();
-				int rows = userProfileBean.updateAll(
-						editRequest  .getFindUser(),
-						editRequest  .getCurrentToken(),
-						editRequest  .getUpHomeMarket(),
-						editRequest  .getFirstName(), 
-						editRequest  .getLastName(), 
-						editRequest  .getAddress1(), 
-						editRequest  .getAddress2(), 
-						editRequest  .getCity(), 
-						editRequest  .getState(), 
-						editRequest  .getZip(), 
-						editRequest  .getZip4(), 
-						editRequest  .getPhone(), 
-						editRequest  .getFax(), 
-						editRequest  .getEmail(), 
-						editRequest  .getSsn(),
-						editRequest  .getBirthDate(),
-						editRequest  .getActiveYN(),
-						editRequest  .getPasswordExpirationDate(),
-						editRequest  .getProfileDisabledDate(),
-						editRequest  .getLastLoginDate(),
-						editRequest  .getPasswordAttempts()
-						);
-				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
-				editRequest.setMsgID(feedback[0]);
-				editRequest.setMsgDescription(feedback[1]);
-				showResponseHeaders(response);
-				response.resetBuffer();
-				showResponseHeaders(response);
-				response.setContentType("application/json");
-				PrintWriter out = response.getWriter();
-				formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
-				out.print(formData);
-				out.flush();
-				commit(tx);
-			} catch (NotSupportedException | SystemException e) {
-				e.printStackTrace();
-			}
-			return;
-		}
-		
 		if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_REMOVE)) {
-			System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0018");
-			remove(session, response, new EditUserProfileRequest());
+			System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000B ");
+			remove(request, response, new EditUserProfileRequest());
 			return;
 		}
+
+		editUserProfileCTRL.setEditUserProfileRequest(editRequest);
+		editUserProfileCTRL.inzEditRequest();
+		editUserProfileCTRL.handleRequest();
+		webResponse(request, response, editUserProfileCTRL.getEditUserProfileRequest());
+		return;
 	}
 
 	/**
@@ -386,39 +109,107 @@ public class EditUserProfileService extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
+
+	/**
+	 * Map the web request in JSON to a java representation for ease of use.
+	 * 
+	 * @param formData String containing the JSON web request. 
+	 * @return java representation of web request 
+	 */
+	private EditUserProfileRequest mapRequest(String formData) {
+		/*debug*/
+        System.out.println("com.yardi.QSECOFR.EditUserProfileService.mapRequest() 0002 ");
+		/*debug*/
+		try {
+			EditUserProfileRequest editRequest = new EditUserProfileRequest();
+			ObjectMapper mapper = new ObjectMapper();
+			editRequest = mapper.readValue(formData, EditUserProfileRequest.class);
+			return editRequest;
+		} catch (JsonProcessingException e) {
+			/*debug*/
+			System.out.println("com.yardi.QSECOFR.EditUserProfileService.mapRequest() exception 0003 ");
+			/*debug*/
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
-	private void remove(HttpSession session, HttpServletResponse response, EditUserProfileRequest editRequest) throws IOException {
+	/**
+	 * Read the request from the input stream.
+	 * 
+	 * @param request a HttpServletRequest
+	 * @return String containing the web request in JSON format
+	 */
+	private String readBuffer(HttpServletRequest request) {
+		/*debug*/
+		System.out.println("com.yardi.QSECOFR.EditUserProfileService.readBuffer() 0004 ");
+		/*debug*/
+		try {
+			BufferedReader br;
+			br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+			String formData = new String("");
+			
+	        if(br != null){
+	        	formData = br.readLine();
+	        }
+	        
+	        System.out.println("com.yardi.QSECOFR.EditUserProfileService.readBuffer() 0000 "
+	        	+ "\n"
+	        	+ "   formData=" + formData);
+	        return formData;
+		} catch (IOException e) {
+			/*debug*/
+	        System.out.println("com.yardi.QSECOFR.EditUserProfileService.readBuffer() exception 0001 ");
+   			/*debug*/
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * Release session resources.<p>
+	 * Call the remove method on stateful com.yardi.ejb.EdidUserProfileCTRLBean so it can release the resources it is using.
+	 * 
+	 * @param request a HttpServletRequest
+	 * @param response a HttpServletResponse
+	 * @param editRequest POJO representation of the web request
+	 * @throws IOException Signals that an I/O exception of some sort has occurred. 
+	 */
+	private void remove(HttpServletRequest request, HttpServletResponse response, EditUserProfileRequest editRequest) throws IOException {
 		//debug
-		System.out.println("com.yardi.QSECOFR.EditUserProfileService remove() 0017 ");
+		System.out.println("com.yardi.QSECOFR.EditUserProfileService remove() 0007 ");
 		//debug
-		UserProfile userProfileBean = (UserProfile)session.getAttribute("userProfileBean");
-		session.setAttribute("userProfileBean", null);
-		userProfileBean.removeBean();
+		EditUserProfileCTRL editUserProfileCTRLbean = (EditUserProfileCTRL)request.getSession(false).getAttribute("editUserProfileCTRL");
+		request.getSession(false).setAttribute("editUserProfileCTRL", null);
+		editUserProfileCTRLbean.removeBean();
 		String feedback [] = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
 		editRequest.setMsgID(feedback[0]);
 		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0014.split("=");
 		editRequest.setMsgDescription(feedback[1]);
-		showResponseHeaders(response);
-		response.resetBuffer();
-		showResponseHeaders(response);
-		response.setContentType("application/json");
-		PrintWriter out = response.getWriter();
-		String formData = new String();
-		formData = "";
-		ObjectMapper mapper = new ObjectMapper();
-		formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
-		out.print(formData);
-		out.flush();
+		webResponse(request, response, editRequest); 
 	}
 	
-	private void showResponseHeaders(HttpServletResponse response) {
-		//debug 
+	/**
+	 * Log the response headers in the HttpServletResponse.
+	 * @param request a HttpServletRequest
+	 * @param response a HttpServletResponse
+	 */
+	private void showResponseHeaders(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println(
+				 "com.yardi.QSECOFR.EditUserProfileService showResponseHeaders() 000C " 
+				+ "\n    "
+				+ "JSESSIONID="
+				+ request.getSession(false).getId()
+				);
 		Collection<String> headerNames = response.getHeaderNames();
+		
 		if (headerNames.isEmpty()) {
 			System.out.println("com.yardi.QSECOFR.EditUserProfileService showResponseHeaders() 0014 headerNames is empty");
 		}
+		
 		for (String n : headerNames) {
 			Collection<String> headerValues = response.getHeaders(n);
+			
 			if (headerValues.isEmpty()) {
 				System.out.println("com.yardi.QSECOFR.EditUserProfileService showResponseHeaders() 0015 "
 						+ "\n"
@@ -426,6 +217,7 @@ public class EditUserProfileService extends HttpServlet {
 						+ n
 						+ "   no headerValues");
 			}
+			
 			for (String v :  headerValues) {
 				System.out.println("com.yardi.QSECOFR.EditUserProfileService showResponseHeaders() 0016 "
 						+ "\n"
@@ -437,5 +229,47 @@ public class EditUserProfileService extends HttpServlet {
 			}
 		}
 		//debug
+	}
+	
+	/**
+	 * Respond to the web request by converting the java representation of the request into JSON. 
+	 * 
+	 * @param request a HttpServletRequest
+	 * @param response a HttpServletResponse
+	 * @param editRequest POJO representation of the web request
+	 */
+	private void webResponse(HttpServletRequest request, HttpServletResponse response, EditUserProfileRequest editRequest) {
+		/*debug*/
+		System.out.println(
+				 "com.yardi.QSECOFR.EditUserProfileService.webResponse() 0005 " 
+				+ "\n    "
+				+ "JSESSIONID="
+				+ request.getSession(false).getId()
+				);
+		/*debug*/
+		ObjectMapper mapper = new ObjectMapper();
+		showResponseHeaders(request, response);
+		response.resetBuffer();
+		showResponseHeaders(request, response);
+		response.setContentType("application/json");
+
+		try {
+			PrintWriter out = response.getWriter();
+			String formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
+			out.print(formData);
+			out.flush();
+		} catch (IOException e1) {
+			/*debug*/
+			System.out.println("com.yardi.QSECOFR.EditUserProfileService.webResponse() exception 0006 ");
+			/*debug*/
+			e1.printStackTrace();
+		}
+		
+		System.out.println(
+				 "com.yardi.QSECOFR.EditUserProfileService.webResponse() 000D "
+				+ "\n    "
+				+ "JSESSIONID="
+				+ request.getSession(false).getId()
+				);
 	}
 }
