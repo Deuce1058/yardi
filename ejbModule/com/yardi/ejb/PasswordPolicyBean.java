@@ -11,19 +11,22 @@ import jakarta.persistence.TypedQuery;
 import com.yardi.ejb.model.Pwd_Policy;
 
 /**
- * Session Bean implementation class PasswordPolicyBean
+ * Session Bean implementation of methods for working with password policy.<p>
+ * 
+ * This singleton runs at startup. Its mission is to give out references to Pwd_Policy entity to clients that need to know password policy.
  */
 @Singleton
 @Startup
 public class PasswordPolicyBean implements PasswordPolicy {
-	/*
-	 * In the case of a RESOURCE_LOCAL, EntityManager.getTransaction().begin() and EntityManager.getTransaction().comit() 
-	 * are allowed. Here, the container is managing begin and commit and an attempt to begin will throw Cannot use an 
-	 * EntityTransaction while using JTA 
-	 */
 	@PersistenceContext(unitName="yardi")
 	private EntityManager emgr;
+	/**
+	 * Field <i>feedback</i> indicates the status of password policy
+	 */
 	private String feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
+	/**
+	 * Reference to the Pwd_Policy entity
+	 */
 	private Pwd_Policy pwdPolicy;
 	
     public PasswordPolicyBean() {
@@ -31,26 +34,37 @@ public class PasswordPolicyBean implements PasswordPolicy {
     }
     
     /**
-     * <p>Retrieve password policy from the Pwd_Policy table and make the policy available to other methods</p>
-     * <p>Policy consists of:<br>
-     *   1 Complexity</p>
-     * <p>  1a Upper case required</p>
-     * <p>  1b Lower case required,</p>
-     * <p>  1c Special characters required</p>
-     * <p>  1d Number required</p>
-     * <p>2 Password length</p>
-     * <p>3 Number of days before password must be changed</p>
-     * <p>4 Number of unique passwords required specifies how many unique tokens are stored. Applied when changing the password. 
-     *   This policy causes the new password token to be checked against the saved tokens for a match. This prevents user from 
-     *   reusing passwords,</p>
-     * <p>5 Maximum login attempts before password is disabled</p>
-     * <br>
-     * <p>Specific rules applied in passwordPolicy are complexity and length,</p>
-     * <br>
-	 * <p>Instance variable feedback indicates the status of the authenticate process</p> 
+     * Retrieve password policy from the PWD_POLICY database table.
+     * 
+     * <pre style="font-family:times;">
+     * Policy consists of:
+     *   1 Complexity
+     *      1.1 Upper case required Y/N
+     *          1.1.1 Number of upper case required
+     *      1.2 Lower case required Y/N
+     *          1.2.1 Number of lower case required
+     *      1.3 Special characters required Y/N
+     *          1.3.1 Number of special characters required
+     *      1.4 Digits required Y/N
+     *          1.4.1 Number of digits required
+     *      1.5 Cant contain user name
+     *      1.6 Cant contain current password
+     *      1.7 Maximum number of repeated characters
+     *   2 Password length
+     *      2a minimum length
+     *      2b maximum length
+     *   3 Number of days before password must be changed
+     *   4 Number of unique passwords required specifies how many unique tokens are stored per user. This rule is applied when changing 
+     *      the password and causes the new hashed password to be checked against token history for a match. The user is prevented from 
+     *      reusing passwords
+     *   5 Maximum number of login attempts allowed since the most recent successful login. When the number of invalid logins reaches this number
+     *      the User_Profile entity is disabled preventing any additional login attempts until the password is reset by an admin
+     * </pre>
+     * 
+     * These rules are applied when logging in and when changing the password either on demand or because the password expired. 
 	 * 
-	 * @param password
-	 * @return Boolean
+	 * @param rrn the relative record number to find in the PWD_POLICY database table
+	 * @return a Pwd_Policy entity
 	 */
 	public Pwd_Policy find(Long rrn) {
 		Pwd_Policy pwdPolicy = null;
@@ -67,11 +81,47 @@ public class PasswordPolicyBean implements PasswordPolicy {
 			e.printStackTrace();
 		}
 		if (!(pwdPolicy==null)) {
-			pwdPolicy.setPp_upper_rqd(pwdPolicy.getPp_upper_rqd());
+			/*
+			 *  Get the value of field pp_upper_rqd (column PP_UPPER_RQD in database table PWD_POLICY) in Pwd_Policy entity and
+			 *  set field pp_upper_rqd (column PP_UPPER_RQD in database table PWD_POLICY) to this value. This will trigger the setter 
+			 *  for boolean field ppUpperRqd. ppUpperRd is tested to determine whether upper case characters are required in the 
+			 *  password. ppUpperRd is not stored in database table PWD_POLICY.
+			 */
+			pwdPolicy.setPp_upper_rqd(pwdPolicy.getPp_upper_rqd()); 
+			/*
+			 *  Get the value of field pp_lower_rqd (column PP_LOWER_RQD in database table PWD_POLICY) in Pwd_Policy entity and
+			 *  set field pp_lower_rqd (column PP_LOWER_RQD in database table PWD_POLICY) to this value. This will trigger the setter 
+			 *  for boolean field ppLowerRqd. ppLowerRqd is tested to determine whether lower case characters are required in the 
+			 *  password. ppLowerRqd is not stored in database table PWD_POLICY.
+			 */
 			pwdPolicy.setPp_lower_rqd(pwdPolicy.getPp_lower_rqd());
+			/*
+			 *  Get the value of field pp_number_rqd (column PP_NUMBER_RQD in database table PWD_POLICY) in Pwd_Policy entity and
+			 *  set field pp_number_rqd (column PP_NUMBER_RQD in database table PWD_POLICY) to this value. This will trigger the setter 
+			 *  for boolean field ppNumberRqd. ppNumberRqd is tested to determine whether digits are required in the 
+			 *  password. ppNumberRqd is not stored in database table PWD_POLICY.
+			 */
 			pwdPolicy.setPp_number_rqd(pwdPolicy.getPp_number_rqd());
+			/*
+			 *  Get the value of field pp_special_rqd (column PP_SPECIAL_RQD in database table PWD_POLICY) in Pwd_Policy entity and
+			 *  set field pp_special_rqd (column PP_SPECIAL_RQD in database table PWD_POLICY) to this value. This will trigger the setter 
+			 *  for boolean field ppSpecialRqd. ppSpecialRqd is tested to determine whether special characters are required in the 
+			 *  password. ppSpecialRqd is not stored in database table PWD_POLICY.
+			 */
 			pwdPolicy.setPp_special_rqd(pwdPolicy.getPp_special_rqd());
+			/*
+			 *  Get the value of field pp_cant_contain_id (column PP_CANT_CONTAIN_ID in database table PWD_POLICY) in Pwd_Policy entity and
+			 *  set field pp_cant_contain_id (column PP_CANT_CONTAIN_ID in database table PWD_POLICY) to this value. This will trigger the setter 
+			 *  for boolean field ppCantContainId. ppCantContainId is tested to determine whether the password is allowed to contain the user ID. 
+			 *  ppCantContainId is not stored in database table PWD_POLICY.
+			 */
 			pwdPolicy.setPp_cant_contain_id(pwdPolicy.getPp_cant_contain_id());
+			/*
+			 *  Get the value of field pp_cant_contain_pwd (column PP_CANT_CONTAIN_PWD in database table PWD_POLICY) in Pwd_Policy entity and
+			 *  set field pp_cant_contain_pwd (column PP_CANT_CONTAIN_PWD in database table PWD_POLICY) to this value. This will trigger the setter 
+			 *  for boolean field ppCantContainPwd. ppCantContainPwd is tested to determine whether the new password is allowed to contain the current  
+			 *  password. ppCantContainPwd is not stored in database table PWD_POLICY.
+			 */
 			pwdPolicy.setPp_cant_contain_pwd(pwdPolicy.getPp_cant_contain_pwd());
 		}
 		//debug
@@ -85,10 +135,18 @@ public class PasswordPolicyBean implements PasswordPolicy {
 		return pwdPolicy;
 	}
 
+	/**
+	 * Return the status of the most recent method call that provides feedback.
+	 * @return status of the most recent method call that provides feedback
+	 */
 	public String getFeedback() {
 		return feedback;
 	}
 	
+	/**
+	 * Return a reference to the Pwd_Policy entity.
+	 * @return reference to the Pwd_Policy entity
+	 */
     public Pwd_Policy getPwdPolicy() {
 		//debug
 		System.out.println("com.yardi.ejb.PasswordPolicyBean getPwdPolicy() 000C ");
@@ -110,12 +168,22 @@ public class PasswordPolicyBean implements PasswordPolicy {
 		return pwdPolicy;
 	}
 	
+    /**
+     * Initialize this class by calling the getter for field <i>pwdPolicy</i>.
+     */
 	@PostConstruct
     private void postConstructCallback() {
     	System.out.println("com.yardi.ejb.PasswordPolicyBean postConstructCallback() ");
     	getPwdPolicy();
     }
 	
+	/**
+	 * Sets a reference to Pwd_Policy by delegating to method find().<p><br>
+	 * 
+	 * <strong>The following feedback is provided:</strong><br>
+   	 * <span style="font-family:consolas;">YRD0000 Process completed normally</span><br>
+   	 * <span style="font-family:consolas;">YRD000B Password policy is missing</span>  
+	 */
 	private void setPwdPolicy() {
 		//debug
 		System.out.println("com.yardi.ejb.PasswordPolicyBean setPwdPolicy() 0010 ");

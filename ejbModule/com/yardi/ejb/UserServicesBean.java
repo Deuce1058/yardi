@@ -22,34 +22,71 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 /**
- * Services for authentication and user profile management:
+ * Services for authentication and user profile management<p>
  * 1. Authentication
  * 2. Change password
  * 3. Password policy
- * 
- * https://stackoverflow.com/questions/2860943/how-can-i-hash-a-password-in-java
- * Hash passwords for storage, and test passwords against password tokens.
- * 
- * Instances of this class can be used concurrently by multiple threads.
- *
- * @author Jim
  */
 @Stateful
 @TransactionManagement(TransactionManagementType.BEAN)
 public class UserServicesBean implements UserServices {
+	/**
+	 * Reference to the password policy obtained from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()
+	 */
 	private Pwd_Policy pwdPolicy = null;
+	/**
+	 * Status of the most recent method call that provides feedback<p> 
+	 * Clients can read this field to determine the status of the most recent method call that provides feedback.
+	 */
 	private String feedback = "";
+	/**
+	 * Today's date and time
+	 */
 	private java.sql.Timestamp today = new java.sql.Timestamp(new java.util.Date().getTime());
+	/**
+	 * POJO representation of the web request to login
+	 */
 	private LoginRequest loginRequest;
+	/**
+	 * POJO representation of the response to the web request to login
+	 */
 	private LoginResponse loginResponse;
+	/**
+	 *  Vector containing the description and URL of each group the user belongs to
+	 */
 	private Vector<LoginInitialPage> initialPageList;
+	/**
+	 * The URL of the page for the group the user belongs to.<p>
+	 * If the user belongs to multiple groups the field initialPage is set to views/selectGroup.html.
+	 */
 	private String initialPage = "";
+	/**
+	 * The value returned by HttpServletRequest.getSession().getId()
+	 */
 	private String sessionID = "";
-	@EJB UserProfile userProfileBean; //bean is thread safe unless marked reentrant in the deployment descriptor
+	/**
+	 * Injected reference to com.yardi.ejb.UserProfileBean
+	 */
+	@EJB UserProfile userProfileBean; 
+	/**
+	 * Injected reference to com.yardi.ejb.UniqueTokensBean
+	 */
 	@EJB UniqueTokens uniqueTokensBean;
+	/**
+	 * Injected reference to com.yardi.ejb.PasswordPolicyBean
+	 */
 	@EJB PasswordPolicy passwordPolicyBean;
+	/**
+	 * Injected reference to com.yardi.ejb.UserGroupsBean
+	 */
 	@EJB UserGroups userGroupsBean;
+	/**
+	 * Injected reference to com.yardi.ejb.SessionsTableBean
+	 */
 	@EJB SessionsTable sessionsBean;
+	/**
+	 * Injected reference to com.yardi.ejb.PwdCompositionRulesBean
+	 */
 	@EJB PwdCompositionRules pwdCompRulesBean;
 	@Resource UserTransaction tx;
 	
@@ -57,18 +94,64 @@ public class UserServicesBean implements UserServices {
 		System.out.println("com.yardi.ejb.UserServicesBean UserServicesBean() 0006");
 	}
 	/**
-	 * Support for authentication. 
-	 * 1. Get the password policy
-	 * 2. Validate the user name against the User_Profile table
-	 * 3. The account must be active
-	 * 4. The account is not disabled because too many invalid passwords have been attempted. Maximum login attempts is 
-	 *    determined by password policy
+	 * Authenticate the user.<p> 
 	 * 
-	 * Instance variable feedback indicates the status of the authenticate process 
+	 * If the user is in the process of changing their password then the transaction begins with method chgPwd(). Method chgPwd() makes the user authenticate again 
+	 * by calling this method. This is why the transaction can not begin with authenticate() if the user is in the process of changing their password.<p>
 	 * 
-	 * @param userName
-	 * @param password
-	 * @return Boolean
+	 * Authentication is delegated to com.yadi.ejb.UserProfileBean.authenticate().<br><br>
+	 * <div style="display:flex; flex-direction: row">
+	 *   <div>
+	 *     <strong><u>If the user successfully authenticates:</u></strong>
+	 *     <ul>
+	 *       <li>
+	 *         If the persistence context has no Sessions_Table entity matching the session ID and the SESSIONS_TABLE database table has no row matching session 
+	 *         ID then persist the Sessions_Table entity.
+	 *       </li>
+	 *       <li>
+	 *         If the persistence context has a Sessions_Table entity matching the session ID then update the Sessions_Table entity.
+	 *       </li>
+	 *       <li>
+	 *         Construct com.yardi.shared.userServices.LoginResponse.
+	 *       </li>
+	 *       <li>
+	 *         If the user is not changing the password then commit the transaction. Otherwise, method chgPwd() will determine when to commit the transaction.
+	 *       </li>
+	 *     </ul>
+	 *   </div>
+	 *   <div>
+	 *     <strong><u>If authentication fails:</u></strong>
+	 *     <ul>
+	 *       <li>
+	 *         If the feedback is <span style="font-family:consolas;">YRD000C, YRD000F or YRD0002</span> and the user is not in the process of changing their password then commit the transaction. 
+	 *         Otherwise, method chgPwd() determines when to commit the transaction.
+	 *       </li>
+	 *       <li>
+	 *         If the feedback is <span style="font-family:consolas;">YRD000F</span> then set the feedback to <span style="font-family:consolas;">YRD0001</span>.
+	 *       </li>
+	 *       <li>
+	 *         If the user fails to authenticate for a reason other than <span style="font-family:consolas;">YRD000C, YRD000F or YRD0002</span> and the user 
+	 *         is not in the process of changing their password then rollback the transaction. Otherwise, method chgPwd() determines what happens to the transaction.
+	 *       </li>
+	 *     </ul>
+	 *   </div>
+	 * </div>
+	 * <p>
+	 * 
+	 * <strong>The following feedback is provided:</strong><br>
+	 * <pre>
+	 * YRD0000 normal completion
+	 * YRD0001 Invalid user name or password
+	 * YRD0002 the password has expired
+	 * YRD0003 the User_Profile entity is disabled (user cant login). Password must be reset to login
+	 * YRD0004 the User_Profile entity is inactive. Administrator must clear the inactive flag to login
+	 * YRD000B password policy is missing
+	 * YRD000C maximum signon attempts exceeded. The User_Profile entity is disabled
+	 * YRD000E User belongs to multiple groups
+	 * YRD000F invalid password
+	 * </pre>
+	 * 
+	 * @return boolean indicating whether authentication was successful or unsuccessful
 	 */
 	public boolean authenticate() {
 		try {
@@ -210,13 +293,15 @@ public class UserServicesBean implements UserServices {
 	}
 
 	/**
-	 * Change the user's current token stored in USER_PROFILE. Hash the new password, calculate the new password 
-	 * expiration date based on password policy, delegate to the userProfileBean to update the user profile, and 
-	 * note that there was a successful login (update the sessions table)
+	 * Change the user's current token stored in USER_PROFILE database table.<p>
 	 * 
-	 * @param pwdLifeInDays
-	 * @param userName
-	 * @param newPassword
+	 * Delegate to com.yardi.ejb.UserProfileBean.changeUserToken() to set a new hashed password.<p>
+	 * 
+	 * Delegate to com.yardi.ejb.UserProfileBean.loginSuccess() to give the user credit for successfully authenticating although they have not yet
+	 * completed the change password process. 
+	 * 
+	 * @param userName identifies the user profile to change
+	 * @param newPassword char array containing the new password in plain text
 	 */
 	private void changeUserToken(final String userName, final char [] newPassword) {
 		//debug
@@ -229,24 +314,96 @@ public class UserServicesBean implements UserServices {
 	}
 
 	/**
-	 * Support for changing password either on demand or when current password has expired.
-	 * Table PP_PWD_POLICY has parameters that control password policy
+	 * Support for changing password either on demand or when the current password has expired.<p>
+	 * The transaction begins and ends here, not in method authenticate().<p>
+	 * Before the user is able to change their password, they must first authenticate using their current credentials.<p>
+	 * Database table PWD_POLICY has parameters that control password policy.<br><br>
 	 * 
-	 * Steps:
-	 * 1 Authenticate with current credentials
-	 * 2 Based on the password policy (table PP_PWD_POLICY):
-	 *   2a Remove any extra rows in UNIQUE_TOKENS table if more tokens are being stored than are required
-	 *   2b Determine whether the new password matches a previously used password
-	 *   2c Store the tokenized new password in UNIQUE_TOKENS table
-	 *   2d Store the tokenized new password in the USER_PROFILE table
-	 *   2e Set the password expiration date and store it in the USER_PROFILE table
+	 * <div style="display:flex; flex-direction: row">
+	 *   <div>
+	 *     <strong><u>Authentication was unsuccessful</u></strong>
+	 *     <ul>
+	 *       <li>
+	 *         If the reason was <span style="font-family:consolas;">YRD000C</span> or <span style="font-family:consolas;">YRD0001</span> commit the transaction
+	 *       </li>
+	 *       <li>
+	 *         If the reason was not <span style="font-family:consolas;">YRD000C</span> and not <span style="font-family:consolas;">YRD0001</span> 
+	 *         rollback the transaction 
+	 *       </li>
+	 *       <li>
+	 *         Return false indicating that the change password request was not successful
+	 *       </li>
+	 *     </ul>
+	 *   </div>
+	 *   <div style="padding-left: 5px">
+	 *     <strong><u>Authentication was successful</u></strong>
+	 *     <ul>
+	 *       <li>
+	 *         Get the password policy from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy().
+	 *       </li>
+	 *       <li>
+	 *         If the user has more stored tokens in history than the maximum number of tokens to store per user, as defined in password policy, then 
+	 *         remove the extra tokens. This can happen if the maximum number of tokens to store per user in password policy is changed.
+	 *       </li>
+	 *       <li>
+	 *         If the new password does not comply with password policy then rollback the transaction and return false to indicate the change password 
+	 *         request was unsuccessful
+	 *       </li>
+	 *       <li>
+	 *         Remove the oldest stored token in history for this user so that when the current token is saved in history, the number of tokens being stored 
+	 *         for this user does not exceed the maximum number of tokens to store per user as defined in password policy. 
+	 *       </li>
+	 *       <li>
+	 *         If unique tokens is being enforced in password policy then save the current token in history.
+	 *       </li>
+	 *       <li>
+	 *         Change the token in the User_Profile entity to the new token.
+	 *       </li>       
+	 *       <li>
+	 *         If the persistence context has no Sessions_Table entity matching the session ID and the SESSIONS_TABLE database table has no row matching session 
+	 *         ID then persist the Sessions_Table entity.
+	 *       </li>
+	 *       <li>
+	 *         If the persistence context has a Sessions_Table entity matching the session ID then update the Sessions_Table entity.
+	 *       </li>
+	 *       <li>
+	 *         Commit the transaction.
+	 *       </li>
+	 *       <li>
+	 *         Return true to indicate the change password request was successful.
+	 *       </li>       
+	 *     </ul>
+	 *   </div>
+	 * </div>
+	 * <p>
+	 * <strong>The following feedback is provided:</strong><br>
+	 * <pre>
+	 * YRD0000 normal completion
+	 * YRD0001 Invalid user name or password
+	 * YRD0002 the password has expired
+	 * YRD0003 the User_Profile entity is disabled (user cant login). Password must be reset to login
+	 * YRD0004 the User_Profile entity is inactive. Administrator must clear the inactive flag to login
+	 * YRD0005 Password must be at least %n characters long
+	 * YRD0006 Password must contain at least 1 upper case
+	 * YRD0007 Password must contain at least 1 lower case
+	 * YRD0008 Password must contain at least 1 number
+	 * YRD0009 Password must contain at least 1 special character
+     * YRD000A Password matches a password that was previously used
+	 * YRD000B Password policy is missing
+	 * YRD000C maximum signon attempts exceeded. The User_Profile entity is disabled
+	 * YRD000E User belongs to multiple groups
+	 * YRD000F invalid password
+	 * YRD0010 New password must not contain current password
+	 * YRD0011 New password must not contain user name in any case
+	 * YRD0015 Password must not be longer than %n characters
+	 * YRD0016 Password contains more than %n repeated characters
+	 * YRD0017 Password must contain at least %n numbers
+	 * YRD0018 Password must contain at least %n upper case characters
+	 * YRD0019 Password must contain at least %n lower case characters
+	 * YRD001A Password must contain at least %n special characters
+	 * </pre>
 	 * 
-	 * Instance variable feedback indicates the status of the change password process 
-	 * 
-	 * @param userName
-	 * @param oldPassword
-	 * @param newPassword
-	 * @return Boolean
+	 * @return boolean indicating whether the change password process was successful 
 	 */
 	public boolean chgPwd() {
 		//debug
@@ -314,7 +471,7 @@ public class UserServicesBean implements UserServices {
 			System.out.println("com.yardi.ejb.UserServicesBean chgpwd() 0030");
 			//debug
 			txStatus();
-			getPwdPolicy();
+			getPwdPolicy(); 
 			short maxUniqueTokens = pwdPolicy.getPpNbrUnique();
 			short pwdLifeInDays   = pwdPolicy.getPpDays();
 			//debug
@@ -365,6 +522,7 @@ public class UserServicesBean implements UserServices {
 			System.out.println("com.yardi.ejb.UserServicesBean chgpwd() 0014");
 			//debug
 
+			//if unique tokens is being enforced in password policy save the current token in history
 			if (maxUniqueTokens > 0) {
 				//debug
 				System.out.println("com.yardi.ejb.UserServicesBean chgpwd() 0020  "
@@ -402,22 +560,50 @@ public class UserServicesBean implements UserServices {
 		return true;
 	}
 	
+	/**
+	 * Returns the status of the most recent method call that provides feedback.<p>
+	 * Clients call <i>getFeedback()</i> to determine the status of the most recent method call that provides feedback.
+	 * @return feedback from the most recent method call that provides feedback.
+	 */
 	public String getFeedback() {
 		return feedback;
 	}
 
+    /**
+     * Returns the URL of the page for the group that the user belongs to.<p>
+     * 
+     * If the user belongs to multiple groups the field <i>initialPage</i> is set to <i>views/selectGroup.html</i>. The initial page is selected 
+     * by the user from a list of initial page names and descriptions representing each group they belong to.<br><br> 
+     * @return the user's initial page.
+     */
 	public String getInitialPage() {
 		return initialPage;
 	}
 
+	/**
+	 * Returns the POJO representation of the web request to login.<p> The login request contains the user's credentials, message ID, message description, 
+	 * string indicating whether user is changing their password, boolean indicating whether user is changing their password and the session ID which is 
+	 * equivalent to HttpServletRequest.getSession().getId().
+	 * @return POJO representation of the web request to login.
+	 */
 	public LoginRequest getLoginRequest() {
 		return loginRequest;
 	}
 
+	/**
+	 * Returns the POJO representation of the response to the web request to login.<p>
+	 * The login response contains the user's credentials, message ID and message description. Field <i>loginResponse</i> is converted to JSON when
+	 * responding to the web request.
+	 * @return POJO representation of the response to the web request to login.
+	 */
 	public LoginResponse getLoginResponse() {
 		return loginResponse;
 	}
 
+	/**
+	 * Returns the password policy obtained from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy().
+	 * @return reference to Pwd_Policy entity
+	 */
 	private Pwd_Policy getPwdPolicy() {
 		
 		if (pwdPolicy == null) {
@@ -433,24 +619,26 @@ public class UserServicesBean implements UserServices {
 		return pwdPolicy;
 	}
 
+	/**
+	 * Returns the session ID which is equivalent to HttpServletRequest.getSession().getId().
+	 * @return the value of field <i>sessionID</i>
+	 */
 	public String getSessionID() {
 		return sessionID;
 	}
 	
+	/**
+	 * When the user successfully authenticates, this method will either persist or update the Sessions_Table entity.<p>
+	 *  
+	 * If there is a Sessions_Table entity that matches the session ID in the persistence context then the Sessions_Table entity is updated.
+	 * If the persistence context does not have a Sessions_Table entity that matches the session ID and the SESSIONS_TABLE database table has 
+	 * no row matching the session ID then the Sessions_Table entity is persisted.<p>
+	 * 
+	 * The actual update or persist is delegated to com.yardi.ejb.SessionsTableBean.<br><br>
+	 * 
+	 * @throws JsonProcessingException problems encountered when processing (parsing, generating) JSON content
+	 */
 	private void loginSuccess() throws JsonProcessingException {
-		/*
-		 * Successful login.
-		 * 1 lookup initial page with join Groups_Master and User_Groups
-		 *   1A if user is in multiple groups set ST_LAST_REQUEST to the html select group page. User picks the initial page
-		 *   1B if user is in only one group set ST_LAST_REQUEST to GM_INITIAL_PAGE
-		 * 2 Set user ID as session attribute  
-		 * 3 Write/update session table
-		 *   3A tokenize session ID. This serves as a password for the session to login. It is not enough for the session 
-		 *      to be in the session table, the session must also login in order for the session to be considered authentic.
-		 *   3B CreateTokenService is used to create a token from the session ID
-		 * 4 Respond to yardiLogin.html/changePwd.html  
-		 */
-		
 		//debug
 		System.out.println("com.yardi.ejb.UserServicesBean loginSuccess() 0005  ");
 		//debug
@@ -506,6 +694,10 @@ public class UserServicesBean implements UserServices {
 		setLoginResponse();
 	}
 
+	/**
+	 * Stateful session bean remove method.<p>
+	 * Clients call this method so that com.yardi.ejb.UserServicesBean can release resources it has before being removed.
+	 */
 	@Override
 	@Remove
 	public void remove() {
@@ -536,6 +728,9 @@ public class UserServicesBean implements UserServices {
 		txStatus();
 	}
 
+	/** 
+	 * Inject the request from the web to login.
+	 */
 	public void setLoginRequest(LoginRequest loginRequest) {
 		this.loginRequest = loginRequest;
 		//debug
@@ -545,6 +740,14 @@ public class UserServicesBean implements UserServices {
 		//debug
 	}
 
+	/**
+	 * Construct the POJO response to the request to login.<p>
+	 * 
+	 * This response consists of the user name, a JSON array of the description and URL of each group the user belongs to, message ID and the URL 
+	 * of the initial for the group that the user belongs to.
+	 * 
+	 * @throws JsonProcessingException problems encountered when processing (parsing, generating) JSON content
+	 */
 	private void setLoginResponse() throws JsonProcessingException {
 		//msg is needed for the response to yardiLogin.html/changePwd.html but depends on userGroups.size() 
 		initialPageList = userGroupsBean.getInitialPageList();
@@ -575,6 +778,12 @@ public class UserServicesBean implements UserServices {
 			);
 	}
 	
+	/**
+	 * Obtain a reference to password policy from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy().<p>
+	 * 
+	 * <strong>The following feedback is provided:</strong><br>
+	 * <span style="font-family:consolas;">YRD000B Password policy is missing</span>
+	 */
 	private void setPwdPolicy() {
 		pwdPolicy = passwordPolicyBean.getPwdPolicy();
 		
@@ -592,6 +801,11 @@ public class UserServicesBean implements UserServices {
 		//debug
 	}
 	
+	/** 
+	 * Set field <i>sessionID</i>.<p>
+	 * 
+	 * @param sessionID the value to set. Equivalent to HttpServletRequest.getSession().getId().
+	 */
 	public void setSessionID(String sessionID) {
 		this.sessionID = sessionID;
 	}
@@ -606,6 +820,9 @@ public class UserServicesBean implements UserServices {
 				+ tx + "]";
 	}
 
+	/**
+	 * Log the transaction status
+	 */
 	private void txStatus() {
 		String status = null;
 		
