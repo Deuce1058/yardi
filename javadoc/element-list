@@ -2,7 +2,11 @@ com.yardi.ejb
 com.yardi.ejb.crypto
 com.yardi.ejb.model
 com.yardi.ejb.test
+com.yardi.QSECOFR
 com.yardi.shared.QSECOFR
 com.yardi.shared.rentSurvey
 com.yardi.shared.test
 com.yardi.shared.userServices
+com.yardi.system
+com.yardi.test
+com.yardi.userServices

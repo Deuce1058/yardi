@@ -730,6 +730,7 @@ public class UserServicesBean implements UserServices {
 
 	/** 
 	 * Inject the request from the web to login.
+	 * @param loginRequest POJO representation of the web request to login
 	 */
 	public void setLoginRequest(LoginRequest loginRequest) {
 		this.loginRequest = loginRequest;
