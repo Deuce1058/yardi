@@ -12,7 +12,7 @@ import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.shared.QSECOFR.EditPwdPolicyRequest;
 
 /**
- * Session Bean implementation class EditUserProfileBean
+ * Session Bean implementation of methods for editing password policy  
  */
 @Stateless
 public class EditPasswordPolicyBean implements EditPasswordPolicy {
@@ -23,6 +23,16 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
     	System.out.println("com.yardi.ejb.EditPassworPolicyBean EditPasswordPolicyBean() ");
     }
 
+	/**
+	 * Find the password policy by rrn.<p>
+	 * 
+	 * The password policy is retrieved directly instead of delegating to 
+	 * {@link com.yardi.ejb.PasswordPolicyBean#getPwdPolicy() com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()}.
+	 * Changes made to the instance returned by <code>getPwdPolicy()</code>will not be persisted because the instance is not managed.
+	 * 
+	 * @param rrn the rrn of the password policy to find 
+	 * @return password policy entity matching the given rrn 
+	 */
     private Pwd_Policy find(Long rrn) {
     	System.out.println("com.yardi.ejb.EditPasswordPolicyBean find() 0008  ");
 		Pwd_Policy pwdPolicy = null;
@@ -40,6 +50,7 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
 			//debug
 			e.printStackTrace();
 		}
+		/* if the password policy was found init password policy entity fields using the values from the database */
 		if (!(pwdPolicy==null)) {
 			pwdPolicy.setPp_upper_rqd(pwdPolicy.getPp_upper_rqd());
 			pwdPolicy.setPp_lower_rqd(pwdPolicy.getPp_lower_rqd());
@@ -59,6 +70,15 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
 		return pwdPolicy;
 	}
 
+    /**
+     * Return a {@link com.yardi.shared.QSECOFR.EditPwdPolicyRequest com.yardi.shared.QSECOFR.EditPwdPolicyRequest} container.<p>
+     * 
+     * Clients use this method to obtain a container which holds all of the password policy elements that can be modified by the user. 
+     * The {@link com.yardi.ejb.model.Pwd_Policy com.yardi.ejb.model.Pwd_Policy} entity is found and then mapped to the <code>EditPwdPolicyRequest</code> container 
+     * which is then returned.
+     * 
+     * @return a container which holds all of the password policy elements that can be modified by the user.
+     */
 	public EditPwdPolicyRequest getPwd_Policy() {
     	System.out.println("com.yardi.ejb.EditPasswordPolicyBean getPwd_Policy() 0007 ");
     	Pwd_Policy pwdPolicy = find(1L);
@@ -70,10 +90,14 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
     }
 
     /**
-     * Map the password policy returned from the PasswordPolicyBean to EditPwdPolicyRequest which will be returned to the browser
+     * Map a {@link com.yardi.ejb.model.Pwd_Policy com.yardi.ejb.model.Pwd_Policy} entity to 
+     * {@link com.yardi.shared.QSECOFR.EditPwdPolicyRequest com.yardi.shared.QSECOFR.EditPwdPolicyRequest}.<p>
      * 
-     * @param pwdPolicy The password policy returned from the PasswordPolicyBean
-     * @return EditPwdPolicyRequest A String representation of Pwd_Policy which will be returned to the browser
+     * <code>EditPwdPolicyRequest</code> is a container which holds all of the password policy elements that can be 
+     * modified by the user. <code>EditPwdPolicyRequest</code> serves as the DTO between the browser and the application. 
+     * 
+     * @param pwdPolicy The password policy returned from the {@link com.yardi.ejb.PasswordPolicyBean#getPwdPolicy() com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()}
+     * @return a container which holds all of the password policy elements that can be modified by the user.
      */
     private EditPwdPolicyRequest newEditPwdPolicyRequest(Pwd_Policy pwdPolicy) {
     	//debug
@@ -148,14 +172,16 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
     }
     
     /**
-	 * Construct a new Pwd_Policy request by mapping EditPwdPolicyRequest to Pwd_Policy. Several columns in PWD_POLICY may contain null. To map these correctly from EditPwdPolicyRequest
-	 * test for a String with a value of "null". If the field from EditPwdPolicyRequest is "null" set the corresponding field in Pwd_Policy to null. Otherwise, the corresponding field
-	 * in Pwd_policy is mapped to String or Short
-	 * @param editPwdPolicyRequest2 
+	 * Construct a new {@link com.yardi.ejb.model.Pwd_Policy com.yardi.ejb.model.Pwd_Policy} entity by mapping 
+	 * {@link com.yardi.shared.QSECOFR.EditPwdPolicyRequest com.yardi.shared.QSECOFR.EditPwdPolicyRequest} container to <code>Pwd_Policy</code> entity.<p> 
 	 * 
-	 * @return Pwd_Policy
-	 */
-	
+	 * Several columns in the <code>PWD_POLICY</code> database table may contain null. To map these correctly from <code>EditPwdPolicyRequest</code>, test for 
+	 * a String with a value of "<i>null</i>". If the field from <code>EditPwdPolicyRequest</code> is "<i>null</i>" set the corresponding field in 
+	 * <code>Pwd_Policy</code> entity to null. Otherwise, the corresponding field in <code>Pwd_Policy</code> entity is mapped to String or Short.
+	 * 
+	 * @param editPwdPolicyRequest a container that holds all the password policy elements which can be modified by the user. 	  
+	 * @return password policy entity
+	 */	
 	public Pwd_Policy newPwdPolicy(EditPwdPolicyRequest editPwdPolicyRequest) {
 		System.out.println("com.yardi.ejb.EditPasswordPolicyBean newPwdPolicy() 0002 ");
 		Pwd_Policy newPwdPolicy = new Pwd_Policy();
@@ -213,6 +239,17 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
 		return newPwdPolicy;
 	}
 
+	/**
+	 * Persist a new {@link com.yardi.ejb.model.Pwd_Policy com.yardi.ejb.model.Pwd_Policy} entity.<p>
+	 * 
+	 * This method accepts a {@link com.yardi.shared.QSECOFR.EditPwdPolicyRequest com.yardi.shared.QSECOFR.EditPwdPolicyRequest} container and maps it to a 
+	 * <code>Pwd_Policy</code> entity by delegating to {@link com.yardi.ejb.EditPasswordPolicyBean#newPwdPolicy(EditPwdPolicyRequest) 
+	 * com.yardi.ejb.EditPasswordPolicyBean.newPwdPolicy(EditPwdPolicyRequest)} 
+	 * before persisting the <code>Pwd_Policy</code> entity.
+	 * 
+	 * @param editPwdPolicyRequest a container which holds all the password policy elements that can be modified
+	 * by the user. 
+	 */ 
 	public void persist(EditPwdPolicyRequest editPwdPolicyRequest) {
     	System.out.println("com.yardi.ejb.EditPasswordPolicyBean persist() 0001 ");
     	Pwd_Policy newPwdPolicy = newPwdPolicy(editPwdPolicyRequest);
@@ -225,6 +262,18 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
     	System.out.println("com.yardi.ejb.EditPasswordPolicyBean postConstructCalllback() ");
     }
     
+    /**
+     * Update all of the password policy elements that can be modified by the user.<p>
+     * 
+     * This method accepts a {@link com.yardi.shared.QSECOFR.EditPwdPolicyRequest com.yardi.shared.QSECOFR.EditPwdPolicyRequest} container and maps it to a 
+     * {@link com.yardi.ejb.model.Pwd_Policy com.yardi.ejb.model.Pwd_Policy} entity by delegating to 
+     * {@link com.yardi.ejb.EditPasswordPolicyBean#newPwdPolicy(EditPwdPolicyRequest) 
+	 * com.yardi.ejb.EditPasswordPolicyBean.newPwdPolicy(EditPwdPolicyRequest)} before merging the state to 
+	 * the persistence context.
+	 * 
+	 * @param editPwdPolicyRequest an <code>EditPwdPolicyRequest</code> container which holds all the password policy elements that can be modified
+	 * by the user. 
+     */
 	public void updateAll(EditPwdPolicyRequest editPwdPolicyRequest) {
     	System.out.println("com.yardi.ejb.EditPasswordPolicyBean updateAll() 0000 ");
     	em.merge(newPwdPolicy(editPwdPolicyRequest));

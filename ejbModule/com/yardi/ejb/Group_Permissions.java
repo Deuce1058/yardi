@@ -5,7 +5,13 @@ import jakarta.persistence.*;
 
 
 /**
- * The persistent class for the GROUP_PERMISSIONS database table.
+ * Entity implementation class for database table GROUP_PERMISSIONS.<p>
+ * 
+ * Database table GROUP_PERMISSIONS defines what permissions a group has. Users are not granted permissions. Instead users are assigned to groups and groups 
+ * are granted permissions.<p>
+ * 
+ * <pre><code>  Database table: GROUP_PERMISSIONS
+ *  Schema:         DB2ADMIN</code></pre>
  * 
  */
 @Entity
@@ -14,12 +20,23 @@ import jakarta.persistence.*;
 public class Group_Permissions implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Column: GP_GROUP_TYPE Group type
+	 */
 	@Column(name="GP_GROUP_TYPE")
 	private int gpGroupType;
 
+	/**
+	 * Column: GP_PERMISSION Group permission.<p> 
+	 * This column can be joined to field <code>pmType</code> in the <code>Permissions_Master</code> entity. 
+	 */
 	@Column(name="GP_PERMISSION")
 	private int gpPermission;
 
+	/**
+	 * Column: GP_RRN Relative record number<p>
+	 * Primary key
+	 */
 	@Id
 	@GeneratedValue
 	@Column(name="GP_RRN")
@@ -31,10 +48,18 @@ public class Group_Permissions implements Serializable {
 		/*debug*/
 	}
 
+	/**
+	 * Return the relative record number<p>
+	 * @return relative record number
+	 */
 	public long getGpRrn() {
 		return this.gpRrn;
 	}
 
+	/**
+	 * Set the relative record number<p>
+	 * @param gpRrn the relative record number to set
+	 */
 	public void setGpRrn(long gpRrn) {
 		/*debug*/
 		System.out.println("com.yardi.ejb.setGpRrn() 0000");
@@ -42,10 +67,18 @@ public class Group_Permissions implements Serializable {
 		this.gpRrn = gpRrn;
 	}
 
+	/**
+	 * Return the group type<p>
+	 * @return group type
+	 */
 	public int getGpGroupType() {
 		return this.gpGroupType;
 	}
 
+	/**
+	 * Set group type<p>
+	 * @param gpGroupType the group type to set
+	 */
 	public void setGpGroupType(int gpGroupType) {
 		/*debug*/
 		System.out.println("com.yardi.ejb.setGpGroupType() 0000");
@@ -53,10 +86,18 @@ public class Group_Permissions implements Serializable {
 		this.gpGroupType = gpGroupType;
 	}
 
+	/**
+	 * Return the group permission<p>
+	 * @return group permission
+	 */
 	public int getGpPermission() {
 		return this.gpPermission;
 	}
 
+	/**
+	 * Set the group permission<p>
+	 * @param gpPermission the group permission to set
+	 */
 	public void setGpPermission(int gpPermission) {
 		/*debug*/
 		System.out.println("com.yardi.ejb.setGpPermission() 0000");
