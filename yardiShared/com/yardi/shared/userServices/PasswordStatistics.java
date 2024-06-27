@@ -16,26 +16,117 @@ import java.util.Map.Entry;
  *
  */
 public class PasswordStatistics {
+	/**
+	 * Number of upper case characters found 
+	 */
 	private int pwdNbrUpper;
+	/**
+	 * Number of lower case characters found
+	 */
 	private int pwdNbrLower;
+	/**
+	 * Number of special characters found
+	 */
 	private int pwdNbrSpecial;
+	/**
+	 * Number of digits found 
+	 */
 	private int pwdNbrNbr;
+	/**
+	 * Length of the password
+	 */
 	private int pwdLength;
+	/**
+	 * Number of repeated characters that were found 
+	 */
 	private int pwdNbrRepeatedChar; 
+	/**
+	 * Stores the password to be examined
+	 */
 	private char[] password;
+	/**
+	 * Indicated whether the password contains upper case characters
+	 */
 	boolean hasUpper   = false;
+	/**
+	 * Indicates whether the password contains lower case characters 
+	 */
 	boolean hasLower   = false;
+	/**
+	 * Indicates whether the password contains digits
+	 */
 	boolean hasDigit   = false;
+	/**
+	 * Indicates whether the password contains special characters
+	 */
 	boolean hasSpecial = false;
 	
+	/**
+	 * Default constructor
+	 */
 	public PasswordStatistics() {
 	}
 	
+	/**
+	 * Constructor to initialize the password to be scanned. Calls <code>scanPassword()</code> to perform the analysis.
+	 * @param password the password to be scanned
+	 */
 	public PasswordStatistics(char[] password) {
 		this.password = password;
 		scanPassword();
 	}
 
+	/**
+	 * Return the password length
+	 * @return password length
+	 */
+	public int getPwdLength() {
+		return pwdLength;
+	}
+	
+	/**
+	 * Return the number of lower case characters found in the password
+	 * @return number of lower case characters found
+	 */
+	public int getPwdNbrLower() {
+		return pwdNbrLower;
+	}
+
+	/**
+	 * Return number of digits found in the password
+	 * @return number of digits found
+	 */
+	public int getPwdNbrNbr() {
+		return pwdNbrNbr;
+	}
+
+	/**
+	 * Return number of repeated characters found in the password
+	 * @return number of repeated characters found
+	 */
+	public int getPwdNbrRepeatedChar() {
+		return pwdNbrRepeatedChar;
+	}
+
+	/**
+	 * Return number of special characters found in the password
+	 * @return number of special characters found
+	 */
+	public int getPwdNbrSpecial() {
+		return pwdNbrSpecial;
+	}
+
+	/**
+	 * Return number of upper case characters found in the password
+	 * @return number of upper case characters found
+	 */
+	public int getPwdNbrUpper() {
+		return pwdNbrUpper;
+	}
+
+	/**
+	 * Scan the password and compile statistics
+	 */
 	private void scanPassword() {
 		pwdLength = password.length;
 		HashMap<Character, Integer> checkedChar = new HashMap<Character, Integer>();
@@ -82,30 +173,6 @@ public class PasswordStatistics {
 			}
 		}
 	}
-	
-	public int getPwdNbrUpper() {
-		return pwdNbrUpper;
-	}
-
-	public int getPwdNbrLower() {
-		return pwdNbrLower;
-	}
-
-	public int getPwdNbrSpecial() {
-		return pwdNbrSpecial;
-	}
-
-	public int getPwdNbrNbr() {
-		return pwdNbrNbr;
-	}
-
-	public int getPwdLength() {
-		return pwdLength;
-	}
-
-	public int getPwdNbrRepeatedChar() {
-		return pwdNbrRepeatedChar;
-	}
 
 	@Override
 	public String toString() {
@@ -145,6 +212,9 @@ public class PasswordStatistics {
 				+ Arrays.toString(password);
 	}
 
+	/**
+	 * Debug
+	 */
 	public String toString1() {
 		return "com.yardi.userServices PasswordStatistics toString() 0001"
 				+ "\n"
@@ -179,6 +249,9 @@ public class PasswordStatistics {
 				+ hasSpecial;
 	}
 	
+	/**
+	 * Debug
+	 */
 	public String toString2() {
 		return "password="
 				+ Arrays.toString(password)
@@ -196,6 +269,9 @@ public class PasswordStatistics {
 				+ pwdNbrNbr;
 	}
 
+	/**
+	 * Debug
+	 */
 	public String toString3() {
 		return "password="
 				+ Arrays.toString(password)

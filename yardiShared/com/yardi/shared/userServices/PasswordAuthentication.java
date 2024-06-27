@@ -25,10 +25,22 @@ public class PasswordAuthentication {
 	   */
 	  public static final int DEFAULT_COST = 16;
 
+	  /**
+	   * Hash algorithm
+	   */
 	  private static final String ALGORITHM = "PBKDF2WithHmacSHA512";
 
+	  /**
+	   * Key length
+	   */
 	  private static final int SIZE = 512;
 
+	  /**
+	   * Validate the number of iterations. The value passed must be be between 2 and 32. If <code>cost</code> satisfies the range constraint then the returned 
+	   * number of iterations is 1 left shifted by <code>cost</code> positions.
+	   * @param cost a value between 2 and 32 
+	   * @return The number of iterations to use in the hash
+	   */
 	  private static int iterations(int cost)
 	  {
 	    if ((cost & ~0x1E) != 0)
@@ -36,6 +48,13 @@ public class PasswordAuthentication {
 	    return 1 << cost;
 	  }
 
+	  /**
+	   * Derive the key using the key specification and specified hashing algorithm.
+	   * @param password plain text password
+	   * @param salt introduces randomness in the hash 
+	   * @param iterations the number of iterations the hash algorithm should perform
+	   * @return derived key
+	   */
 	  private static byte[] pbkdf2(char[] password, byte[] salt, int iterations)
 	  {
 	    KeySpec spec = new PBEKeySpec(password, salt, iterations, SIZE);
@@ -51,6 +70,9 @@ public class PasswordAuthentication {
 	    }
 	  }
 
+	  /**
+	   * The exponential computational cost of hashing a password
+	   */
 	  private final int cost;
 
 	  public PasswordAuthentication()
