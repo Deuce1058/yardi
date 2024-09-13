@@ -28,7 +28,14 @@ import com.yardi.shared.QSECOFR.EditUserProfileRequest;
  */
 @WebServlet(description = "Handle edit user profile requests", urlPatterns = { "/editUserProfile" })
 public class EditUserProfileService extends HttpServlet {
+	/**
+	 * Serial version ID
+	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * User transaction 
+	 */
 	@Resource UserTransaction tx;
 
 	/**
@@ -39,6 +46,26 @@ public class EditUserProfileService extends HttpServlet {
     }
 
 	/**
+	 * Handle requests to edit the user profile.<p>
+	 * 
+	 * <code>doGet()</code> begins by checking for a session attribute named <code>editUserProfileCTRL</code>. This attribute is a reference to 
+	 * {@link com.yardi.ejb.EditUserProfileCTRLBean#EditUserProfileCTRLBean() com.yardi.ejb.EditUserProfileCTRLBean}. If attribute <code>editUserProfileCTRL</code>
+	 * is not found <code>doGet()</code> obtains a reference to <code>EditUserProfileCTRLBean</code> from JNDI and sets attribute <code>editUserProfileCTRL</code> to 
+	 * be a reference to <code>EditUserProfileCTRLBean</code>.<p>
+	 * 
+	 * The raw JSON request is mapped to {@link com.yardi.shared.QSECOFR.EditUserProfileRequest#EditUserProfileRequest() com.yardi.shared.QSECOFR.EditUserProfileRequest}.<p>
+	 * 
+	 * A remove request is a special case which indicates the user is leaving the page <code>userProfile_CRUD.html</code>. Therefore they are finished editing user profiles. 
+	 * <code>doGet()</code> calls <code>remove()</code> to clean up resources before further servicing the request.<p>
+	 * 
+	 * The <code>EditUserProfileRequest</code> is injected into <code>EditUserProfileCTRLBean</code>.<p>
+	 * 
+	 * The <code>EditUserProfileCTRLBean</code> is instructed to initialize itself.<p>
+	 * 
+	 * The <code>EditUserProfileCTRLBean</code> is instructed to handle the request.<p>
+	 * 
+	 * <code>webResponse()</code> handles responding to the request.
+	 * 
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -168,7 +195,10 @@ public class EditUserProfileService extends HttpServlet {
 	
 	/**
 	 * Release session resources.<p>
-	 * Call the remove method on stateful com.yardi.ejb.EdidUserProfileCTRLBean so it can release the resources it is using.
+
+	 * A remove request is a special case which indicates the user is leaving the page <code>userProfile_CRUD.html</code>. Therefore they are finished editing user profiles. 
+	 * <code>remove()</code> will release resources on stateful {@link com.yardi.ejb.EditUserProfileCTRLBean#EditUserProfileCTRLBean() com.yardi.ejb.EdidUserProfileCTRLBean} 
+	 * by calling its remove method and setting session attribute <code>editUserProfileCTRL</code> to <i>null</i>.
 	 * 
 	 * @param request a HttpServletRequest
 	 * @param response a HttpServletResponse
@@ -232,7 +262,7 @@ public class EditUserProfileService extends HttpServlet {
 	}
 	
 	/**
-	 * Respond to the web request by converting the java representation of the request into JSON. 
+	 * Respond to the web request by mapping the java representation of the request to JSON. 
 	 * 
 	 * @param request a HttpServletRequest
 	 * @param response a HttpServletResponse

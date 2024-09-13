@@ -17,11 +17,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.shared.userServices.PasswordAuthentication;
 
 /**
- * Servlet implementation class CreateTokenService
- * Convert passwords to tokens
+ * Convert a user supplied passwords to a token. Entry point for the create token application.
  */
 @WebServlet("/newToken")
 public class CreateTokenService extends HttpServlet {
+	/** 
+	 * Version ID
+	 */
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -32,6 +34,9 @@ public class CreateTokenService extends HttpServlet {
     }
 
 	/**
+	 * Obtain a new instance of {@link com.yardi.shared.userServices.PasswordAuthentication#PasswordAuthentication() com.yardi.shared.userServices.PasswordAuthentication}.
+	 * Read the request from the input stream and map it from JSON to {@link com.yardi.QSECOFR.TokenRequest#TokenRequest() com.yardi.QSECOFR.TokenRequest} container.
+	 * Hash the supplied user password. 
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -83,6 +88,11 @@ public class CreateTokenService extends HttpServlet {
 		doGet(request, response);
 	}
 
+	/**
+	 * Show headers in the response and their corresponding values for audit purposes. Of particular interest is the session ID. This is used to show that the session ID 
+	 * is being maintained throughout the session.
+	 * @param response HTTP response
+	 */
 	private void showResponseHeaders(HttpServletResponse response) {
 		//debug 
 		Collection<String> headerNames = response.getHeaderNames();

@@ -15,10 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Servlet implementation class SessionInfoService. This service returns a collection of information about the session. HTML does 
- * a post to invoke this and have access to things like session attributes since html can not access this information directly.
- * The information is returned in a JSON object. 
- */
+ * Exposes details of the http session to clients. Clients may use this servlet to discover details available to the HttpServletRequest and HttpServletResponse objects.
+ */ 
 @WebServlet("/SessionInfo")
 public class SessionInfoService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -31,7 +29,14 @@ public class SessionInfoService extends HttpServlet {
     }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * Entry point.<p> The request, formatted as JSON, is retrieved from the input stream and mapped to 
+	 * {@link com.yardi.userServices.SessionInfo#SessionInfo() com.yardi.userServices.SessionInfo}. Determine what the client is asking for and obtain that info from the 
+	 * HttpServletRequest and HttpServletResponse. Store the info in <code>SessionInfo</code>. Map <code>SessionInfo</code> to JSON and respond to the request.
+	 * 
+	 * @param request {@link HttpServletRequest HttpServletRequest}
+	 * @param response {@link HttpServletResponse HttpServletResponse} 
+	 * @throws ServletException 
+	 * @throws IOException
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		boolean useAttribute = false;
@@ -88,6 +93,10 @@ public class SessionInfoService extends HttpServlet {
 		doGet(request, response);
 	}
 
+	/**
+	 * Log the response headers to ensure that the session ID is being retained 
+	 * @param response {@link HttpServletResponse HttpServletResponse}
+	 */
 	private void showResponseHeaders(HttpServletResponse response) {
 		//debug 
 		Collection<String> headerNames = response.getHeaderNames();

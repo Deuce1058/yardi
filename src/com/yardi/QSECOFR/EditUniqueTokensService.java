@@ -31,15 +31,28 @@ import com.yardi.ejb.Unique_Tokens;
 import com.yardi.ejb.UserProfile;
 
 /**
- * Servlet implementation class EditUniqueTokensService
+ * Entry point for the edit unique tokens app. Handle requests from the web to edit unique tokens.
  */
 @WebServlet(description = "Handle edit unique tokens requests", urlPatterns = {"/editUniqueTokens"})
 public class EditUniqueTokensService extends HttpServlet {
+	/**
+	 * serial version ID
+	 */
 	private static final long serialVersionUID = 1L;
-       
+    
+	/**
+	 * Default constructor
+	 */
     public EditUniqueTokensService() {
     }
 
+    /**
+     * Not used
+     * @param currentPath currentPath
+     * @param jsonNode jsonNode 
+     * @param map map 
+     * @param suffix suffix 
+     */
 	private void addKeys(String currentPath, JsonNode jsonNode, Map<String, String> map, List<Integer> suffix) {
 		System.out.println("com.yardi.QSECOFR.EditUniqueTokensService addKeys() 0009");
 	    if (jsonNode.isObject()) {
@@ -111,6 +124,33 @@ public class EditUniqueTokensService extends HttpServlet {
 	    }
 	}
 
+	/**
+	 * Handle requests for editing unique tokens. Two basic requests are supported:
+	 * <ul>
+	 *   <li> find the unique tokens for a given user </li>
+	 *   <li> the update request is a combination of adding new tokens, updating existing tokens and deleting existing tokens</li>
+	 * </ul>
+	 * <p>
+	 * doGet() begins by obtaining a reference to {@link com.yardi.ejb.UserProfileBean#UserProfileBean() com.yardi.ejb.UserProfileBean} and 
+	 * {@link com.yardi.ejb.UniqueTokensBean#UniqueTokensBean() com.yardi.ejb.UniqueTokensBean} from JNDI. 
+	 * <p>
+	 * The request is first deserialized to {@link com.yardi.QSECOFR.EditUniqueTokensRequest#EditUniqueTokensRequest() com.yardi.QSECOFR.EditUniqueTokensRequest}. At this 
+	 * point, only the <code>action</code>, <code>findUser</code>, and <code>uniqueTokensString</code> fields in 
+	 * <code>EditUniqueTokensRequest</code> are populated. Field <code>uniqueTokensString</code> contains a JSON array.
+	 * <p>
+	 * If the request is an update request, then the <code>uniqueTokensString</code> field in <code>EditUniqueTokensRequest</code> is 
+	 * deserialized to a <code>Vector&lt;EditUniqueTokensRequest&gt;</code>. Now fields <code>up1UserName</code>, <code>up1Token</code>, <code>up1DateAdded</code>,
+	 * <code>up1Rrn</code>, and <code>deleteToken</code> are populated. doGet() calls <code>updateTokens()</code> to handle the rest of the update request.
+	 * <p>
+	 * If the request is a find request doGet calls <code>findTokens()</code> to further handle the request.
+	 * <p>
+	 * Finally doGet() responds to the web request.
+	 * 
+	 * @param request see jakarta.servlet.http.HttpServletRequest 
+	 * @param response see jakarta.servlet.http.HttpServletResponse  
+	 * @throws ServletException a general servlet exception 
+	 * @throws IOException a general I/O exception
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//debug
 		System.out.println("com.yardi.QSECOFR.EditUniqueTokensService doGet() 0000");
@@ -267,6 +307,17 @@ public class EditUniqueTokensService extends HttpServlet {
 		doGet(request, response);
 	}
 
+	/**
+	 * Handle the find request by finding all tokens for the given user. Delegate to <code>com.yardi.ejb.UniqueTokensBean.findTokens(userName)</code> to get the tokens. 
+	 * The user tokens are stored in field uniqueTokens on the edit request <code>com.yardi.QSECOFR.EditUniqueTokensRequest</code>.
+	 * 
+	 * @param userName user name
+	 * @param userProfileBean reference to {@link com.yardi.ejb.UserProfileBean#UserProfileBean() com.yardi.ejb.UserProfileBean}
+	 * @param uniqueTokenBean reference to {@link com.yardi.ejb.UniqueTokensBean#UniqueTokensBean() com.yardi.ejb.UniqueTokensBean}
+	 * @param uniqueTokens Vector&lt;{@link com.yardi.ejb.Unique_Tokens#Unique_Tokens() com.yardi.ejb.Unique_Tokens}&gt;
+	 * @param editRequest reference to {@link com.yardi.QSECOFR.EditUniqueTokensRequest#EditUniqueTokensRequest() com.yardi.QSECOFR.EditUniqueTokensRequest}
+	 * @return boolean indicating whether the given <code>userNane</code> is valid
+	 */
 	private boolean findTokens(String userName, UserProfile userProfileBean, UniqueTokens uniqueTokenBean, Vector<Unique_Tokens> uniqueTokens, EditUniqueTokensRequest editRequest) {
 		//debug
 		System.out.println("com.yardi.QSECOFR.EditUniqueTokensService findTokens() 0003");
@@ -292,6 +343,10 @@ public class EditUniqueTokensService extends HttpServlet {
 		return true;
 	}
 	
+	/**
+	 * Show the response headers to ensure the session ID isn't getting wiped somewhere
+	 * @param response see jakarta.servlet.http.HttpServletResponse
+	 */
 	private void showResponseHeaders(HttpServletResponse response) {
 		//debug 
 		Collection<String> headerNames = response.getHeaderNames();
@@ -320,6 +375,29 @@ public class EditUniqueTokensService extends HttpServlet {
 		//debug
 	}	
 	
+	/**
+	 * Handle the update request. An update request is a combination of adding new tokens, updating existing tokens and deleting existing tokens.
+	 * <p>
+	 * Because {@link com.yardi.QSECOFR.EditUniqueTokensRequest#up1DateAdded com.yardi.QSECOFR.EditUniqueTokensRequest.up1DateAdded} maps to <code>String</code>,
+	 * a <code>java.util.Calendar</code> is constructed from the month, day, century and year components of <code>up1DateAdded</code> so that the mills from this calendar 
+	 * can be passed to <code>UniqueTokensBean.updateToken</code>.
+	 * <p>
+	 * Tokens with a relative record number of &gt;0 are tokens that exist in the database table UNIQUE_TOKENS. Tokens being added have a negative relative record number.
+	 * Tokens having a positive relative record number that are not being deleted are updated.
+	 * <p>
+	 * If <code>EditUniqueTokensRequest.deleteToken</code> is true then the token is being deleted. Delegate to 
+	 * {@link com.yardi.ejb.UniqueTokensBean#remove(long) UniqueTokensBean.remove()} to remove the token from the database.
+	 * <p>
+	 * If the relative record number is greater than zero and the token is not being deleted then the token is updated. Delegate to 
+	 * {@link com.yardi.ejb.UniqueTokensBean#updateToken(Long, String, Long) UniqueTokensBean.updateToken()}.
+	 * <p>
+	 * If the relative record number is negative then persist the token to database table UNIQUE_TOKENS. Delegate to 
+	 * {@link com.yardi.ejb.UniqueTokensBean#persist(String, String, java.util.Date) UniqueTokensBean.persist()}.
+	 * 
+	 * @param uniqueTokenBean reference to {@link com.yardi.ejb.UniqueTokensBean#UniqueTokensBean() com.yardi.ejb.UniqueTokensBean}
+	 * @param uniqueTokens Vector&lt;{@link com.yardi.ejb.Unique_Tokens#Unique_Tokens() com.yardi.ejb.Unique_Tokens}&gt;
+	 * @param updatedTokens Vector&lt;{@link com.yardi.QSECOFR.EditUniqueTokensRequest#EditUniqueTokensRequest() com.yardi.QSECOFR.EditUniqueTokensRequest}&gt;
+	 */
 	private void updateTokens(UniqueTokens uniqueTokenBean, Vector<Unique_Tokens> uniqueTokens, Vector<EditUniqueTokensRequest> updatedTokens) {
 		//debug
 		System.out.println("com.yardi.QSECOFR.EditUniqueTokensService updateTokens() 0018 \n   EditUniqueTokensRequest");

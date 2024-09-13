@@ -26,12 +26,23 @@ import com.yardi.shared.QSECOFR.EditPwdPolicyRequest;
 //import com.yardi.userServices.InvalidSessionException;
 
 /**
- * Servlet implementation class EditPwdPolicyService
+ * Handle requests to edit password policy. Entry point for edit password policy app.
  */
 @WebServlet(description = "Handle edit password policy requests", urlPatterns = {"/PwdPolicy"})
 public class EditPwdPolicyService extends HttpServlet implements Serializable {
+	/**
+	 * Serial version ID
+	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Obtain an instance of {@link com.yardi.ejb.EditPasswordPolicyBean#EditPasswordPolicyBean() com.yardi.ejb.EditPasswordPolicyBean} from JNDI. 
+	 * Read the edit request from the input stream and map it to {@link com.yardi.shared.QSECOFR.EditPwdPolicyRequest#EditPwdPolicyRequest() 
+	 * com.yardi.shared.QSECOFR.EditPwdPolicyRequest}.
+	 * Determine the requested action (find, add or update) and call the appropriate method on EditPasswordPolicyBean to handle the request.
+	 * 
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//debug
 		System.out.println("com.yardi.QSECOFR.EditPwdPolicyService doGet() 0000 "
@@ -86,10 +97,20 @@ public class EditPwdPolicyService extends HttpServlet implements Serializable {
 		}
 	}
 	
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
 	
+	/**
+	 * Get the password policy from com.yardi.ejb.EditPasswordPolicyBean, map it to JSON and respond to the web.
+	 * @param editPasswordPolicyBean the instance of {@link com.yardi.ejb.EditPasswordPolicyBean#EditPasswordPolicyBean() EditPasswordPolicyBean} 
+	 * passed from doGet()  
+	 * @param response <a href="https://jakarta.ee/specifications/servlet/4.0/apidocs/javax/servlet/http/httpservletresponse">HttpServletResponse</a> from doGet()
+	 * @throws IOException an I/O exception
+	 */
 	private void find(EditPasswordPolicy editPasswordPolicyBean, HttpServletResponse response) throws IOException {
 		//debug
 		System.out.println("com.yardi.QSECOFR.EditPwdPolicyService find() 0009 ");
@@ -100,6 +121,12 @@ public class EditPwdPolicyService extends HttpServlet implements Serializable {
 		webResponse(response, formData);
 	}	
 	
+	/**
+	 * Reset response buffer, set content type, print the response formatted as JSON and flush output buffer
+	 * @param response <a href="https://jakarta.ee/specifications/servlet/4.0/apidocs/javax/servlet/http/httpservletresponse">HttpServletResponse</a> from find()
+	 * @param formData a JSON string containing the web response 
+	 * @throws IOException an I/O exception
+	 */
 	private void webResponse(HttpServletResponse response, String formData) throws IOException {
 		//debug
 		System.out.println("com.yardi.QSECOFR.EditPwdPolicyService webResponse() 0006 ");
