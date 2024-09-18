@@ -8,7 +8,7 @@ import jakarta.persistence.*;
  * Entity implementation class for database table GROUP_PERMISSIONS.<p>
  * 
  * Database table GROUP_PERMISSIONS defines what permissions a group has. Users are not granted permissions. Instead users are assigned to groups and groups 
- * are granted permissions.<p>
+ * are granted permissions.
  * 
  * <pre><code>  Database table: GROUP_PERMISSIONS
  *  Schema:         DB2ADMIN</code></pre>
@@ -18,6 +18,9 @@ import jakarta.persistence.*;
 @Table(name="GROUP_PERMISSIONS", schema="DB2ADMIN")
 @NamedQuery(name="Group_Permissions.findAll", query="SELECT g FROM Group_Permissions g")
 public class Group_Permissions implements Serializable {
+	/**
+	 * Serial version ID
+	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -42,6 +45,9 @@ public class Group_Permissions implements Serializable {
 	@Column(name="GP_RRN")
 	private long gpRrn;
 
+	/**
+	 * Default constructor
+	 */
 	public Group_Permissions() {
 		/*debug*/
 		System.out.println("com.yardi.ejb.Group_Permissions.Group_Permissions() 0000");
@@ -49,7 +55,7 @@ public class Group_Permissions implements Serializable {
 	}
 
 	/**
-	 * Return the relative record number<p>
+	 * Return the relative record number
 	 * @return relative record number
 	 */
 	public long getGpRrn() {
@@ -57,7 +63,7 @@ public class Group_Permissions implements Serializable {
 	}
 
 	/**
-	 * Set the relative record number<p>
+	 * Set the relative record number
 	 * @param gpRrn the relative record number to set
 	 */
 	public void setGpRrn(long gpRrn) {
@@ -68,7 +74,7 @@ public class Group_Permissions implements Serializable {
 	}
 
 	/**
-	 * Return the group type<p>
+	 * Return the group type
 	 * @return group type
 	 */
 	public int getGpGroupType() {
@@ -76,7 +82,7 @@ public class Group_Permissions implements Serializable {
 	}
 
 	/**
-	 * Set group type<p>
+	 * Set group type
 	 * @param gpGroupType the group type to set
 	 */
 	public void setGpGroupType(int gpGroupType) {
@@ -87,7 +93,7 @@ public class Group_Permissions implements Serializable {
 	}
 
 	/**
-	 * Return the group permission<p>
+	 * Return the group permission
 	 * @return group permission
 	 */
 	public int getGpPermission() {
@@ -95,7 +101,7 @@ public class Group_Permissions implements Serializable {
 	}
 
 	/**
-	 * Set the group permission<p>
+	 * Set the group permission
 	 * @param gpPermission the group permission to set
 	 */
 	public void setGpPermission(int gpPermission) {

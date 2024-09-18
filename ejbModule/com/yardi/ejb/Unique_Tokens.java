@@ -12,7 +12,7 @@ import java.util.Date;
  * Entity implementation class for database table UNIQUE_TOKENS<p>
  * 
  * Database table UNIQUE_TOKENS is used to prevent password reuse. When a user changes their password, the current password is saved 
- * in UNIQUE_TOKENS database table before the password is changed. The number of saved passwords is defined in password policy.<p>  
+ * in UNIQUE_TOKENS database table before the password is changed. The number of saved passwords is defined in password policy.
  * 
  * <pre><code>  Database table: UNIQUE_TOKENS
  *  Schema:         DB2ADMIN</code></pre>

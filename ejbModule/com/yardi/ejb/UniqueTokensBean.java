@@ -35,7 +35,7 @@ public class UniqueTokensBean implements UniqueTokens {
     }
 
     /**
-     * Find the Unique_Tokens entity by relative record number.<p>
+     * Find the Unique_Tokens entity by relative record number.
      * @param rrn relative record number of the entity to find. 
      * @return Unique_Tokens entity matching the given relative record number. Returns null if the persistence context does not contain a 
      * Unique_Tokens entity for the given relative record number and the UNIQUE_TOKENS database table has no row matching the given relative record number.
@@ -141,7 +141,7 @@ public class UniqueTokensBean implements UniqueTokens {
 	}
 			
 	/**
-	 * Test whether the instance is an entity.<p>
+	 * Test whether the instance is an entity.
 	 * 
 	 * @param clazz the instance to test.
 	 * @return boolean indicating whether the instance is an entity.
@@ -164,7 +164,7 @@ public class UniqueTokensBean implements UniqueTokens {
 	}
 
 	/**
-     * Test whether the entity manager is participating in a transaction.<p>
+     * Test whether the entity manager is participating in a transaction.
      * 
      * @return boolean indicating whether the entity manager is joined to the current transaction. 
      */
@@ -178,7 +178,7 @@ public class UniqueTokensBean implements UniqueTokens {
 	}
 
     /**
-	 * Test whether the given Unique_Tokens entity managed.<p>
+	 * Test whether the given Unique_Tokens entity managed.
 	 * 
 	 * @param token the entity to test.
 	 * @return boolean indicating whether the Unique_Tokens entity is being managed. Returns false if the given instance is null or if the given 
@@ -215,7 +215,7 @@ public class UniqueTokensBean implements UniqueTokens {
 	} 
     
 	/**
-	 * Persist a new Unique_Tokens entity constructed from the supplied parms.<p>
+	 * Persist a new Unique_Tokens entity constructed from the supplied parms.
 	 * @param userName user's name
 	 * @param token hashed password
 	 * @param dateAdded date token was added
@@ -241,7 +241,7 @@ public class UniqueTokensBean implements UniqueTokens {
     }
 
     /**
-     * Remove Unique_Tokens entities by relative record number.<p>
+     * Remove Unique_Tokens entities by relative record number.
      * @param rrn the relative record number of the entity to remove.
      */
 	public void remove(long rrn) {
@@ -457,7 +457,7 @@ public class UniqueTokensBean implements UniqueTokens {
 	}
     
     /**
-     * Update the Unique_Tokens entity with the specified relative record number using the given parms.<p>
+     * Update the Unique_Tokens entity with the specified relative record number using the given parms.
      * @param up1Rrn relative record number to update.
      * @param up1Token new hashed password value.
      * @param time new date added value in mills.

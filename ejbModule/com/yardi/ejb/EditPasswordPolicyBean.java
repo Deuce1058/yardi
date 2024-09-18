@@ -16,9 +16,15 @@ import com.yardi.shared.QSECOFR.EditPwdPolicyRequest;
  */
 @Stateless
 public class EditPasswordPolicyBean implements EditPasswordPolicy {
+	/**
+	 * {@link EntityManager EntityManager}
+	 */
 	@PersistenceContext(unitName="yardi")
 	private EntityManager em;
 
+	/**
+	 * Default constructor 
+	 */
 	public EditPasswordPolicyBean() {
     	System.out.println("com.yardi.ejb.EditPassworPolicyBean EditPasswordPolicyBean() ");
     }
@@ -257,6 +263,9 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
     	em.persist(newPwdPolicy);
     }
     
+	/**
+	 * Post construct callback 
+	 */
     @PostConstruct
     private void postConstructCallback() {
     	System.out.println("com.yardi.ejb.EditPasswordPolicyBean postConstructCalllback() ");

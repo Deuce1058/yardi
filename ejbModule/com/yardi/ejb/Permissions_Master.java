@@ -7,10 +7,10 @@ import jakarta.persistence.*;
 /**
  * Entity implementation class for Entity: Permissions_Master.<p>
  * 
- * Database table PERMISSIONS_MASTER defines all possible permissions. Each permission has an associated description.<p>
+ * Database table PERMISSIONS_MASTER defines all possible permissions. Each permission has an associated description.
  * 
  * <pre><code>  Database table: PERMISSIONS_MASTER
-S *  Schema:         DB2ADMIN</code></pre>
+ *  Schema:         DB2ADMIN</code></pre>
  */
 @Entity
 @Table(name="PERMISSIONS_MASTER", schema="DB2ADMIN")

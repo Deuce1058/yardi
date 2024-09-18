@@ -88,6 +88,9 @@ public class EditPwdPolicyRequest {
 	 */
 	private String cantContainPwd;
 
+	/**
+	 * Default constructor
+	 */
 	public EditPwdPolicyRequest() {
 	}
 
