@@ -15,6 +15,9 @@ import jakarta.persistence.*;
 @Entity
 @Table(name="GROUPS_MASTER", schema="DB2ADMIN")
 public class Groups_Master implements Serializable {
+	/**
+	 * Serial version ID
+	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -60,6 +63,9 @@ public class Groups_Master implements Serializable {
 	@OneToMany(mappedBy = "ugGroupsMaster")
 	private List<User_Groups> gmUserGroups;
 
+	/**
+	 * Default constructor
+	 */
 	public Groups_Master() {
 		/*debug*/
 		System.out.println("com.yardi.ejb.model.Groups_Master.Login_Groups_Master() 0000");

@@ -176,7 +176,10 @@ public class EditUserProfileRequest {
 	 */
 	@JsonIgnore
 	private short passwordAttempts;
-	
+
+	/**
+	 * Default constructor
+	 */
 	public EditUserProfileRequest() {
 		System.out.println("com.yardi.shared.QSECOFR.EditUserProfileRequest.EditUserProfileRequest()");
 	}

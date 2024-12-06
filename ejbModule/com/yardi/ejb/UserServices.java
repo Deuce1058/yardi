@@ -73,7 +73,7 @@ public interface UserServices {
 	 */
 	String getFeedback();
     /**
-     * Returns the URL of the page for the group that the user belongs to.<p>
+     * Returns the URL of the page for the group that the user belongs to.
      * @return the user's initial page.
      */
 	String getInitialPage();
@@ -106,7 +106,7 @@ public interface UserServices {
 	 */
 	void setLoginRequest(LoginRequest loginRequest);
 	/** 
-	 * Set field <i>sessionID</i>.<p>
+	 * Set field <code>sessionID</code>.
 	 * 
 	 * @param sessionID the value to set. Equivalent to HttpServletRequest.getSession().getId().
 	 */

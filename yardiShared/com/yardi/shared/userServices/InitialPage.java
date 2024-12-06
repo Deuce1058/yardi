@@ -9,23 +9,54 @@ package com.yardi.shared.userServices;
  * @author Jim 	
  */
 public class InitialPage {
+	/**
+	 * The name of the page
+	 */
 	private String page = "";
+	
+	/**
+	 * The URL of the page
+	 */
 	private String url = "";
 
+	/**
+	 * Constructor using all fields
+	 * @param page the name of the page
+	 * @param url the URL of the page
+	 */
 	public InitialPage(String page, String url) {
 		this.page = page;
 		this.url = url;
 	}
 	
+	/**
+	 * Return the page name
+	 * @return page name
+	 */
 	public String getPage() {
 		return page;
 	}
-	public void setPage(String page) {
-		this.page = page;
-	}
+	
+	/**
+	 * Return the URL of the page
+	 * @return URL of the page
+	 */
 	public String getUrl() {
 		return url;
 	}
+	
+	/**
+	 * Set page name to the given String
+	 * @param page name value to set
+	 */
+	public void setPage(String page) {
+		this.page = page;
+	}
+	
+	/**
+	 * Set page's URL to the given String
+	 * @param url value to set
+	 */
 	public void setUrl(String url) {
 		this.url = url;
 	}

@@ -803,7 +803,7 @@ public class UserServicesBean implements UserServices {
 	}
 	
 	/** 
-	 * Set field <i>sessionID</i>.<p>
+	 * Set field <i>sessionID</i>.
 	 * 
 	 * @param sessionID the value to set. Equivalent to HttpServletRequest.getSession().getId().
 	 */

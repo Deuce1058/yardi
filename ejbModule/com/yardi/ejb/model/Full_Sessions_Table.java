@@ -14,6 +14,9 @@ import jakarta.persistence.*;
 @Entity
 @Table(name="SESSIONS_TABLE", schema="DB2ADMIN")
 public class Full_Sessions_Table implements Serializable {
+	/**
+	 * Serial version ID
+	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -75,6 +78,9 @@ public class Full_Sessions_Table implements Serializable {
 	@Column(name="ST_RRN")
 	private long stRrn;
 	
+	/**
+	 * Default constructor
+	 */
 	public Full_Sessions_Table() {
 		/*debug*/
 		System.out.println("com.yardi.ejb.model.Full_Sessions_Table.Full_Sessions_Table() 0000 ");

@@ -26,6 +26,9 @@ public class LoginResponse {
 	 */
 	private String msgDescription;
 
+	/**
+	 * Default constructor
+	 */
 	public LoginResponse() {
 	}
 

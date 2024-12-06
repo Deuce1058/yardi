@@ -4,6 +4,9 @@ import com.yardi.shared.QSECOFR.EditUserProfileRequest;
 
 import jakarta.ejb.Local;
 
+/**
+ * Defines methods used in the Edit User Profile application
+ */
 @Local
 public interface EditUserProfileCTRL {
 	/**

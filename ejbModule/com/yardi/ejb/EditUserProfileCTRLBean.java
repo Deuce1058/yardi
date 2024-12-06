@@ -43,6 +43,9 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 * Injected reference to EJB com.yardi.ejb.SessionsTableBean
 	 */
 	@EJB SessionsTable sessionsTableBean;
+	/**
+	 * Allows explicit management of transaction boundaries
+	 */
 	@Resource UserTransaction tx;
 	/**
 	 * POJO representation of the web request. Also used as part of the web response.
@@ -52,7 +55,10 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 * Clients read this field to determine the status of the the most recent method call that provides feedback.
 	 */
 	private String[] feedback;
-	
+
+	/**
+	 * Default constructor
+	 */
 	public EditUserProfileCTRLBean() {
         /*debug*/
     	System.out.println("com.yardi.ejb.EditUserProfileCTRLBean() ");
@@ -507,6 +513,9 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 		userProfileBean.persist(profile);
 	}
 
+	/**
+	 * Post construct callback
+	 */
 	@PostConstruct
 	private void postConstructCallback() {
 		/*debug*/

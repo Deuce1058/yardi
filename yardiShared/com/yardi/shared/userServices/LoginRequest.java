@@ -47,6 +47,9 @@ public class LoginRequest {
 	 */
 	private String sessionID;
 	
+	/**
+	 * Default constructor
+	 */
 	public LoginRequest() {
 	}
 
