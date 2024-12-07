@@ -1,5 +1,6 @@
 package com.yardi.shared.helpdesk;
 
+
 /**
  * History of the dates on which password was changed and the number of times the password was changed on that date.<p> 
  * JPQL Query uses this class to store a List of each date on which the user changed their password and the count of how many times the password changed on a given date. 
