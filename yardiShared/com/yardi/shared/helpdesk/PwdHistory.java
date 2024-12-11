@@ -20,7 +20,7 @@ public class PwdHistory {
 	private long dateCount;  
 
 	public PwdHistory() {
-		System.out.println("com.yardi.shared.helpdesk.PwdHistory PwdHistory() 0000");
+		System.out.println("com.yardi.shared.helpdesk.PwdHistory.PwdHistory() 0000");
 	}
 	
 	/**
@@ -29,7 +29,7 @@ public class PwdHistory {
 	 * @param dateCount number of tokens added on a given date
 	 */
 	public PwdHistory(java.sql.Date dateAdded, long dateCount) {
-		System.out.println("com.yardi.shared.helpdesk.PwdHistory PwdHistory() 0001");
+		System.out.println("com.yardi.shared.helpdesk.PwdHistory.PwdHistory(Date, long) 0001");
 		this.dateAdded = dateAdded; 
 		this.dateCount = dateCount; 
 	}
@@ -39,6 +39,7 @@ public class PwdHistory {
 	 * @return date token was added
 	 */
 	public java.sql.Date getDateAdded() {
+		System.out.println("com.yardi.shared.helpdesk.PwdHistory.getDateAdded() 0002");
 		return dateAdded;
 	}
 
@@ -47,6 +48,7 @@ public class PwdHistory {
 	 * @return number of times password was changed on a given date
 	 */
 	public long getDateCount() {
+		System.out.println("com.yardi.shared.helpdesk.PwdHistory.getDateCount() 0003");
 		return dateCount;
 	}
 
@@ -55,6 +57,7 @@ public class PwdHistory {
 	 * @param dateAdded date token was added
 	 */
 	public void setDateAdded(java.sql.Date dateAdded) {
+		System.out.println("com.yardi.shared.helpdesk.PwdHistory.setDateAdded() 0004");
 		this.dateAdded = dateAdded;
 	}
 
@@ -63,6 +66,7 @@ public class PwdHistory {
 	 * @param dateCount number of times password was changed on a given date
 	 */
 	public void setDateCount(long dateCount) {
+		System.out.println("com.yardi.shared.helpdesk.PwdHistory.setDateCount() 0005");
 		this.dateCount = dateCount;
 	}	
 }
