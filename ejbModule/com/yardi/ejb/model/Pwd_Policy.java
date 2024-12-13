@@ -196,7 +196,14 @@ public class Pwd_Policy implements Serializable {
 	 * the new password may contain the current password. Not stored in PWD_POLICY database table.
 	 */
 	@Transient private boolean ppCantContainPwd;
-		
+
+	/**
+	 * Column: PP_TEMP_PWD_TTL<p>
+	 * Temporary password time to live in minutes.
+	 */
+	@Column(name="PP_TEMP_PWD_TTL") 
+	private short ppTempPwdTtl; 
+
 	/**
 	 * Column: PP_RRN<p>
 	 * 
@@ -231,11 +238,13 @@ public class Pwd_Policy implements Serializable {
 	 * @param ppNbrSpecial Defines the minimum number of special characters required in the new password
 	 * @param pp_cant_contain_id Determines whether the new password may contain the user ID in any case
 	 * @param pp_cant_contain_pwd Determines whether the new password may contain the current password
+	 * @param ppTempPwdTtl Temporary password time to live in minutes
 	 */
 	public Pwd_Policy(short ppDays, short ppNbrUnique, short ppMaxSignonAttempts, short ppPwdMinLen, 
 			String pp_upper_rqd, String pp_lower_rqd, String pp_number_rqd,
 			String pp_special_rqd, short ppMaxPwdLen, short ppMaxRepeatChar, short ppNbrDigits,
-			short ppNbrUpper, short ppNbrLower, short ppNbrSpecial, String pp_cant_contain_id, String pp_cant_contain_pwd
+			short ppNbrUpper, short ppNbrLower, short ppNbrSpecial, String pp_cant_contain_id, String pp_cant_contain_pwd,
+			short ppTempPwdTtl
 			) {
 		//debug
 		System.out.println("com.yardi.ejb.model.Pwd_Policy Pwd_Policy() 0000 ");
@@ -433,7 +442,7 @@ public class Pwd_Policy implements Serializable {
 	 */
 	public short getPpPwdMinLen() {
 		//debug 
-		System.out.println("com.yardi.ejb.model.Pwd_Policy getPpPwdMinLen() 0000 ");
+		System.out.println("com.yardi.ejb.model.Pwd_Policy getPpPwdMinLen() 004D ");
 		//debug
 		return ppPwdMinLen;
 	}
@@ -458,6 +467,17 @@ public class Pwd_Policy implements Serializable {
 		System.out.println("com.yardi.ejb.model.Pwd_Policy getPpSpecialRqd() 0008 ");
 		//debug
 		return ppSpecialRqd;
+	}
+
+	/**
+	 * Return temporary password time to live in minutes
+	 * @return temporary password time to live in minutes
+	 */
+	public short getPpTempPwdTtl() {
+		//debug
+		System.out.println("com.yardi.ejb.model.Pwd_Policy getPpTempPwdTtl() 004E ");
+		//debug
+		return ppTempPwdTtl;
 	}
 
 	/**
@@ -663,7 +683,7 @@ public class Pwd_Policy implements Serializable {
 		this.pp_special_rqd = pp_special_rqd;
 		setPpSpecialRqd();
 	}
-	
+
 	/**
 	 * Upper case character required is set based on the value of field <i>ppUpperRqd</i>.<p> 
 	 * Set field <i>pp_upper_rqd</i> to "y" if <i>ppUpperRqd</i> is true.<br> 
@@ -697,7 +717,7 @@ public class Pwd_Policy implements Serializable {
 		this.pp_upper_rqd = pp_upper_rqd;
 		setPpUpperRqd();
 	}
-
+	
 	/**
 	 * Password cant contain user ID is set based on the value of field <i>pp_cant_contain_id</i>.<p> 
 	 * Enforces password cant contain user ID.<br>
@@ -758,7 +778,7 @@ public class Pwd_Policy implements Serializable {
 		//debug
 		this.ppDays = ppDays;
 	}
-	
+
 	/**
 	 * Lower case character required is set based on the value of field <i>pp_lower_rqd</i>.<p> 
 	 * Enforces at least one lower case character required.<br>
@@ -783,7 +803,7 @@ public class Pwd_Policy implements Serializable {
 			ppLowerRqd = false;
 		}
 	}
-
+	
 	/**
 	 * Maximum password length is set to the given short.
 	 * @param ppMaxPwdLen the value to set
@@ -827,7 +847,7 @@ public class Pwd_Policy implements Serializable {
 		//debug
 		ppMaxRepeatChar = null;
 	}
-	
+
 	/**
 	 * Maximum number of invalid login attempts since the most recent successful login is set to the given short.
 	 * @param ppMaxSignonAttempts the value to set
@@ -849,7 +869,7 @@ public class Pwd_Policy implements Serializable {
 		//debug
 		this.ppNbrDigits = ppNbrDigits;
 	}
-
+	
 	/**
 	 * If required, set number of digits required to <i>null</i> to indicate that the rule is not enforced.<p> Setting a value by using a parm that 
 	 * has a <i>null</i> value causes NullPointerException.
@@ -904,7 +924,7 @@ public class Pwd_Policy implements Serializable {
 		//debug
 		ppNbrSpecial = null;
 	}
-	
+
 	/**
 	 * Number of unique tokens to store per user is set to the given Short.<p> Enforces unique passwords.
 	 * @param ppNbrUnique the value to set
@@ -915,7 +935,7 @@ public class Pwd_Policy implements Serializable {
 		//debug
 		this.ppNbrUnique = ppNbrUnique;
 	}
-
+	
 	/**
 	 * Number of upper case characters required is set to the given short.
 	 * @param ppNbrUpper the value to set
@@ -937,7 +957,7 @@ public class Pwd_Policy implements Serializable {
 		//debug
 		ppNbrUpper = null;
 	}
-	
+
 	/**
 	 * At least one number is required is set based on the value of field <i>pp_number_rqd</i>.<p> 
 	 * Enforces number required.<br>
@@ -973,7 +993,7 @@ public class Pwd_Policy implements Serializable {
 		//debug
 		this.ppPwdMinLen = ppPwdMinLen;
 	}
-
+	
 	/**
 	 * The relative record number (sequence) is set to the given long. 
 	 * @param ppRrn the value to set
@@ -995,7 +1015,7 @@ public class Pwd_Policy implements Serializable {
 		//debug
 		ppRrn = null;
 	}
-	
+
 	/**
 	 * At least one special character is required is set based on the value of field <i>pp_special_rqd</i>.<p> 
 	 * Enforces at least one special character required.<br>
@@ -1019,6 +1039,17 @@ public class Pwd_Policy implements Serializable {
 			//debug
 			ppSpecialRqd = false;
 		}
+	}
+	
+	/**
+	 * Set temporary password time to live in minutes to the given short
+	 * @param ppTempPwdTtl temporary password time to live in minutes
+	 */
+	public void setPpTempPwdTtl(short ppTempPwdTtl) {
+		//debug
+		System.out.println("com.yardi.ejb.model.Pwd_Policy setPpTempPwdTtl() 004C ");
+		//debug
+		this.ppTempPwdTtl = ppTempPwdTtl;
 	}
 
 	/**
@@ -1054,7 +1085,7 @@ public class Pwd_Policy implements Serializable {
 				+ ", ppLowerRqd=" + ppLowerRqd + ", ppNumberRqd=" + ppNumberRqd + ", ppSpecialRqd=" + ppSpecialRqd 
 				+ ", ppPwdMaxLen=" + ppMaxPwdLen + ", ppMaxRepeatChar=" + ppMaxRepeatChar + ", ppNbrDigits=" + ppNbrDigits 
 				+ ", ppNbrUpper=" + ppNbrUpper + ", ppNbrLower=" + ppNbrLower + ", ppNbrSpecial=" + ppNbrSpecial 
-				+ ", ppCantContainID=" + ppCantContainId + ", ppCantContainPwd=" + ppCantContainPwd
+				+ ", ppCantContainID=" + ppCantContainId + ", ppCantContainPwd=" + ppCantContainPwd + ", ppTempPwdTtl=" + ppTempPwdTtl
 				+ ", ppRrn=" + ppRrn 
 				+ "]";
 	}
