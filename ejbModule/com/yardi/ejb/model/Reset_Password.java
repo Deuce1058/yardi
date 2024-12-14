@@ -88,7 +88,6 @@ public class Reset_Password implements Serializable {
 	 * @return account active flag
 	 */
 	public String getUpActiveYn() {
-		System.out.println("com.yardi.ejb.model.Reset_Password.getUpActiveYn() 0001");
 		return this.upActiveYn;
 	}
 
@@ -97,7 +96,6 @@ public class Reset_Password implements Serializable {
 	 * @return date and time when the user profile became disabled
 	 */
 	public Timestamp getUpDisabledDate() {
-		System.out.println("com.yardi.ejb.model.Reset_Password.getUpDisabledDate() 0002");
 		return this.upDisabledDate;
 	}   
 	
@@ -106,7 +104,6 @@ public class Reset_Password implements Serializable {
 	 * @return date and time of most recent successful login
 	 */
 	public Timestamp getUpLastLoginDate() {
-		System.out.println("com.yardi.ejb.model.Reset_Password.getUpLastLoginDate() 0003");
 		return this.upLastLoginDate;
 	}
 
@@ -115,7 +112,6 @@ public class Reset_Password implements Serializable {
 	 * @return number of invalid password attempts
 	 */
 	public short getUpPwdAttempts() {
-		System.out.println("com.yardi.ejb.model.Reset_Password.getUpPwdAttempts() 0004");
 		return this.upPwdAttempts;
 	}   
 	
@@ -124,7 +120,6 @@ public class Reset_Password implements Serializable {
 	 * @return date and time when the password must be changed
 	 */
 	public Date getUpPwdexpd() {
-		System.out.println("com.yardi.ejb.model.Reset_Password.getUpPwdexpd() 0005");
 		return this.upPwdexpd;
 	}
 
@@ -133,7 +128,6 @@ public class Reset_Password implements Serializable {
 	 * @return user's hashed temporary password
 	 */
 	public String getUpTempPwd() {
-		System.out.println("com.yardi.ejb.model.Reset_Password.getUpTempPwd() 0006");
 		return this.upTempPwd;
 	}   
 	
@@ -142,7 +136,6 @@ public class Reset_Password implements Serializable {
 	 * @return ID column
 	 */
 	public String getUpUserid() {
-		System.out.println("com.yardi.ejb.model.Reset_Password.getUpUserid() 0007");
 		return this.upUserid;
 	}
 
@@ -152,7 +145,7 @@ public class Reset_Password implements Serializable {
 	 * @param upActiveYn user profile active flag
 	 */
 	public void setUpActiveYn(String upActiveYn) {
-		System.out.println("com.yardi.ejb.model.Reset_Password.setUpActiveYn() 0008");
+		System.out.println("com.yardi.ejb.model.Reset_Password.setUpActiveYn() 0001");
 		this.upActiveYn = upActiveYn;
 	}   
 	
@@ -161,7 +154,7 @@ public class Reset_Password implements Serializable {
 	 * @param upDisabledDate date and time when the user profile became disabled
 	 */
 	public void setUpDisabledDate(Timestamp upDisabledDate) {
-		System.out.println("com.yardi.ejb.model.Reset_Password.setUpDisabledDate() 0009");
+		System.out.println("com.yardi.ejb.model.Reset_Password.setUpDisabledDate() 0002");
 		this.upDisabledDate = upDisabledDate;
 	}
 
@@ -170,7 +163,7 @@ public class Reset_Password implements Serializable {
 	 * @param upLastLoginDate date and time of most recent successful login
 	 */
 	public void setUpLastLoginDate(Timestamp upLastLoginDate) {
-		System.out.println("com.yardi.ejb.model.Reset_Password.setUpLastLoginDate() 000A");
+		System.out.println("com.yardi.ejb.model.Reset_Password.setUpLastLoginDate() 0003");
 		this.upLastLoginDate = upLastLoginDate;
 	}
 	
@@ -179,7 +172,7 @@ public class Reset_Password implements Serializable {
 	 * @param upPwdAttempts number of invalid password attempts
 	 */
 	public void setUpPwdAttempts(short upPwdAttempts) {
-		System.out.println("com.yardi.ejb.model.Reset_Password.setUpPwdAttempts() 000B");
+		System.out.println("com.yardi.ejb.model.Reset_Password.setUpPwdAttempts() 0004");
 		this.upPwdAttempts = upPwdAttempts;
 	}
 
@@ -188,7 +181,7 @@ public class Reset_Password implements Serializable {
 	 * @param upPwdexpd date and time when password must be changed
 	 */
 	public void setUpPwdexpd(java.sql.Timestamp upPwdexpd) {
-		System.out.println("com.yardi.ejb.model.Reset_Password.setUpPwdexpd() 000C");
+		System.out.println("com.yardi.ejb.model.Reset_Password.setUpPwdexpd() 0005");
 		this.upPwdexpd = upPwdexpd;
 	}   
 	
@@ -197,7 +190,7 @@ public class Reset_Password implements Serializable {
 	 * @param upTempPwd the user's hashed temporary password
 	 */
 	public void setUpTempPwd(String upTempPwd) {
-		System.out.println("com.yardi.ejb.model.Reset_Password.setUpTempPwd() 000D");
+		System.out.println("com.yardi.ejb.model.Reset_Password.setUpTempPwd() 0006");
 		this.upTempPwd = upTempPwd;
 	}
 
@@ -206,7 +199,7 @@ public class Reset_Password implements Serializable {
 	 * @param upUserid user ID
 	 */
 	public void setUpUserid(String upUserid) {
-		System.out.println("com.yardi.ejb.model.Reset_Password.setUpUserid() 000E");
+		System.out.println("com.yardi.ejb.model.Reset_Password.setUpUserid() 0007");
 		this.upUserid = upUserid;
 	}   
 }
