@@ -52,7 +52,6 @@ public class User_Profile_Existence_Check implements Serializable {
 	 * @return User ID
 	 */
 	public String getUpUserid() {
-		System.out.println("com.yardi.ejb.model.getUpUserid() 0002");
 		return upUserid;
 	}
 
@@ -61,7 +60,7 @@ public class User_Profile_Existence_Check implements Serializable {
 	 * @param upUserid user ID
 	 */
 	public void setUpUserid(String upUserid) {
-		System.out.println("com.yardi.ejb.model.setUpUserid() 0003");
+		System.out.println("com.yardi.ejb.model.setUpUserid() 0002");
 		this.upUserid = upUserid;
 	}   
 }
