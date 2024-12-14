@@ -79,7 +79,6 @@ public class ResetPwdRequest {
      * @return action to perform
      */
 	public String getAction() {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest getAction() 0001");
 		return action;
 	}
 
@@ -88,7 +87,6 @@ public class ResetPwdRequest {
 	 * @return message description
 	 */
 	public String getMsgDescription() {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest getMsgDescription() 0002");
 		return msgDescription;
 	}
     
@@ -97,7 +95,6 @@ public class ResetPwdRequest {
 	 * @return message ID
 	 */
 	public String getMsgID() {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest getMsgID() 0003");
 		return msgID;
 	}
 	
@@ -106,7 +103,6 @@ public class ResetPwdRequest {
 	 * @return new password
 	 */
 	public String getNewPassword() {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest getNewPassword() 0004");
 		return newPassword;
 	}
 	
@@ -115,7 +111,6 @@ public class ResetPwdRequest {
      * @return history of dates on which password was changed and number of times password was changed on that date
      */
     public List<PwdHistory> getPwdHistory() {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest getPwdHistory() 0015");
 		return pwdHistory;
 	}
 	
@@ -126,7 +121,6 @@ public class ResetPwdRequest {
 	 * @return user profile active flag
 	 */
 	public String getUpActiveYn() {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest getUpActiveYn() 0005");
 		return upActiveYn;
 	}
 	
@@ -137,7 +131,6 @@ public class ResetPwdRequest {
 	 * @return date and time on which the user profile was disabled
 	 */
 	public java.sql.Timestamp getUpDisabledDate() {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest getUpDisabledDate() 0006");
 		return upDisabledDate;
 	}
 	
@@ -148,7 +141,6 @@ public class ResetPwdRequest {
 	 * @return date and time of the most recent successful login
 	 */
 	public java.sql.Timestamp getUpLastLoginDate() {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest getUpLastLoginDate() 0007");
 		return upLastLoginDate;
 	}
 	
@@ -159,7 +151,6 @@ public class ResetPwdRequest {
 	 * @return number of failed password attempts
 	 */
 	public short getUpPwdAttempts() {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest getUpPwdAttempts() 0008");
 		return upPwdAttempts;
 	}
 	
@@ -170,7 +161,6 @@ public class ResetPwdRequest {
 	 * @return date and time on which the password expires
 	 */
 	public java.sql.Timestamp getUpPwdexpd() {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest getUpPwdexpd() 0009");
 		return upPwdexpd;
 	}
 	
@@ -181,7 +171,6 @@ public class ResetPwdRequest {
 	 * @return user ID
 	 */
 	public String getUpUserid() {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest getUpUserid() 000A");
 		return upUserid;
 	}
 	
@@ -190,7 +179,7 @@ public class ResetPwdRequest {
 	 * @param action to perform: find or resetPwd
 	 */
 	public void setAction(String action) {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setAction() 000B");
+    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setAction() 0001");
 		this.action = action;
 	}
 	
@@ -199,7 +188,7 @@ public class ResetPwdRequest {
 	 * @param msgDescription message description 
 	 */
 	public void setMsgDescription(String msgDescription) {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setMsgDescription() 000C");
+    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setMsgDescription() 0002");
 		this.msgDescription = msgDescription;
 	}
 	
@@ -208,7 +197,7 @@ public class ResetPwdRequest {
 	 * @param msgID the message ID to set
 	 */
 	public void setMsgID(String msgID) {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setMsgID() 000D");
+    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setMsgID() 0003");
 		this.msgID = msgID;
 	}
 	
@@ -217,7 +206,7 @@ public class ResetPwdRequest {
 	 * @param newPassword new password
 	 */
 	public void setNewPassword(String newPassword) {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setNewPassword() 000E");
+    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setNewPassword() 0004");
 		this.newPassword = newPassword;
 	}
 	
@@ -226,7 +215,7 @@ public class ResetPwdRequest {
      * @param pwdHistory history of dates on which password was changed and number of times password was changed on that date
      */
 	public void setPwdHistory(List<PwdHistory> pwdHistory) {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setPwdHistory() 0016");
+    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setPwdHistory() 0005");
 		this.pwdHistory = pwdHistory;
 	}
 	
@@ -237,7 +226,7 @@ public class ResetPwdRequest {
 	 * @param upActiveYn user profile active flag 
 	 */
 	public void setUpActiveYn(String upActiveYn) {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setUpActiveYn() 000F");
+    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setUpActiveYn() 0006");
 		this.upActiveYn = upActiveYn;
 	}
 	
@@ -248,7 +237,7 @@ public class ResetPwdRequest {
 	 * @param upDisabledDate date and time on which the user profile was disabled 
 	 */
 	public void setUpDisabledDate(java.sql.Timestamp upDisabledDate) {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setUpDisabledDate() 0010");
+    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setUpDisabledDate() 0007");
 		this.upDisabledDate = upDisabledDate;
 	}
 	
@@ -259,7 +248,7 @@ public class ResetPwdRequest {
 	 * @param upLastLoginDate date and time of the most recent successful login
 	 */
 	public void setUpLastLoginDate(java.sql.Timestamp upLastLoginDate) {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setUpLastLoginDate() 0011");
+    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setUpLastLoginDate() 0008");
 		this.upLastLoginDate = upLastLoginDate;
 	}
 	
@@ -270,7 +259,7 @@ public class ResetPwdRequest {
 	 * @param upPwdAttempts number of failed password attempts
 	 */
 	public void setUpPwdAttempts(short upPwdAttempts) {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setUpPwdAttempts() 0012");
+    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setUpPwdAttempts() 0009");
 		this.upPwdAttempts = upPwdAttempts;
 	}
 	
@@ -281,7 +270,7 @@ public class ResetPwdRequest {
 	 * @param upPwdexpd date and time on which the password expires
 	 */
 	public void setUpPwdexpd(java.sql.Timestamp upPwdexpd) {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setUpPwdexpd() 0013");
+    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setUpPwdexpd() 000A");
 		this.upPwdexpd = upPwdexpd;
 	}
 	
@@ -292,7 +281,7 @@ public class ResetPwdRequest {
 	 * @param upUserid user ID
 	 */
 	public void setUpUserid(String upUserid) {
-    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setUpUserid() 0014");
+    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setUpUserid() 000B");
 		this.upUserid = upUserid;
 	}
 }
