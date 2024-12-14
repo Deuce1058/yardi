@@ -17,6 +17,8 @@ import jakarta.persistence.metamodel.EntityType;
 import com.yardi.ejb.model.User_Profile;
 import com.yardi.ejb.model.Full_User_Profile;
 import com.yardi.ejb.model.Pwd_Policy;
+import com.yardi.ejb.model.Reset_Password;
+import com.yardi.ejb.model.Update_Temp_Password;
 import com.yardi.shared.userServices.PasswordAuthentication;
 
 /**
@@ -795,5 +797,106 @@ public class UserProfileBean implements UserProfile {
 		isJoined();
 		this.userProfile = userProfile;
 		isManaged(this.userProfile);
+	}
+	
+	/**
+	 * Determine whether a row exists in database table USER_PROFILE for the given user ID.<p>
+	 * The entity returned by the query is immediately detached because the only purpose of the entity is to determine whether a row exists. The entity does 
+	 * not need to be tracked.
+	 * @param userId user ID
+	 * @return boolean indicating whether a row exists in database table USER_PROFILE for the given user ID
+	 */
+	public boolean doesUserExist(String userId) {
+		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean doesUserExist() 002C ");
+		//debug
+		isJoined();
+		Long count = em.createQuery("SELECT COUNT(u) FROM User_Profile_Existence_Check u WHERE u.userId = :userId", Long.class)
+				.setParameter("userId", userId)
+				.getSingleResult();
+		return count > 0;
+	}
+	
+	private boolean isManaged(Reset_Password resetPassword) {
+		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean isManaged() 002F ");
+		//debug
+  		
+  		if (resetPassword==null) {
+  	  		System.out.println(
+  	  				  "com.yardi.ejb.UserProfileBean.isManaged() 0030 "
+  	  				+ "\n"
+	  				+ "   em.contains(Reset_Password)=false"
+	  				);
+	  		return false;
+  		} 
+  		
+  		if (isEntity(resetPassword.getClass())==false) {
+  	  		System.out.println(
+	  				  "com.yardi.ejb.UserProfileBean.isManaged() 00032 "
+	  				+ "\n"
+	  				+ "   em.contains(Reset_Password)=false"
+	  				);
+	  		return false;
+  		}
+
+		System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 0033 "
+				+ "\n "
+				+ "   em.contains(Reset_Password)="
+				+ em.contains(resetPassword)
+				);
+    	return em.contains(resetPassword);
+	}
+	
+	private boolean isManaged(Update_Temp_Password updateTempPassword) {
+		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean isManaged() 0035 ");
+		//debug
+  		
+  		if (updateTempPassword==null) {
+  	  		System.out.println(
+  	  				  "com.yardi.ejb.UserProfileBean.isManaged() 0036 "
+  	  				+ "\n"
+	  				+ "   em.contains(Update_Temp_Password)=false"
+	  				);
+	  		return false;
+  		} 
+  		
+  		if (isEntity(updateTempPassword.getClass())==false) {
+  	  		System.out.println(
+	  				  "com.yardi.ejb.UserProfileBean.isManaged() 00037 "
+	  				+ "\n"
+	  				+ "   em.contains(Update_Temp_Password)=false"
+	  				);
+	  		return false;
+  		}
+
+		System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 0038 "
+				+ "\n "
+				+ "   em.contains(Update_Temp_Password)="
+				+ em.contains(updateTempPassword)
+				);
+    	return em.contains(updateTempPassword);
+	}
+	
+	public Reset_Password findUserProfileForPwdReset(String userID) {
+		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean findUserProfileForPwdReset() 002D ");
+		//debug
+		isJoined();
+		Reset_Password resetPassword = em.find(Reset_Password.class, userID);
+	    isManaged(resetPassword); 
+	    return resetPassword;
+	}
+	
+	public Update_Temp_Password merge(Update_Temp_Password updateTempPassword) {
+		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean merge() 0034 ");
+		//debug
+		isJoined();
+		isManaged(updateTempPassword);
+		Update_Temp_Password mergedTempPassword = em.merge(updateTempPassword);
+		isManaged(mergedTempPassword);
+		return mergedTempPassword;
 	}
 }
