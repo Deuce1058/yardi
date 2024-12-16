@@ -126,6 +126,27 @@ public class UtilsBean implements Utils {
     }
     
     /**
+	 * Attempt to roll back the transaction
+	 * @param tx - The transaction to roll back
+	 */
+	public void rollback(UserTransaction tx) {
+		//debug
+		System.out.println("om.yardi.ejb.util.UtilsBean.rollback() 0011 ");
+		//debug
+		try {
+			tx.rollback();
+		} catch (Exception e) {
+			System.out.println("om.yardi.ejb.util.UtilsBean.rollback() 0012 "
+					+ "\n"
+					+ "   exception="
+					+ e
+					);	
+			e.printStackTrace();
+		}
+		txStatus(tx);
+	}
+	
+	/**
 	 * Log the transaction status
 	 */
 	public void txStatus(UserTransaction tx) {
@@ -184,4 +205,5 @@ public class UtilsBean implements Utils {
   				+ status
   				);
 	}
+
 }
