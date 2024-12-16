@@ -1,5 +1,6 @@
 package com.yardi.ejb;
 
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
@@ -12,6 +13,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.metamodel.EntityType;
 
 import com.yardi.ejb.model.Pwd_Policy;
+import com.yardi.shared.helpdesk.PwdHistory;
 
 /**
  * Session Bean implementation of methods for working with user tokens. 
@@ -111,6 +113,29 @@ public class UniqueTokensBean implements UniqueTokens {
     }
 	
     /**
+	 * Find all the user's tokens and count the number of tokens for each date.<p>
+	 * This list appears on the password reset page used by the help desk. It shows each time the user has reset their password and the number of times on each 
+	 * day that the user reset their password 
+	 * @param userID user ID
+	 * @return List of the user's tokens with a count of the number of tokens there are on each date
+	 */
+	public List<PwdHistory> findTokensWithCount(String userID) {
+		//debug
+		System.out.println("com.yardi.ejb.UniqueTokensBean findTokensWithCount() 0021 ");
+		//debug
+		isJoined();
+		TypedQuery<PwdHistory> qry = em.createQuery(
+				"SELECT NEW com.yardi.shared.helpdesk.PwdHistory(u.up1DateAdded, COUNT(u)) " + 
+	    		"FROM Unique_Tokens u " + 
+	    		"WHERE u.up1UserName = :userID " + 
+	    		"ORDER BY t.up1DateAdded DESC, t.up1Rrn DESC" + 
+	    		"GROUP BY u.up1DateAdded",  
+	    		PwdHistory.class);
+		qry.setParameter("userID", userID);
+	    return qry.getResultList(); 
+	}
+			
+	/**
      * Returns a reference to the Pwd_Policy entity from com.yardi.ejb.PasswordPolicyBean.<p>
      * 
      * postConstructCallback() calls this method. On the initial call the <i>pwdPolicy</i> field is null so setPwdPolicy() is called to obtain a
@@ -139,7 +164,7 @@ public class UniqueTokensBean implements UniqueTokens {
 		//debug
 		return pwdPolicy;
 	}
-			
+
 	/**
 	 * Test whether the instance is an entity.
 	 * 
@@ -163,7 +188,7 @@ public class UniqueTokensBean implements UniqueTokens {
 	    return foundEntity;
 	}
 
-	/**
+    /**
      * Test whether the entity manager is participating in a transaction.
      * 
      * @return boolean indicating whether the entity manager is joined to the current transaction. 
@@ -175,9 +200,9 @@ public class UniqueTokensBean implements UniqueTokens {
   				+ em.isJoinedToTransaction()
   				);
 		return em.isJoinedToTransaction();
-	}
-
-    /**
+	} 
+    
+	/**
 	 * Test whether the given Unique_Tokens entity managed.
 	 * 
 	 * @param token the entity to test.
@@ -212,9 +237,9 @@ public class UniqueTokensBean implements UniqueTokens {
 	  			+ em.contains(token)
 	  			);
 		return em.contains(token);  			
-	} 
-    
-	/**
+	}
+
+    /**
 	 * Persist a new Unique_Tokens entity constructed from the supplied parms.
 	 * @param userName user's name
 	 * @param token hashed password
@@ -240,7 +265,7 @@ public class UniqueTokensBean implements UniqueTokens {
     	getPwdPolicy();
     }
 
-    /**
+	/**
      * Remove Unique_Tokens entities by relative record number.
      * @param rrn the relative record number of the entity to remove.
      */
@@ -423,7 +448,7 @@ public class UniqueTokensBean implements UniqueTokens {
 			//debug
 		}
 	}
-
+	
 	/**
 	 * Set Pwd_Policy entity to the reference obtained from com.yardi.ejb.PasswordPoilcyBean
 	 */
@@ -445,8 +470,8 @@ public class UniqueTokensBean implements UniqueTokens {
 			);
 		//debug
 	}
-	
-	/**
+    
+    /**
 	 * Log the string representation of the class instance. 
 	 * @return string representation of the class instance.
 	 */
@@ -455,8 +480,8 @@ public class UniqueTokensBean implements UniqueTokens {
 				+ "\n  "
 				+ this;
 	}
-    
-    /**
+	
+	/**
      * Update the Unique_Tokens entity with the specified relative record number using the given parms.
      * @param up1Rrn relative record number to update.
      * @param up1Token new hashed password value.
@@ -481,5 +506,5 @@ public class UniqueTokensBean implements UniqueTokens {
         t.setUp1Token(up1Token);
         t.setUp1DateAdded(new java.util.Date(time));
         return 1;
-    }
+    } 
 }
