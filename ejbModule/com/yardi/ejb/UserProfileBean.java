@@ -15,6 +15,7 @@ import jakarta.persistence.PersistenceContextType;
 import jakarta.persistence.metamodel.EntityType;
 
 import com.yardi.ejb.model.User_Profile;
+import com.yardi.ejb.util.Utils;
 import com.yardi.ejb.model.Full_User_Profile;
 import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.ejb.model.Reset_Password;
@@ -57,6 +58,10 @@ public class UserProfileBean implements UserProfile {
 	 * EJB com.yardi.ejb.PasswordPolicyBean
 	 */
 	@EJB PasswordPolicy passwordPolicyBean;
+	/**
+	 * EJB com.yardi.ejb.util.UtilsBean
+	 */
+	@EJB Utils utilsBean;
 
     public UserProfileBean() {
     	System.out.println("com.yardi.ejb.UserProfileBean UserProfileBean() 0015 ");
@@ -442,9 +447,9 @@ public class UserProfileBean implements UserProfile {
 		//debug
 		System.out.println("com.yardi.ejb.UserProfileBean findUserProfileForPwdReset() 0039 ");
 		//debug
-		isJoined();
+		utilsBean.isJoined(em);
 		Reset_Password resetPassword = em.find(Reset_Password.class, userID);
-	    isManaged(resetPassword); 
+	    utilsBean.isManaged(em, resetPassword); 
 	    return resetPassword;
 	}
     
@@ -612,88 +617,6 @@ public class UserProfileBean implements UserProfile {
     	return em.contains(pwdPolicy);
 	}
 	
-    /**
-	 * Test whether the persistence context contains the given Reset_Password.<p>
-	 * 
-	 * If <i>resetPassword</i> is null return false.<br><br>
-	 * 
-	 * If <i>resetPassword</i> is not an entity return false
-	 * 
-	 * @param resetPassword entity used to hold user profile details that appear on the password reset page used by the help desk
-	 * @return boolean that indicates whether the entity manager contains the given Reset_Password
-	 */
-	private boolean isManaged(Reset_Password resetPassword) {
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean isManaged() 003A ");
-		//debug
-  		
-  		if (resetPassword==null) {
-  	  		System.out.println(
-  	  				  "com.yardi.ejb.UserProfileBean.isManaged() 003B "
-  	  				+ "\n"
-	  				+ "   em.contains(Reset_Password)=false"
-	  				);
-	  		return false;
-  		} 
-  		
-  		if (isEntity(resetPassword.getClass())==false) {
-  	  		System.out.println(
-	  				  "com.yardi.ejb.UserProfileBean.isManaged() 0003D "
-	  				+ "\n"
-	  				+ "   em.contains(Reset_Password)=false"
-	  				);
-	  		return false;
-  		}
-
-		System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 003E "
-				+ "\n "
-				+ "   em.contains(Reset_Password)="
-				+ em.contains(resetPassword)
-				);
-    	return em.contains(resetPassword);
-	}
-    
-	/**
-	 * Test whether the persistence context contains the given Update_Temp_Password.<p>
-	 * 
-	 * If <i>updateTempPassword</i> is null return false.<br><br>
-	 * 
-	 * If <i>updateTempPassword</i> is not an entity return false
-	 * 
-	 * @param updateTempPassword an entity used to assign a temporary password 
-	 * @return boolean indicating whether the entity manager contains the given Update_Temp_Password 
-	 */
-	private boolean isManaged(Update_Temp_Password updateTempPassword) {
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean isManaged() 0035 ");
-		//debug
-  		
-  		if (updateTempPassword==null) {
-  	  		System.out.println(
-  	  				  "com.yardi.ejb.UserProfileBean.isManaged() 0036 "
-  	  				+ "\n"
-	  				+ "   em.contains(Update_Temp_Password)=false"
-	  				);
-	  		return false;
-  		} 
-  		
-  		if (isEntity(updateTempPassword.getClass())==false) {
-  	  		System.out.println(
-	  				  "com.yardi.ejb.UserProfileBean.isManaged() 00037 "
-	  				+ "\n"
-	  				+ "   em.contains(Update_Temp_Password)=false"
-	  				);
-	  		return false;
-  		}
-
-		System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 0038 "
-				+ "\n "
-				+ "   em.contains(Update_Temp_Password)="
-				+ em.contains(updateTempPassword)
-				);
-    	return em.contains(updateTempPassword);
-	}
-	
 	/**
 	 * Test whether the persistence context contains the given User_Profile.<p>
 	 * 
@@ -803,10 +726,10 @@ public class UserProfileBean implements UserProfile {
 		//debug
 		System.out.println("com.yardi.ejb.UserProfileBean merge() 003C ");
 		//debug
-		isJoined();
-		isManaged(updateTempPassword);
+		utilsBean.isJoined(em);
+		utilsBean.isManaged(em, updateTempPassword);
 		Update_Temp_Password mergedTempPassword = em.merge(updateTempPassword);
-		isManaged(mergedTempPassword);
+		utilsBean.isManaged(em, mergedTempPassword);
 		return mergedTempPassword;
 	}
 	
