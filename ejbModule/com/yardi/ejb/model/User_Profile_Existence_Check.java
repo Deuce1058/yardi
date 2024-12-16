@@ -2,7 +2,6 @@ package com.yardi.ejb.model;
 
 import java.io.Serializable;
 import java.lang.String;
-import javax.persistence.*;
 
 import com.ibm.db2.cmx.annotation.Column;
 import com.ibm.db2.cmx.annotation.Id;
