@@ -3,6 +3,8 @@ package com.yardi.ejb;
 import jakarta.ejb.Local;
 
 import com.yardi.ejb.model.Full_User_Profile;
+import com.yardi.ejb.model.Reset_Password;
+import com.yardi.ejb.model.Update_Temp_Password;
 import com.yardi.ejb.model.User_Profile;
 
 /**
@@ -86,6 +88,14 @@ public interface UserProfile {
 	 */
 	void changeUserToken(final char [] newPassword);
     /**
+	 * Determine whether a row exists in database table USER_PROFILE for the given user ID.<p>
+	 * The entity returned by the query is immediately detached because the only purpose of the entity is to determine whether a row exists. The entity does 
+	 * not need to be tracked.
+     * @param userId user ID
+     * @return boolean indicating whether a row exists in database table USER_PROFILE for the given user ID
+     */
+    boolean doesUserExist(String userId);
+    /**
      * Return the User_Profile entity specified by <i>userName</i>.<p> 
      * 
      * Returns null if the User_Profile entity is not in the persistence context and USER_PROFILE database table has no row matching userName.<p>
@@ -98,7 +108,7 @@ public interface UserProfile {
      * @return User_Profile entity that matches <i>userName</i>.
      */
 	User_Profile find(String userName);
-    /**
+	/**
 	 * Return the Full_User_Profile entity specified by <i>userID</i>.<p>
 	 * 
 	 * Returns null if the Full_User_Profile entity is not in the persistence context and the USER_PROFILE database table has no row matching userID.<br><br>
@@ -111,6 +121,12 @@ public interface UserProfile {
 	 * @return Full_User_Profile that matches <i>userID</i>
 	 */
 	Full_User_Profile findFullUserProfile(String userID);
+    /**
+	 * Retrieve the user profile details that will be displayed on the password reset page used by the helpdesk
+     * @param userID user ID
+     * @return entity that holds user profile details to be displayed on the password reset page
+     */
+    Reset_Password findUserProfileForPwdReset(String userID);
 	/**
 	 * Return the status of the most recent method call that provides feedback.<p>
 	 * Clients call <i>getFeedback()</i> to determine the status of the most recent method call that provides feedback.
@@ -130,13 +146,20 @@ public interface UserProfile {
      * Merges the state in the <i>userProfile</i> field into the persistence context.
      */
 	void loginSuccess();
-    /**
+	/**
      * Merge the given Full_User_Profile state into the persistence context.
      * 
      * @param userProfile entity containing the state to be merged
      * @return the managed Full_User_Profile that the state was merged to
      */
 	Full_User_Profile merge(Full_User_Profile userProfile);
+	/**
+	 * Assign a temporary password by merging an Update_Temp_Password. In case the user profile is disabled, the password attempts and disabled date are cleared 
+	 * to make it appear as if the user is authenticating normally except with a temporary password   
+     * @param updateTempPassword updateTempPassword entity used to assign a temporary password
+     * @return a reference to the managed Update_Temp_Password entity 
+     */
+    Update_Temp_Password merge(Update_Temp_Password updateTempPassword);
 	/**
      * Persist a Full_User_Profile 
      * 
@@ -149,18 +172,18 @@ public interface UserProfile {
 	 * @param userProfile the entity to remove.
 	 */
 	void remove(Full_User_Profile userProfile);
-	/**
+    /**
 	 *  Stateful session bean remove method. Called by clients to release resources used by com.yardi.ejb.UserProfileBean.
 	 */
 	void removeBean();
-	/**
+    /**
 	 * Update the number of invalid password attempts since the last successful login in the User_Profile entity.<p>
 	 * 
 	 * The state stored in the <i>userProfile</i> field is merged into the persistence context.
 	 * @param pwdAttempts the value to set
 	 */
 	void setUpPwdAttempts(short pwdAttempts);
-	/**
+    /**
 	 * Inject the given User_Profile entity.<p>
 	 * 
 	 * During login clients inject the User_Profile entity because a reference has been obtained prior to this point and the class should use that reference
