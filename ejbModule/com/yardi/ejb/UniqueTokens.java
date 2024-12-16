@@ -1,6 +1,9 @@
 package com.yardi.ejb;
 
+import java.util.List;
 import java.util.Vector;
+
+import com.yardi.shared.helpdesk.PwdHistory;
 
 import jakarta.ejb.Local;
 
@@ -10,7 +13,8 @@ import jakarta.ejb.Local;
 @Local
 public interface UniqueTokens {
     /**
-     * Find the Unique_Tokens entity by relative record number.<p>
+     * Find the Unique_Tokens entity by relative record number.
+     * 
      * @param rrn relative record number of the entity to find. 
      * @return Unique_Tokens entity matching the given relative record number. Returns null if the persistence context does not contain a 
      * Unique_Tokens entity for the given relative record number and the UNIQUE_TOKENS database table has no row matching the given relative record number.
@@ -27,14 +31,16 @@ public interface UniqueTokens {
      */
 	Vector<Unique_Tokens> findTokens(String userName);
 	/**
-	 * Persist a new Unique_Tokens entity constructed from the supplied parms.<p>
+	 * Persist a new Unique_Tokens entity constructed from the supplied parms.
+	 * 
 	 * @param userName user's name
 	 * @param token hashed password
 	 * @param dateAdded date token was added
 	 */
 	void persist(String userName, String token, java.util.Date dateAdded);
     /**
-     * Remove Unique_Tokens entities by relative record number.<p>
+     * Remove Unique_Tokens entities by relative record number.
+     * 
      * @param rrn the relative record number of the entity to remove.
      */
 	void remove(long rrn);
@@ -74,11 +80,20 @@ public interface UniqueTokens {
 	 */
 	String stringify();
     /**
-     * Update the Unique_Tokens entity with the specified relative record number using the given parms.<p>
+     * Update the Unique_Tokens entity with the specified relative record number using the given parms.
+     * 
      * @param rrn relative record number to update.
      * @param token new hashed password value.
      * @param time new date added value in mills.
      * @return 1
      */
 	int updateToken(Long rrn, String token, Long time);
-	}
+	/**
+	 * Find all the user's tokens and count the number of tokens for each date.<p>
+	 * This list appears on the password reset page used by the help desk. It shows each time the user has reset their password and the number of times on each 
+	 * day that the user reset their password 
+	 * @param userID user ID
+	 * @return List of the user's tokens with a count of the number of tokens there are on each date
+	 */
+	List<PwdHistory> findTokensWithCount(String userID);
+}
