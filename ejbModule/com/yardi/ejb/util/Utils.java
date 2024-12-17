@@ -34,12 +34,6 @@ public interface Utils {
 	<T> boolean isManaged(EntityManager em, T entity);
 
 	/**
-	 * Attempt to roll back the transaction
-	 * @param tx - The transaction to roll back
-	 */
-	void rollback(UserTransaction tx);
-
-	/**
 	 * Log the transaction status
 	 */
 	void txStatus(UserTransaction tx);
