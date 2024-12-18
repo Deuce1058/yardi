@@ -1,9 +1,7 @@
 package com.yardi.ejb.helpdesk;
 
-import java.security.Timestamp;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.PasswordPolicy;
 import com.yardi.ejb.UniqueTokens;
@@ -18,18 +16,16 @@ import com.yardi.shared.userServices.PasswordAuthentication;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJB;
+import jakarta.ejb.Remove;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionManagement;
 import jakarta.ejb.TransactionManagementType;
-import jakarta.transaction.HeuristicMixedException;
-import jakarta.transaction.HeuristicRollbackException;
-import jakarta.transaction.NotSupportedException;
-import jakarta.transaction.RollbackException;
-import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 
 /**
- * Session Bean implementation class PwdResetCtrlBean
+ * Password reset controller bean controls the password reset process.<p>
+ * Two main functions are performed. findUserDetails() finds the user profile and returns details about the status of the user profile for the helpdesk to review.
+ * resetPwd() sets the temporary password assigned by the helpdesk.  
  */
 @Stateful
 @TransactionManagement(TransactionManagementType.BEAN)
@@ -51,11 +47,20 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
     	System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.PwdResetCtrlBean() 0000 ");
     }
 
-    @PostConstruct
-    private void postConstructCallback() {
-    	System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.postConstructCallback() 0001 ");
-    }    
-    
+    /**
+     * Find user profile details.<p>
+     * The help desk will review the following user profile details returned in the reset password request: user profile active flag, disabled timestamp, 
+     * password expiration timestamp, last login timestamp, number of failed password attempts,<p>
+     * 
+     * {@link com.yardi.ejb.UserProfileBean#findUserProfileForPwdReset(String) userProfileBean.findUserProfileForPwdReset()} returns user profile details for
+     * the helpdesk in entity {@link com.yardi.ejb.model.Reset_Password Reset_Password}. Next the Reset_Password entity is mapped to the
+     * {@link com.yardi.shared.helpdesk.ResetPwdRequest ResetPwdRequest}. The ResetPwdRequest is then returned.<p>
+     * 
+     *  Feedback provided:<br>
+     *  YRD0000 process completed normally<br>
+     *  YRD000D No such user name,<br>
+     *  YRD001F placeholder for java.lang.Exception.getMessage()
+     */
     public ResetPwdRequest findUserDetails() {
     	System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.findUserDetails() 0003 ");
         feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
@@ -96,28 +101,65 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 			resetPwdRequest.setMsgDescription(feedback);
 			return resetPwdRequest;
 		}     
-    }
+    }    
     
-	/**
-	 * Attempt to roll back the transaction
-	 * @param tx - The transaction to roll back
-	 */
-	private void rollback(UserTransaction tx) {
-		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.rollback() 0004 ");
-		try {
-			tx.rollback();
-		} catch (Exception e) {
-			System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.rollback() 0005 "
-					+ "\n"
-					+ "   exception="
-					+ e
-					);	
-			e.printStackTrace();
+    /**
+     * Return feedback from the most recent operation that provides feedback
+     * @return feedback from the most recent operation that provides feedback
+     */
+    public String getFeedback() {
+		return feedback;
+	}
+    
+	/** 
+	* Returns the password policy obtained from 
+	* {@link com.yardi.ejb.PasswordPolicyBean#getPwdPolicy() com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()  } 
+	* @return reference to Pwd_Policy entity 
+	*/ 
+	private Pwd_Policy getPwdPolicy() { 
+		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.getPwdPolicy() 0006	");
+		
+		if (pwd_Policy == null) {
+			setPwdPolicy();
 		}
-		utilsBean.txStatus(tx);
+		
+		return pwd_Policy; 
 	}
 	
-	public com.yardi.shared.helpdesk.ResetPwdRequest resetPwd() {
+	/**
+	 * Post construct callback
+	 */	
+	@PostConstruct
+    private void postConstructCallback() {
+    	System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.postConstructCallback() 0001 ");
+    }
+
+	/**
+	 * Remove bean
+	 */
+	@Remove
+	public void remove() {
+		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.remove() 000B ");
+		userProfileBean.removeBean();
+	}
+
+	/**
+	 * Set the temporary password assigned by the helpdesk in the user profile.<p>
+	 * A new {@link com.yardi.ejb.model.Update_Temp_Password Update_Temp_Password} entity is merged into the persistence context. Contents of the Update_Temp_Password 
+	 * entity are:<br>
+	 * <ul>
+	 *   <li>User id from the password reset request</li>
+	 *   <li>hashed temporary password assigned by the helpdesk</li>
+	 *   <li>password expiration timestamp calculated from LocalDateTime.now() plus the number of minutes before the password expires as defined in password policy  
+	 *   {@link com.yardi.ejb.model.Pwd_Policy#ppTempPwdTtl ppTempPwdTtl}</li>
+	 *   <li>disabled timestamp set to null</li>
+	 *   <li>number of password attempts set to zero</li>
+	 * </ul>
+	 *  
+	 * Feedback provided:<br>
+	 * YRD0000 Process completed normally<p>
+	 */
+	public ResetPwdRequest resetPwd() {
 		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.resetPwd() 0009 ");
 	    feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
 
@@ -151,18 +193,23 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 		}
 	}
 
-	/** 
-	* Returns the password policy obtained from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy(). 
-	* @return reference to Pwd_Policy entity 
-	*/ 
-	private Pwd_Policy getPwdPolicy() { 
-		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.getPwdPolicy() 0006	");
-		
-		if (pwd_Policy == null) {
-			setPwdPolicy();
+	/**
+	 * Attempt to roll back the transaction
+	 * @param tx - The transaction to roll back
+	 */
+	private void rollback(UserTransaction tx) {
+		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.rollback() 0004 ");
+		try {
+			tx.rollback();
+		} catch (Exception e) {
+			System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.rollback() 0005 "
+					+ "\n"
+					+ "   exception="
+					+ e
+					);	
+			e.printStackTrace();
 		}
-		
-		return pwd_Policy; 
+		utilsBean.txStatus(tx);
 	}  
 	
 	/** 
@@ -180,6 +227,9 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 		} 
 	}
 	
+	/**
+	 * Inject the {@link com.yardi.shared.helpdesk.ResetPwdRequest reset password request}  
+	 */
 	public  void setResetPwdRequest(ResetPwdRequest resetPwdRequest) {
 		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.setResetPwdRequest() 0008 ");
 		this.resetPwdRequest = resetPwdRequest; 
