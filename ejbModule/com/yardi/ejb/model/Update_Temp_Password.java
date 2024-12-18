@@ -14,8 +14,8 @@ import jakarta.persistence.TemporalType;
 /**
  * Set temporary password and password life in minutes.<p>
  * In case the user profile is disabled, clear disabled date and password attempts. Doing this makes it appear as if they are authenticating normally except with a 
- * temporary password.  
- * <span style="font-family:consolas;">Database table: USER_PROFILE</span><p>
+ * temporary password.<p>
+ * <span style="font-family:consolas;">Database table: USER_PROFILE</span><br>
  * <span style="font-family:consolas;">Schema:         DB2ADMIN</span>
  */
 @Entity
