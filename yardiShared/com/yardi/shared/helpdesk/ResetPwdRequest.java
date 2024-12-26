@@ -62,11 +62,18 @@ public class ResetPwdRequest {
     */ 
     private short upPwdAttempts; 
     
+    /**
+     * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
+     * <span style="font-family:consolas;">Column: UP_TEMP_PWD</span><p>
+     * Hashed temporary password assigned by help desk
+     */
+    private String upTempPwd;
+    
     /** 
      * History of the dates on which password was changed and the number of times the password was changed on that date 
      */ 
-    private List <PwdHistory> pwdHistory;      
-    
+    private List <PwdHistory> pwdHistory;
+
     /**
      * Default constructor
      */
@@ -74,22 +81,22 @@ public class ResetPwdRequest {
     	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest ResetPwdRequest() 0000");
     }
 
-    /**
+	/**
      * Return action to perform: find or resetPwd
      * @return action to perform
      */
 	public String getAction() {
 		return action;
-	}
-
-	/**
+	}      
+    
+    /**
 	 * Return message description
 	 * @return message description
 	 */
 	public String getMsgDescription() {
 		return msgDescription;
 	}
-    
+
     /**
 	 * Return message ID 
 	 * @return message ID
@@ -97,7 +104,7 @@ public class ResetPwdRequest {
 	public String getMsgID() {
 		return msgID;
 	}
-	
+
 	/**
 	 * Return new password 
 	 * @return new password
@@ -105,8 +112,8 @@ public class ResetPwdRequest {
 	public String getNewPassword() {
 		return newPassword;
 	}
-	
-	/**
+    
+    /**
      * Return history of the dates on which password was changed and the number of times the password was changed on that date 
      * @return history of dates on which password was changed and number of times password was changed on that date
      */
@@ -162,6 +169,16 @@ public class ResetPwdRequest {
 	 */
 	public java.sql.Timestamp getUpPwdexpd() {
 		return upPwdexpd;
+	}
+	
+	/**
+     * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
+     * <span style="font-family:consolas;">Column: UP_TEMP_PWD</span><p>
+     * Return hashed temporary password assigned by help desk
+     * @return hashed temporary password assigned by help desk
+     */
+    public String getUpTempPwd() {
+		return upTempPwd;
 	}
 	
 	/**
@@ -272,6 +289,16 @@ public class ResetPwdRequest {
 	public void setUpPwdexpd(java.sql.Timestamp upPwdexpd) {
     	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest setUpPwdexpd() 000A");
 		this.upPwdexpd = upPwdexpd;
+	}
+	
+	/**
+     * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
+     * <span style="font-family:consolas;">Column: UP_TEMP_PWD</span><p>
+     * Set temporary password to the given String
+     * @param upTempPwd temporary password
+     */
+	public void setUpTempPwd(String upTempPwd) {
+		this.upTempPwd = upTempPwd;
 	}
 	
 	/**
