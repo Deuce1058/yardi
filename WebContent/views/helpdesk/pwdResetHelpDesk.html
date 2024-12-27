@@ -102,6 +102,11 @@
       height: 228.2px;
       overflow-y: scroll;
     }
+    .error-border {
+      border-style: solid;
+      border-color: red;
+      border-width: medium;
+    }
   </style>
   <h4 class="white align-center background-red">
     <noscript>This site requires JavaScript. Ensure that this is enabled on your browser.</noscript>
@@ -289,37 +294,69 @@ $(function () {
   var formItems;
   var d = new Date();
   $('#sysDate').text(d.getFullYear() + ' ' + (d.getMonth() + 1) + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds());
+  $('#accountDetailsPanel').toggle();
   configureButtons();
 
   $('#findBtn').click(function(e) {
     /*
     console.log('loginState.html main 0001 ');
     */
-    findButtonDisabled = true;
-    configureButtons();
-
-    if ($('#username').val()==='') { 
-      /*
-      console.log('loginState.html main 0002 ');
-      */
-      e.preventDefault;
-    } else {
-      formItems = {
+    e.preventDefault();
+    $('#username').removeClass('error-border');
+    formItems = {
         "action"   : "find",
-        "userName" : $('#username').val()
-      };
+        "userName" : $('#username').val().trim()
+    };
+
+    if ($('#username').checkValidity()===false) {
+      $(this).addClass('error-border');
+      $('#form-feedback').text('User name is required');
+    } else {
       doPost(formItems)
-        .then(buildPage)
+        .then(
+          buildPage,
+          findButtonDisabled = true,
+          configureButtons(),
+          $('#accountDetailsPanel').toggle()
+        )
         .catch(error => {
           $('#form-feedback').text(ajaxData.msgd);
         });
     }
   });
 
-  $('#cancelBtn').click(function() {
+  $('#cancelBtn').click(function(e) {
+    e.preventDefault();
     findButtonDisabled = false;
     configureButtons();
     clearScreen();
+    $('#accountDetailsPanel').toggle();
+  });
+
+  $('#updateBtn').click(function(e) {
+    e.preventDefault();
+    $('#tempPwdInput').removeClass('error-border');
+    formItems = {
+        "action"    : "resetPwd",
+        "userName"  : $('#username').val().trim(),
+        "upTempPwd" : $('#tempPwdInput').val().trim()
+    };
+    
+    if ($('#tempPwdInput').checkValidity()===false) {
+      $(this).addClass('error-border');
+      $('#form-feedback').text('Temporary password is required');
+    } else {
+      doPost(formItems)
+        .then(
+          findButtonDisabled = false,
+          configureButtons(),
+          clearScreen(),
+          $('#accountDetailsPanel').toggle()
+        )
+        .catch(error => {
+          $('#form-feedback').text(ajaxData.msgd);
+        });
+    }
   });
 });
 
@@ -363,20 +400,9 @@ function buildUserProfileDetails(formItems) {
   $('#pwdAttempts')      .text(formItems.upPwdAttempts);
 }
 
-function buildUsrPrfPanel(formItems) {
-  $('#userToken')        .text(formItems.uptoken);
-  $('#pwdExpD')          .text(formItems.upPwdexpd);
-  $('#pwdAttempts')      .text(formItems.upPwdAttempts);
-  $('#disabledDate')     .text(formItems.upDisabledDate);
-  $('#disabledTime')     .text(formItems.upDisabledTime);
-  $('#lastLoginDate')    .text(formItems.upLastLoginDate);
-  $('#lastLoginTime')    .text(formItems.upLastLoginTime);
-  $('#activeYN')         .text(formItems.upActiveYn);
-}
-
 function buildPwdHistory(formItems) {
   $('#pwdHistoryTable').html('');
-   $('#pwdHistoryTable').append(
+  $('#pwdHistoryTable').append(
       '<thead>'
     + '  <tr id="tableHeaders">'
     + '    <th class="sticky">Date</th>'
@@ -400,90 +426,34 @@ function buildPwdHistory(formItems) {
   $('#pwdHistoryTable').append('</tbody>');
 }
 
-function buildSessionsTablePanel(formItems) {
-  $('#sessionID')     .text(formItems.stSesssionId);
-  $('#sessionToken')  .text(formItems.stSessionToken);
-  $('#lastRqs')       .text(formItems.stLastRequest);
-  $('#lastActiveDate').text(formItems.stLastActiveDate);
-  $('#lastActiveTime').text(formItems.stLastActiveTime);
-}
-
-function buildUsrGroupsPanel(formItems) {
-  $('#userGroupsTable').html('');
-  $('#userGroupsTable').append(
-      '<thead> '
-    + '  <tr> '
-    + '    <th class="sticky">Group</th> '
-    + '    <th class="sticky">Description</th> '
-    + '    <th class="sticky">Initial Page</th> '
-    + '  </tr> '
-    + '</thead> '
-    + '<tbody>'
-  );
-  $.each(JSON.parse(formItems.userGroups), function(key, value) { 
-    var s = value.page.split(';');
-    $('#userGroupsTable').append(
-        '<tr class="blue"> '
-      + '  <td id="ugGroup">'
-      + s[0]
-      + '  </td> '
-      + '  <td id="ugDescription">'
-      + s[1]
-      + '  </td>'
-      + '  <td> '
-      + value.url
-      + '  </td> '
-       + '</tr> '
-    );
-  });
-  $('#userGroupsTable').append('</tbody>');
-}
-
 function clearScreen() {
   $('#username')         .val('');
   $('#form-feedback')    .text('');
-  $('#pwdLife')          .text('');
-  $('#nbrUnique')        .text('');
-  $('#maxLoginAttempts') .text('');
-  $('#minPwdLen')        .text('');
-  $('#maxPwdLen')        .text('');
-  $('#maxRepeatChar')    .text('');
-  $('#nbrDigits')        .text('');
-  $('#nbrLower')         .text('');
-  $('#nbrSpecial')       .text('');
-  $('#upperRqd')         .text('');
-  $('#lowerRqd')         .text('');
-  $('#nbrUpper')         .text('');
-  $('#nbrRqd')           .text('');
-  $('#specialRqd')       .text('');
-  $('#cantContainUsrNam').text('');
-  $('#cantContainPwd')   .text('');
-  $('#userToken')        .text('');
-  $('#pwdExpD')          .text('');
-  $('#pwdAttempts')      .text('');
-  $('#disabledDate')     .text('');
-  $('#disabledTime')     .text('');
-  $('#lastLoginDate')    .text('');
-  $('#lastLoginTime')    .text('');
+  $('#tempPwdInput')     .val('');
   $('#activeYN')         .text('');
-  $('#uniqueTokens')     .html('');
-  $('#sessionID')        .text('');
-  $('#sessionToken')     .text('');
-  $('#lastRqs')          .text('');
-  $('#lastActiveDate')   .text('');
-  $('#lastActiveTime')   .text('');
-  $('#userGroupsTable')  .html('');
+  $('#tempPwdYn')        .text('');
+  $('#disabledDate')     .text('');
+  $('#pwdExpDate')       .text('');
+  $('#lastLoginDate')    .text('');
+  $('#pwdAttempts')      .text('');
+  $('#pwdHistoryTable')  .html('');
+  $('#username')         .removeClass('error-border');
+  $('#tempPwdInput')     .removeClass('error-border');
 }
 
 function configureButtons() {
    if (findButtonDisabled) {
-    $('#username').addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
-    $('#findBtn') .addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
-    $('#cancelBtn') .addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
+    $('#username')    .addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
+    $('#tempPwdInput').addClass('not-allowed').removeClass('pointer')    .attr('disabled', false);
+    $('#findBtn')     .addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
+    $('#cancelBtn')   .addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
+    $('#updateBtn')   .addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
   } else {
-    $('#username').addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
-    $('#findBtn') .addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
-    $('#cancelBtn') .addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
+    $('#username')    .addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
+    $('#tempPwdInput').addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
+    $('#findBtn')     .addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
+    $('#cancelBtn')   .addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
+    $('#updateBtn')   .addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
   }
 }
   </script>
