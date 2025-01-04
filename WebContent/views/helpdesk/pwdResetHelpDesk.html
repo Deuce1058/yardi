@@ -305,7 +305,7 @@ $(function () {
     $('#username').removeClass('error-border');
     formItems = {
         "action"   : "find",
-        "userName" : $('#username').val().trim()
+        "upUserid" : $('#username').val().trim()
     };
 
     if ($('#username').checkValidity()===false) {
@@ -395,7 +395,7 @@ function buildUserProfileDetails(formItems) {
     $('#tempPwdYn')        .text('N');
   }
   $('#disabledDate')     .text(formItems.upDisabledDate);
-  $('#pwdExpDate')       .text(formItems.upPwdexpd);
+  $('#pwdExpDate')       .text(formItems.upPwdexpd);  
   $('#lastLoginDate')    .text(formItems.upLastLoginDate);
   $('#pwdAttempts')      .text(formItems.upPwdAttempts);
 }
