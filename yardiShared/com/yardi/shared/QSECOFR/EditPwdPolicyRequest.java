@@ -10,47 +10,17 @@ public class EditPwdPolicyRequest {
 	 */
 	private String action;
 	/**
-	 * Message identifier
+	 * Determines whether the new password may contain the user ID in any case. 
 	 */
-	private String msgId;
+	private String cantContainId;
 	/**
-	 * Message description 
+	 * Determines whether the new password may contain the current password.
 	 */
-	private String msgDescription;
-	/**
-	 * Password life in days
-	 */
-	private String pwdLifeInDays;
-	/**
-	 * Enforce unique tokens. Enter a positive value to define the number of unique tokens to store per user. Enter zero if not enforcing 
-	 * unique tokens. Used to prevent password reuse.
-	 */
-	private String nbrUnique;
-	/**
-	 * The allowed number of invalid password attempts since the most recent successful login. When the number of unsuccessful login attempts reaches 
-	 * this number, the user profile entity is disabled and the user cant login until an admin resets the password. Enter a value greater than zero.
-	 */
-	private String maxSignonAttempts;
-	/**
-	 * The minimum password length. Enter a value greater than zero to define the minimum password length.
-	 */
-	private String pwdMinLen;
-	/**
-	 * Determines whether at least one upper case character is required in the new password. 
-	 */
-	private String upperRqd;
+	private String cantContainPwd;
 	/**
 	 * Determines whether at least one lower case character is required in the new password. 
 	 */
 	private String lowerRqd;
-	/**
-	 * Determine whether at least one digit is required in the new password.
-	 */
-	private String nbrRqd;
-	/**
-	 * Determines whether at least one special character is required in the new password.
-	 */
-	private String specialRqd;
 	/**
 	 * Maximum length of new password. Set to <i>null</i> if this rule is not being enforced.
 	 */
@@ -60,33 +30,67 @@ public class EditPwdPolicyRequest {
 	 */
 	private String maxRepeatChar;
 	/**
+	 * The allowed number of invalid password attempts since the most recent successful login. When the number of unsuccessful login attempts reaches 
+	 * this number, the user profile entity is disabled and the user cant login until an admin resets the password. Enter a value greater than zero.
+	 */
+	private String maxSignonAttempts;
+	/**
+	 * Message description 
+	 */
+	private String msgDescription;
+	/**
+	 * Message identifier
+	 */
+	private String msgId;
+	/**
 	 * If digits are required in the new password, then new passwords must contain at least the number of digits defined by this field.
 	 * Set to <i>null</i> if this rule is not being enforced.
 	 */
 	private String nbrDigits;
-	/**
-	 * If upper case characters are required in the new password then new passwords must contain at least the number of upper case characters defined 
-	 * by this field. Set to <i>null</i> if this rule is not being enforced.
-	 */
-	private String nbrUpper;
 	/**
 	 * If lower case characters are required in the new password then new passwords must contain at least the number of lower case characters defined 
 	 * by this field. Set to <i>null</i> if this rule is not being enforced.
 	 */
 	private String nbrLower;
 	/**
+	 * Determine whether at least one digit is required in the new password.
+	 */
+	private String nbrRqd;
+	/**
 	 * If special characters are required in the new password then the new password must contain at least the number of special characters defined by 
 	 * this field. Set to <i>null</i> if this rule is not being enforced.
 	 */
 	private String nbrSpecial;
 	/**
-	 * Determines whether the new password may contain the user ID in any case. 
+	 * Enforce unique tokens. Enter a positive value to define the number of unique tokens to store per user. Enter zero if not enforcing 
+	 * unique tokens. Used to prevent password reuse.
 	 */
-	private String cantContainId;
+	private String nbrUnique;
 	/**
-	 * Determines whether the new password may contain the current password.
+	 * If upper case characters are required in the new password then new passwords must contain at least the number of upper case characters defined 
+	 * by this field. Set to <i>null</i> if this rule is not being enforced.
 	 */
-	private String cantContainPwd;
+	private String nbrUpper;
+	/**
+	 * Password life in days
+	 */
+	private String pwdLifeInDays;
+	/**
+	 * The minimum password length. Enter a value greater than zero to define the minimum password length.
+	 */
+	private String pwdMinLen;
+	/**
+	 * Determines whether at least one special character is required in the new password.
+	 */
+	private String specialRqd;
+	/**
+	 * Temporary password life in minutes
+	 */
+	private String temporaryPwdLifeMins;
+	/**
+	 * Determines whether at least one upper case character is required in the new password. 
+	 */
+	private String upperRqd;
 
 	/**
 	 * Default constructor
@@ -100,6 +104,7 @@ public class EditPwdPolicyRequest {
 	 * @param msgId Message identifier
 	 * @param msgDescription Message description
 	 * @param pwdLifeInDays Password life in days
+	 * @param temporaryPwdLifeMins temporary password life in minutes 
 	 * @param nbrUnique Number of unique tokens to store per user
 	 * @param maxSignonAttempts The allowed number of invalid password attempts since the most recent successful login
 	 * @param pwdMinLen Minimum password length
@@ -116,7 +121,7 @@ public class EditPwdPolicyRequest {
 	 * @param cantContainId Determines whether the new password may contain the user ID
 	 * @param cantContainPwd Determines whether the new password may contain the current password
 	 */
-	public EditPwdPolicyRequest(String action, String msgId, String msgDescription, String pwdLifeInDays,
+	public EditPwdPolicyRequest(String action, String msgId, String msgDescription, String pwdLifeInDays, String temporaryPwdLifeMins,
 			String nbrUnique, String maxSignonAttempts, String pwdMinLen, String upperRqd, String lowerRqd,
 			String nbrRqd, String specialRqd, String maxPwdLen, String maxRepeatChar, String nbrDigits, String nbrUpper,
 			String nbrLower, String nbrSpecial, String cantContainId, String cantContainPwd) {
@@ -124,6 +129,7 @@ public class EditPwdPolicyRequest {
 		this.msgId = msgId;
 		this.msgDescription = msgDescription;
 		this.pwdLifeInDays = pwdLifeInDays;
+		this.temporaryPwdLifeMins = temporaryPwdLifeMins;
 		this.nbrUnique = nbrUnique;
 		this.maxSignonAttempts = maxSignonAttempts;
 		this.pwdMinLen = pwdMinLen;
@@ -285,6 +291,14 @@ public class EditPwdPolicyRequest {
 		return specialRqd;
 	}
 
+	/** 
+	 * Return temporary password life in minutes
+	 * @return temporary password life in minutes
+	 */
+	public String getTemporaryPwdLifeMins() {
+		return temporaryPwdLifeMins;
+	}
+
 	/**
 	 * Return value of upper case required in new password rule.
 	 * @return Value of upper case required in new password rule. 
@@ -364,7 +378,7 @@ public class EditPwdPolicyRequest {
 	public void setMsgId(String msgId) {
 		this.msgId = msgId;
 	}
-	
+
 	/**
 	 * Set number of digits required in the new password to the given String
 	 * @param nbrDigits number of digits required value
@@ -372,7 +386,7 @@ public class EditPwdPolicyRequest {
 	public void setNbrDigits(String nbrDigits) {
 		this.nbrDigits = nbrDigits;
 	}
-
+	
 	/**
 	 * Set number of lower case characters required in the new password value to the given String
 	 * @param nbrLower number of lower case characters required value
@@ -438,6 +452,14 @@ public class EditPwdPolicyRequest {
 	}
 
 	/**
+	 * Set temporary password life in minutes to the given String
+	 * @param temporaryPwdLifeMins temporary password life in minutes
+	 */
+	public void setTemporaryPwdLifeMins(String temporaryPwdLifeMins) {
+		this.temporaryPwdLifeMins = temporaryPwdLifeMins;
+	}
+
+	/**
 	 * Set at least one upper case character required in the new password value to the given String
 	 * @param upperRqd at least one upper case character required value
 	 */
@@ -447,12 +469,12 @@ public class EditPwdPolicyRequest {
 
 	@Override
 	public String toString() {
-		return "EditPwdPolicyRequest [action=" + action + ", msgId=" + msgId + ", msgDescription=" + msgDescription
-				+ ", pwdLifeInDays=" + pwdLifeInDays + ", nbrUnique=" + nbrUnique + ", maxSignonAttempts="
-				+ maxSignonAttempts + ", pwdMinLen=" + pwdMinLen + ", upperRqd=" + upperRqd + ", lowerRqd=" + lowerRqd
-				+ ", nbrRqd=" + nbrRqd + ", specialRqd=" + specialRqd + ", maxPwdLen=" + maxPwdLen + ", maxRepeatChar="
-				+ maxRepeatChar + ", nbrDigits=" + nbrDigits + ", nbrUpper=" + nbrUpper + ", nbrLower=" + nbrLower
-				+ ", nbrSpecial=" + nbrSpecial + ", cantContainId=" + cantContainId + ", cantContainPwd="
-				+ cantContainPwd + "]";
+		return "EditPwdPolicyRequest [action=" + action + ", cantContainId=" + cantContainId + ", cantContainPwd="
+				+ cantContainPwd + ", lowerRqd=" + lowerRqd + ", maxPwdLen=" + maxPwdLen + ", maxRepeatChar="
+				+ maxRepeatChar + ", maxSignonAttempts=" + maxSignonAttempts + ", msgDescription=" + msgDescription
+				+ ", msgId=" + msgId + ", nbrDigits=" + nbrDigits + ", nbrLower=" + nbrLower + ", nbrRqd=" + nbrRqd
+				+ ", nbrSpecial=" + nbrSpecial + ", nbrUnique=" + nbrUnique + ", nbrUpper=" + nbrUpper
+				+ ", pwdLifeInDays=" + pwdLifeInDays + ", pwdMinLen=" + pwdMinLen + ", specialRqd=" + specialRqd
+				+ ", temporaryPwdLifeMins=" + temporaryPwdLifeMins + ", upperRqd=" + upperRqd + "]";
 	}
 }
