@@ -250,6 +250,7 @@ public class Pwd_Policy implements Serializable {
 		System.out.println("com.yardi.ejb.model.Pwd_Policy Pwd_Policy() 0000 ");
 		//debug
 		this.ppDays = ppDays;
+		this.ppTempPwdTtl = ppTempPwdTtl;
 		this.ppNbrUnique = ppNbrUnique;
 		this.ppMaxSignonAttempts = ppMaxSignonAttempts;
 		this.ppPwdMinLen = ppPwdMinLen;
