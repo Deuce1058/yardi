@@ -118,14 +118,15 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
     		editPwdPolicyRequest.setAction(com.yardi.shared.rentSurvey.YardiConstants.EDIT_PASSWORD_POLICY_REQUEST_ACTION_ADD);
     	} else {
     		editPwdPolicyRequest.setAction(com.yardi.shared.rentSurvey.YardiConstants.EDIT_PASSWORD_POLICY_REQUEST_ACTION_UPDATE);
-    		editPwdPolicyRequest.setPwdLifeInDays    (Short.toString(pwdPolicy.getPpDays()));
-    		editPwdPolicyRequest.setNbrUnique        (Short.toString(pwdPolicy.getPpNbrUnique()));
-    		editPwdPolicyRequest.setMaxSignonAttempts(Short.toString(pwdPolicy.getPpMaxSignonAttempts())); 
-    		editPwdPolicyRequest.setPwdMinLen        (Short.toString(pwdPolicy.getPpPwdMinLen()));
-    		editPwdPolicyRequest.setUpperRqd         (pwdPolicy.getPp_upper_rqd());
-    		editPwdPolicyRequest.setLowerRqd         (pwdPolicy.getPp_lower_rqd());
-    		editPwdPolicyRequest.setNbrRqd           (pwdPolicy.getPp_number_rqd());
-    		editPwdPolicyRequest.setSpecialRqd       (pwdPolicy.getPp_special_rqd());
+    		editPwdPolicyRequest.setPwdLifeInDays       (Short.toString(pwdPolicy.getPpDays()));
+    		editPwdPolicyRequest.setTemporaryPwdLifeMins(Short.toString(pwdPolicy.getPpTempPwdTtl()));
+    		editPwdPolicyRequest.setNbrUnique           (Short.toString(pwdPolicy.getPpNbrUnique()));
+    		editPwdPolicyRequest.setMaxSignonAttempts   (Short.toString(pwdPolicy.getPpMaxSignonAttempts())); 
+    		editPwdPolicyRequest.setPwdMinLen           (Short.toString(pwdPolicy.getPpPwdMinLen()));
+    		editPwdPolicyRequest.setUpperRqd            (pwdPolicy.getPp_upper_rqd());
+    		editPwdPolicyRequest.setLowerRqd            (pwdPolicy.getPp_lower_rqd());
+    		editPwdPolicyRequest.setNbrRqd              (pwdPolicy.getPp_number_rqd());
+    		editPwdPolicyRequest.setSpecialRqd          (pwdPolicy.getPp_special_rqd());
 
     		if (pwdPolicy.getPpMaxPwdLen()==null) {
     			editPwdPolicyRequest.setMaxPwdLen("null");
@@ -191,14 +192,15 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
 	public Pwd_Policy newPwdPolicy(EditPwdPolicyRequest editPwdPolicyRequest) {
 		System.out.println("com.yardi.ejb.EditPasswordPolicyBean newPwdPolicy() 0002 ");
 		Pwd_Policy newPwdPolicy = new Pwd_Policy();
-		newPwdPolicy.setPpDays(Short.parseShort(editPwdPolicyRequest.getPwdLifeInDays()));
-		newPwdPolicy.setPpNbrUnique(Short.parseShort(editPwdPolicyRequest.getNbrUnique()));
+		newPwdPolicy.setPpDays             (Short.parseShort(editPwdPolicyRequest.getPwdLifeInDays()));
+		newPwdPolicy.setPpTempPwdTtl       (Short.parseShort(editPwdPolicyRequest.getTemporaryPwdLifeMins()));
+		newPwdPolicy.setPpNbrUnique        (Short.parseShort(editPwdPolicyRequest.getNbrUnique()));
 		newPwdPolicy.setPpMaxSignonAttempts(Short.parseShort(editPwdPolicyRequest.getMaxSignonAttempts()));
-		newPwdPolicy.setPpPwdMinLen(Short.parseShort(editPwdPolicyRequest.getPwdMinLen()));
-		newPwdPolicy.setPp_upper_rqd(editPwdPolicyRequest.getUpperRqd()); 
-		newPwdPolicy.setPp_lower_rqd(editPwdPolicyRequest.getLowerRqd());
-		newPwdPolicy.setPp_number_rqd(editPwdPolicyRequest.getNbrRqd());
-		newPwdPolicy.setPp_special_rqd(editPwdPolicyRequest.getSpecialRqd());
+		newPwdPolicy.setPpPwdMinLen        (Short.parseShort(editPwdPolicyRequest.getPwdMinLen()));
+		newPwdPolicy.setPp_upper_rqd       (editPwdPolicyRequest.getUpperRqd()); 
+		newPwdPolicy.setPp_lower_rqd       (editPwdPolicyRequest.getLowerRqd());
+		newPwdPolicy.setPp_number_rqd      (editPwdPolicyRequest.getNbrRqd());
+		newPwdPolicy.setPp_special_rqd     (editPwdPolicyRequest.getSpecialRqd());
 		
 		if (editPwdPolicyRequest.getMaxPwdLen().trim().equalsIgnoreCase("null")) {
 			newPwdPolicy.setPpMaxPwdLenNull();
