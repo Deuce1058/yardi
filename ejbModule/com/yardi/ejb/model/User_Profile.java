@@ -31,33 +31,20 @@ public class User_Profile implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Column: UP_USERID User ID primary key 
+	 * Return serial version
+	 * @return serial version
 	 */
-	@Id
-	@Column(name="UP_USERID")
-	private String upUserid;
-
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
 	/**
-	 * Column: UPTOKEN Hashed password 
+	 * Column: UP_ACTIVE_YN<p> 
+	 * Indicates whether the User_Profile entity is active. An admin must clear this flag before the user is able to login. 
 	 */
-	@Column(name="UPTOKEN")
-	private String uptoken;
-
-	/**
-	 * Column: UP_PWDEXPD<p>
-	 * Password expiration date. Password must be changed on or after this date. 
-	 */
-	@Temporal(TemporalType.DATE)
-	@Column(name="UP_PWDEXPD")
-	private java.util.Date upPwdexpd;
-
-	/**
-	 * Column: UP_PWD_ATTEMPTS<p>
-	 * The number of invalid password attempts since the most recent successful login 
-	 */
-	@Column(name="UP_PWD_ATTEMPTS")
-	private short upPwdAttempts;
-
+	@Column(name="UP_ACTIVE_YN")
+	private String upActiveYn;
+	
 	/**
 	 * Column: UP_DISABLED_DATE<p>
 	 * Date and time when the User_Profile entity was disabled due to too many invalid login attempts since the most recent successful login  
@@ -71,13 +58,6 @@ public class User_Profile implements Serializable {
 	 */
 	@Column(name="UP_LAST_LOGIN_DATE")
 	private java.sql.Timestamp upLastLoginDate;
-
-	/**
-	 * Column: UP_ACTIVE_YN<p> 
-	 * Indicates whether the User_Profile entity is active. An admin must clear this flag before the user is able to login. 
-	 */
-	@Column(name="UP_ACTIVE_YN")
-	private String upActiveYn;
 	
 	/**
 	 * Reference to User_Groups entity.
@@ -93,12 +73,38 @@ public class User_Profile implements Serializable {
 	private List<User_Groups> upLoginUserGroups;
 
 	/**
-	 * Return serial version
-	 * @return serial version
+	 * Column: UP_PWD_ATTEMPTS<p>
+	 * The number of invalid password attempts since the most recent successful login 
 	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+	@Column(name="UP_PWD_ATTEMPTS")
+	private short upPwdAttempts;
+
+	/**
+	 * Column: UP_PWDEXPD<p>
+	 * Password expiration date. Password must be changed on or after this date. 
+	 */
+	@Temporal(TemporalType.DATE)
+	@Column(name="UP_PWDEXPD")
+	private java.sql.Timestamp upPwdexpd;
+
+	/**
+	 * Column: UP_TEMP_PWD temporary password 
+	 */
+	@Column(name="UP_TEMP_PWD")
+	private String upTempPwd;
+
+	/**
+	 * Column: UPTOKEN Hashed password 
+	 */
+	@Column(name="UPTOKEN")
+	private String uptoken;
+	
+	/**
+	 * Column: UP_USERID User ID primary key 
+	 */
+	@Id
+	@Column(name="UP_USERID")
+	private String upUserid;
 
 	/**
 	 * Return user profile active Y/N indicator
@@ -137,8 +143,16 @@ public class User_Profile implements Serializable {
 	 * Password must be changed on or after this date. 
 	 * @return password expiration date
 	 */
-	public java.util.Date getUpPwdexpd() {
+	public java.sql.Timestamp getUpPwdexpd() {
 		return upPwdexpd;
+	}
+
+	/**
+	 * Return temporary password
+	 * @return temporary password
+	 */
+	public String getUpTempPwd() {
+		return upTempPwd;
 	}
 
 	/**
@@ -195,7 +209,7 @@ public class User_Profile implements Serializable {
 	 * The password expiration date is set to the given Date.
 	 * @param upPwdexpd password expiration date
 	 */
-	public void setUpPwdexpd(java.util.Date upPwdexpd) {
+	public void setUpPwdexpd(java.sql.Timestamp upPwdexpd) {
 		/*debug*/
 		System.out.println("com.yardi.ejb.model.User_Profile.setUpPwdexpd() 0000");
 		/*debug*/
