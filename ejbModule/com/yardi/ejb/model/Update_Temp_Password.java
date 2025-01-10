@@ -8,8 +8,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 /**
  * Set temporary password and password life in minutes.<p>
@@ -46,7 +44,6 @@ public class Update_Temp_Password implements Serializable {
 	 * <span style="font-family:consolas;">Database table: USER_PROFILE</span><p>
 	 * <span style="font-family:consolas;">Column:         UP_PWDEXPD</span>
 	 */
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="UP_PWDEXPD")
 	private Timestamp upPwdexpd;
 	/**
@@ -54,7 +51,6 @@ public class Update_Temp_Password implements Serializable {
 	 * <span style="font-family:consolas;">Database table: USER_PROFILE</span><p>
 	 * <span style="font-family:consolas;">Column:         UP_DISABLED_DATE</span>
 	 */
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="UP_DISABLED_DATE")
 	private Timestamp upDisabledDate;
 	/**
