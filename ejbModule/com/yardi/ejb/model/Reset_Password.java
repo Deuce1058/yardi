@@ -9,8 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 /**
  * Entity for user profile details. These details are displayed on the password reset page used by the help desk.
@@ -49,7 +47,6 @@ public class Reset_Password implements Serializable {
 	 * <span style="font-family:consolas;">Column: UP_DISABLED_DATE</span><p>
 	 * Date and time when the user profile became disabled due to too many invalid password attempts since the most recent successful login.
 	 */
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="UP_DISABLED_DATE")
 	private Timestamp upDisabledDate;
 	/**
@@ -57,7 +54,6 @@ public class Reset_Password implements Serializable {
 	 * <span style="font-family:consolas;">Column: UP_PWDEXPD</span><p>
 	 * Password expiration date. The date and time when the password must be changed. 
 	 */
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="UP_PWDEXPD") 
 	private Timestamp upPwdexpd;
 	/**
@@ -65,7 +61,6 @@ public class Reset_Password implements Serializable {
 	 * <span style="font-family:consolas;">Column: UP_LAST_LOGIN_DATE</span><p>
 	 * Date and time of most recent successful login.
 	 */
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="UP_LAST_LOGIN_DATE") 
 	private Timestamp upLastLoginDate;
 	/**
