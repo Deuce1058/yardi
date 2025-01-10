@@ -1,8 +1,7 @@
 package com.yardi.ejb;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import jakarta.annotation.PostConstruct;
@@ -304,12 +303,8 @@ public class UserProfileBean implements UserProfile {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} 
-		GregorianCalendar gc = new GregorianCalendar();
-		gc.set(Calendar.HOUR, 0);
-		gc.set(Calendar.MINUTE, 0);
-		gc.set(Calendar.SECOND, 0);
-		gc.set(Calendar.HOUR_OF_DAY, 0);
-		gc.add(Calendar.DAY_OF_MONTH, Short.valueOf(pwdPolicy.getPpDays()).intValue()); //new password expiration date
+		
+		
 		//debug
 		System.out.println("com.yardi.ejb.UserProfileBean changeUserToken() 0004 "
 				+ "\n "
@@ -318,14 +313,11 @@ public class UserProfileBean implements UserProfile {
 				+ "  userToken="
 				+ userToken
 				+ "\n "
-				+ "  gc="
-				+ gc.toString()
-				+ "\n "
 				+ "  check USER PROFILE"
 				);
 		//debug
 		userProfile.setUptoken(userToken);
-		userProfile.setUpPwdexpd(new java.util.Date(gc.getTimeInMillis()));
+		userProfile.setUpPwdexpd(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		isJoined();
 		User_Profile managedUserProfile = em.merge(userProfile);
 		managedUserProfile.setUptoken(userProfile.getUptoken());
