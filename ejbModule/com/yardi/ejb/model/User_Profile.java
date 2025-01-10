@@ -14,8 +14,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 /**
  * Entity implementation class for Entity: User_Profile.<br><br>
@@ -83,7 +81,6 @@ public class User_Profile implements Serializable {
 	 * Column: UP_PWDEXPD<p>
 	 * Password expiration date. Password must be changed on or after this date. 
 	 */
-	@Temporal(TemporalType.DATE)
 	@Column(name="UP_PWDEXPD")
 	private java.sql.Timestamp upPwdexpd;
 
