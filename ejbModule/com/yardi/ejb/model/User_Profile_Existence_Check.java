@@ -3,11 +3,10 @@ package com.yardi.ejb.model;
 import java.io.Serializable;
 import java.lang.String;
 
-import com.ibm.db2.cmx.annotation.Column;
-import com.ibm.db2.cmx.annotation.Id;
-import com.ibm.db2.cmx.annotation.Table;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 /**
  * Entity for checking whether the USER_PROFILE table contains the given primary key<p>
