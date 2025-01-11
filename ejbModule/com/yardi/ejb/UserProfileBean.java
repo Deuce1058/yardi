@@ -374,7 +374,7 @@ public class UserProfileBean implements UserProfile {
 		System.out.println("com.yardi.ejb.UserProfileBean doesUserExist() 0034 ");
 		//debug
 		isJoined();
-		Long count = em.createQuery("SELECT COUNT(u) FROM User_Profile_Existence_Check u WHERE u.userId = :userId", Long.class)
+		Long count = em.createQuery("SELECT COUNT(u) FROM User_Profile_Existence_Check u WHERE u.upUserid = :userId", Long.class)
 				.setParameter("userId", userId)
 				.getSingleResult();
 		return count > 0;
