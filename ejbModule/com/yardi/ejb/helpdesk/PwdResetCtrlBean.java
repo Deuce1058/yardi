@@ -20,6 +20,7 @@ import jakarta.ejb.Remove;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionManagement;
 import jakarta.ejb.TransactionManagementType;
+import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 
 /**
@@ -30,15 +31,15 @@ import jakarta.transaction.UserTransaction;
 @Stateful
 @TransactionManagement(TransactionManagementType.BEAN)
 public class PwdResetCtrlBean implements PwdResetCtrl {
-	private ResetPwdRequest resetPwdRequest;
-	private Pwd_Policy pwd_Policy = null;
 	private String feedback;
+	@EJB PasswordPolicy passwordPolicyBean;
+	private Pwd_Policy pwd_Policy = null;
 	private Reset_Password reset_Password;
-	@EJB UserProfile userProfileBean;
-	@EJB UniqueTokens uniqueTokensBean;
-	@EJB PasswordPolicy passwordPolicyBean; 
-	@EJB Utils utilsBean;
+	private ResetPwdRequest resetPwdRequest;
 	@Resource UserTransaction tx;
+	@EJB UniqueTokens uniqueTokensBean; 
+	@EJB UserProfile userProfileBean;
+	@EJB Utils utilsBean;
 
     /**
      * Default constructor. 
@@ -66,7 +67,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
         feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
         try {
 			tx.begin();
-			utilsBean.txStatus(tx);
+			txStatus(tx);
 			reset_Password = userProfileBean.findUserProfileForPwdReset(resetPwdRequest.getUpUserid());
 			
 			if (!(reset_Password==null)) {
@@ -85,7 +86,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 			}
 				
 			tx.commit();
-			utilsBean.txStatus(tx);
+			txStatus(tx);
 			return resetPwdRequest;			
 		} catch (Exception e) {
 			System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.findUserDetails() exception 0002 "
@@ -103,29 +104,29 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 		}     
     }    
     
-    /**
-     * Return feedback from the most recent operation that provides feedback
-     * @return feedback from the most recent operation that provides feedback
-     */
+	/**
+	 * Return feedback from the most recent operation that provides feedback
+	 * @return feedback from the most recent operation that provides feedback
+	 */
     public String getFeedback() {
-		return feedback;
-	}
-    
-	/** 
-	* Returns the password policy obtained from 
-	* {@link com.yardi.ejb.PasswordPolicyBean#getPwdPolicy() com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()  } 
-	* @return reference to Pwd_Policy entity 
-	*/ 
-	private Pwd_Policy getPwdPolicy() { 
-		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.getPwdPolicy() 0006	");
-		
-		if (pwd_Policy == null) {
-			setPwdPolicy();
-		}
-		
-		return pwd_Policy; 
-	}
+    	return feedback;
+    }
 	
+   /**
+    * Returns the password policy obtained from
+    * {@link com.yardi.ejb.PasswordPolicyBean#getPwdPolicy() com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()}
+    * @return reference to Pwd_Policy entity 
+    */
+    private Pwd_Policy getPwdPolicy() {
+    	System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.getPwdPolicy() 0006	");
+    	
+    	if (pwd_Policy == null) {
+    		setPwdPolicy();
+    	}
+    	
+    	return pwd_Policy;
+    }
+    
 	/**
 	 * Post construct callback
 	 */	
@@ -133,7 +134,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
     private void postConstructCallback() {
     	System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.postConstructCallback() 0001 ");
     }
-
+	
 	/**
 	 * Remove bean
 	 */
@@ -167,7 +168,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 		    PasswordAuthentication pwdAuthentication = new PasswordAuthentication(); 
 		    resetPwdRequest.setNewPassword(pwdAuthentication.hash(resetPwdRequest.getNewPassword().toCharArray())); 
 		    tx.begin();
-		    utilsBean.txStatus(tx);
+		    txStatus(tx);
 		    pwd_Policy = getPwdPolicy(); 
 		    LocalDateTime ldt = LocalDateTime.now();
 		    ldt.plusMinutes((long) pwd_Policy.getPpTempPwdTtl());
@@ -178,7 +179,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 		    tx.commit();
 		    return resetPwdRequest;
 		} catch (Exception e) {
-			System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.findUserDetails() exception 000A "
+			System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.resetPwd() exception 000A "
 					+ "\n    "
 					+ e
 					);
@@ -209,9 +210,9 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 					);	
 			e.printStackTrace();
 		}
-		utilsBean.txStatus(tx);
-	}  
-	
+		txStatus(tx);
+	}
+
 	/** 
 	 * Obtain a reference to password policy from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy().<p> 
 	 * 
@@ -225,7 +226,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 		if (pwd_Policy == null) {
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
 		} 
-	}
+	}  
 	
 	/**
 	 * Inject the {@link com.yardi.shared.helpdesk.ResetPwdRequest reset password request}  
@@ -233,5 +234,65 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 	public  void setResetPwdRequest(ResetPwdRequest resetPwdRequest) {
 		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.setResetPwdRequest() 0008 ");
 		this.resetPwdRequest = resetPwdRequest; 
+	}
+	
+	/**
+	 * Log the transaction status
+	 */
+	private void txStatus(UserTransaction tx) {
+    	System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.txStatus() 000C ");
+
+    	if (tx==null) {
+			System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.txStatus() tx is null 000F ");
+			return;
+		}
+	
+		String status = null;
+		
+		try {
+			switch(tx.getStatus()) {
+			case jakarta.transaction.Status.STATUS_ACTIVE:
+				status = "active";
+				break;
+			case jakarta.transaction.Status.STATUS_COMMITTED:
+				status = "committed";
+				break;
+			case jakarta.transaction.Status.STATUS_COMMITTING:
+				status = "committing";
+				break;
+			case jakarta.transaction.Status.STATUS_MARKED_ROLLBACK:
+				status = "marked rollback";
+				break;
+			case jakarta.transaction.Status.STATUS_NO_TRANSACTION:
+				status = "no transaction";
+				break;
+			case jakarta.transaction.Status.STATUS_PREPARED:
+				status = "prepared";
+				break;
+			case jakarta.transaction.Status.STATUS_PREPARING:
+				status = "prepairing";
+				break;
+			case jakarta.transaction.Status.STATUS_ROLLEDBACK:
+				status = "rolled back";
+				break;
+			case jakarta.transaction.Status.STATUS_ROLLING_BACK:
+				status = "rolling back";
+				break;
+			case jakarta.transaction.Status.STATUS_UNKNOWN:
+				status = "unknown";
+				break;
+			default:
+				status = "undefined";
+			}
+		} catch (SystemException e) {
+			System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.txStatus() SystemException 000D ");
+			e.printStackTrace();
+		}
+		
+		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.txStatus() 000E "
+  				+ "\n"
+  				+ "   tx status="
+  				+ status
+  				);
 	}
 }
