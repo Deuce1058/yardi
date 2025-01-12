@@ -308,8 +308,8 @@ $(function () {
         "upUserid" : $('#username').val().trim()
     };
 
-    if ($('#username').checkValidity()===false) {
-      $(this).addClass('error-border');
+    if ($('#username').val()==='') {
+      $('#username').addClass('error-border');
       $('#form-feedback').text('User name is required');
     } else {
       doPost(formItems)
@@ -320,7 +320,7 @@ $(function () {
           $('#accountDetailsPanel').toggle()
         )
         .catch(error => {
-          $('#form-feedback').text(ajaxData.msgd);
+          $('#form-feedback').text(error.msgd);
         });
     }
   });
@@ -354,7 +354,7 @@ $(function () {
           $('#accountDetailsPanel').toggle()
         )
         .catch(error => {
-          $('#form-feedback').text(ajaxData.msgd);
+          $('#form-feedback').text(error.msgd);
         });
     }
   });
@@ -364,7 +364,7 @@ function doPost(formItems) {
   return new Promise((resolve, reject) => {
     $.ajax({
       type: 'POST',
-      url: '../doPwdReset',
+      url: '../../doPwdReset',
       data: JSON.stringify(formItems),
       dataType: "json"
     })
