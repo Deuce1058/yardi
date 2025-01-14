@@ -313,14 +313,14 @@ $(function () {
       $('#form-feedback').text('User name is required');
     } else {
       doPost(formItems)
-        .then(
-          buildPage,
+        .then(data => {
+          buildPage(data),
           findButtonDisabled = true,
           configureButtons(),
           $('#accountDetailsPanel').toggle()
-        )
+        })
         .catch(error => {
-          $('#form-feedback').text(error.msgd);
+          $('#form-feedback').text(error.msgDescription);
         });
     }
   });
@@ -342,7 +342,7 @@ $(function () {
         "newPassword" : $('#tempPwdInput').val().trim()
     };
     
-    if ($('#tempPwdInput').checkValidity()===false) {
+    if ($('#tempPwdInput').val()==='') {
       $(this).addClass('error-border');
       $('#form-feedback').text('Temporary password is required');
     } else {
@@ -354,7 +354,7 @@ $(function () {
           $('#accountDetailsPanel').toggle()
         )
         .catch(error => {
-          $('#form-feedback').text(error.msgd);
+          $('#form-feedback').text(error.msgDescription);
         });
     }
   });
