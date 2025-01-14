@@ -64,7 +64,8 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
      */
     public ResetPwdRequest findUserDetails() {
     	System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.findUserDetails() 0003 ");
-        feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
+    	resetPwdRequest.toString();
+    	feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
         try {
 			tx.begin();
 			txStatus(tx);
@@ -74,10 +75,12 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 			    ObjectMapper mapper = new ObjectMapper(); 
 				resetPwdRequest = mapper.readValue(mapper.writeValueAsString(reset_Password), ResetPwdRequest.class);
 				resetPwdRequest.setPwdHistory(uniqueTokensBean.findTokensWithCount(resetPwdRequest.getUpUserid()));
+				resetPwdRequest.setAction(com.yardi.shared.rentSurvey.YardiConstants.EDIT_PASSWORD_POLICY_REQUEST_ACTION_FIND);
 				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
 				String m[] = feedback.split("=");
 				resetPwdRequest.setMsgID(m[0]);
 				resetPwdRequest.setMsgDescription(m[1]);
+		    	resetPwdRequest.toString();
 			} else {
 				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000D;
 				String m[] = feedback.split("=");
@@ -233,7 +236,8 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 	 */
 	public  void setResetPwdRequest(ResetPwdRequest resetPwdRequest) {
 		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.setResetPwdRequest() 0008 ");
-		this.resetPwdRequest = resetPwdRequest; 
+		this.resetPwdRequest = resetPwdRequest;
+		this.resetPwdRequest.toString();
 	}
 	
 	/**
