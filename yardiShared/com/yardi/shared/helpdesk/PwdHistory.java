@@ -1,5 +1,6 @@
 package com.yardi.shared.helpdesk;
 
+import java.util.Date;
 
 /**
  * History of the dates on which password was changed and the number of times the password was changed on that date.<p> 
@@ -13,7 +14,7 @@ public class PwdHistory {
 	 * <span style="font-family:consolas;">Column: UP1_DATE_ADDED</span><p>
 	 * Date token was added
 	 */ 
-	private java.sql.Date dateAdded;
+	private Date dateAdded;
 	/**
 	 * Number of tokens added on a given date 
 	 */
@@ -28,7 +29,7 @@ public class PwdHistory {
 	 * @param dateAdded date token was added
 	 * @param dateCount number of tokens added on a given date
 	 */
-	public PwdHistory(java.sql.Date dateAdded, long dateCount) {
+	public PwdHistory(Date dateAdded, long dateCount) {
 		System.out.println("com.yardi.shared.helpdesk.PwdHistory.PwdHistory(Date, long) 0001");
 		this.dateAdded = dateAdded; 
 		this.dateCount = dateCount; 
@@ -38,7 +39,7 @@ public class PwdHistory {
 	 * Return date token was added
 	 * @return date token was added
 	 */
-	public java.sql.Date getDateAdded() {
+	public Date getDateAdded() {
 		return dateAdded;
 	}
 
