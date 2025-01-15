@@ -368,8 +368,8 @@ function doPost(formItems) {
       data: JSON.stringify(formItems),
       dataType: "json"
     })
-    .done((ajaxData) => {
-      if (ajaxData.msgid === 'YRD0000') {
+    .done(ajaxData => {
+      if (ajaxData.msgID === 'YRD0000') {
         configureButtons();
         buildPage(ajaxData);
         resolve(ajaxData);  // Resolve on success
