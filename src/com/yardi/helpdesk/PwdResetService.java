@@ -219,7 +219,10 @@ public class PwdResetService extends HttpServlet {
 	 * @param pwdResetCtrlBean a reference to {@link com.yardi.ejb.helpdesk.PwdResetCtrlBean PwdResetCtrlBean}
 	 */
 	private void webResponse(HttpServletRequest request, HttpServletResponse response, String formData, PwdResetCtrl pwdResetCtrlBean) {
-		System.out.println("com.yardi.helpdesk.PwdResetService.webResponse() 000D ");
+		System.out.println("com.yardi.helpdesk.PwdResetService.webResponse() 000D "
+				+ "\n    "
+				+ formData
+				);
 	    try {
 			HttpSession session = request.getSession();
 	    	resetBuffer(response);
