@@ -196,5 +196,13 @@ public class Reset_Password implements Serializable {
 	public void setUpUserid(String upUserid) {
 		System.out.println("com.yardi.ejb.model.Reset_Password.setUpUserid() 0007");
 		this.upUserid = upUserid;
+	}
+
+	@Override
+	public String toString() {
+		System.out.println("com.yardi.ejb.model.Reset_Password.toString() 0008");
+		return "Reset_Password [upUserid=" + upUserid + ", upTempPwd=" + upTempPwd + ", upActiveYn=" + upActiveYn
+				+ ", upDisabledDate=" + upDisabledDate + ", upPwdexpd=" + upPwdexpd + ", upLastLoginDate="
+				+ upLastLoginDate + ", upPwdAttempts=" + upPwdAttempts + "]";
 	}   
 }
