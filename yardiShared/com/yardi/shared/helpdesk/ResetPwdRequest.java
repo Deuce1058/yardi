@@ -2,8 +2,6 @@ package com.yardi.shared.helpdesk;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonMerge;
-
 /**
  * A request to reset the user's password.<p>
  * The container holds details about the status of the user's account for the help desk to review on the password reset page. 
@@ -13,64 +11,54 @@ public class ResetPwdRequest {
 	/**
 	 * Action to perform: find or resetPwd
 	 */
-	@JsonMerge
 	private String action;
     /**
      * Message ID
      */
-	@JsonMerge
     private String msgID;
     /**
      * Message description
      */
-	@JsonMerge
     private String msgDescription; 	
 	/**
 	 * New password
 	 */
-	@JsonMerge
     private String newPassword;
 	/**
 	 * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
 	 * <span style="font-family:consolas;">Column: UP_USERID</span><p>
 	 * User ID
 	 */
-	@JsonMerge
     private String upUserid;
     /** 
      * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
      * <span style="font-family:consolas;">Column: UP_ACTIVE_YN</span><p>
      * User profile active flag. Y for active. N for inactive. User cant login unless this column is Y. Only an admin can set this column to Y.
      */ 
-	@JsonMerge
     private String upActiveYn;
     /**
      * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p> 
      * <span style="font-family:consolas;">Column: UP_DISABLED_DATE</span><p>
      * Date and time when the user profile became disabled due to too many invalid password attempts since the last successful login.
      */ 
-	@JsonMerge
     private java.sql.Timestamp upDisabledDate; 
     /**
      * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p> 
      * <span style="font-family:consolas;">Column: UP_PWDEXPD</span><p>
      * Password expiration date. The date on which the password must be changed.
      */ 
-	@JsonMerge
     private java.sql.Timestamp upPwdexpd; 
     /**
      * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
      * <span style="font-family:consolas;">Column: UP_LAST_LOGIN_DATE</span><p>
      * Date and time of last successful login.
      */ 
-	@JsonMerge
     private java.sql.Timestamp upLastLoginDate; 
     /**
      * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
      * <span style="font-family:consolas;">Column: UP_PWD_ATTEMPTS</span><p>
      * Number of invalid password attempts since the last successful login.
     */ 
-	@JsonMerge
     private short upPwdAttempts; 
     
     /**
@@ -78,7 +66,6 @@ public class ResetPwdRequest {
      * <span style="font-family:consolas;">Column: UP_TEMP_PWD</span><p>
      * Hashed temporary password assigned by help desk
      */
-	@JsonMerge
     private String upTempPwd;
     
     /** 
@@ -333,6 +320,4 @@ public class ResetPwdRequest {
 				+ upLastLoginDate + ", upPwdAttempts=" + upPwdAttempts + ", upTempPwd=" + upTempPwd + ", pwdHistory="
 				+ pwdHistory + "]";
 	}
-
-
 }
