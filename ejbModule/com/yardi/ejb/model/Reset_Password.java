@@ -114,7 +114,7 @@ public class Reset_Password implements Serializable {
 	 * Password expiration date. The date and time when the password must be changed.	 
 	 * @return date and time when the password must be changed
 	 */
-	public Date getUpPwdexpd() {
+	public Timestamp getUpPwdexpd() {
 		return this.upPwdexpd;
 	}
 
