@@ -3,7 +3,6 @@ package com.yardi.ejb.helpdesk;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 import com.yardi.ejb.PasswordPolicy;
 import com.yardi.ejb.UniqueTokens;
 import com.yardi.ejb.UserProfile;
@@ -82,9 +81,8 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 			
 			if (!(reset_Password==null)) {
 			    ObjectMapper mapper = new ObjectMapper(); 
-			    ObjectReader objectReader = mapper.readerForUpdating(resetPwdRequest);
-			    String s = mapper.writeValueAsString(mapper.writeValueAsString(reset_Password));
-			    objectReader.readValue(s);
+			    mapper.readerForUpdating(resetPwdRequest).readValue(mapper.writeValueAsString(reset_Password));
+			    String s = mapper.writeValueAsString(reset_Password);
 		    	System.out.println(
 		    			  "com.yardi.ejb.helpdesk.PwdResetCtrlBean.findUserDetails() 0010 "
 		    			+ "\n    "
