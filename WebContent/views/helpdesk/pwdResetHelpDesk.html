@@ -411,7 +411,7 @@ function buildPwdHistory(formItems) {
     + '</thead>'
     + '<tbody>'
   );
-  $.each(JSON.parse(formItems.pwdHistory), function(key, value) {
+  $.each(formItems.pwdHistory, function(key, value) {
     $('#pwdHistoryTable').append(
         '<tr class="blue" id="tableRow"> '
       + '  <td id="pwdChgDate"> ' 
