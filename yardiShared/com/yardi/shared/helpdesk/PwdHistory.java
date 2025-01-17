@@ -16,6 +16,10 @@ public class PwdHistory {
 	 */ 
 	private Date dateAdded;
 	/**
+	 * A string containing the formatted dateAdded for display purposes
+	 */
+	private String dateAddedString;
+	/**
 	 * Number of tokens added on a given date 
 	 */
 	private long dateCount;  
@@ -44,6 +48,14 @@ public class PwdHistory {
 	}
 
 	/**
+	 * Return the formatted date added for display purposes 
+	 * @return formatted date added
+	 */
+	public String getDateAddedString() {
+		return dateAddedString;
+	}
+
+	/**
 	 * Return number of times password was changed on a given date
 	 * @return number of times password was changed on a given date
 	 */
@@ -61,11 +73,25 @@ public class PwdHistory {
 	}
 
 	/**
+	 * Set the formatted date added for display purposes 
+	 * @param dateAddedString String containing formatted date added for display purposes  
+	 */
+	public void setDateAddedString(String dateAddedString) {
+		this.dateAddedString = dateAddedString;
+	}
+
+	/**
 	 * Set number of times password was changed on a given date to the given long
 	 * @param dateCount number of times password was changed on a given date
 	 */
 	public void setDateCount(long dateCount) {
 		System.out.println("com.yardi.shared.helpdesk.PwdHistory.setDateCount() 0003");
 		this.dateCount = dateCount;
+	}
+
+	@Override
+	public String toString() {
+		return "PwdHistory [dateAdded=" + dateAdded + ", dateAddedString=" + dateAddedString + ", dateCount="
+				+ dateCount + "]";
 	}	
 }
