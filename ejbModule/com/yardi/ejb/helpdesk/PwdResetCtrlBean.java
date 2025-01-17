@@ -1,5 +1,6 @@
 package com.yardi.ejb.helpdesk;
 
+import com.yardi.shared.helpdesk.ResetPwdRequest;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,7 +11,6 @@ import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.ejb.model.Reset_Password;
 import com.yardi.ejb.model.Update_Temp_Password;
 import com.yardi.ejb.util.Utils;
-import com.yardi.shared.helpdesk.ResetPwdRequest;
 import com.yardi.shared.userServices.PasswordAuthentication;
 
 import jakarta.annotation.PostConstruct;
