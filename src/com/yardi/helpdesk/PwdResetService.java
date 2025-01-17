@@ -4,15 +4,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.List;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.helpdesk.PwdResetCtrl;
+import com.yardi.shared.helpdesk.PwdHistory;
 import com.yardi.shared.helpdesk.ResetPwdRequest;
 
 import jakarta.servlet.ServletException;
@@ -97,15 +98,43 @@ public class PwdResetService extends HttpServlet {
 	        resetPwdRequest = pwdResetCtrlBean.resetPwd(); 
 	    }
 	    
+	    formatDatesInRequest(resetPwdRequest);
 	    ObjectMapper mapper = new ObjectMapper(); 
 	    webResponse(request, response, mapper.writeValueAsString(resetPwdRequest), pwdResetCtrlBean); 
 	}
 
-	/**
+    /**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
+	}
+
+	/**
+     * Format the dates in ReestPwdRequest for display purposes
+     * @param resetPwdRequest request to reset a password
+     */
+	private void formatDatesInRequest(ResetPwdRequest resetPwdRequest) {
+		System.out.println("com.yardi.helpdesk.PwdResetService.formatDatesInRequest() 0010 ");
+		SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyy MMdd HH:mm:ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMdd");
+		resetPwdRequest.setUpDisabledDateString (timeStampFormat.format(resetPwdRequest.getUpDisabledDate()));
+		resetPwdRequest.setUpLastLoginDateString(timeStampFormat.format(resetPwdRequest.getUpLastLoginDate()));
+		resetPwdRequest.setUpPwdexpdString      (timeStampFormat.format(resetPwdRequest.getUpPwdexpd()));
+		
+		if (!(resetPwdRequest.getPwdHistory()==null)) {
+			List<PwdHistory> pwdHistoryList = resetPwdRequest.getPwdHistory();
+			for(PwdHistory pwdHistory : pwdHistoryList) {
+				pwdHistory.setDateAddedString(dateFormat.format(pwdHistory.getDateAdded()));
+			}
+		}
+		
+		System.out.println(
+				  "com.yardi.helpdesk.PwdResetService.formatDatesInRequest() 0011 "
+				+ "\n    "
+				+ "ResetPwdRequest="
+				+ resetPwdRequest.toString()
+				);
 	}
 
 	/**
