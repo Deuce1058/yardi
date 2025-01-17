@@ -1,5 +1,6 @@
 package com.yardi.shared.helpdesk;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -13,23 +14,21 @@ public class ResetPwdRequest {
 	 */
 	private String action;
     /**
-     * Message ID
-     */
-    private String msgID;
-    /**
      * Message description
      */
-    private String msgDescription; 	
+    private String msgDescription;
+    /**
+     * Message ID
+     */
+    private String msgID; 	
 	/**
 	 * New password
 	 */
     private String newPassword;
-	/**
-	 * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
-	 * <span style="font-family:consolas;">Column: UP_USERID</span><p>
-	 * User ID
-	 */
-    private String upUserid;
+	/** 
+     * History of the dates on which password was changed and the number of times the password was changed on that date 
+     */ 
+    private List <PwdHistory> pwdHistory;
     /** 
      * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
      * <span style="font-family:consolas;">Column: UP_ACTIVE_YN</span><p>
@@ -37,41 +36,53 @@ public class ResetPwdRequest {
      */ 
     private String upActiveYn;
     /**
-     * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p> 
+     * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
      * <span style="font-family:consolas;">Column: UP_DISABLED_DATE</span><p>
-     * Date and time when the user profile became disabled due to too many invalid password attempts since the last successful login.
-     */ 
-    private java.sql.Timestamp upDisabledDate; 
+     *  Date and time when the user profile became disabled due to too many invalid password attempts since the last successful login.
+     */
+    private Timestamp upDisabledDate;
     /**
-     * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p> 
-     * <span style="font-family:consolas;">Column: UP_PWDEXPD</span><p>
-     * Password expiration date. The date on which the password must be changed.
-     */ 
-    private java.sql.Timestamp upPwdexpd; 
+     * A String containing the formatted disabled date for display purposes
+     */
+    private String upDisabledDateString;
     /**
      * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
      * <span style="font-family:consolas;">Column: UP_LAST_LOGIN_DATE</span><p>
      * Date and time of last successful login.
-     */ 
-    private java.sql.Timestamp upLastLoginDate; 
+     */
+    private Timestamp upLastLoginDate; 
+    /**
+     * A String containing the formatted last login date for display purposes
+     */
+    private String upLastLoginDateString; 
     /**
      * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
      * <span style="font-family:consolas;">Column: UP_PWD_ATTEMPTS</span><p>
      * Number of invalid password attempts since the last successful login.
     */ 
-    private short upPwdAttempts; 
-    
+    private short upPwdAttempts;
+    /**
+     * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p> 
+     * <span style="font-family:consolas;">Column: UP_PWDEXPD</span><p>
+     * Password expiration date. The date on which the password must be changed.
+     */
+    private Timestamp upPwdexpd;
+    /**
+     * A string containing the formatted password expiration date for display purposes
+     */
+    private String upPwdexpdString;    
     /**
      * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
      * <span style="font-family:consolas;">Column: UP_TEMP_PWD</span><p>
      * Hashed temporary password assigned by help desk
      */
     private String upTempPwd;
-    
-    /** 
-     * History of the dates on which password was changed and the number of times the password was changed on that date 
-     */ 
-    private List <PwdHistory> pwdHistory;
+    /**
+	 * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
+	 * <span style="font-family:consolas;">Column: UP_USERID</span><p>
+	 * User ID
+	 */
+    private String upUserid;
 
     /**
      * Default constructor
@@ -80,15 +91,15 @@ public class ResetPwdRequest {
     	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest.ResetPwdRequest() 0000");
     }
 
-	/**
+    /**
      * Return action to perform: find or resetPwd
      * @return action to perform
      */
 	public String getAction() {
 		return action;
-	}      
-    
-    /**
+	}
+
+	/**
 	 * Return message description
 	 * @return message description
 	 */
@@ -96,7 +107,7 @@ public class ResetPwdRequest {
 		return msgDescription;
 	}
 
-    /**
+	/**
 	 * Return message ID 
 	 * @return message ID
 	 */
@@ -111,15 +122,15 @@ public class ResetPwdRequest {
 	public String getNewPassword() {
 		return newPassword;
 	}
-    
-    /**
+
+	/**
      * Return history of the dates on which password was changed and the number of times the password was changed on that date 
      * @return history of dates on which password was changed and number of times password was changed on that date
      */
     public List<PwdHistory> getPwdHistory() {
 		return pwdHistory;
 	}
-	
+
 	/**
      * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
      * <span style="font-family:consolas;">Column: UP_ACTIVE_YN</span><p>
@@ -129,25 +140,40 @@ public class ResetPwdRequest {
 	public String getUpActiveYn() {
 		return upActiveYn;
 	}
-	
-	/**
-     * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p> 
-     * <span style="font-family:consolas;">Column: UP_DISABLED_DATE</span><p>
-	 * Return date and time on which the user profile was disabled due to too many failed login attempts since the last successful login 
-	 * @return date and time on which the user profile was disabled
+
+    
+    /**
+	 * Return disabled timestamp
+	 * @return disabled timestamp
 	 */
-	public java.sql.Timestamp getUpDisabledDate() {
+	public Timestamp getUpDisabledDate() {
 		return upDisabledDate;
 	}
+
+
+	/**
+     * Return the formatted disabled date for display purposes
+     * @return formatted disabled date for display purposes
+     */
+	public String getUpDisabledDateString() {
+		return upDisabledDateString;
+	}
+    
+    /**
+	 * Return last login timestamp
+	 * @return last login timestamp
+	 */
+	public Timestamp getUpLastLoginDate() {
+		return upLastLoginDate;
+	}
+	
 	
 	/**
-     * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
-     * <span style="font-family:consolas;">Column: UP_LAST_LOGIN_DATE</span><p>
-	 * Return date and time of the most recent successful login
-	 * @return date and time of the most recent successful login
+	 * Get formatted last login date for display purposes
+	 * @return formatted last login date for display purposes
 	 */
-	public java.sql.Timestamp getUpLastLoginDate() {
-		return upLastLoginDate;
+	public String getUpLastLoginDateString() {
+		return upLastLoginDateString;
 	}
 	
 	/**
@@ -161,13 +187,19 @@ public class ResetPwdRequest {
 	}
 	
 	/**
-     * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p> 
-     * <span style="font-family:consolas;">Column: UP_PWDEXPD</span><p>
-	 * Return date and time on which the password expires
-	 * @return date and time on which the password expires
+	 * Return password expiration timestamp
+	 * @return password expiration timestamp
 	 */
-	public java.sql.Timestamp getUpPwdexpd() {
+	public Timestamp getUpPwdexpd() {
 		return upPwdexpd;
+	}
+	
+	/**
+	 * Return the formatted password expiration date for display purposes
+	 * @return formatted password expiration date for display purposes
+	 */
+	public String getUpPwdexpdString() {
+		return upPwdexpdString;
 	}
 	
 	/**
@@ -225,7 +257,7 @@ public class ResetPwdRequest {
     	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest.setNewPassword() 0004");
 		this.newPassword = newPassword;
 	}
-	
+
 	/**
      * Set history of the dates on which password was changed and the number of times the password was changed on that date 
      * @param pwdHistory history of dates on which password was changed and number of times password was changed on that date
@@ -257,6 +289,14 @@ public class ResetPwdRequest {
 		this.upDisabledDate = upDisabledDate;
 	}
 	
+	/**
+	 * Set formatted disabled date for display purposes to the given String 
+	 * @param upDisabledDateString disabled date for display purposes
+	 */
+	public void setUpDisabledDateString(String upDisabledDateString) {
+		this.upDisabledDateString = upDisabledDateString;
+	}
+	
 	/**'
      * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
      * <span style="font-family:consolas;">Column: UP_LAST_LOGIN_DATE</span><p>
@@ -269,6 +309,14 @@ public class ResetPwdRequest {
 	}
 	
 	/**
+	 * Set formatted last login date for display purposes to the given String 
+	 * @param upLastLoginDateString last login date for display purposes
+	 */
+	public void setUpLastLoginDateString(String upLastLoginDateString) {
+		this.upLastLoginDateString = upLastLoginDateString;
+	}
+
+	/**
      * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
      * <span style="font-family:consolas;">Column: UP_PWD_ATTEMPTS</span><p>
 	 * Set number of failed password attempts since the most recent successful login to the given short
@@ -278,7 +326,7 @@ public class ResetPwdRequest {
     	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest.setUpPwdAttempts() 0009");
 		this.upPwdAttempts = upPwdAttempts;
 	}
-	
+
 	/**
      * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p> 
      * <span style="font-family:consolas;">Column: UP_PWDEXPD</span><p>
@@ -289,7 +337,15 @@ public class ResetPwdRequest {
     	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest.setUpPwdexpd() 000A");
 		this.upPwdexpd = upPwdexpd;
 	}
-	
+
+	/**
+	 * Set formatted password expiration date for display purposes to the given String
+	 * @param upPwdexpdString password expiration date for display purposes
+	 */
+	public void setUpPwdexpdString(String upPwdexpdString) {
+		this.upPwdexpdString = upPwdexpdString;
+	}
+
 	/**
      * <span style="font-family:consolas;">Table:  USER_PROFILE</span><p>
      * <span style="font-family:consolas;">Column: UP_TEMP_PWD</span><p>
@@ -310,14 +366,15 @@ public class ResetPwdRequest {
     	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest.setUpUserid() 000B");
 		this.upUserid = upUserid;
 	}
-
+	
 	@Override
 	public String toString() {
 		System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest.toString() 000C ");
-		return "ResetPwdRequest [action=" + action + ", msgID=" + msgID + ", msgDescription=" + msgDescription
-				+ ", newPassword=" + newPassword + ", upUserid=" + upUserid + ", upActiveYn=" + upActiveYn
-				+ ", upDisabledDate=" + upDisabledDate + ", upPwdexpd=" + upPwdexpd + ", upLastLoginDate="
-				+ upLastLoginDate + ", upPwdAttempts=" + upPwdAttempts + ", upTempPwd=" + upTempPwd + ", pwdHistory="
-				+ pwdHistory + "]";
+		return "ResetPwdRequest [action=" + action + ", msgDescription=" + msgDescription + ", msgID=" + msgID
+				+ ", newPassword=" + newPassword + ", pwdHistory=" + pwdHistory + ", upActiveYn=" + upActiveYn
+				+ ", upDisabledDateString=" + upDisabledDateString + ", upLastLoginDateString=" + upLastLoginDateString
+				+ ", upPwdexpdString=" + upPwdexpdString + ", upDisabledDate=" + upDisabledDate + ", upLastLoginDate="
+				+ upLastLoginDate + ", upPwdexpd=" + upPwdexpd + ", upPwdAttempts=" + upPwdAttempts + ", upTempPwd="
+				+ upTempPwd + ", upUserid=" + upUserid + "]";
 	}
 }
