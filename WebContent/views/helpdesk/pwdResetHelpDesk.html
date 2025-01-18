@@ -394,9 +394,9 @@ function buildUserProfileDetails(formItems) {
   if (formItems.upTempPwd===null) {
     $('#tempPwdYn')        .text('N');
   }
-  $('#disabledDate')     .text(formItems.upDisabledDate);
-  $('#pwdExpDate')       .text(formItems.upPwdexpd);  
-  $('#lastLoginDate')    .text(formItems.upLastLoginDate);
+  $('#disabledDate')     .text(formItems.upDisabledDateString);
+  $('#pwdExpDate')       .text(formItems.upPwdexpdString);  
+  $('#lastLoginDate')    .text(formItems.upLastLoginDateString);
   $('#pwdAttempts')      .text(formItems.upPwdAttempts);
 }
 
@@ -415,14 +415,14 @@ function buildPwdHistory(formItems) {
     $('#pwdHistoryTable').append(
         '<tr class="blue" id="tableRow"> '
       + '  <td id="pwdChgDate"> ' 
-      + value.dateAdded
+      + value.dateAddedString
       + '  </td> '
       + '  <td id="pwdTimesChg"> '
       + value.dateCount
       + '  </td>'
       + '</tr>'
     );
-  } );
+  });
   $('#pwdHistoryTable').append('</tbody>');
 }
 
