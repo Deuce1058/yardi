@@ -128,8 +128,8 @@ public class UniqueTokensBean implements UniqueTokens {
 				"SELECT NEW com.yardi.shared.helpdesk.PwdHistory(u.up1DateAdded, COUNT(u)) " + 
 	    		"FROM Unique_Tokens u " + 
 	    		"WHERE u.up1UserName = :userID " + 
-	    		"GROUP BY u.up1DateAdded, u.up1Rrn " +
-	    		"ORDER BY u.up1DateAdded DESC, u.up1Rrn DESC ", 
+	    		"GROUP BY u.up1DateAdded " +
+	    		"ORDER BY u.up1DateAdded DESC ", 
 	    		PwdHistory.class);
 		qry.setParameter("userID", userID);
 	    return qry.getResultList(); 
