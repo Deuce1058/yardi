@@ -343,7 +343,7 @@ $(function () {
     };
     
     if ($('#tempPwdInput').val()==='') {
-      $(this).addClass('error-border');
+      $('#tempPwdInput').addClass('error-border');
       $('#form-feedback').text('Temporary password is required');
     } else {
       doPost(formItems)
