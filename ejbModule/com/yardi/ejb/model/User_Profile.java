@@ -214,6 +214,14 @@ public class User_Profile implements Serializable {
 	}
 
 	/**
+	 * Set temporary password to the given String 
+	 * @param upTempPwd temporary password
+	 */
+	public void setUpTempPwd(String upTempPwd) {
+		this.upTempPwd = upTempPwd;
+	}
+
+	/**
 	 * The hashed password is set to the given String.
 	 * @param uptoken hashed password
 	 */
