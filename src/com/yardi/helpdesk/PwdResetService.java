@@ -48,7 +48,7 @@ public class PwdResetService extends HttpServlet {
 				+ "sessionID="
 				+ session.getId()
 				);
-		PwdResetCtrl pwdpwdResetCtrlBean = (PwdResetCtrl)session.getAttribute("pwdpwdResetCtrlBean");
+		PwdResetCtrl pwdpwdResetCtrlBean = (PwdResetCtrl)session.getAttribute("pwdResetCtrlBean");
 		
 		synchronized(session) {
 			if (pwdpwdResetCtrlBean==null) {
@@ -62,7 +62,7 @@ public class PwdResetService extends HttpServlet {
 					return null;
 				}
 				
-				session.setAttribute("pwdpwdResetCtrlBean", pwdpwdResetCtrlBean);
+				session.setAttribute("pwdResetCtrlBean", pwdpwdResetCtrlBean);
 			}
 		}
 		
@@ -118,8 +118,15 @@ public class PwdResetService extends HttpServlet {
 		System.out.println("com.yardi.helpdesk.PwdResetService.formatDatesInRequest() 0010 ");
 		SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyy MMdd HH:mm:ss");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMdd");
-		resetPwdRequest.setUpDisabledDateString (timeStampFormat.format(resetPwdRequest.getUpDisabledDate()));
-		resetPwdRequest.setUpLastLoginDateString(timeStampFormat.format(resetPwdRequest.getUpLastLoginDate()));
+		
+		if (!(resetPwdRequest.getUpDisabledDate()==null)) {
+			resetPwdRequest.setUpDisabledDateString (timeStampFormat.format(resetPwdRequest.getUpDisabledDate()));
+		}
+		
+		if (!(resetPwdRequest.getUpLastLoginDate()==null)) {
+			resetPwdRequest.setUpLastLoginDateString(timeStampFormat.format(resetPwdRequest.getUpLastLoginDate()));
+		}
+		
 		resetPwdRequest.setUpPwdexpdString      (timeStampFormat.format(resetPwdRequest.getUpPwdexpd()));
 		
 		if (!(resetPwdRequest.getPwdHistory()==null)) {
