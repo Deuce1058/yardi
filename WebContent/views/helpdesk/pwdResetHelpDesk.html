@@ -444,14 +444,14 @@ function clearScreen() {
 function configureButtons() {
    if (findButtonDisabled) {
     $('#username')    .addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
-    $('#tempPwdInput').addClass('not-allowed').removeClass('pointer')    .attr('disabled', false);
     $('#findBtn')     .addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
+    $('#tempPwdInput').addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
     $('#cancelBtn')   .addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
     $('#updateBtn')   .addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
   } else {
     $('#username')    .addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
-    $('#tempPwdInput').addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
     $('#findBtn')     .addClass('pointer')    .removeClass('not-allowed').attr('disabled', false);
+    $('#tempPwdInput').addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
     $('#cancelBtn')   .addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
     $('#updateBtn')   .addClass('not-allowed').removeClass('pointer')    .attr('disabled', true);
   }
