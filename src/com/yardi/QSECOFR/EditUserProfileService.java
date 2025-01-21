@@ -20,7 +20,7 @@ import jakarta.transaction.UserTransaction;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yardi.ejb.EditUserProfileCTRL;
+import com.yardi.ejb.QSECOFR.EditUserProfileCTRL;
 import com.yardi.shared.QSECOFR.EditUserProfileRequest;
 
 /**
@@ -49,7 +49,7 @@ public class EditUserProfileService extends HttpServlet {
 	 * Handle requests to edit the user profile.<p>
 	 * 
 	 * <code>doGet()</code> begins by checking for a session attribute named <code>editUserProfileCTRL</code>. This attribute is a reference to 
-	 * {@link com.yardi.ejb.EditUserProfileCTRLBean#EditUserProfileCTRLBean() com.yardi.ejb.EditUserProfileCTRLBean}. If attribute <code>editUserProfileCTRL</code>
+	 * {@link com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean#EditUserProfileCTRLBean() com.yardi.ejb.EditUserProfileCTRLBean}. If attribute <code>editUserProfileCTRL</code>
 	 * is not found <code>doGet()</code> obtains a reference to <code>EditUserProfileCTRLBean</code> from JNDI and sets attribute <code>editUserProfileCTRL</code> to 
 	 * be a reference to <code>EditUserProfileCTRLBean</code>.<p>
 	 * 
@@ -197,7 +197,7 @@ public class EditUserProfileService extends HttpServlet {
 	 * Release session resources.<p>
 
 	 * A remove request is a special case which indicates the user is leaving the page <code>userProfile_CRUD.html</code>. Therefore they are finished editing user profiles. 
-	 * <code>remove()</code> will release resources on stateful {@link com.yardi.ejb.EditUserProfileCTRLBean#EditUserProfileCTRLBean() com.yardi.ejb.EdidUserProfileCTRLBean} 
+	 * <code>remove()</code> will release resources on stateful {@link com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean#EditUserProfileCTRLBean() com.yardi.ejb.EdidUserProfileCTRLBean} 
 	 * by calling its remove method and setting session attribute <code>editUserProfileCTRL</code> to <i>null</i>.
 	 * 
 	 * @param request a HttpServletRequest
