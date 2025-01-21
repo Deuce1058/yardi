@@ -1,5 +1,6 @@
-package com.yardi.ejb;
+package com.yardi.ejb.QSECOFR;
 
+import java.time.LocalDateTime;
 import java.util.Vector;
 
 import jakarta.annotation.PostConstruct;
@@ -16,6 +17,10 @@ import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 
+import com.yardi.ejb.SessionsTable;
+import com.yardi.ejb.UniqueTokens;
+import com.yardi.ejb.UserGroups;
+import com.yardi.ejb.UserProfile;
 import com.yardi.ejb.model.Full_Sessions_Table;
 import com.yardi.ejb.model.Full_User_Profile;
 import com.yardi.ejb.model.User_Groups2;
@@ -113,6 +118,10 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 			/*debug*/
 			tx.begin();
 			txStatus();
+			editRequest.getLdt();
+			editRequest.setLdt(LocalDateTime.now());
+			Full_User_Profile x = new Full_User_Profile();
+			x.getUpDisabledDate();
 			persistFull_User_Profile(
 					new Full_User_Profile(
 							editRequest.getFindUser(),
