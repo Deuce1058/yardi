@@ -1,4 +1,4 @@
-package com.yardi.ejb;
+package com.yardi.ejb.QSECOFR;
 
 import com.yardi.shared.QSECOFR.EditUserProfileRequest;
 
