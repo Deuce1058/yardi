@@ -1,5 +1,6 @@
 package com.yardi.shared.QSECOFR;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date; 
@@ -108,6 +109,11 @@ public class EditUserProfileRequest {
 	 */
 	private String pwdExpDate;
 	/**
+	 * User profile password expiration time.<p> 
+	 * The password must be changed on or after this time. From and to the web for presentation purposes. Format HH:MM:SS.
+	 */
+	private String pwdExpTime;
+	/**
 	 * User profile time when the profile was disabled due to too many invalid password attempts since the last login.<p> 
 	 * From and to the web for presentation purposes. Format is hh:mm:ss.
 	 */
@@ -125,6 +131,10 @@ public class EditUserProfileRequest {
 	 * User profile hashed password.<p> From and to the web for presentation purposes.
 	 */
 	private String currentToken;
+	/**
+	 * User profile hashed temporary password assigned by help desk for presentation purposes.
+	 */
+	private String tempToken;
 	/**
 	 * User profile date of most recent successful login.<p> From and to the web for presentation purposes. Format is MM/DD/CCYY.
 	 */
