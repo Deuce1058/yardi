@@ -482,6 +482,14 @@ public class EditUserProfileRequest {
 	}
 
 	/**
+	 * Return the password expiration time for display purposes. Formatted HH:MM:SS
+	 * @return password expiration time for display purposes
+	 */
+	public String getPwdExpTime() {
+		return pwdExpTime;
+	}
+
+	/**
 	 * Return the ssn for presentation purposes.
 	 * @return the ssn
 	 */
@@ -495,6 +503,14 @@ public class EditUserProfileRequest {
 	 */
 	public String getState() {
 		return state;
+	}
+
+	/**
+	 * Return the hashed temporary token assigned by helpdesk 
+	 * @return hashed temporary token
+	 */
+	public String getTempToken() {
+		return tempToken;
 	}
 
 	/**
@@ -944,6 +960,14 @@ public class EditUserProfileRequest {
 	}
 
 	/**
+	 * Set the password expiration time for display purposes to the given String
+	 * @param pwdExpTime password expiration time for display purposes
+	 */
+	public void setPwdExpTime(String pwdExpTime) {
+		this.pwdExpTime = pwdExpTime;
+	}
+
+	/**
 	 * Set user profile ssn for presentation purposes.
 	 * @param ssn the value to set
 	 */
@@ -963,6 +987,14 @@ public class EditUserProfileRequest {
 		System.out.println("com.yardi.shared.QSECOFR.EditUserProfileRequest.setState() 0033 ");
 		/*debug*/
 		this.state = state;
+	}
+
+	/** 
+	 * Set the hashed temporary token to the given String
+	 * @param tempToken hashed temporary token
+	 */
+	public void setTempToken(String tempToken) {
+		this.tempToken = tempToken;
 	}
 
 	/**
@@ -1196,7 +1228,7 @@ public class EditUserProfileRequest {
 				);
 		return new Date(gc.getTimeInMillis());
 	}
-	
+
 	@Override
 	public String toString() {
 		return "EditUserProfileRequest [action=" + action + ", findUser=" + findUser + ", msgID=" + msgID
@@ -1204,10 +1236,11 @@ public class EditUserProfileRequest {
 				+ ", address1=" + address1 + ", address2=" + address2 + ", city=" + city + ", state=" + state + ", zip="
 				+ zip + ", zip4=" + zip4 + ", phone=" + phone + ", fax=" + fax + ", email=" + email + ", ssn=" + ssn
 				+ ", dob=" + dob + ", homeMarket=" + homeMarket + ", activeYN=" + activeYN + ", pwdExpDate="
-				+ pwdExpDate + ", disabledTime=" + disabledTime + ", disabledDate=" + disabledDate + ", pwdAttempts="
-				+ pwdAttempts + ", currentToken=" + currentToken + ", lastLogin=" + lastLogin + ", lastLoginTime="
-				+ lastLoginTime + ", birthDate=" + birthDate + ", upHomeMarket=" + upHomeMarket
-				+ ", passwordExpirationDate=" + passwordExpirationDate + ", profileDisabledDate=" + profileDisabledDate
-				+ ", lastLoginDate=" + lastLoginDate + ", passwordAttempts=" + passwordAttempts + "]";
+				+ pwdExpDate + ", pwdExpTime=" + pwdExpTime + ", disabledTime=" + disabledTime + ", disabledDate="
+				+ disabledDate + ", pwdAttempts=" + pwdAttempts + ", currentToken=" + currentToken + ", tempToken="
+				+ tempToken + ", lastLogin=" + lastLogin + ", lastLoginTime=" + lastLoginTime + ", birthDate="
+				+ birthDate + ", upHomeMarket=" + upHomeMarket + ", passwordExpirationDate=" + passwordExpirationDate
+				+ ", profileDisabledDate=" + profileDisabledDate + ", lastLoginDate=" + lastLoginDate
+				+ ", passwordAttempts=" + passwordAttempts + "]";
 	}
 }
