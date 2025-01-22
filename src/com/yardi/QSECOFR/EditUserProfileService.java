@@ -42,9 +42,43 @@ public class EditUserProfileService extends HttpServlet {
 	 * @see HttpServlet#HttpServlet()
 	 */
     public EditUserProfileService() {
-        super();
     }
 
+	/**
+	 * Determine whether the session contains a reference to {@link com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean EditUserProfileCTRLBean}.<p> 
+	 * If the session does not have a reference to EditUserProfileCTRLBean then get the reference from JNDI and save it in the session. Return the reference that came 
+	 * from either the session or JNDI.   
+	 * @param request {@link HttpServletRequest}
+	 * @return a reference to EditUserProfileCTRLBean
+	 */
+	private EditUserProfileCTRL checkSession(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		System.out.println("com.yardi.QSECOFR.EditUserProfileService.checkSession() 0000 "
+				+ "\n    "
+				+ "sessionID="
+				+ session.getId()
+				);
+		EditUserProfileCTRL editUserProfileCTRLBean = (EditUserProfileCTRL)session.getAttribute("editUserProfileCTRL");
+		
+		synchronized(session) {
+			if (editUserProfileCTRLBean==null) {
+				System.out.println("com.yardi.QSECOFR.EditUserProfileService.checkSession() 0001 ");
+				try {
+					InitialContext ctx = new InitialContext();
+					editUserProfileCTRLBean = (EditUserProfileCTRL)ctx.lookup("java:global/yardiWeb/EditUserProfileCTRLBean");
+				} catch (NamingException e) {
+					System.out.println("com.yardi.QSECOFR.EditUserProfileService.checkSession() 0002 NamingException ");
+					e.printStackTrace();
+					return null;
+				}
+				
+				session.setAttribute("editUserProfileCTRL", editUserProfileCTRLBean);
+			}
+		}
+		
+		return editUserProfileCTRLBean;
+	}
+		
 	/**
 	 * Handle requests to edit the user profile.<p>
 	 * 
@@ -70,63 +104,18 @@ public class EditUserProfileService extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println(
-				  "com.yardi.QSECOFR.EditUserProfileService doGet() 0019 " 
+				  "com.yardi.QSECOFR.EditUserProfileService doGet() 0014 " 
 				+ "\n    "
 				+ "JSESSIONID="
-				+ request.getSession(false).getId()
+				+ request.getSession().getId()
 				);
-		HttpSession session = request.getSession(false);
-		InitialContext ctx;
-		EditUserProfileCTRL editUserProfileCTRL = (EditUserProfileCTRL)session.getAttribute("editUserProfileCTRL");
-		
-		if (editUserProfileCTRL == null) {
-			try {
-				ctx = new InitialContext();
-				editUserProfileCTRL = (EditUserProfileCTRL)ctx.lookup("java:global/yardiWeb/EditUserProfileCTRLBean");
-				//debug
-				System.out.println(
-						 "com.yardi.QSECOFR.EditUserProfileService doGet() 0008 " 
-						+ "\n    "
-						+ "JSESSIONID="
-						+ session.getId()
-						);
-				//debug
-			} catch (NamingException e) {
-				//debug
-				System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 0009 ");
-				//debug
-				e.printStackTrace();
-			}
-			session.setAttribute("editUserProfileCTRL", editUserProfileCTRL);
-			//debug
-			System.out.println(
-					 "com.yardi.QSECOFR.EditUserProfileService doGet() 000A " 
-					+ "\n    "
-					+ "JSESSIONID="
-					+ session.getId()
-					);
-			//debug
-		}
-		
+		EditUserProfileCTRL editUserProfileCTRL = checkSession(request);
 		String formData = readBuffer(request);
 		EditUserProfileRequest editRequest = mapRequest(formData);
-		
-		/*
-		 * When the user requests another page, the current page notifies this servlet so that it can call the remove method on 
-		 * stateful com.yardi.ejb.EditUserProfileCTRLBean and release session resources that are being used. Next this servlet responds
-		 * to the request with YRD0000 and the current page causes the requested page to load
-		 */
-
-		if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_REMOVE)) {
-			System.out.println("com.yardi.QSECOFR.EditUserProfileService doGet() 000B ");
-			remove(request, response, new EditUserProfileRequest());
-			return;
-		}
-
 		editUserProfileCTRL.setEditUserProfileRequest(editRequest);
 		editUserProfileCTRL.inzEditRequest();
 		editUserProfileCTRL.handleRequest();
-		webResponse(request, response, editUserProfileCTRL.getEditUserProfileRequest());
+		webResponse(request, response, editUserProfileCTRL.getEditUserProfileRequest(), editUserProfileCTRL);
 		return;
 	}
 
@@ -145,13 +134,12 @@ public class EditUserProfileService extends HttpServlet {
 	 */
 	private EditUserProfileRequest mapRequest(String formData) {
 		/*debug*/
-        System.out.println("com.yardi.QSECOFR.EditUserProfileService.mapRequest() 0002 ");
+        System.out.println("com.yardi.QSECOFR.EditUserProfileService.mapRequest() 0015 ");
 		/*debug*/
+		ObjectMapper mapper = new ObjectMapper();
+		EditUserProfileRequest editRequest = new EditUserProfileRequest();
 		try {
-			EditUserProfileRequest editRequest = new EditUserProfileRequest();
-			ObjectMapper mapper = new ObjectMapper();
 			editRequest = mapper.readValue(formData, EditUserProfileRequest.class);
-			return editRequest;
 		} catch (JsonProcessingException e) {
 			/*debug*/
 			System.out.println("com.yardi.QSECOFR.EditUserProfileService.mapRequest() exception 0003 ");
@@ -159,6 +147,8 @@ public class EditUserProfileService extends HttpServlet {
 			e.printStackTrace();
 			return null;
 		}
+		
+		return editRequest;
 	}
 	
 	/**
@@ -171,52 +161,27 @@ public class EditUserProfileService extends HttpServlet {
 		/*debug*/
 		System.out.println("com.yardi.QSECOFR.EditUserProfileService.readBuffer() 0004 ");
 		/*debug*/
+		String formData = "";
+		BufferedReader br;
 		try {
-			BufferedReader br;
 			br = new BufferedReader(new InputStreamReader(request.getInputStream()));
-			String formData = new String("");
 			
 	        if(br != null){
 	        	formData = br.readLine();
 	        }
 	        
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService.readBuffer() 0000 "
+	        System.out.println("com.yardi.QSECOFR.EditUserProfileService.readBuffer() 000E "
 	        	+ "\n"
 	        	+ "   formData=" + formData);
-	        return formData;
 		} catch (IOException e) {
 			/*debug*/
-	        System.out.println("com.yardi.QSECOFR.EditUserProfileService.readBuffer() exception 0001 ");
+	        System.out.println("com.yardi.QSECOFR.EditUserProfileService.readBuffer() exception 000F ");
    			/*debug*/
 			e.printStackTrace();
 			return null;
 		}
-	}
-	
-	/**
-	 * Release session resources.<p>
-
-	 * A remove request is a special case which indicates the user is leaving the page <code>userProfile_CRUD.html</code>. Therefore they are finished editing user profiles. 
-	 * <code>remove()</code> will release resources on stateful {@link com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean#EditUserProfileCTRLBean() com.yardi.ejb.EdidUserProfileCTRLBean} 
-	 * by calling its remove method and setting session attribute <code>editUserProfileCTRL</code> to <i>null</i>.
-	 * 
-	 * @param request a HttpServletRequest
-	 * @param response a HttpServletResponse
-	 * @param editRequest POJO representation of the web request
-	 * @throws IOException Signals that an I/O exception of some sort has occurred. 
-	 */
-	private void remove(HttpServletRequest request, HttpServletResponse response, EditUserProfileRequest editRequest) throws IOException {
-		//debug
-		System.out.println("com.yardi.QSECOFR.EditUserProfileService remove() 0007 ");
-		//debug
-		EditUserProfileCTRL editUserProfileCTRLbean = (EditUserProfileCTRL)request.getSession(false).getAttribute("editUserProfileCTRL");
-		request.getSession(false).setAttribute("editUserProfileCTRL", null);
-		editUserProfileCTRLbean.removeBean();
-		String feedback [] = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
-		editRequest.setMsgID(feedback[0]);
-		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0014.split("=");
-		editRequest.setMsgDescription(feedback[1]);
-		webResponse(request, response, editRequest); 
+		
+        return formData;
 	}
 	
 	/**
@@ -229,19 +194,19 @@ public class EditUserProfileService extends HttpServlet {
 				 "com.yardi.QSECOFR.EditUserProfileService showResponseHeaders() 000C " 
 				+ "\n    "
 				+ "JSESSIONID="
-				+ request.getSession(false).getId()
+				+ request.getSession().getId()
 				);
 		Collection<String> headerNames = response.getHeaderNames();
 		
 		if (headerNames.isEmpty()) {
-			System.out.println("com.yardi.QSECOFR.EditUserProfileService showResponseHeaders() 0014 headerNames is empty");
+			System.out.println("com.yardi.QSECOFR.EditUserProfileService showResponseHeaders() 0011 headerNames is empty");
 		}
 		
 		for (String n : headerNames) {
 			Collection<String> headerValues = response.getHeaders(n);
 			
 			if (headerValues.isEmpty()) {
-				System.out.println("com.yardi.QSECOFR.EditUserProfileService showResponseHeaders() 0015 "
+				System.out.println("com.yardi.QSECOFR.EditUserProfileService showResponseHeaders() 0010 "
 						+ "\n"
 						+ "   Response header name="
 						+ n
@@ -249,7 +214,7 @@ public class EditUserProfileService extends HttpServlet {
 			}
 			
 			for (String v :  headerValues) {
-				System.out.println("com.yardi.QSECOFR.EditUserProfileService showResponseHeaders() 0016 "
+				System.out.println("com.yardi.QSECOFR.EditUserProfileService showResponseHeaders() 0013 "
 						+ "\n"
 						+ "   Response header name="
 						+ n
@@ -268,15 +233,16 @@ public class EditUserProfileService extends HttpServlet {
 	 * @param response a HttpServletResponse
 	 * @param editRequest POJO representation of the web request
 	 */
-	private void webResponse(HttpServletRequest request, HttpServletResponse response, EditUserProfileRequest editRequest) {
+	private void webResponse(HttpServletRequest request, HttpServletResponse response, EditUserProfileRequest editRequest, EditUserProfileCTRL editUserProfileCTRLbean) {
 		/*debug*/
 		System.out.println(
 				 "com.yardi.QSECOFR.EditUserProfileService.webResponse() 0005 " 
 				+ "\n    "
 				+ "JSESSIONID="
-				+ request.getSession(false).getId()
+				+ request.getSession().getId()
 				);
 		/*debug*/
+		HttpSession session = request.getSession();
 		ObjectMapper mapper = new ObjectMapper();
 		showResponseHeaders(request, response);
 		response.resetBuffer();
@@ -288,6 +254,10 @@ public class EditUserProfileService extends HttpServlet {
 			String formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
 			out.print(formData);
 			out.flush();
+			editUserProfileCTRLbean.removeBean();
+			synchronized(session) {
+				request.getSession().setAttribute("editUserProfileCTRL", null);
+			}
 		} catch (IOException e1) {
 			/*debug*/
 			System.out.println("com.yardi.QSECOFR.EditUserProfileService.webResponse() exception 0006 ");
@@ -299,7 +269,7 @@ public class EditUserProfileService extends HttpServlet {
 				 "com.yardi.QSECOFR.EditUserProfileService.webResponse() 000D "
 				+ "\n    "
 				+ "JSESSIONID="
-				+ request.getSession(false).getId()
+				+ request.getSession().getId()
 				);
 	}
 }
