@@ -31,8 +31,9 @@ public interface EditUserProfileCTRL {
 	 * 
 	 * The client only needs to call this method after injecting the web request and initializing the web request. 
 	 * Based on the request, this method delegates to the appropriate method to complete the rest of the process.  
+	 * @return TODO
 	 */
-	void handleRequest();
+	EditUserProfileRequest handleRequest();
 	/**
 	 * Directs the web request to initialize itself.<p>
 	 * 
