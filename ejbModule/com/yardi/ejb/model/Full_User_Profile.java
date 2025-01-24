@@ -1,6 +1,8 @@
 package com.yardi.ejb.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+
 import jakarta.persistence.*;
 
 /**
@@ -149,10 +151,8 @@ public class Full_User_Profile implements Serializable {
 	 * Column: UP_PWDEXPD<p>
 	 * Password expiration date. The date on which the password must be changed.
 	 */
-	// TemporalType.DATE maps a java.util.Date to a java.sql.Date
-	@Temporal(TemporalType.DATE)
 	@Column(name="UP_PWDEXPD")
-	private java.util.Date upPwdexpd;
+	private Timestamp upPwdexpd;
 
 	/**
 	 * NOT USED
@@ -414,9 +414,10 @@ public class Full_User_Profile implements Serializable {
 
 	/**
 	 * Column: <span style="font-family:consolas;">UP_PWDEXPD</span>
-	 * @return Password expiration date. The date on which the password must be changed.
+	 * The date and time when the password must be changed.
+	 * @return Password expiration Timestamp. 
 	 */
-	public java.util.Date getUpPwdexpd() {
+	public Timestamp getUpPwdexpd() {
 		return this.upPwdexpd;
 	}
 
@@ -664,10 +665,10 @@ public class Full_User_Profile implements Serializable {
 
 	/**
 	 * Column: <span style="font-family:consolas;">UP_PWDEXPD</span><p>
-	 * Set password expiration date on which the password must be changed to the given <span style="font-family:consolas;">java.util.Date</span>
-	 * @param upPwdexpd expiration date to set
+	 * Set password expiration date and time when the password must be changed to the given Timestamp 
+	 * @param upPwdexpd expiration Timestamp to set
 	 */
-	public void setUpPwdexpd(java.util.Date upPwdexpd) {
+	public void setUpPwdexpd(Timestamp upPwdexpd) {
 		/*debug*/
 		System.out.println("com.yardi.ejb.model.Full_User_Profile.setUpPwdexpd() 0011 ");
 		/*debug*/
