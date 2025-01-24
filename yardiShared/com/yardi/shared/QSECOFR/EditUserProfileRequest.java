@@ -1,5 +1,7 @@
 package com.yardi.shared.QSECOFR;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -960,11 +962,18 @@ public class EditUserProfileRequest {
 	}
 
 	/**
-	 * Set the password expiration time for display purposes to the given String
+	 * Set the password expiration time for display purposes to the given String.<p>
+	 * Expects a String containing a Timestamp formatted "MM/dd/yyyy HH:mm:ss"
 	 * @param pwdExpTime password expiration time for display purposes
 	 */
-	public void setPwdExpTime(String pwdExpTime) {
-		this.pwdExpTime = pwdExpTime;
+	public void setPwdExpTime(String pwdExpTimeStamp) {
+		System.out.println("com.yardi.shared.QSECOFR.EditUserProfileRequest.setPwdExpTime() 0039 "
+				+ "\n    "
+				+ "pwdExpTimeStamp="
+				+ pwdExpTimeStamp
+				);
+		String [] s = pwdExpTimeStamp.split(" ");
+		this.pwdExpTime = s[1];
 	}
 
 	/**
@@ -1079,63 +1088,36 @@ public class EditUserProfileRequest {
 	}
 
 	/**
-	 * Convert the given Timestamp to a date String and a time String for presentation purposes.<p> Date String is in MM/DD/CCYY format. 
-	 * Time String is in hh:mm:ss format.
-	 * 
-	 * @param date the Timestamp to convert.
-	 * @return String [] containing the string representation of the date and time components of the given Timestamp. Element zero is the date String.
-	 * Element one is the time String.
+	 * Format the given Date for presentation purposes.<p>
+	 * Format is "MM/dd/yyyy"
+	 * @param date the Date to convert.
+	 * @return String containing the formatted date "MM/dd/yyyy" 
 	 */
-	public String [] stringify(java.sql.Timestamp date) {
-		//https://www.mkyong.com/java/java-enum-example/
-		//timestamp=2018-01-08 23:03:27.007
-		String cymdHmsMils[] = date.toString().split(" ");
-		System.out.println("com.yardi.shared.QSECOFR.EditUserProfileRequest stringify(java.sql.Timestamp) 0000"
-			    + "\n"
-			    + "   date="
-			    + date
-			    + "\n"
-			    + "   cymdHmsMils="
-			    + Arrays.toString(cymdHmsMils)
-			    );
-		String cymd[] = cymdHmsMils[0].split("-");
-		System.out.println("com.yardi.shared.QSECOFR.EditUserProfileRequest stringify(java.sql.Timestamp) 0001"
-			    + "\n"
-			    + "   cymd="
-			    + Arrays.toString(cymd)
-			    );
-		String dateTime[] = new String [2];
-		dateTime[0] = cymd[1] + "/" + cymd[2] + "/" + cymd[0]; 
-		dateTime[1] = cymdHmsMils[1];
-		System.out.println("com.yardi.shared.QSECOFR.EditUserProfileRequest stringify(java.sql.Timestamp) 0009"
-			    + "\n"
-			    + "   dateTime="
-			    + Arrays.toString(dateTime)
-			    );
-		return dateTime;
+	public String stringify(Date date) {
+		System.out.println("com.yardi.shared.QSECOFR.EditUserProfileRequest.stringify(Date) 0037"
+				+ "\n    "
+				+ "date="
+				+ date
+				);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		return dateFormat.format(date);
 	}
 
 	/**
-	 * Convert the given Date to string for presentation purposes.<p> Date String is in MM/DD/CCYY format.
-	 * @param date the Date to convert.
-	 * @return String representation of the given Date 
+	 * Format the given Timestamp for presentation purposes.<p> 
+	 * Format is "MM/dd/yyyy HH:mm:ss" 
+	 * 
+	 * @param ts the Timestamp to format.
+	 * @return String containing the formatted Timestamp.
 	 */
-	public String stringify(java.util.Date date) {
-		//https://www.mkyong.com/java/java-enum-example/
-		//date=Mon Jan 08 23:03:27 EST 2018
-		String fields[] = date.toString().split(" ");
-		int mm = 99;
-		String month = fields[1];
-		int dd = Integer.parseInt(fields[2]);
-		int yyyy = Integer.parseInt(fields[5]);
-		
-		for (MonthNameAbbr m : MonthNameAbbr.values()) {
-			if(m.toString().equalsIgnoreCase(month)) {
-				mm = m.getOrdinal();
-			};
-		}
-
-		return mm + "/" + dd + "/" + yyyy;
+	public String stringify(Timestamp ts) {
+		System.out.println("com.yardi.shared.QSECOFR.EditUserProfileRequest.stringify(Timestamp) 0038"
+			    + "\n"
+			    + "   ts="
+			    + ts
+			    );
+		SimpleDateFormat timeStampFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		return timeStampFormat.format(ts);
 	}
 
 	/**
