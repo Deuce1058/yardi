@@ -372,7 +372,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 * The client only needs to call this method after injecting the web request and initializing the web request. 
 	 * Based on the request, this method delegates to the appropriate method to complete the rest of the process.  
 	 */
-	public void handleRequest() {
+	public EditUserProfileRequest handleRequest() {
 		/*debug*/
 		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.handleRequest() 0006 ");
 		/*debug*/
@@ -390,6 +390,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
     	if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_UPDATE)) {
     		updateUserProfile();
     	}
+		return editRequest;
     }
 	
 	/**
