@@ -136,7 +136,7 @@ public class EditUserProfileRequest {
 	/**
 	 * User profile hashed temporary password assigned by help desk for presentation purposes.
 	 */
-	private String tempToken;
+	private String upTempPwd;
 	/**
 	 * User profile date of most recent successful login.<p> From and to the web for presentation purposes. Format is MM/DD/CCYY.
 	 */
@@ -508,19 +508,19 @@ public class EditUserProfileRequest {
 	}
 
 	/**
-	 * Return the hashed temporary token assigned by helpdesk 
-	 * @return hashed temporary token
-	 */
-	public String getTempToken() {
-		return tempToken;
-	}
-
-	/**
 	 * Return the home market. Field <i>homeMarket</i> is parsed to short to set the value for <i>upHomeMarket</i>.
 	 * @return home market
 	 */
 	public short getUpHomeMarket() {
 		return upHomeMarket;
+	}
+
+	/**
+	 * Return the hashed temporary token assigned by helpdesk 
+	 * @return hashed temporary token
+	 */
+	public String getUpTempPwd() {
+		return upTempPwd;
 	}
 
 	/**
@@ -998,14 +998,6 @@ public class EditUserProfileRequest {
 		this.state = state;
 	}
 
-	/** 
-	 * Set the hashed temporary token to the given String
-	 * @param tempToken hashed temporary token
-	 */
-	public void setTempToken(String tempToken) {
-		this.tempToken = tempToken;
-	}
-
 	/**
 	 * Set user profile home market for presentation purposes.
 	 * @param upHomeMarket home market
@@ -1015,6 +1007,14 @@ public class EditUserProfileRequest {
 		System.out.println("com.yardi.shared.QSECOFR.EditUserProfileRequest.setUpHomeMarket() 0034 ");
 		/*debug*/
 		this.upHomeMarket = upHomeMarket;
+	}
+
+	/** 
+	 * Set the hashed temporary token to the given String
+	 * @param tempToken hashed temporary token
+	 */
+	public void setUpTempPwd(String tempToken) {
+		this.upTempPwd = tempToken;
 	}
 
 	/**
@@ -1219,8 +1219,8 @@ public class EditUserProfileRequest {
 				+ zip + ", zip4=" + zip4 + ", phone=" + phone + ", fax=" + fax + ", email=" + email + ", ssn=" + ssn
 				+ ", dob=" + dob + ", homeMarket=" + homeMarket + ", activeYN=" + activeYN + ", pwdExpDate="
 				+ pwdExpDate + ", pwdExpTime=" + pwdExpTime + ", disabledTime=" + disabledTime + ", disabledDate="
-				+ disabledDate + ", pwdAttempts=" + pwdAttempts + ", currentToken=" + currentToken + ", tempToken="
-				+ tempToken + ", lastLogin=" + lastLogin + ", lastLoginTime=" + lastLoginTime + ", birthDate="
+				+ disabledDate + ", pwdAttempts=" + pwdAttempts + ", currentToken=" + currentToken + ", upTempPwd="
+				+ upTempPwd + ", lastLogin=" + lastLogin + ", lastLoginTime=" + lastLoginTime + ", birthDate="
 				+ birthDate + ", upHomeMarket=" + upHomeMarket + ", passwordExpirationDate=" + passwordExpirationDate
 				+ ", profileDisabledDate=" + profileDisabledDate + ", lastLoginDate=" + lastLoginDate
 				+ ", passwordAttempts=" + passwordAttempts + "]";
