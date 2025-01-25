@@ -1,5 +1,6 @@
 package com.yardi.ejb.QSECOFR;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Vector;
 
@@ -263,8 +264,9 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 * <pre>YRD0000 process completed normally
 	 *YRD000D no such user name
 	 * </pre> 
+	 * @return TODO
 	 */
-	private void findUserProfile() {
+	private Full_User_Profile findUserProfile() {
 		/*debug*/
 		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.finUserProfile() 0007 ");
 		/*debug*/
@@ -283,7 +285,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 				editRequest.setMsgDescription(feedback[1]);
 				rollback(tx);
 				txStatus();
-				return;
+				return null;
 			}
 			
 			/*debug*/
@@ -293,12 +295,9 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 					+ userProfile
 					);
 			/*debug*/
-			mapFullUserProfile(userProfile); //map the Full_User_Profile entity to com.yardi.shared.QSECOFR.EditUserProfileRequest for the web response
-			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
-			editRequest.setMsgID(feedback[0]);
-			editRequest.setMsgDescription(feedback[1]);
 			commit(tx);
 			txStatus();
+			return userProfile;
 		} catch (NotSupportedException e) {
 			/*debug*/
 			System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.finUserProfile() 0008 ");
@@ -377,7 +376,11 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.handleRequest() 0006 ");
 		/*debug*/
     	if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_FIND)) {
-    		findUserProfile();
+    		Full_User_Profile userProfile = findUserProfile();
+    		
+    		if (!(userProfile==null)) {
+    			mapFullUserProfile(userProfile); //map the Full_User_Profile entity to com.yardi.shared.QSECOFR.EditUserProfileRequest for the web response
+    		}
     	}
     	
     	if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_ADD)) {
@@ -390,6 +393,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
     	if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_UPDATE)) {
     		updateUserProfile();
     	}
+    	
 		return editRequest;
     }
 	
@@ -470,23 +474,28 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 		editRequest.setDob           (editRequest.stringify(userProfile        .getUpdob()));
 		editRequest.setHomeMarket    (Short.toString(userProfile.getUpHomeMarket()));
 		editRequest.setActiveYN      (userProfile.getUpActiveYn());
-		editRequest.setPwdExpDate    (editRequest.stringify(userProfile        .getUpPwdexpd()));
-		String dateTime[] = new String[2];
-
+		String dateTime[] = (editRequest.stringify(userProfile.getUpPwdexpd())).split(" ");
+		editRequest.setPwdExpDate(dateTime[0]);
+		editRequest.setPwdExpTime(dateTime[1]);		
+		
 		if (userProfile.getUpDisabledDate()==null) {
 			editRequest.setDisabledDate("");
 			editRequest.setDisabledTime("");
 		} else {
-			dateTime = editRequest.stringify(userProfile      .getUpDisabledDate());
+			dateTime = editRequest.stringify(userProfile.getUpDisabledDate()).split(" ");
 			editRequest.setDisabledDate(dateTime[0]);
 			editRequest.setDisabledTime(dateTime[1]);
 		}
 
 		editRequest.setPwdAttempts   (Short.toString(userProfile.getUpPwdAttempts()));
-		editRequest.setCurrentToken  (userProfile.getUptoken());
-		dateTime = editRequest.stringify(userProfile        .getUpLastLoginDate());
+		editRequest.setCurrentToken(userProfile.getUptoken());
+		editRequest.setUpTempPwd(userProfile.getUpTempPwd()); 
+		dateTime = (editRequest.stringify(userProfile.getUpLastLoginDate())).split(" ");
 		editRequest.setLastLogin     (dateTime[0]);
 		editRequest.setLastLoginTime (dateTime[1]);
+		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
+		editRequest.setMsgID(feedback[0]);
+		editRequest.setMsgDescription(feedback[1]);
 		/*debug*/
 		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.mapFullUserProfile() 0012 "
 				+ "\n"
@@ -494,7 +503,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 		/*debug*/
 	}
 
-    /**
+	/**
 	 * Merge the given Full_User_Profile entity into the persistence context.<p>
 	 * 
 	 * This method delegates to com.yardi.ejb.UserProfileBean.merge() to perform the merge.
