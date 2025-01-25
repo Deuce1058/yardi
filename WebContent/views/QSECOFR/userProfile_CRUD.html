@@ -477,8 +477,8 @@
             <input	type="text" class="roundedCorners form-control-sm border" name="currentToken" id="currentToken" required 	placeholder="Current token"  maxlen="174"/>
           </div>
           <div class="d-sm-flex pb-sm-1">
-            <label for="tempToken" class="control-label pr-sm-2">Temporary token</label>
-            <input	type="text" class="roundedCorners form-control-sm border" name="tempToken" id="tempToken" placeholder="Temporary token"  maxlen="174"/>
+            <label for="upTempPwd" class="control-label pr-sm-2">Temporary token</label>
+            <input	type="text" class="roundedCorners form-control-sm border" name="upTempPwd" id="upTempPwd" placeholder="Temporary token"  maxlen="174"/>
           </div>
 
 
@@ -919,7 +919,7 @@
 
 
       $("#currentToken") .attr("disabled", true);
-      $("#tempToken")    .attr("disabled", true);
+      $("#upTempPwd")    .attr("disabled", true);
 
 
 
@@ -981,7 +981,7 @@
 
 
       $("#currentToken") .attr("disabled", true);
-      $("#tempToken")    .attr("disabled", true);
+      $("#upTempPwd")    .attr("disabled", true);
 
 
 
@@ -1040,7 +1040,7 @@
 
 
       $("#currentToken") .attr("disabled", false);
-      $("#tempToken")    .attr("disabled", false);
+      $("#upTempPwd")    .attr("disabled", false);
 
 
 
@@ -1119,7 +1119,7 @@
 
 
         "currentToken"   : $("#currentToken") .val(),
-        "tempToken"      : $("#tempToken")    .val(),
+        "upTempPwd"      : $("#upTempPwd")    .val(),
 
 
 
@@ -1175,7 +1175,7 @@
 
 
         "currentToken"   : data.currentToken,
-        "tempToken"      : data.tempToken,
+        "upTempPwd"      : data.upTempPwd,
 
 
 
@@ -1341,7 +1341,7 @@
 
 
       $("#currentToken")  .val(formItems.currentToken);
-      $("#tempToken")     .val(formItems.tempToken);
+      $("#upTempPwd")     .val(formItems.upTempPwd);
 
 
 
@@ -1401,7 +1401,7 @@
 
 
       $("#currentToken") .val('');
-      $("#tempToken")    .val('');
+      $("#upTempPwd")    .val('');
 
 
 
