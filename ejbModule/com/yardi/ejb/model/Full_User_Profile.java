@@ -41,6 +41,13 @@ public class Full_User_Profile implements Serializable {
 	private String uptoken;
 
 	/**
+	 * Column: UP_TEMP_PWD<p>
+	 * Hashed temporary password assigned by helpdesk.
+	 */
+	@Column(name="UP_TEMP_PWD")
+	private String upTempPwd;
+	
+	/**
 	 * Column: UP_HOME_MARKET<p>
 	 * Home market.
 	 */
@@ -452,6 +459,14 @@ public class Full_User_Profile implements Serializable {
 	}
 
 	/**
+	 * Return the hashed temporary password assigned by helpdesk.
+	 * @return hashed temporary password
+	 */
+	public String getUpTempPwd() {
+		return upTempPwd;
+	}
+
+	/**
 	 * Column: <span style="font-family:consolas;">UPTOKEN</span>
 	 * @return The user's hashed password.
 	 */
@@ -719,6 +734,14 @@ public class Full_User_Profile implements Serializable {
 	}
 
 	/**
+	 * Set the hashed temporary password to the given String.
+	 * @param upTempPwd hashed temporary password
+	 */
+	public void setUpTempPwd(String tempToken) {
+		this.upTempPwd = tempToken;
+	}
+
+	/**
 	 * Column: <span style="font-family:consolas;">UPTOKEN</span><p>
 	 * Set the user's hashed password to the given String
 	 * @param uptoken the token value to set
@@ -768,17 +791,13 @@ public class Full_User_Profile implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User_Profile [upUserid=" + upUserid + ", uptoken=" + uptoken
-				+ ", upHomeMarket=" + upHomeMarket + ", upFirstName="
-				+ upFirstName + ", upLastName=" + upLastName + ", upAddress1="
-				+ upAddress1 + ", upAddress2=" + upAddress2 + ", upCity="
-				+ upCity + ", upState=" + upState + ", upZip=" + upZip
-				+ ", upZip4=" + upZip4 + ", upPhone=" + upPhone + ", upFax="
-				+ upFax + ", upEmail=" + upEmail + ", upssn=" + upssn
-				+ ", updob=" + updob + ", upActiveYn=" + upActiveYn
-				+ ", upPwdexpd=" + upPwdexpd + ", upDisabledYn=" + upDisabledYn
-				+ ", upDisabledDate=" + upDisabledDate + ", upLastLoginDate="
-				+ upLastLoginDate + ", upPwdAttempts=" + upPwdAttempts
-				+ ", uprrn=" + uprrn + "]";
+		return "Full_User_Profile [upUserid=" + upUserid + ", uptoken=" + uptoken + ", upTempPwd=" + upTempPwd
+				+ ", upHomeMarket=" + upHomeMarket + ", upFirstName=" + upFirstName + ", upLastName=" + upLastName
+				+ ", upAddress1=" + upAddress1 + ", upAddress2=" + upAddress2 + ", upCity=" + upCity + ", upState="
+				+ upState + ", upZip=" + upZip + ", upZip4=" + upZip4 + ", upPhone=" + upPhone + ", upFax=" + upFax
+				+ ", upEmail=" + upEmail + ", upssn=" + upssn + ", updob=" + updob + ", upActiveYn=" + upActiveYn
+				+ ", upPwdexpd=" + upPwdexpd + ", upDisabledYn=" + upDisabledYn + ", upDisabledDate=" + upDisabledDate
+				+ ", upLastLoginDate=" + upLastLoginDate + ", upPwdAttempts=" + upPwdAttempts + ", uprrn=" + uprrn
+				+ "]";
 	}
 }
