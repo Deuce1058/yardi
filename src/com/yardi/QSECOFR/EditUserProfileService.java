@@ -113,9 +113,10 @@ public class EditUserProfileService extends HttpServlet {
 		String formData = readBuffer(request);
 		EditUserProfileRequest editRequest = mapRequest(formData);
 		editUserProfileCTRL.setEditUserProfileRequest(editRequest);
-		editUserProfileCTRL.inzEditRequest();
+		//editUserProfileCTRL.inzEditRequest();
 		editUserProfileCTRL.handleRequest();
-		webResponse(request, response, editUserProfileCTRL.getEditUserProfileRequest(), editUserProfileCTRL);
+	    ObjectMapper mapper = new ObjectMapper(); 
+		webResponse(request, response, mapper.writeValueAsString(editRequest), editUserProfileCTRL);
 		return;
 	}
 
@@ -233,7 +234,7 @@ public class EditUserProfileService extends HttpServlet {
 	 * @param response a HttpServletResponse
 	 * @param editRequest POJO representation of the web request
 	 */
-	private void webResponse(HttpServletRequest request, HttpServletResponse response, EditUserProfileRequest editRequest, EditUserProfileCTRL editUserProfileCTRLbean) {
+	private void webResponse(HttpServletRequest request, HttpServletResponse response, String formData,	EditUserProfileCTRL editUserProfileCTRLbean) {
 		/*debug*/
 		System.out.println(
 				 "com.yardi.QSECOFR.EditUserProfileService.webResponse() 0005 " 
@@ -243,7 +244,6 @@ public class EditUserProfileService extends HttpServlet {
 				);
 		/*debug*/
 		HttpSession session = request.getSession();
-		ObjectMapper mapper = new ObjectMapper();
 		showResponseHeaders(request, response);
 		response.resetBuffer();
 		showResponseHeaders(request, response);
@@ -251,7 +251,6 @@ public class EditUserProfileService extends HttpServlet {
 
 		try {
 			PrintWriter out = response.getWriter();
-			String formData = mapper.writeValueAsString(editRequest); //convert the feedback to json 
 			out.print(formData);
 			out.flush();
 			editUserProfileCTRLbean.removeBean();
