@@ -2,6 +2,11 @@ package com.yardi.ejb.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 import jakarta.persistence.*;
 
@@ -236,18 +241,19 @@ public class Full_User_Profile implements Serializable {
 	 * @param upFax user's fax number
 	 * @param upEmail email address
 	 * @param upssn ssn
-	 * @param updob user's birth date
+	 * @param dobString user's birth date
 	 * @param upActiveYn user profile active flag. Y is active. N is inactive. Must be Y to login.
-	 * @param upPwdexpd password expiration date. Password must be changed on or after this date.
+	 * @param pwdexpd password expiration date. Password must be changed on or after this date.
 	 * @param upDisabledYn NOT USED
-	 * @param upDisabledDate Timestamp of when the user profile was disabled due to too many invalid login attempts since the last successful login
-	 * @param upLastLoginDate Timestamp of the most recent successful login
+	 * @param disabledDate Timestamp of when the user profile was disabled due to too many invalid login attempts since the last successful login
+	 * @param lastLoginDate Timestamp of the most recent successful login
 	 * @param upPwdAttempts number of invalid login attempts since the last successful login 
 	 * @param uprrn sequence field
 	 */
 	public Full_User_Profile(
 			String upUserid, 
 			String uptoken,
+			String upTempPwd,
 			short upHomeMarket,
 			String upFirstName,
 			String upLastName,
@@ -261,12 +267,12 @@ public class Full_User_Profile implements Serializable {
 			String upFax,
 			String upEmail,
 			String upssn,
-			java.util.Date updob,
+			String dobString,
 			String upActiveYn,
-			java.util.Date upPwdexpd,
+			String pwdexpd,
 			String upDisabledYn,
-			java.sql.Timestamp upDisabledDate,
-			java.sql.Timestamp upLastLoginDate,
+			String disabledDate,
+			String lastLoginDate,
 			short upPwdAttempts,
 			long uprrn
 			) {
@@ -275,6 +281,7 @@ public class Full_User_Profile implements Serializable {
 		/*debug*/
 		this.upUserid        = upUserid;
 		this.uptoken         = uptoken;
+		this.upTempPwd       = upTempPwd;
 		this.upHomeMarket    = upHomeMarket;
 		this.upFirstName     = upFirstName;
 		this.upLastName      = upLastName;
@@ -288,12 +295,23 @@ public class Full_User_Profile implements Serializable {
 		this.upFax           = upFax;
 		this.upEmail         = upEmail;
 		this.upssn           = upssn;
-		this.updob           = updob;
+		
+		LocalDate ld = LocalDate.parse(dobString, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+		this.updob = Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		
 		this.upActiveYn      = upActiveYn;
-		this.upPwdexpd       = upPwdexpd;
+		
+		LocalDateTime ldt = LocalDateTime.parse(pwdexpd, DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss"));
+		this.upPwdexpd = Timestamp.valueOf(ldt);
+		
 		this.upDisabledYn    = upDisabledYn;
-		this.upDisabledDate  = upDisabledDate; 
-		this.upLastLoginDate = upLastLoginDate;
+		
+		ldt = LocalDateTime.parse(disabledDate, DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss"));
+		this.upDisabledDate = Timestamp.valueOf(ldt);
+		
+		ldt = LocalDateTime.parse(lastLoginDate, DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss"));
+		this.upLastLoginDate = Timestamp.valueOf(ldt);
+		
 		this.upPwdAttempts   = upPwdAttempts;          this.uprrn = uprrn;
 	}
 
@@ -332,11 +350,11 @@ public class Full_User_Profile implements Serializable {
 
 	/**
 	 * Column: <span style="font-family:consolas;">UP_DISABLED_DATE</span><p>
-	 * Return date and time when the user profile became disabled due to too many invalid password attempts since the last successful login.
-	 * @return date and time when the user profile became disabled
+	 * Return Timestamp when user profile was disabled due to too many failed login attempts since the most recent successful login 
+	 * @return Timestamp when user profile was disabled
 	 */
-	public java.sql.Timestamp getUpDisabledDate() {
-		return this.upDisabledDate;
+	public Timestamp getUpDisabledDate() {
+		return upDisabledDate;
 	}
 
 	/**
