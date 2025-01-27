@@ -1,7 +1,5 @@
 package com.yardi.ejb.QSECOFR;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Vector;
 
 import jakarta.annotation.PostConstruct;
@@ -20,6 +18,7 @@ import jakarta.transaction.UserTransaction;
 
 import com.yardi.ejb.SessionsTable;
 import com.yardi.ejb.UniqueTokens;
+import com.yardi.ejb.Unique_Tokens;
 import com.yardi.ejb.UserGroups;
 import com.yardi.ejb.UserProfile;
 import com.yardi.ejb.model.Full_Sessions_Table;
@@ -119,14 +118,11 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 			/*debug*/
 			tx.begin();
 			txStatus();
-			editRequest.getLdt();
-			editRequest.setLdt(LocalDateTime.now());
-			Full_User_Profile x = new Full_User_Profile();
-			x.getUpDisabledDate();
 			persistFull_User_Profile(
 					new Full_User_Profile(
 							editRequest.getFindUser(),
 							editRequest.getCurrentToken(),
+							editRequest.getUpTempPwd(),
 							editRequest.getUpHomeMarket(),
 							editRequest.getFirstName(), 
 							editRequest.getLastName(), 
@@ -140,12 +136,12 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 							editRequest.getFax(), 
 							editRequest.getEmail(), 
 							editRequest.getSsn(),
-							editRequest.getBirthDate(),
+							editRequest.getDob(),
 							editRequest.getActiveYN(),
-							editRequest.getPasswordExpirationDate(),
+							editRequest.getPwdExpDate() + " " + editRequest.getPwdExpTime(),
 							" ",
-							editRequest.getProfileDisabledDate(),	
-							editRequest.getLastLoginDate(),
+							editRequest.getDisabledDate() + " " + editRequest.getDisabledTime(),	
+							editRequest.getLastLogin() + " " + editRequest.getLastLoginTime(),
 							editRequest.getPasswordAttempts(),
 							/*a value is required for the sequence field because of the constructor but it will still be assigned by JPA*/
 							0l 
@@ -218,7 +214,6 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 		}
 	}	
 	
-	
 	/**
 	 * Find the Full_User_Profile entity for the given user ID.<p>
 	 * 
@@ -270,11 +265,12 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 		/*debug*/
 		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.finUserProfile() 0007 ");
 		/*debug*/
-		
+		Full_User_Profile userProfile = null;
+
 		try {
 			tx.begin();
 			txStatus();
-			Full_User_Profile userProfile = findFullUserProfile(editRequest.getFindUser());
+			userProfile = findFullUserProfile(editRequest.getFindUser());
 
 			if (userProfile == null) {
 				/*debug*/
@@ -297,7 +293,6 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 			/*debug*/
 			commit(tx);
 			txStatus();
-			return userProfile;
 		} catch (NotSupportedException e) {
 			/*debug*/
 			System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.finUserProfile() 0008 ");
@@ -309,6 +304,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 			/*debug*/
 			e.printStackTrace();
 		}
+		return userProfile;
 	}
 	
 	
@@ -434,65 +430,65 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.mapFullUserProfile() 0011 ");
 		/*debug*/
 		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
-		editRequest.setMsgID         (feedback[0]);
+		editRequest.setMsgID(feedback[0]);
 		editRequest.setMsgDescription(feedback[1]);
-		editRequest.setFirstName     (userProfile.getUpFirstName());
-		editRequest.setLastName      (userProfile.getUpLastName());
-		editRequest.setAddress1      (userProfile.getUpAddress1());
+		editRequest.setFirstName         (userProfile.getUpFirstName());
+		editRequest.setLastName          (userProfile.getUpLastName());
+		editRequest.setAddress1          (userProfile.getUpAddress1());
 
 		if (userProfile.getUpAddress2()==null) {
-			editRequest.setAddress2  ("");
+			editRequest.setAddress2      ("");
 		} else {
-			editRequest.setAddress2  (userProfile.getUpAddress2());
+			editRequest.setAddress2      (userProfile.getUpAddress2());
 		}
 
-		editRequest.setCity          (userProfile.getUpCity());
-		editRequest.setState         (userProfile.getUpState());
-		editRequest.setZip           (userProfile.getUpZip());
+		editRequest.setCity              (userProfile.getUpCity());
+		editRequest.setState             (userProfile.getUpState());
+		editRequest.setZip               (userProfile.getUpZip());
 
 		if (userProfile.getUpZip4()==null) {
-			editRequest.setZip4      ("");
+			editRequest.setZip4          ("");
 		} else {
-			editRequest.setZip4      (userProfile.getUpZip4());
+			editRequest.setZip4          (userProfile.getUpZip4());
 		}
 
-		editRequest.setPhone         (userProfile.getUpPhone());
+		editRequest.setPhone             (userProfile.getUpPhone());
 
 		if (userProfile.getUpFax()==null) {
-			editRequest.setFax       ("");
+			editRequest.setFax           ("");
 		} else {
-			editRequest.setFax       (userProfile.getUpFax());
+			editRequest.setFax           (userProfile.getUpFax());
 		} 
 
 		if (userProfile.getUpEmail()==null) {
-			editRequest.setEmail     ("");
+			editRequest.setEmail         ("");
 		} else {
-			editRequest.setEmail     (userProfile.getUpEmail());
+			editRequest.setEmail         (userProfile.getUpEmail());
 		}
 
-		editRequest.setSsn           (userProfile.getUpssn());
-		editRequest.setDob           (editRequest.stringify(userProfile        .getUpdob()));
-		editRequest.setHomeMarket    (Short.toString(userProfile.getUpHomeMarket()));
-		editRequest.setActiveYN      (userProfile.getUpActiveYn());
-		String dateTime[] = (editRequest.stringify(userProfile.getUpPwdexpd())).split(" ");
-		editRequest.setPwdExpDate(dateTime[0]);
-		editRequest.setPwdExpTime(dateTime[1]);		
+		editRequest.setSsn               (userProfile.getUpssn());
+		editRequest.setDob               (editRequest.stringify(userProfile        .getUpdob()));
+		editRequest.setHomeMarket        (Short.toString(userProfile.getUpHomeMarket()));
+		editRequest.setActiveYN          (userProfile.getUpActiveYn());
+		String dateTime[] =              (editRequest.stringify(userProfile.getUpPwdexpd())).split(" ");
+		editRequest.setPwdExpDate        (dateTime[0]);
+		editRequest.setPwdExpTime        (dateTime[1]);		
 		
 		if (userProfile.getUpDisabledDate()==null) {
-			editRequest.setDisabledDate("");
-			editRequest.setDisabledTime("");
+			editRequest.setDisabledDate  ("");
+			editRequest.setDisabledTime  ("");
 		} else {
 			dateTime = editRequest.stringify(userProfile.getUpDisabledDate()).split(" ");
-			editRequest.setDisabledDate(dateTime[0]);
-			editRequest.setDisabledTime(dateTime[1]);
+			editRequest.setDisabledDate  (dateTime[0]);
+			editRequest.setDisabledTime  (dateTime[1]);
 		}
 
-		editRequest.setPwdAttempts   (Short.toString(userProfile.getUpPwdAttempts()));
-		editRequest.setCurrentToken(userProfile.getUptoken());
-		editRequest.setUpTempPwd(userProfile.getUpTempPwd()); 
+		editRequest.setPwdAttempts       (Short.toString(userProfile.getUpPwdAttempts()));
+		editRequest.setCurrentToken      (userProfile.getUptoken());
+		editRequest.setUpTempPwd         (userProfile.getUpTempPwd()); 
 		dateTime = (editRequest.stringify(userProfile.getUpLastLoginDate())).split(" ");
-		editRequest.setLastLogin     (dateTime[0]);
-		editRequest.setLastLoginTime (dateTime[1]);
+		editRequest.setLastLogin         (dateTime[0]);
+		editRequest.setLastLoginTime     (dateTime[1]);
 		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
 		editRequest.setMsgID(feedback[0]);
 		editRequest.setMsgDescription(feedback[1]);
@@ -575,6 +571,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 * Remove the given Unique_Tokens entity.<p>
 	 * 
 	 * This method delegates to com.yardi.ejb.UniqueTokensBean.remove() to remove the given Unique_Tokens entity.
+	 * @param <removeToken>
 	 * 
 	 * @param token the Unique_Tokens entity to remove 
 	 */
@@ -722,6 +719,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 					new Full_User_Profile(
 							editRequest.getFindUser(),
 							editRequest.getCurrentToken(),
+							editRequest.getUpTempPwd(),
 							editRequest.getUpHomeMarket(),
 							editRequest.getFirstName(), 
 							editRequest.getLastName(), 
@@ -735,12 +733,12 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 							editRequest.getFax(), 
 							editRequest.getEmail(), 
 							editRequest.getSsn(),
-							editRequest.getBirthDate(),
+							editRequest.getDob(),
 							editRequest.getActiveYN(),
-							editRequest.getPasswordExpirationDate(),
+							editRequest.getPwdExpDate() + " " + editRequest.getPwdExpTime(),
 							"",
-							editRequest.getProfileDisabledDate(),
-							editRequest.getLastLoginDate(),
+							editRequest.getDisabledDate() + " " + editRequest.getDisabledTime(),
+							editRequest.getLastLogin() + " " + editRequest.getLastLoginTime(),
 							editRequest.getPasswordAttempts(), 
 							/* do not change the sequence column from the found Full_User_Profile */
 							userProfile.getUprrn()
