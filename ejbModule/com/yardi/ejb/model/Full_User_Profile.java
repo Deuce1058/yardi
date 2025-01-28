@@ -276,9 +276,7 @@ public class Full_User_Profile implements Serializable {
 			short upPwdAttempts,
 			long uprrn
 			) {
-		/*debug*/
 		System.out.println("com.yardi.ejb.model.Full_User_Profile() 0001 ");
-		/*debug*/
 		this.upUserid        = upUserid;
 		this.uptoken         = uptoken;
 		this.upTempPwd       = upTempPwd;
@@ -313,6 +311,10 @@ public class Full_User_Profile implements Serializable {
 		this.upLastLoginDate = Timestamp.valueOf(ldt);
 		
 		this.upPwdAttempts   = upPwdAttempts;          this.uprrn = uprrn;
+		System.out.println("com.yardi.ejb.model.Full_User_Profile() 001A "
+				+ "\n    "
+				+ toString()
+				);
 	}
 
 	/**
@@ -756,6 +758,7 @@ public class Full_User_Profile implements Serializable {
 	 * @param upTempPwd hashed temporary password
 	 */
 	public void setUpTempPwd(String tempToken) {
+		System.out.println("com.yardi.ejb.model.Full_User_Profile.setUpTempPwd() 0019 ");
 		this.upTempPwd = tempToken;
 	}
 
