@@ -66,7 +66,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	public EditUserProfileCTRLBean() {
         /*debug*/
-    	System.out.println("com.yardi.ejb.EditUserProfileCTRLBean() ");
+    	System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean() ");
         /*debug*/
     }
 	
@@ -76,14 +76,14 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
     private void commit(UserTransaction tx) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.commit() 000A ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.commit() 000A ");
 		/*debug*/
 		try {
 			tx.commit();
 		} catch (SecurityException | IllegalStateException | RollbackException | HeuristicMixedException
 				| HeuristicRollbackException | SystemException e) {
 			/*debug*/
-			System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.commit() 000B ");
+			System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.commit() 000B ");
 			/*debug*/
 			e.printStackTrace();
 		}
@@ -95,7 +95,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	private void createUserGroup() {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.createUserGroup() 001B ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.createUserGroup() 001B ");
 		/*debug*/
 		txStatus();
 		userGroupsBean.persist(new User_Groups2(editRequest.getFindUser(), com.yardi.shared.rentSurvey.YardiConstants.DEFAULT_USER_GROUP));
@@ -110,53 +110,58 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */	
 	private void createUserProfile() {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.createUserProfile() 0013 ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.createUserProfile() 0013 "
+				+ "\n    "
+				+ editRequest.toString()
+				);
 		/*debug*/
 		try {
-			/*debug*/
-			System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.createUserProfile() 0014 ");
-			/*debug*/
 			tx.begin();
 			txStatus();
-			persistFull_User_Profile(
-					new Full_User_Profile(
-							editRequest.getFindUser(),
-							editRequest.getCurrentToken(),
-							editRequest.getUpTempPwd(),
-							editRequest.getUpHomeMarket(),
-							editRequest.getFirstName(), 
-							editRequest.getLastName(), 
-							editRequest.getAddress1(), 
-							editRequest.getAddress2(), 
-							editRequest.getCity(), 
-							editRequest.getState(), 
-							editRequest.getZip(), 
-							editRequest.getZip4(), 
-							editRequest.getPhone(), 
-							editRequest.getFax(), 
-							editRequest.getEmail(), 
-							editRequest.getSsn(),
-							editRequest.getDob(),
-							editRequest.getActiveYN(),
-							editRequest.getPwdExpDate() + " " + editRequest.getPwdExpTime(),
-							" ",
-							editRequest.getDisabledDate() + " " + editRequest.getDisabledTime(),	
-							editRequest.getLastLogin() + " " + editRequest.getLastLoginTime(),
-							editRequest.getPasswordAttempts(),
-							/*a value is required for the sequence field because of the constructor but it will still be assigned by JPA*/
-							0l 
-					)
+			Full_User_Profile profile = new Full_User_Profile(
+					editRequest.getFindUser(),
+					editRequest.getCurrentToken(),
+					editRequest.getUpTempPwd(),
+					editRequest.getUpHomeMarket(),
+					editRequest.getFirstName(), 
+					editRequest.getLastName(), 
+					editRequest.getAddress1(), 
+					editRequest.getAddress2(), 
+					editRequest.getCity(), 
+					editRequest.getState(), 
+					editRequest.getZip(), 
+					editRequest.getZip4(), 
+					editRequest.getPhone(), 
+					editRequest.getFax(), 
+					editRequest.getEmail(), 
+					editRequest.getSsn(),
+					editRequest.getDob(),
+					editRequest.getActiveYN(),
+					editRequest.getPwdExpDate() + " " + editRequest.getPwdExpTime(),
+					" ",
+					editRequest.getDisabledDate() + " " + editRequest.getDisabledTime(),	
+					editRequest.getLastLogin() + " " + editRequest.getLastLoginTime(),
+					editRequest.getPasswordAttempts(),
+					/*a value is required for the sequence field because of the constructor but it will still be assigned by JPA*/
+					0l 
 			);
+			persistFull_User_Profile(profile);
 			/* maintain referential integrity by inserting a USER_GROUPS row with the default value for UG_GROUP */
 			createUserGroup();
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
 			editRequest.setMsgID(feedback[0]);
 			editRequest.setMsgDescription(feedback[1]);
+			System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.createUserProfile() 0014 "
+					+ "\n    "
+					+ profile.toString()
+					+ "\n    "
+					+ editRequest.toString()
+					);
 			commit(tx);
 			txStatus();
 		} catch (NotSupportedException | SystemException e) {
 			/*debug*/
-			System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.createUserProfile() 0015 ");
+			System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.createUserProfile() 0015 ");
 			/*debug*/
 			e.printStackTrace();
 		}
@@ -171,7 +176,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	private void deleteUserProfile() {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.deleteUserProfile() 0016 ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.deleteUserProfile() 0016 ");
 		/*debug*/
 		try {
 			tx.begin();
@@ -208,7 +213,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 			txStatus();
 		} catch (NotSupportedException | SystemException e) {
 			/*debug*/
-			System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.deleteUserProfile() 0017 ");
+			System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.deleteUserProfile() 0017 ");
 			/*debug*/
 			e.printStackTrace();
 		}
@@ -225,7 +230,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	private Full_User_Profile findFullUserProfile(String userId) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.findFullUserProfile() 0023 ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.findFullUserProfile() 0023 ");
 		/*debug*/
 		return userProfileBean.findFullUserProfile(userId);
 	} 
@@ -241,7 +246,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	private Vector<User_Groups2> findUserGroups(String userId) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.findUserGroups() 0022 ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.findUserGroups() 0022 ");
 		/*debug*/
 		return userGroupsBean.find2(userId);
 	}
@@ -263,7 +268,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	private Full_User_Profile findUserProfile() {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.finUserProfile() 0007 ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.finUserProfile() 0007 ");
 		/*debug*/
 		Full_User_Profile userProfile = null;
 
@@ -274,7 +279,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 
 			if (userProfile == null) {
 				/*debug*/
-				System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.finUserProfile() 000E ");
+				System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.finUserProfile() 000E ");
 				/*debug*/
 				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000D.split("="); 
 				editRequest.setMsgID(feedback[0]);
@@ -285,7 +290,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 			}
 			
 			/*debug*/
-			System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.finUserProfile() 000F "
+			System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.finUserProfile() 000F "
 					+ "\n"
 					+ "   userProfile=" 
 					+ userProfile
@@ -295,12 +300,12 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 			txStatus();
 		} catch (NotSupportedException e) {
 			/*debug*/
-			System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.finUserProfile() 0008 ");
+			System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.finUserProfile() 0008 ");
 			/*debug*/
 			e.printStackTrace();
 		} catch (SystemException e) {
 			/*debug*/
-			System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.finUserProfile() 0009 ");
+			System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.finUserProfile() 0009 ");
 			/*debug*/
 			e.printStackTrace();
 		}
@@ -318,6 +323,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 * matching the given user ID and SESSIONS_TABLE database table has no rows for the given user ID.
 	 */
 	private Vector<Full_Sessions_Table> findUserSessions(String userId) {
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.findUserSessions() 0028 ");
 		return sessionsTableBean.findFull_Sessions_Table(userId);
 	}
 
@@ -332,7 +338,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	private Vector<Unique_Tokens> findUserTokens(String userId) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.findUserTokens() 0010 ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.findUserTokens() 0010 ");
 		/*debug*/
 		return uniqueTokensBean.findTokens(userId); 
 	}	
@@ -344,6 +350,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 * @return the current com.yardi.shared.QSECOFR.EditUserProfileRequest
 	 */
 	public EditUserProfileRequest getEditUserProfileRequest() {
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.getEditUserProfileRequest() 0027 ");
 		return editRequest;		
 	}
 	
@@ -358,6 +365,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 * @return String[] containing the current feedback 
 	 */
 	public String[] getFeedback() {
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.getFeedback() 0029 ");
 		return feedback;
 	}
 	
@@ -369,7 +377,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	public EditUserProfileRequest handleRequest() {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.handleRequest() 0006 ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.handleRequest() 0006 ");
 		/*debug*/
     	if (editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_FIND)) {
     		Full_User_Profile userProfile = findUserProfile();
@@ -401,7 +409,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	public void inzEditRequest() {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.inzEditRequest() 0003 ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.inzEditRequest() 0003 ");
 		/*debug*/
 		if (   editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_FIND)
 				|| editRequest.getAction().equals(com.yardi.shared.rentSurvey.YardiConstants.EDIT_USER_PROFILE_REQUEST_ACTION_DELETE)
@@ -411,7 +419,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 				 * clear out the other fields. Also, for find and delete, the other fields we dont need will have 
 				 * garbage left over from the previous request.    
 				 */
-				System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.inzEditRequest() 0004 ");
+				System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.inzEditRequest() 0004 ");
 				editRequest.specialInzsr();
 			}
 		
@@ -427,7 +435,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
      */
 	private void mapFullUserProfile(Full_User_Profile userProfile) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.mapFullUserProfile() 0011 ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.mapFullUserProfile() 0011 ");
 		/*debug*/
 		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
 		editRequest.setMsgID(feedback[0]);
@@ -493,9 +501,9 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 		editRequest.setMsgID(feedback[0]);
 		editRequest.setMsgDescription(feedback[1]);
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.mapFullUserProfile() 0012 "
-				+ "\n"
-				+ "   editRequest=" + editRequest);
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.mapFullUserProfile() 0012 "
+				+ "\n    "
+				+ editRequest.toString());
 		/*debug*/
 	}
 
@@ -509,7 +517,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	private Full_User_Profile mergeFullUserProfile(Full_User_Profile profile) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.mergeFullUserProfile() 001E ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.mergeFullUserProfile() 001E ");
 		/*debug*/
 		return userProfileBean.merge(profile);
 	}
@@ -523,7 +531,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	private void persistFull_User_Profile(Full_User_Profile profile) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.persistFull_User_Profile() 001F ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.persistFull_User_Profile() 001F ");
 		/*debug*/
 		userProfileBean.persist(profile);
 	}
@@ -534,7 +542,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	@PostConstruct
 	private void postConstructCallback() {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.postConstructCallback() 0000 ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.postConstructCallback() 0000 ");
 		/*debug*/
 	}
 	
@@ -547,7 +555,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	@Remove
 	public void removeBean() {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.removeBean() 0005 ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.removeBean() 0005 ");
 		/*debug*/
 		userProfileBean.removeBean();
 		userGroupsBean.removeBean();
@@ -562,7 +570,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	private void removeFullSessionsTable(Full_Sessions_Table session) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.removeFullSessionsTable() 0019 ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.removeFullSessionsTable() 0019 ");
 		/*debug*/
 		sessionsTableBean.remove(session);
 	}
@@ -577,7 +585,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	private void removeToken(Unique_Tokens token) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.removeToken() 0018 ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.removeToken() 0018 ");
 		/*debug*/
 		uniqueTokensBean.remove(token.getUp1Rrn());	
 	}
@@ -591,7 +599,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	private void removeUserGroup2(User_Groups2 userGroup) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.removeUserGroup2() 001A ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.removeUserGroup2() 001A ");
 		/*debug*/
 		userGroupsBean.remove(userGroup);
 	}
@@ -605,7 +613,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	private void removeUserProfile(Full_User_Profile profile) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.removeUserProfile() 0024 ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.removeUserProfile() 0024 ");
 		/*debug*/
 		userProfileBean.remove(profile);
 	}
@@ -616,13 +624,13 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	private void rollback(UserTransaction tx) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.rollback() 000C ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.rollback() 000C ");
 		/*debug*/
 		try {
 			tx.rollback();
 		} catch (IllegalStateException | SecurityException | SystemException e) {
 			/*debug*/
-			System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.rollback() 000D ");
+			System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.rollback() 000D ");
 			/*debug*/
 			e.printStackTrace();
 		}
@@ -635,13 +643,13 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	public void setEditUserProfileRequest (EditUserProfileRequest editRequest) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.setEditUserProfileRequest() 0001 ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.setEditUserProfileRequest() 0001 ");
 		/*debug*/
 		this.editRequest = editRequest;
 		/*debug*/
-        System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.setEditUserProfileRequest() 0002 "
+        System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.setEditUserProfileRequest() 0002 "
             	+ "\n"
-            	+ "   editRequest=" + this.editRequest);
+            	+ "   editRequest=" + this.editRequest.toString());
 		/*debug*/
 	}
 	
@@ -687,11 +695,11 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 				status = "undefined";
 			}
 		} catch (SystemException e) {
-			System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.txStatus() SystemException 0025 ");
+			System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.txStatus() SystemException 0025 ");
 			e.printStackTrace();
 		}
 		
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.txStatus() 0026 "
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.txStatus() 0026 "
   				+ "\n"
   				+ "   tx status="
   				+ status
@@ -705,57 +713,65 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 	 */
 	private void updateUserProfile() {
 		/*debug*/
-		System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.updateUserProfile() 001C ");
+		System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.updateUserProfile() 001C "
+				+ "\n    "
+				+ editRequest.toString()
+				);
 		/*debug*/
 		try {
 			tx.begin();
 			txStatus();
-			/*debug*/
-			System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.updateUserProfile() 0020 ");
-			/*debug*/
+			System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.updateUserProfile() 0020 "
+					+ "\n    "
+					+ editRequest.toString()
+					);
 			/* A find occurred previously in another transaction that has committed. Need to find again here */
-			Full_User_Profile userProfile = findFullUserProfile(editRequest.getFindUser());
-			mergeFullUserProfile(
-					new Full_User_Profile(
-							editRequest.getFindUser(),
-							editRequest.getCurrentToken(),
-							editRequest.getUpTempPwd(),
-							editRequest.getUpHomeMarket(),
-							editRequest.getFirstName(), 
-							editRequest.getLastName(), 
-							editRequest.getAddress1(), 
-							editRequest.getAddress2(), 
-							editRequest.getCity(), 
-							editRequest.getState(), 
-							editRequest.getZip(), 
-							editRequest.getZip4(), 
-							editRequest.getPhone(), 
-							editRequest.getFax(), 
-							editRequest.getEmail(), 
-							editRequest.getSsn(),
-							editRequest.getDob(),
-							editRequest.getActiveYN(),
-							editRequest.getPwdExpDate() + " " + editRequest.getPwdExpTime(),
-							"",
-							editRequest.getDisabledDate() + " " + editRequest.getDisabledTime(),
-							editRequest.getLastLogin() + " " + editRequest.getLastLoginTime(),
-							editRequest.getPasswordAttempts(), 
-							/* do not change the sequence column from the found Full_User_Profile */
-							userProfile.getUprrn()
-					)
+			Full_User_Profile existingUserProfile = findFullUserProfile(editRequest.getFindUser());
+			Full_User_Profile newUserProfile =	new Full_User_Profile(
+					editRequest.getFindUser(),
+					editRequest.getCurrentToken(),
+					editRequest.getUpTempPwd(),
+					editRequest.getUpHomeMarket(),
+					editRequest.getFirstName(), 
+					editRequest.getLastName(), 
+					editRequest.getAddress1(), 
+					editRequest.getAddress2(), 
+					editRequest.getCity(), 
+					editRequest.getState(), 
+					editRequest.getZip(), 
+					editRequest.getZip4(), 
+					editRequest.getPhone(), 
+					editRequest.getFax(), 
+					editRequest.getEmail(), 
+					editRequest.getSsn(),
+					editRequest.getDob(),
+					editRequest.getActiveYN(),
+					editRequest.getPwdExpDate() + " " + editRequest.getPwdExpTime(),
+					"",
+					editRequest.getDisabledDate() + " " + editRequest.getDisabledTime(),
+					editRequest.getLastLogin() + " " + editRequest.getLastLoginTime(),
+					editRequest.getPasswordAttempts(), 
+					/* do not change the sequence column from the found Full_User_Profile */
+					existingUserProfile.getUprrn() 
 			);
+			mergeFullUserProfile(newUserProfile);
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("="); 
 			editRequest.setMsgID(feedback[0]);
 			editRequest.setMsgDescription(feedback[1]);
-			/*debug*/
-			System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.updateUserProfile() 001D ");
-			/*debug*/
+			System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.updateUserProfile() 001D "
+					+ "\n    "
+					+ "existingUserProfile "
+					+ existingUserProfile.toString()
+					+ "\n    "
+					+ "newUserProfile "
+					+ newUserProfile.toString()
+					+ "\n    "
+					+ editRequest.toString()
+					);
 			commit(tx);
 			txStatus();
 		} catch (NotSupportedException | SystemException e) {
-			/*debug*/
-			System.out.println("com.yardi.ejb.EditUserProfileCTRLBean.updateUserProfile() exception 0021 ");
-			/*debug*/
+			System.out.println("com.yardi.ejb.QSECOFR.EditUserProfileCTRLBean.updateUserProfile() exception 0021 ");
 			e.printStackTrace();
 		}
 	}
