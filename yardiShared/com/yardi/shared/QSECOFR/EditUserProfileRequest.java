@@ -965,14 +965,13 @@ public class EditUserProfileRequest {
 	 * Expects a String containing a Timestamp formatted "MM/dd/yyyy HH:mm:ss"
 	 * @param pwdExpTime password expiration time for display purposes
 	 */
-	public void setPwdExpTime(String pwdExpTimeStamp) {
+	public void setPwdExpTime(String pwdExpTime) {
 		System.out.println("com.yardi.shared.QSECOFR.EditUserProfileRequest.setPwdExpTime() 0039 "
 				+ "\n    "
 				+ "pwdExpTimeStamp="
-				+ pwdExpTimeStamp
+				+ pwdExpTime
 				);
-		String [] s = pwdExpTimeStamp.split(" ");
-		this.pwdExpTime = s[1];
+		this.pwdExpTime = pwdExpTime;
 	}
 
 	/**
