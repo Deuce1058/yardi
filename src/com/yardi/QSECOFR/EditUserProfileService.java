@@ -114,7 +114,12 @@ public class EditUserProfileService extends HttpServlet {
 		EditUserProfileRequest editRequest = mapRequest(formData);
 		editUserProfileCTRL.setEditUserProfileRequest(editRequest);
 		//editUserProfileCTRL.inzEditRequest();
-		editUserProfileCTRL.handleRequest();
+		editRequest = editUserProfileCTRL.handleRequest();
+		System.out.println(
+				  "com.yardi.QSECOFR.EditUserProfileService doGet() 0008 " 
+				+ "\n    "
+				+ editRequest.toString()
+				);
 	    ObjectMapper mapper = new ObjectMapper(); 
 		webResponse(request, response, mapper.writeValueAsString(editRequest), editUserProfileCTRL);
 		return;
@@ -149,6 +154,11 @@ public class EditUserProfileService extends HttpServlet {
 			return null;
 		}
 		
+        System.out.println(
+        		  "com.yardi.QSECOFR.EditUserProfileService.mapRequest() 0007 "
+        		+ "\n    "
+        		+ editRequest.toString()
+        		);
 		return editRequest;
 	}
 	
@@ -182,6 +192,11 @@ public class EditUserProfileService extends HttpServlet {
 			return null;
 		}
 		
+		System.out.println("com.yardi.QSECOFR.EditUserProfileService.readBuffer() 0009 " 
+				+ "\n    "
+				+ "formData="
+				+ formData
+				);
         return formData;
 	}
 	
@@ -241,6 +256,9 @@ public class EditUserProfileService extends HttpServlet {
 				+ "\n    "
 				+ "JSESSIONID="
 				+ request.getSession().getId()
+				+ "\n    "
+				+ "formData="
+				+ formData
 				);
 		/*debug*/
 		HttpSession session = request.getSession();
