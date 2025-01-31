@@ -122,7 +122,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 					editRequest.getFindUser(),
 					editRequest.getCurrentToken(),
 					editRequest.getUpTempPwd(),
-					editRequest.getUpHomeMarket(),
+					Short.parseShort(editRequest.getHomeMarket()),
 					editRequest.getFirstName(), 
 					editRequest.getLastName(), 
 					editRequest.getAddress1(), 
@@ -141,7 +141,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 					" ",
 					editRequest.getDisabledDate() + " " + editRequest.getDisabledTime(),	
 					editRequest.getLastLogin() + " " + editRequest.getLastLoginTime(),
-					editRequest.getPasswordAttempts(),
+					Short.parseShort(editRequest.getPwdAttempts()),
 					/*a value is required for the sequence field because of the constructor but it will still be assigned by JPA*/
 					0l 
 			);
@@ -731,7 +731,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 					editRequest.getFindUser(),
 					editRequest.getCurrentToken(),
 					editRequest.getUpTempPwd(),
-					editRequest.getUpHomeMarket(),
+					Short.parseShort(editRequest.getHomeMarket()),
 					editRequest.getFirstName(), 
 					editRequest.getLastName(), 
 					editRequest.getAddress1(), 
@@ -750,7 +750,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 					"",
 					editRequest.getDisabledDate() + " " + editRequest.getDisabledTime(),
 					editRequest.getLastLogin() + " " + editRequest.getLastLoginTime(),
-					editRequest.getPasswordAttempts(), 
+					Short.parseShort(editRequest.getPwdAttempts()), 
 					/* do not change the sequence column from the found Full_User_Profile */
 					existingUserProfile.getUprrn() 
 			);
