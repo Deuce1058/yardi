@@ -294,6 +294,7 @@ public class ResetPwdRequest {
 	 * @param upDisabledDateString disabled date for display purposes
 	 */
 	public void setUpDisabledDateString(String upDisabledDateString) {
+    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest.setUpDisabledDateString() 000D ");
 		this.upDisabledDateString = upDisabledDateString;
 	}
 	
@@ -313,6 +314,7 @@ public class ResetPwdRequest {
 	 * @param upLastLoginDateString last login date for display purposes
 	 */
 	public void setUpLastLoginDateString(String upLastLoginDateString) {
+    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest.setUpLastLoginDateString() 000E ");
 		this.upLastLoginDateString = upLastLoginDateString;
 	}
 
@@ -343,6 +345,7 @@ public class ResetPwdRequest {
 	 * @param upPwdexpdString password expiration date for display purposes
 	 */
 	public void setUpPwdexpdString(String upPwdexpdString) {
+    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest.setUpPwdexpdString() 000F ");
 		this.upPwdexpdString = upPwdexpdString;
 	}
 
@@ -353,6 +356,7 @@ public class ResetPwdRequest {
      * @param upTempPwd temporary password
      */
 	public void setUpTempPwd(String upTempPwd) {
+    	System.out.println("com.yardi.shared.helpdesk.ResetPwdRequest.setUpTempPwd() 0010 ");
 		this.upTempPwd = upTempPwd;
 	}
 	
