@@ -99,6 +99,14 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 				String m[] = feedback.split("=");
 				resetPwdRequest.setMsgID(m[0]);
 				resetPwdRequest.setMsgDescription(m[1]);
+				
+			    if (!reset_Password.getUpActiveYn().equalsIgnoreCase("Y")) {
+			        feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0004;
+			        m = feedback.split("=");
+			        resetPwdRequest.setMsgID(m[0]);
+			        resetPwdRequest.setMsgDescription(m[1]);
+			    }
+			    
 		    	System.out.println(
 		    			  "com.yardi.ejb.helpdesk.PwdResetCtrlBean.findUserDetails() 0011 "
 		    			+ "\n    "
