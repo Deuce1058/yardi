@@ -1,40 +1,39 @@
 package com.yardi.shared.test;
 
 public class LoginStateRequest {
-	private String msgid;
 	private String msgd;
-	private String userName;
-	private String ppDays;
-	private String ppNbrUnique;
-	private String ppMaxSignonAttempts;
-	private String ppPwdMinLen;
-	private String pp_upper_rqd;
+	private String msgid;
+	private String pp_cant_contain_id;
+	private String pp_cant_contain_pwd;
 	private String pp_lower_rqd;
 	private String pp_number_rqd;
 	private String pp_special_rqd;
+	private String pp_upper_rqd;
+	private String ppDays;
 	private String ppMaxPwdLen;
 	private String ppMaxRepeatChar;
+	private String ppMaxSignonAttempts;
 	private String ppNbrDigits;
-	private String ppNbrUpper;
 	private String ppNbrLower;
 	private String ppNbrSpecial;
-	private String pp_cant_contain_id;
-	private String pp_cant_contain_pwd;
-	private String uptoken;
-	private String upPwdexpd;
-	private String upPwdAttempts;
-	private String upDisabledDate;
-	private String upDisabledTime;
-	private String upLastLoginDate;
-	private String upLastLoginTime;
-	private String upActiveYn;
-	private String uniqueTokensString;
-	private String stSesssionId;
-	private String stSessionToken;
-	private String stLastRequest;
+	private String ppNbrUnique;
+	private String ppNbrUpper;
+	private String ppPwdMinLen;
+	private String ppTempPwdTtl;
 	private String stLastActiveDate;
-	private String stLastActiveTime;
+	private String stLastRequest;
+	private String stSessionToken;
+	private String stSesssionId;
+	private String uniqueTokensString;
+	private String upActiveYn;
+	private String upDisabledDate;
+	private String upLastLoginDate;
+	private String upPwdAttempts;
+	private String upPwdexpd;
+	private String upTempPwd;
+	private String uptoken;
 	private String userGroups;
+	private String userName;
 	
 	public LoginStateRequest() {
 	}
@@ -111,12 +110,12 @@ public class LoginStateRequest {
 		return ppPwdMinLen;
 	}
 
-	public String getStLastActiveDate() {
-		return stLastActiveDate;
+	public String getPpTempPwdTtl() {
+		return ppTempPwdTtl;
 	}
 
-	public String getStLastActiveTime() {
-		return stLastActiveTime;
+	public String getStLastActiveDate() {
+		return stLastActiveDate;
 	}
 
 	public String getStLastRequest() {
@@ -143,16 +142,8 @@ public class LoginStateRequest {
 		return upDisabledDate;
 	}
 
-	public String getUpDisabledTime() {
-		return upDisabledTime;
-	}
-
 	public String getUpLastLoginDate() {
 		return upLastLoginDate;
-	}
-
-	public String getUpLastLoginTime() {
-		return upLastLoginTime;
 	}
 
 	public String getUpPwdAttempts() {
@@ -161,6 +152,10 @@ public class LoginStateRequest {
 
 	public String getUpPwdexpd() {
 		return upPwdexpd;
+	}
+
+	public String getUpTempPwd() {
+		return upTempPwd;
 	}
 
 	public String getUptoken() {
@@ -247,12 +242,12 @@ public class LoginStateRequest {
 		this.ppPwdMinLen = ppPwdMinLen;
 	}
 
-	public void setStLastActiveDate(String stLastActiveDate) {
-		this.stLastActiveDate = stLastActiveDate;
+	public void setPpTempPwdTtl(String ppTempPwdTtl) {
+		this.ppTempPwdTtl = ppTempPwdTtl;
 	}
 
-	public void setStLastActiveTime(String stLastActiveTime) {
-		this.stLastActiveTime = stLastActiveTime;
+	public void setStLastActiveDate(String stLastActiveDate) {
+		this.stLastActiveDate = stLastActiveDate;
 	}
 
 	public void setStLastRequest(String stLastRequest) {
@@ -279,16 +274,8 @@ public class LoginStateRequest {
 		this.upDisabledDate = upDisabledDate;
 	}
 
-	public void setUpDisabledTime(String upDisabledTime) {
-		this.upDisabledTime = upDisabledTime;
-	}
-
 	public void setUpLastLoginDate(String upLastLoginDate) {
 		this.upLastLoginDate = upLastLoginDate;
-	}
-
-	public void setUpLastLoginTime(String upLastLoginTime) {
-		this.upLastLoginTime = upLastLoginTime;
 	}
 
 	public void setUpPwdAttempts(String upPwdAttempts) {
@@ -297,6 +284,10 @@ public class LoginStateRequest {
 
 	public void setUpPwdexpd(String upPwdexpd) {
 		this.upPwdexpd = upPwdexpd;
+	}
+
+	public void setUpTempPwd(String upTempPwd) {
+		this.upTempPwd = upTempPwd;
 	}
 
 	public void setUptoken(String uptoken) {
@@ -313,30 +304,17 @@ public class LoginStateRequest {
 
 	@Override
 	public String toString() {
-		return "LoginStateRequest [msgid=" + msgid + ", msgd=" + msgd + ", userName=" + userName + ", ppDays=" + ppDays
-				+ "\n    "
-				+ ", ppNbrUnique=" + ppNbrUnique + ", ppMaxSignonAttempts=" + ppMaxSignonAttempts + ", ppPwdMinLen="
-				+ ppPwdMinLen + ", pp_upper_rqd=" + pp_upper_rqd 
-				+ "\n    "
-				+ ", pp_lower_rqd=" + pp_lower_rqd + ", pp_number_rqd="
-				+ pp_number_rqd + ", pp_special_rqd=" + pp_special_rqd + ", ppMaxPwdLen=" + ppMaxPwdLen
-				+ "\n    "
-				+ ", ppMaxRepeatChar=" + ppMaxRepeatChar + ", ppNbrDigits=" + ppNbrDigits + ", ppNbrUpper=" + ppNbrUpper
-				+ ", ppNbrLower=" + ppNbrLower 
-				+ "\n    "
-				+ ", ppNbrSpecial=" + ppNbrSpecial + ", pp_cant_contain_id="
-				+ pp_cant_contain_id + ", pp_cant_contain_pwd=" + pp_cant_contain_pwd + ", uptoken=" + uptoken
-				+ "\n    "
-				+ ", upPwdexpd=" + upPwdexpd + ", upPwdAttempts=" + upPwdAttempts + ", upDisabledDate=" + upDisabledDate
-				+ ", upDisabledTime=" + upDisabledTime 
-				+ "\n    "
-				+ ", upLastLoginDate=" + upLastLoginDate + ", upLastLoginTime="
-				+ upLastLoginTime + ", upActiveYn=" + upActiveYn + ", uniqueTokensString=" + uniqueTokensString
-				+ "\n    "
-				+ ", stSesssionId=" + stSesssionId + ", stSessionToken=" + stSessionToken + ", stLastRequest="
-				+ stLastRequest + ", stLastActiveDate=" + stLastActiveDate 
-				+ "\n    "
-				+ ", stLastActiveTime=" + stLastActiveTime
-				+ ", userGroups=" + userGroups + "]";
+		return "LoginStateRequest [msgd=" + msgd + ", msgid=" + msgid + ", pp_cant_contain_id=" + pp_cant_contain_id
+				+ ", pp_cant_contain_pwd=" + pp_cant_contain_pwd + ", pp_lower_rqd=" + pp_lower_rqd + ", pp_number_rqd="
+				+ pp_number_rqd + ", pp_special_rqd=" + pp_special_rqd + ", pp_upper_rqd=" + pp_upper_rqd + ", ppDays="
+				+ ppDays + ", ppMaxPwdLen=" + ppMaxPwdLen + ", ppMaxRepeatChar=" + ppMaxRepeatChar
+				+ ", ppMaxSignonAttempts=" + ppMaxSignonAttempts + ", ppNbrDigits=" + ppNbrDigits + ", ppNbrLower="
+				+ ppNbrLower + ", ppNbrSpecial=" + ppNbrSpecial + ", ppNbrUnique=" + ppNbrUnique + ", ppNbrUpper="
+				+ ppNbrUpper + ", ppPwdMinLen=" + ppPwdMinLen + ", ppTempPwdTtl=" + ppTempPwdTtl + ", stLastActiveDate="
+				+ stLastActiveDate + ", stLastRequest=" + stLastRequest + ", stSessionToken=" + stSessionToken
+				+ ", stSesssionId=" + stSesssionId + ", uniqueTokensString=" + uniqueTokensString + ", upActiveYn="
+				+ upActiveYn + ", upDisabledDate=" + upDisabledDate + ", upLastLoginDate=" + upLastLoginDate
+				+ ", upPwdAttempts=" + upPwdAttempts + ", upPwdexpd=" + upPwdexpd + ", upTempPwd=" + upTempPwd
+				+ ", uptoken=" + uptoken + ", userGroups=" + userGroups + ", userName=" + userName + "]";
 	}
 }
