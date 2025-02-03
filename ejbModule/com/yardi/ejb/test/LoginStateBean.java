@@ -1,8 +1,6 @@
 package com.yardi.ejb.test;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import jakarta.annotation.PostConstruct;
@@ -94,6 +92,10 @@ public class LoginStateBean implements LoginState {
 		return pwdPolicy;
 	}
 
+	private boolean isValidUserName() {
+		return userProfileBean.doesUserExist(loginStateRequest.getUserName());
+	}
+	
 	public void mapEntities() {
 		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0004 ");
@@ -104,48 +106,53 @@ public class LoginStateBean implements LoginState {
 			loginStateRequest.setMsgid(s[0]);
 			loginStateRequest.setMsgd(s[1]);
 		
-			if (findUserID()) {
+			if (isValidUserName()) {
+				findUserID();
 				mapPwdPolicy();
 				mapUserProfile();
 				mapUniqueTokens();
 				mapSessionsTable();
 				mapUserGroups();
+			} else {
+				s = com.yardi.shared.rentSurvey.YardiConstants.YRD000D.split("=");
+				loginStateRequest.setMsgid(s[0]);
+				loginStateRequest.setMsgd(s[1]);
 			}
 
 			tx.commit();
 		} catch (NotSupportedException e) {
 			//debug
-			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0000 ");
+			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0012 ");
 			//debug
 			e.printStackTrace();
 		} catch (SystemException e) {
 			//debug
-			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0001 ");
+			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0013 ");
 			//debug
 			e.printStackTrace();
 		} catch (SecurityException e) {
 			//debug
-			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0002 ");
+			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0014 ");
 			//debug
 			e.printStackTrace();
 		} catch (IllegalStateException e) {
 			//debug
-			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0003 ");
+			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0015 ");
 			//debug
 			e.printStackTrace();
 		} catch (RollbackException e) {
 			//debug
-			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0005 ");
+			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0016 ");
 			//debug
 			e.printStackTrace();
 		} catch (HeuristicMixedException e) {
 			//debug
-			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0006 ");
+			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0017 ");
 			//debug
 			e.printStackTrace();
 		} catch (HeuristicRollbackException e) {
 			//debug
-			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0007 ");
+			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0018 ");
 			//debug
 			e.printStackTrace();
 		}
@@ -155,21 +162,22 @@ public class LoginStateBean implements LoginState {
 		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean mapPwdPolicy() 0005 ");
 		//debug
-		loginStateRequest.setPpDays(Short.toString(pwdPolicy.getPpDays()));
-		loginStateRequest.setPpNbrUnique(Short.toString(pwdPolicy.getPpNbrUnique()));
+		loginStateRequest.setPpDays             (Short.toString(pwdPolicy.getPpDays()));
+		loginStateRequest.setPpTempPwdTtl       (Short.toString(pwdPolicy.getPpTempPwdTtl()));
+		loginStateRequest.setPpNbrUnique        (Short.toString(pwdPolicy.getPpNbrUnique()));
 		loginStateRequest.setPpMaxSignonAttempts(Short.toString(pwdPolicy.getPpMaxSignonAttempts()));
-		loginStateRequest.setPpPwdMinLen(Short.toString(pwdPolicy.getPpPwdMinLen()));
-		loginStateRequest.setPpMaxPwdLen("null");
-		loginStateRequest.setPpMaxRepeatChar("null");
-		loginStateRequest.setPpNbrDigits("null");
-		loginStateRequest.setPpNbrUpper("null");
-		loginStateRequest.setPpNbrLower("null");
-		loginStateRequest.setPpNbrSpecial("null");
-		loginStateRequest.setPp_upper_rqd("FALSE");
-		loginStateRequest.setPp_lower_rqd("FALSE");
-		loginStateRequest.setPp_number_rqd("FALSE");
-		loginStateRequest.setPp_special_rqd("FALSE");
-		loginStateRequest.setPp_cant_contain_id("FALSE");
+		loginStateRequest.setPpPwdMinLen        (Short.toString(pwdPolicy.getPpPwdMinLen()));
+		loginStateRequest.setPpMaxPwdLen        ("null");
+		loginStateRequest.setPpMaxRepeatChar    ("null");
+		loginStateRequest.setPpNbrDigits        ("null");
+		loginStateRequest.setPpNbrUpper         ("null");
+		loginStateRequest.setPpNbrLower         ("null");
+		loginStateRequest.setPpNbrSpecial       ("null");
+		loginStateRequest.setPp_upper_rqd       ("FALSE");
+		loginStateRequest.setPp_lower_rqd       ("FALSE");
+		loginStateRequest.setPp_number_rqd      ("FALSE");
+		loginStateRequest.setPp_special_rqd     ("FALSE");
+		loginStateRequest.setPp_cant_contain_id ("FALSE");
 		loginStateRequest.setPp_cant_contain_pwd("FALSE");
 		
 		if (!(pwdPolicy.getPpMaxPwdLen() == null)) {
@@ -225,12 +233,10 @@ public class LoginStateBean implements LoginState {
 		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean mapSessionsTable() 0006 ");
 		//debug
-		String [] ts = new String [2]; 
 		loginStateRequest.setStSesssionId("");
 		loginStateRequest.setStSessionToken("");
 		loginStateRequest.setStLastRequest("");
 		loginStateRequest.setStLastActiveDate("");
-		loginStateRequest.setStLastActiveTime("");
 		/*debug*/
 		if (userGroupsBean==null) {
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapSessionsTable() 0010 ");
@@ -244,12 +250,10 @@ public class LoginStateBean implements LoginState {
 			//debug
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapSessionsTable() 000F ");
 			//debug
-			loginStateRequest.setStSesssionId(userGroupsBean.getLoginSessionTable().getStSessionId());
-			loginStateRequest.setStSessionToken(userGroupsBean.getLoginSessionTable().getStSessionToken());
-			loginStateRequest.setStLastRequest(userGroupsBean.getLoginSessionTable().getStLastRequest());
-			ts = stringifyDate(userGroupsBean.getLoginSessionTable().getStLastActive());
-			loginStateRequest.setStLastActiveDate(ts[0]);
-			loginStateRequest.setStLastActiveTime(ts[1]);
+			loginStateRequest.setStSesssionId    (userGroupsBean.getLoginSessionTable().getStSessionId());
+			loginStateRequest.setStSessionToken  (userGroupsBean.getLoginSessionTable().getStSessionToken());
+			loginStateRequest.setStLastRequest   (userGroupsBean.getLoginSessionTable().getStLastRequest());
+			loginStateRequest.setStLastActiveDate(stringifyDate(userGroupsBean.getLoginSessionTable().getStLastActive()));
 		}
 	}
 
@@ -291,23 +295,21 @@ public class LoginStateBean implements LoginState {
 		//debug 
 		System.out.println("com.yardi.ejb.test.LoginStateBean mapUserProfile() 000A ");
 		//debug
-		String [] ts = new String [2]; 
-		loginStateRequest.setUptoken(userGroupsBean.getLoginUserProfile().getUptoken());
-		loginStateRequest.setUpPwdexpd(stringifyDate(userGroupsBean.getLoginUserProfile().getUpPwdexpd()));
-		loginStateRequest.setUpPwdAttempts(Short.toString(userGroupsBean.getLoginUserProfile().getUpPwdAttempts()));
-		loginStateRequest.setUpDisabledDate("");
-		loginStateRequest.setUpDisabledTime("");
+		loginStateRequest.setUptoken        (userGroupsBean.getLoginUserProfile().getUptoken());
+		loginStateRequest.setUpTempPwd      (userGroupsBean.getLoginUserProfile().getUpTempPwd());
+		loginStateRequest.setUpPwdexpd      (stringifyDate(userGroupsBean.getLoginUserProfile().getUpPwdexpd()));
+		loginStateRequest.setUpPwdAttempts  (Short.toString(userGroupsBean.getLoginUserProfile().getUpPwdAttempts()));
+		loginStateRequest.setUpDisabledDate ("");
+		loginStateRequest.setUpLastLoginDate("");
+		loginStateRequest.setUpActiveYn     (userGroupsBean.getLoginUserProfile().getUpActiveYn());
 		
-		if (  !(userGroupsBean.getLoginUserProfile().getUpDisabledDate() == null) ) {
-			ts = stringifyDate(userGroupsBean.getLoginUserProfile().getUpDisabledDate());  
-			loginStateRequest.setUpDisabledDate(ts[0]);
-			loginStateRequest.setUpDisabledTime(ts[1]);
+		if (!(userGroupsBean.getLoginUserProfile().getUpDisabledDate() == null)) {
+			loginStateRequest.setUpDisabledDate(stringifyDate(userGroupsBean.getLoginUserProfile().getUpDisabledDate()));
 		}
 		
-		ts = stringifyDate(userGroupsBean.getLoginUserProfile().getUpLastLoginDate());  
-		loginStateRequest.setUpLastLoginDate(ts[0]);
-		loginStateRequest.setUpLastLoginTime(ts[1]);
-		loginStateRequest.setUpActiveYn(userGroupsBean.getLoginUserProfile().getUpActiveYn());
+		if (!(userGroupsBean.getLoginUserProfile().getUpLastLoginDate() == null)) {
+			loginStateRequest.setUpLastLoginDate(stringifyDate(userGroupsBean.getLoginUserProfile().getUpLastLoginDate()));
+		}
 	}
 	
 	@PostConstruct
@@ -354,44 +356,13 @@ public class LoginStateBean implements LoginState {
 		//debug
 	}
 	
-	private String [] stringifyDate(java.sql.Timestamp ts) {
-		String r []       = new String [2];
-		LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(ts.getTime()), ZoneId.systemDefault());
-		String mm         = Integer.toString(ldt.getMonthValue());
-		String d          = Integer.toString(ldt.getDayOfMonth());
-		String h          = Integer.toString(ldt.getHour());
-		String min        = Integer.toString(ldt.getMinute());
-		String sec        = Integer.toString(ldt.getSecond());
-		
-		if (ldt.getMonthValue() < 10 ) {
-			mm = "0" + Integer.toString(ldt.getMonthValue());
-		}
-		
-		if (ldt.getDayOfMonth() < 10) {
-			d = "0" + Integer.toString(ldt.getDayOfMonth());
-		} 
-		
-		r[0] =   Integer.toString(ldt.getYear()) 
-			   + " "
-			   + mm
-			   + d;
-		r[1] = h + ":" + min + ":" + sec;
-		return r;
+	private String stringifyDate(java.sql.Timestamp ts) {
+		SimpleDateFormat f = new SimpleDateFormat("yyyy MMdd HH:mm:ss");
+		return f.format(ts);
 	}
 	
 	private String stringifyDate(java.util.Date date) {
-		LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
-		String m = Integer.toString(ldt.getMonthValue());
-		String d = Integer.toString(ldt.getDayOfMonth());
-		
-		if (ldt.getMonthValue() < 10 ) {
-			m = "0" + Integer.toString(ldt.getMonthValue());
-		}
-		
-		if (ldt.getDayOfMonth() < 10) {
-			d = "0" + Integer.toString(ldt.getDayOfMonth());
-		} 
-		
-		return new String(Integer.toString(ldt.getYear()) + " " + m + d);
+		SimpleDateFormat f = new SimpleDateFormat("yyyy MMdd");
+		return f.format(date);
 	}
 }
