@@ -26,7 +26,10 @@ public class LoginStateService extends HttpServlet {
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//debug
-		System.out.println("com.yardi.test.LoginStateService doGet() 0003 ");
+		System.out.println("com.yardi.test.LoginStateService doGet() 0003 "
+				+ "JSESSIONID="
+				+ request.getSession().getId()
+				);
 		//debug
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		LoginState loginStateBean = null;
@@ -75,6 +78,11 @@ public class LoginStateService extends HttpServlet {
 		loginStateRequest = loginStateBean.getLoginStateRequest();
 		webResponse(response, mapper.writeValueAsString(loginStateRequest));
 		loginStateBean.removeBean();
+		System.out.println("com.yardi.test.LoginStateService doGet() 0006 "
+				+ "JSESSIONID="
+				+ request.getSession().getId()
+				);
+		return;
     }
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
