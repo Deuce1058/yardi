@@ -39,7 +39,7 @@ public class UserProfileBean implements UserProfile {
 	 * examples of EntityManager.setProperty()
 	 * examples of EntityManagerFactory.createEntityManager(SynchronizationType synchronizationType, Map map)
 	 */
-	@PersistenceContext(unitName = "yardi", type=PersistenceContextType.EXTENDED)	
+	@PersistenceContext(unitName = "yardi", type=PersistenceContextType.TRANSACTION)	
 	private EntityManager em;
 	/**
 	 * Clients can read this field to obtain the status after calling a method that provides feedback. 
@@ -327,6 +327,23 @@ public class UserProfileBean implements UserProfile {
     }
 	
 	/**
+	 * Detach the specified entity 
+	 * @param <T> generic type
+	 * @param entity the entity to detach
+	 */
+	public <T> void detachEntity(T entity) {
+        System.out.println("com.yardi.ejb.UserProfileBean.detachEntity() 0035");
+        
+        if (utilsBean.isEntity(entity.getClass(), em)) {
+            System.out.println("com.yardi.ejb.UserProfileBean.detachEntity() 0036");
+            utilsBean.isJoined(em);
+            utilsBean.isManaged(em, entity);
+            em.detach(entity);
+            utilsBean.isManaged(em, entity);
+        }
+	}
+
+    /**
 	 * Disable the User_Profile entity. <p>
 	 *  
 	 * The disabled date Timestamp is set to the system time.<br><br>
@@ -361,7 +378,7 @@ public class UserProfileBean implements UserProfile {
 				);
 		//debug
     }
-
+    
     /**
 	 * Determine whether a row exists in database table USER_PROFILE for the given user ID.<p>
 	 * The entity returned by the query is immediately detached because the only purpose of the entity is to determine whether a row exists. The entity does 
@@ -380,7 +397,7 @@ public class UserProfileBean implements UserProfile {
 		return count > 0;
 	}
     
-    /**
+	/**
      * Return the User_Profile entity specified by <i>userName</i>.<p> 
      * 
      * Returns null if the User_Profile entity is not in the persistence context and USER_PROFILE database table has no row matching userName.<p>
@@ -396,7 +413,7 @@ public class UserProfileBean implements UserProfile {
     	return em.find(User_Profile.class, userName);
     }
     
-	/**
+    /**
 	 * Return the Full_User_Profile entity specified by <i>userID</i>.<p>
 	 * 
 	 * Returns null if the Full_User_Profile entity is not in the persistence context and the USER_PROFILE database table has no row matching userID.<br><br>
@@ -445,7 +462,7 @@ public class UserProfileBean implements UserProfile {
 	    return resetPassword;
 	}
     
-    /**
+	/**
 	 * Return the status of the most recent method call that provides feedback.<p>
 	 * Clients call <i>getFeedback()</i> to determine the status of the most recent method call that provides feedback.
 	 * @return feedback from the most recent method call that provides feedback.
@@ -453,7 +470,7 @@ public class UserProfileBean implements UserProfile {
     public String getFeedback() {
 		return feedback;
 	}
-    
+			
 	/**
      * Returns the password policy obtained from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()
      * 
@@ -484,15 +501,15 @@ public class UserProfileBean implements UserProfile {
     	isManaged(pwdPolicy);
 		return pwdPolicy;
 	}
-			
-	/**
+    
+    /**
      * Return the class's reference to the User_Profile entity stored in the <i>userProfile</i> field
      * @return reference to the User_Profile entity
      */
     public User_Profile getUserProfile() {
 		return userProfile;
 	}
-    
+
     /**
 	 * Test whether the instance is an entity.
 	 * 
@@ -512,11 +529,11 @@ public class UserProfileBean implements UserProfile {
 	        }
 	    }
 	    
-		System.out.println("com.yardi.ejb.UserGroupsBean isEntity() 002A " + foundEntity);
+		System.out.println("com.yardi.ejb.UserProfileBean isEntity() 002A " + foundEntity);
 	    return foundEntity;
 	}
-
-    /**
+	
+	/**
 	 * Test whether the EntityManager is joined to a transaction.
 	 * 
 	 * @return boolean indicating whether the EntityManager is joined to the current transaction.
@@ -544,8 +561,7 @@ public class UserProfileBean implements UserProfile {
 	  	System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 002B ");
 	  		
   		if (userProfile==null) {
-  	  		System.out.println(
-  	  				  "com.yardi.ejb.UserProfileBean.isManaged() 002C "
+  	  		System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 002C "
   	  				+ "\n"
 	  				+ "   em.contains(Full_User_Profile)=false"
 	  				);
@@ -553,8 +569,7 @@ public class UserProfileBean implements UserProfile {
   		} 
   		
   		if (isEntity(userProfile.getClass())==false) {
-  	  		System.out.println(
-	  				  "com.yardi.ejb.UserProfileBean.isManaged() 002D "
+  	  		System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 002D "
 	  				+ "\n"
 	  				+ "   em.contains(Full_User_Profile)=false"
 	  				);
@@ -584,8 +599,7 @@ public class UserProfileBean implements UserProfile {
 	  	System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 002E ");
 
   		if (pwdPolicy==null) {
-  	  		System.out.println(
-  	  				  "com.yardi.ejb.UserProfileBean.isManaged() 002F "
+  	  		System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 002F "
   	  				+ "\n"
 	  				+ "   em.contains(Pwd_Policy)=false"
 	  				);
@@ -593,8 +607,7 @@ public class UserProfileBean implements UserProfile {
   		} 
   		
   		if (isEntity(pwdPolicy.getClass())==false) {
-  	  		System.out.println(
-	  				  "com.yardi.ejb.UserProfileBean.isManaged() 0030 "
+  	  		System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 0030 "
 	  				+ "\n"
 	  				+ "   em.contains(Pwd_Policy)=false"
 	  				);
@@ -623,8 +636,7 @@ public class UserProfileBean implements UserProfile {
 		System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 0031 ");
 
   		if (userProfile==null) {
-  	  		System.out.println(
-  	  				  "com.yardi.ejb.UserProfileBean.isManaged() 0032 "
+  	  		System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 0032 "
   	  				+ "\n"
 	  				+ "   em.contains(User_Profile)=false"
 	  				);
@@ -632,8 +644,7 @@ public class UserProfileBean implements UserProfile {
   		} 
   		
   		if (isEntity(userProfile.getClass())==false) {
-  	  		System.out.println(
-	  				  "com.yardi.ejb.UserProfileBean.isManaged() 0033 "
+  	  		System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 0033 "
 	  				+ "\n"
 	  				+ "   em.contains(User_Profile)=false"
 	  				);
@@ -647,7 +658,7 @@ public class UserProfileBean implements UserProfile {
 				);
     	return em.contains(userProfile);
 	}
-	
+
 	/**
      * Update the user profile to reflect successful login.<p> 
      * 
@@ -690,7 +701,7 @@ public class UserProfileBean implements UserProfile {
 		isJoined();
     	isManaged(managedUserProfile);
     }
-
+	
 	/**
      * Merge the given Full_User_Profile state into the persistence context.
      * 
@@ -724,7 +735,7 @@ public class UserProfileBean implements UserProfile {
 		utilsBean.isManaged(em, mergedTempPassword);
 		return mergedTempPassword;
 	}
-	
+
 	/**
      * Persist a Full_User_Profile 
      * 
@@ -738,12 +749,29 @@ public class UserProfileBean implements UserProfile {
 		em.persist(userProfile);
 		isManaged(userProfile);
 	}
-
+	
 	@PostConstruct
     private void postConstructCallback() {
     	System.out.println("com.yardi.ejb.UserProfileBean postConstructCallback() 0016 ");
     	getPwdPolicy();
     }
+	
+	/**
+	 * Refresh the specified entity.
+	 * @param <T> Generic type
+	 * @param entity the entity to refresh. 
+	 */
+	public <T> void refreshEntity(T entity) {
+        System.out.println("com.yardi.ejb.UserProfileBean.refreshEntity() 0037 ");
+        
+        if (utilsBean.isEntity(entity.getClass(), em)) {
+            System.out.println("com.yardi.ejb.UserProfileBean.refreshEntity() 0038 ");
+            utilsBean.isJoined(em);
+            utilsBean.isManaged(em, entity);
+    		em.refresh(entity);
+            utilsBean.isManaged(em, entity);
+        }
+	}
 	
 	/**
 	 * Remove the given Full_User_Profile entity.<p>
