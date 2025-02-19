@@ -88,6 +88,12 @@ public interface UserProfile {
 	 */
 	void changeUserToken(final char [] newPassword);
     /**
+	 * Detach the specified entity to prevent issues with stale entities 
+	 * @param <T> generic type
+	 * @param entity the entity to detach
+	 */
+    <T> void detachEntity(T entity);
+    /**
 	 * Determine whether a row exists in database table USER_PROFILE for the given user ID.<p>
 	 * The entity returned by the query is immediately detached because the only purpose of the entity is to determine whether a row exists. The entity does 
 	 * not need to be tracked.
@@ -167,6 +173,12 @@ public interface UserProfile {
      */
 	void persist(Full_User_Profile userProfile);
 	/**
+	 * Refresh the specified entity to prevent issues with stale entities 
+	 * @param <T> generic type
+	 * @param entity the entity to refresh
+	 */
+    <T> void refreshEntity(T entity);
+    /**
 	 * Remove the given Full_User_Profile entity.<p>
 	 *  
 	 * @param userProfile the entity to remove.
@@ -183,7 +195,8 @@ public interface UserProfile {
 	 * @param pwdAttempts the value to set
 	 */
 	void setUpPwdAttempts(short pwdAttempts);
-    /**
+    
+	/**
 	 * Inject the given User_Profile entity.<p>
 	 * 
 	 * During login clients inject the User_Profile entity because a reference has been obtained prior to this point and the class should use that reference
