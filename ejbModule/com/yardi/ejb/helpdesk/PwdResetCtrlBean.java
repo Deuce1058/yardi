@@ -63,8 +63,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
      *  YRD001F placeholder for java.lang.Exception.getMessage()
      */
     public ResetPwdRequest findUserDetails() {
-    	System.out.println(
-    			  "com.yardi.ejb.helpdesk.PwdResetCtrlBean.findUserDetails() 0003 "
+    	System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.findUserDetails() 0003 "
     			+ "\n    "
     			+ resetPwdRequest.toString()
     			);
@@ -73,18 +72,18 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 			tx.begin();
 			txStatus(tx);
 			reset_Password = userProfileBean.findUserProfileForPwdReset(resetPwdRequest.getUpUserid());
-	    	System.out.println(
-	    			  "com.yardi.ejb.helpdesk.PwdResetCtrlBean.findUserDetails() 0012 "
-	    			+ "\n    "
-	    			+ reset_Password.toString()
-	    			);
+			userProfileBean.refreshEntity(reset_Password);
+			reset_Password = userProfileBean.findUserProfileForPwdReset(resetPwdRequest.getUpUserid());
 			
 			if (!(reset_Password==null)) {
+		    	System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.findUserDetails() 0012 "
+		    			+ "\n    "
+		    			+ reset_Password.toString()
+		    			);
 			    ObjectMapper mapper = new ObjectMapper(); 
 			    mapper.readerForUpdating(resetPwdRequest).readValue(mapper.writeValueAsString(reset_Password));
 			    String s = mapper.writeValueAsString(reset_Password);
-		    	System.out.println(
-		    			  "com.yardi.ejb.helpdesk.PwdResetCtrlBean.findUserDetails() 0010 "
+		    	System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.findUserDetails() 0010 "
 		    			+ "\n    "
 		    			+ resetPwdRequest.toString()
 		    			+ "\n    "
@@ -99,16 +98,15 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 				String m[] = feedback.split("=");
 				resetPwdRequest.setMsgID(m[0]);
 				resetPwdRequest.setMsgDescription(m[1]);
-				
-			    if (!reset_Password.getUpActiveYn().equalsIgnoreCase("Y")) {
+
+			    if (!(reset_Password.getUpActiveYn().equalsIgnoreCase("Y"))) {
 			        feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0004;
 			        m = feedback.split("=");
 			        resetPwdRequest.setMsgID(m[0]);
 			        resetPwdRequest.setMsgDescription(m[1]);
 			    }
 			    
-		    	System.out.println(
-		    			  "com.yardi.ejb.helpdesk.PwdResetCtrlBean.findUserDetails() 0011 "
+		    	System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.findUserDetails() 0011 "
 		    			+ "\n    "
 		    			+ resetPwdRequest.toString()
 		    			);
@@ -175,6 +173,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 	@Remove
 	public void remove() {
 		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.remove() 000B ");
+		//userProfileBean.detachEntity(reset_Password);
 		userProfileBean.removeBean();
 	}
 
@@ -267,8 +266,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 	 */
 	public  void setResetPwdRequest(ResetPwdRequest resetPwdRequest) {
 		this.resetPwdRequest = resetPwdRequest;
-		System.out.println(
-				  "com.yardi.ejb.helpdesk.PwdResetCtrlBean.setResetPwdRequest() 0008 "
+		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.setResetPwdRequest() 0008 "
 				+ "\n    "
 				+ this.resetPwdRequest.toString()
 				);
