@@ -321,6 +321,14 @@ $(function () {
         })
         .catch(error => {
           $('#form-feedback').text(error.msgDescription);
+          if (error.msgID === 'YRD0004') {
+            buildPage(error),
+            findButtonDisabled = true,
+            configureButtons(),
+            $('#accountDetailsPanel').toggle(),
+            $('#updateBtn')   .addClass('not-allowed').removeClass('pointer')    .attr('disabled', true),
+            $('#tempPwdInput').addClass('not-allowed').removeClass('pointer')    .attr('disabled', true)
+          }
         });
     }
   });
