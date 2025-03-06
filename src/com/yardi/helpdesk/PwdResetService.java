@@ -84,7 +84,11 @@ public class PwdResetService extends HttpServlet {
 	 * </ul>
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("com.yardi.helpdesk.PwdResetService.doGet() 000F ");
+		System.out.println("com.yardi.helpdesk.PwdResetService.doGet() 000F "
+				+ "\n    "
+				+ "JSESSIONID="
+				+ request.getSession().getId()
+				);
 	    PwdResetCtrl pwdResetCtrlBean = checkSession(request);
 	    String formdata = readRawBufferedLine(request); 
 	    ResetPwdRequest resetPwdRequest = mapRequestStringToResetPwdRequest(formdata); 
@@ -98,9 +102,13 @@ public class PwdResetService extends HttpServlet {
 	        resetPwdRequest = pwdResetCtrlBean.resetPwd(); 
 	    }
 	    
-	    formatDatesInRequest(resetPwdRequest);
+	    if (!(pwdResetCtrlBean.getFeedback().equalsIgnoreCase(com.yardi.shared.rentSurvey.YardiConstants.YRD000D))) {
+		    formatDatesInRequest(resetPwdRequest);	    	
+	    }
+	   
 	    ObjectMapper mapper = new ObjectMapper(); 
 	    webResponse(request, response, mapper.writeValueAsString(resetPwdRequest), pwdResetCtrlBean); 
+	    return;
 	}
 
     /**
@@ -136,8 +144,7 @@ public class PwdResetService extends HttpServlet {
 			}
 		}
 		
-		System.out.println(
-				  "com.yardi.helpdesk.PwdResetService.formatDatesInRequest() 0011 "
+		System.out.println("com.yardi.helpdesk.PwdResetService.formatDatesInRequest() 0011 "
 				+ "\n    "
 				+ "ResetPwdRequest="
 				+ resetPwdRequest.toString()
@@ -270,6 +277,10 @@ public class PwdResetService extends HttpServlet {
 		    synchronized(session) {
 			    request.getSession().setAttribute("pwdResetCtrlBean", null); 
 		    }
+			System.out.println("com.yardi.helpdesk.PwdResetService.webResponse() 0012 "
+					+ "JSESSIONID="
+					+ request.getSession().getId()
+					);
 		} catch (IOException e) {
 			System.out.println("com.yardi.helpdesk.PwdResetService.webResponse() 000E IOException ");
 			e.printStackTrace();
