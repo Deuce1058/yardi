@@ -730,6 +730,12 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 					);
 			/* A find occurred previously in another transaction that has committed. Need to find again here */
 			Full_User_Profile existingUserProfile = findFullUserProfile(editRequest.getFindUser());
+			String disabledDateString = editRequest.getDisabledDate() + " " + editRequest.getDisabledTime();
+
+			if (editRequest.getDisabledDate().isEmpty() && editRequest.getDisabledTime().equalsIgnoreCase("00:00:00")) {
+		        disabledDateString = "null";
+		    } 
+
 			Full_User_Profile newUserProfile =	new Full_User_Profile(
 					editRequest.getFindUser(),
 					editRequest.getCurrentToken(),
@@ -751,7 +757,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 					editRequest.getActiveYN(),
 					editRequest.getPwdExpDate() + " " + editRequest.getPwdExpTime(),
 					"",
-					editRequest.getDisabledDate() + " " + editRequest.getDisabledTime(),
+					disabledDateString,
 					editRequest.getLastLogin() + " " + editRequest.getLastLoginTime(),
 					Short.parseShort(editRequest.getPwdAttempts()), 
 					/* do not change the sequence column from the found Full_User_Profile */
