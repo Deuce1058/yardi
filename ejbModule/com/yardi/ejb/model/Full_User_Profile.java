@@ -304,8 +304,12 @@ public class Full_User_Profile implements Serializable {
 		
 		this.upDisabledYn    = upDisabledYn;
 		
-		ldt = LocalDateTime.parse(disabledDate, DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss"));
-		this.upDisabledDate = Timestamp.valueOf(ldt);
+		if (disabledDate.equalsIgnoreCase("null")) {
+		    this.upDisabledDate = null;
+		} else {
+		    ldt = LocalDateTime.parse(disabledDate, DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss"));
+		    this.upDisabledDate = Timestamp.valueOf(ldt);
+		}
 		
 		ldt = LocalDateTime.parse(lastLoginDate, DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss"));
 		this.upLastLoginDate = Timestamp.valueOf(ldt);
