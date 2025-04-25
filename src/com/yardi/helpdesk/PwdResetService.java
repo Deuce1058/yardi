@@ -102,7 +102,8 @@ public class PwdResetService extends HttpServlet {
 	        resetPwdRequest = pwdResetCtrlBean.resetPwd(); 
 	    }
 	    
-	    if (!(pwdResetCtrlBean.getFeedback().equalsIgnoreCase(com.yardi.shared.rentSurvey.YardiConstants.YRD000D))) {
+	    if (!(pwdResetCtrlBean.getFeedback().equalsIgnoreCase(com.yardi.shared.rentSurvey.YardiConstants.YRD000D)) &&
+	    	!(resetPwdRequest.getAction().equalsIgnoreCase(com.yardi.shared.rentSurvey.YardiConstants.PASSWORD_RESET_REQUEST))) {
 		    formatDatesInRequest(resetPwdRequest);	    	
 	    }
 	   
