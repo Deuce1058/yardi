@@ -168,6 +168,13 @@ public class User_Profile implements Serializable {
 		return upUserid;
 	}
 
+	/** 
+	 * Set temporary password to null
+	 */
+	public void nullifyUpTempPwd() {
+		upTempPwd = null;
+	}
+
 	/**
 	 * Set the disabled date to the given Timestamp.<p>
 	 * The date and time when the user profile became disabled due to too many invalid login attempts since the most recent successful login is set.
@@ -220,7 +227,7 @@ public class User_Profile implements Serializable {
 	public void setUpTempPwd(String upTempPwd) {
 		this.upTempPwd = upTempPwd;
 	}
-
+	
 	/**
 	 * The hashed password is set to the given String.
 	 * @param uptoken hashed password
