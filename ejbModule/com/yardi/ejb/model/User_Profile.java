@@ -103,6 +103,10 @@ public class User_Profile implements Serializable {
 	@Column(name="UP_USERID")
 	private String upUserid;
 
+	public User_Profile() {
+		System.out.println("com.yardi.ejb.model.User_Profile.User_Profile() 0000");
+	}
+
 	/**
 	 * Return user profile active Y/N indicator
 	 * @return user profile active Y/N indicator
@@ -172,6 +176,7 @@ public class User_Profile implements Serializable {
 	 * Set temporary password to null
 	 */
 	public void nullifyUpTempPwd() {
+		System.out.println("com.yardi.ejb.model.nullifyUpTempPwd() 0007");
 		upTempPwd = null;
 	}
 
@@ -182,7 +187,7 @@ public class User_Profile implements Serializable {
 	 */
 	public void setUpDisabledDate(java.sql.Timestamp upDisabledDate) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.model.User_Profile.setUpDisabledDate() 0000");
+		System.out.println("com.yardi.ejb.model.User_Profile.setUpDisabledDate() 0005");
 		/*debug*/
 		this.upDisabledDate = upDisabledDate;
 	}
@@ -193,7 +198,7 @@ public class User_Profile implements Serializable {
 	 */
 	public void setUpLastLoginDate(java.sql.Timestamp upLastLoginDate) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.model.User_Profile.setUpLastLoginDate() 0000");
+		System.out.println("com.yardi.ejb.model.User_Profile.setUpLastLoginDate() 0001");
 		/*debug*/
 		this.upLastLoginDate = upLastLoginDate;
 	}
@@ -204,7 +209,7 @@ public class User_Profile implements Serializable {
 	 */
 	public void setUpPwdAttempts(short upPwdAttempts) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.model.User_Profile.setUpPwdAttempts() 0000");
+		System.out.println("com.yardi.ejb.model.User_Profile.setUpPwdAttempts() 0002");
 		/*debug*/
 		this.upPwdAttempts = upPwdAttempts;
 	}
@@ -215,7 +220,7 @@ public class User_Profile implements Serializable {
 	 */
 	public void setUpPwdexpd(java.sql.Timestamp upPwdexpd) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.model.User_Profile.setUpPwdexpd() 0000");
+		System.out.println("com.yardi.ejb.model.User_Profile.setUpPwdexpd() 0003");
 		/*debug*/
 		this.upPwdexpd = upPwdexpd;
 	}
@@ -225,6 +230,7 @@ public class User_Profile implements Serializable {
 	 * @param upTempPwd temporary password
 	 */
 	public void setUpTempPwd(String upTempPwd) {
+		System.out.println("com.yardi.ejb.model.setUpTempPwd() 0006");
 		this.upTempPwd = upTempPwd;
 	}
 	
@@ -234,7 +240,7 @@ public class User_Profile implements Serializable {
 	 */
 	public void setUptoken(String uptoken) {
 		/*debug*/
-		System.out.println("com.yardi.ejb.model.User_Profile.setUptoken() 0000");
+		System.out.println("com.yardi.ejb.model.User_Profile.setUptoken() 0004");
 		/*debug*/
 		this.uptoken = uptoken;
 	}
