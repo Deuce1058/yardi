@@ -154,45 +154,25 @@ public class UserProfileBean implements UserProfile {
 		isJoined();
 		isManaged(userProfile);
 		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
-		java.sql.Timestamp today = new java.sql.Timestamp(new java.util.Date().getTime());
-
-		if (pwdPolicy==null) { //get the password policy
-			//debug
-			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0010 pwdPolicy == null");
-			//debug
-			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
-			return false;
-		}
-
-		if (userProfile == null) {
-			//debug
-			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0006 userProfile == null");
-			//debug
-			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0001;
-			return false;
-		}
-
-		if (userProfile.getUpDisabledDate() != null) {
-			//debug
-			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0008 userProfile.getUpDisabledDate() != null\n");
-			//debug
-			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0003;
-			return false;
-		}
-
-		if (userProfile.getUpActiveYn().equals("N")) {
-			//debug
-			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0009 userProfile.getUpActiveYn().equals(N)");
-			//debug
-			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0004;
-			return false;
-		}
+		
+	    if (!isAuthenticationPrecheckPassed()) {
+	        return false;
+	    }
 
 		short maxSignonAttempts = pwdPolicy.getPpMaxSignonAttempts();
-		long passwordExpiration = userProfile.getUpPwdexpd().getTime();
 		short signonAttempts = userProfile.getUpPwdAttempts();
+		String token = "";
+		
+		if (userProfile.getUpTempPwd()!=null) {
+			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 003D ");
+			token = userProfile.getUpTempPwd();
+		} else {
+			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 003E ");
+			token = userProfile.getUptoken();			
+		}
+		
 		PasswordAuthentication passwordAuthentication = new PasswordAuthentication(); 
-		boolean pwdValid = passwordAuthentication.authenticate(password.toCharArray(), userProfile.getUptoken());
+		boolean pwdValid = passwordAuthentication.authenticate(password.toCharArray(), token);
 
 		if (pwdValid == false) {
 			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0017 ");
@@ -225,7 +205,17 @@ public class UserProfileBean implements UserProfile {
 			}
 		} else {
 
-			if (userIsChangingPassword == false && passwordExpiration <= today.getTime()) {
+			if (userIsChangingPassword == false && userProfile.getUpTempPwd() != null) { 
+				System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 003B ");
+			    setUpPwdAttempts((short) 0); 
+			    feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD001B; 
+			    return false; //authenticated but cant login before changing password. Temporary passwords automatically expire if authentication succeeds  
+			} 
+			
+			LocalDateTime now = LocalDateTime.now();
+
+			if (userIsChangingPassword == false && (userProfile.getUpPwdexpd().toLocalDateTime().isBefore(now)   
+					                            ||  userProfile.getUpPwdexpd().toLocalDateTime().isEqual (now))) {
 				/*
 				 * there is pwdPolicy
 				 * there is userProfile
@@ -247,16 +237,16 @@ public class UserProfileBean implements UserProfile {
 						+ "\n "
 						+ "  userIsChangingPassword =" + userIsChangingPassword   
 						+ "\n "
-						+ "  passwordExpiration =" + passwordExpiration
+						+ "  userProfile.getUpPwdexpd()=" + userProfile.getUpPwdexpd().toString()
 						+ "\n "
-						+ "  today =" + today
+						+ "  now=" + now.toString()
 						+ "\n "
 						+ "  feedback =" + feedback
 						);
 				//debug
 				return false;
 			}
-
+			
 			if (userIsChangingPassword == false) {
 				/*
 				 * They have successfully logged in at this point only if they are not changing the password so only set 
@@ -278,7 +268,7 @@ public class UserProfileBean implements UserProfile {
 		return pwdValid;
 	}
 
-	/**
+    /**
 	 * Change the hashed password stored in the User_Profile entity.<p>
 	 * 
 	 * <strong>Steps to change the user's token:</strong>
@@ -325,7 +315,7 @@ public class UserProfileBean implements UserProfile {
 		isJoined();
     	isManaged(managedUserProfile);
     }
-	
+
 	/**
 	 * Detach the specified entity 
 	 * @param <T> generic type
@@ -343,7 +333,7 @@ public class UserProfileBean implements UserProfile {
         }
 	}
 
-    /**
+	/**
 	 * Disable the User_Profile entity. <p>
 	 *  
 	 * The disabled date Timestamp is set to the system time.<br><br>
@@ -378,8 +368,8 @@ public class UserProfileBean implements UserProfile {
 				);
 		//debug
     }
-    
-    /**
+	
+	/**
 	 * Determine whether a row exists in database table USER_PROFILE for the given user ID.<p>
 	 * The entity returned by the query is immediately detached because the only purpose of the entity is to determine whether a row exists. The entity does 
 	 * not need to be tracked.
@@ -396,8 +386,8 @@ public class UserProfileBean implements UserProfile {
 				.getSingleResult();
 		return count > 0;
 	}
-    
-	/**
+
+    /**
      * Return the User_Profile entity specified by <i>userName</i>.<p> 
      * 
      * Returns null if the User_Profile entity is not in the persistence context and USER_PROFILE database table has no row matching userName.<p>
@@ -447,7 +437,7 @@ public class UserProfileBean implements UserProfile {
     	return userProfile;
 	}
     
-    /**
+	/**
 	 * Retrieve the user profile details that will be displayed on the password reset page used by the helpdesk
 	 * @param userID user ID
 	 * @return entity that holds user profile details to be displayed on the password reset page
@@ -462,7 +452,7 @@ public class UserProfileBean implements UserProfile {
 	    return resetPassword;
 	}
     
-	/**
+    /**
 	 * Return the status of the most recent method call that provides feedback.<p>
 	 * Clients call <i>getFeedback()</i> to determine the status of the most recent method call that provides feedback.
 	 * @return feedback from the most recent method call that provides feedback.
@@ -470,8 +460,8 @@ public class UserProfileBean implements UserProfile {
     public String getFeedback() {
 		return feedback;
 	}
-			
-	/**
+    
+    /**
      * Returns the password policy obtained from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()
      * 
      * @return Pwd_Policy entity 
@@ -502,14 +492,53 @@ public class UserProfileBean implements UserProfile {
 		return pwdPolicy;
 	}
     
-    /**
+	/**
      * Return the class's reference to the User_Profile entity stored in the <i>userProfile</i> field
      * @return reference to the User_Profile entity
      */
     public User_Profile getUserProfile() {
 		return userProfile;
 	}
+			
+	/**
+	 * Check for anything that would prevent authentication such as a disabled account
+	 * @return false if there are conditions that prevent authentication
+	 */
+	private boolean isAuthenticationPrecheckPassed() {
+		if (pwdPolicy==null) { //get the password policy
+			System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticationPrecheckPassed() 0010 pwdPolicy == null");
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
+			return false;
+		}
 
+		if (userProfile == null) {
+			System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticationPrecheckPassed() 0006 userProfile == null");
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0001;
+			return false;
+		}
+
+		if (userProfile.getUpDisabledDate() != null) {
+			System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticationPrecheckPassed() 0008 userProfile.getUpDisabledDate() != null\n");
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0003;
+			return false;
+		}
+
+		if (userProfile.getUpActiveYn().equals("N")) {
+			System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticationPrecheckPassed() 0009 userProfile.getUpActiveYn().equals(N)");
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0004;
+			return false;
+		}
+		
+		if (userProfile.getUpTempPwd() != null && (userProfile.getUpPwdexpd().toLocalDateTime().isBefore(LocalDateTime.now())  
+				                               ||  userProfile.getUpPwdexpd().toLocalDateTime().isEqual (LocalDateTime.now())) ) { 
+			System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticationPrecheckPassed() 003A ");
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD001C;
+			return false; 
+		}
+		
+		return true;
+	}
+    
     /**
 	 * Test whether the instance is an entity.
 	 * 
@@ -675,24 +704,29 @@ public class UserProfileBean implements UserProfile {
     	userProfile.setUpPwdAttempts((short) 0);
     	userProfile.setUpDisabledDate(null);
     	userProfile.setUpLastLoginDate(new java.sql.Timestamp(new java.util.Date().getTime()));
+    	userProfile.nullifyUpTempPwd();
     	User_Profile managedUserProfile = em.merge(userProfile);
     	managedUserProfile.setUpPwdAttempts(  userProfile.getUpPwdAttempts());
     	managedUserProfile.setUpDisabledDate( userProfile.getUpDisabledDate());
     	managedUserProfile.setUpLastLoginDate(userProfile.getUpLastLoginDate());
+    	managedUserProfile.nullifyUpTempPwd();
     	//debug
 		System.out.println("com.yardi.ejb.UserProfileBean loginSuccess() 0003 "
 				+ "\n "
 				+ "   userName=" 
-				+ userProfile.getUpUserid()
+				+ managedUserProfile.getUpUserid()
 				+ "\n "
 				+ "   upPwdAttempts="
-				+ userProfile.getUpPwdAttempts()
+				+ managedUserProfile.getUpPwdAttempts()
 				+ "\n "
 				+ "   upDisabledDate="
-				+ userProfile.getUpDisabledDate()
+				+ managedUserProfile.getUpDisabledDate().toString()
 				+ "\n "
 				+ "   loginDate=" 
-				+ userProfile.getUpLastLoginDate()
+				+ managedUserProfile.getUpLastLoginDate().toString()
+				+ "\n "
+				+ "   upTempPwd=" 
+				+ managedUserProfile.getUpTempPwd()
 				+ "\n "
 				+ "   isManaged(managedUserProfile)="
 				+ isManaged(managedUserProfile)
