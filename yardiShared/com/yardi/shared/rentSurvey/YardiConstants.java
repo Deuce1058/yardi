@@ -31,8 +31,8 @@ public class YardiConstants {
 	public static final String YRD0018 = "YRD0018=Password must contain at least %n upper case characters";
 	public static final String YRD0019 = "YRD0019=Password must contain at least %n lower case characters";
 	public static final String YRD001A = "YRD001A=Password must contain at least %n special characters";
-	public static final String YRD001B = "Authenticated with temporary password.";
-	public static final String YRD001C = "Temporary password expired. Contact help desk for a new password.";
+	public static final String YRD001B = "YRD001B=Authenticated with temporary password.";
+	public static final String YRD001C = "YRD001C=Temporary password expired. Contact help desk for a new password.";
 	public static final String YRD001F = "YRD001F=placeholder for java.lang.Exception.getMessage()";
 	public static final Pattern PATTERN_UPPER    = Pattern.compile(".*?\\p{Lu}");
 	public static final Pattern PATTERN_LOWER    = Pattern.compile(".*?[\\p{L}&&[^\\p{Lu}]]");
