@@ -62,6 +62,9 @@ public class UserProfileBean implements UserProfile {
 	 */
 	@EJB Utils utilsBean;
 
+	/**
+	 * Default constructor
+	 */
     public UserProfileBean() {
     	System.out.println("com.yardi.ejb.UserProfileBean UserProfileBean() 0015 ");
     }
@@ -96,9 +99,10 @@ public class UserProfileBean implements UserProfile {
      *   <li>There is a reference to User_Profile entity</li>
      *   <li>The User_Profile entity is not disabled</li>
      *   <li>The User_Proile entity is active</li>
+     *   <li>If a temporary password has been assigned, the temporary password has not expired</li>
      * </ul><br>
 	 *
-     * If these conditions are satisfied then com.yardi.shared.userServices.PasswordAuthentication.athenticate() checks that the hash of the 
+     * If these conditions are satisfied then <code>com.yardi.shared.userServices.PasswordAuthentication.athenticate()</code> checks that the hash of the 
      * plain text password matches the hashed password stored in User_Profile entity.<br><br><br>
      * 
      * 
@@ -113,6 +117,14 @@ public class UserProfileBean implements UserProfile {
      * <strong>If the password is valid:</strong>
      * <div style="display:flex; flex-direction: row">
      *   <div>
+     *     <pre>    <u>If authenticating with a temporary password:</u></pre>
+     *     <ul>
+     *       <li>set <i>upPwdAttempts</i> in User_Profile entity to zero to give the user credit for successfully authenticating</li>
+     *       <li>set feedback to <span style="font-family:consolas;">YRD001B</span></li>
+     *       <li>prevent login unless password is changed</li>
+     *     </ul>
+     *   </div>
+     *   <div>
      *     <pre>    <u>If the password needs to be changed:</u></pre>
      *     <ul>
      *       <li>set <i>upPwdAttempts</i> in User_Profile entity to zero to give the user credit for successfully authenticating</li>
@@ -124,7 +136,7 @@ public class UserProfileBean implements UserProfile {
      *     <pre>    <u>If the user is not in the process of changing their password:</u></pre>
      *     <ul>
      *       <li>call the <i>loginSuccess()</i> method</li>
-     *       <li>return the boolean value from com.yardi.shared.userServices.PasswordAuthentication.authenticate()</li>
+     *       <li>return true indicating that authentication was successful and use is logged in</li>
      *     </ul>    
      *   </div>
      * </div>
@@ -139,6 +151,8 @@ public class UserProfileBean implements UserProfile {
      * YRD000B password policy is missing
      * YRD000C maximum signon attempts exceeded. The User_Profile entity is disabled
      * YRD000F invalid password
+     * YRD001B Authenticated with temporary password
+     * YRD001C Temporary password expired. Contact help desk for a new password
      * </pre>
      * 
      * 
@@ -148,127 +162,60 @@ public class UserProfileBean implements UserProfile {
      * @return boolean indicating whether authentication was successful 
      */
 	public boolean authenticate(String userName, String password, boolean userIsChangingPassword) {
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0013 ");
-		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 0013 ");
 		isJoined();
 		isManaged(userProfile);
 		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
+		PasswordAuthentication passwordAuthentication = new PasswordAuthentication(); 
 		
 	    if (!isAuthenticationPrecheckPassed()) {
+			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 003F ");
 	        return false;
 	    }
 
-		short maxSignonAttempts = pwdPolicy.getPpMaxSignonAttempts();
-		short signonAttempts = userProfile.getUpPwdAttempts();
-		String token = "";
+		if (!passwordAuthentication.authenticate(password.toCharArray(), selectAuthenticationToken())) {
+			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 0040 ");
+			handleFailedAuthentication(pwdPolicy.getPpMaxSignonAttempts(), userProfile.getUpPwdAttempts());
+			return false;
+		} 
 		
-		if (userProfile.getUpTempPwd()!=null) {
-			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 003D ");
-			token = userProfile.getUpTempPwd();
-		} else {
-			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 003E ");
-			token = userProfile.getUptoken();			
+		if (isAuthenticatingWithTemporaryPassword(userIsChangingPassword)) {
+			/*
+			 * They have successfully authenticated at this point but need to change the password to login.
+			 * Set password attempts to zero. 
+			 * Temporary passwords expire immediately upon successful authentication 
+			 */
+			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 0041 ");
+		    setUpPwdAttempts((short) 0); 
+			return false;
+		} 
+		
+		if (isPasswordExpired(userIsChangingPassword)) {
+			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 0042 ");
+			setUpPwdAttempts((short) 0); //give them credit for successfully authenticating
+			return false;
 		}
 		
-		PasswordAuthentication passwordAuthentication = new PasswordAuthentication(); 
-		boolean pwdValid = passwordAuthentication.authenticate(password.toCharArray(), token);
-
-		if (pwdValid == false) {
-			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0017 ");
-			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000F;
-			signonAttempts++;
-			setUpPwdAttempts(signonAttempts);
-			//debug
-			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0012"
+		if (userIsChangingPassword == false) {
+			/*
+			 * They have successfully logged in at this point only if they are not changing the password so only set 
+			 * last login date when they are not changing the password 
+			 */
+			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 000F"
 					+ "\n "
-					+ "  feedback =" + feedback  
+					+ "   userIsChangingPassword="
+					+ userIsChangingPassword
 					+ "\n "
-					+ "  signonAttempts = " + signonAttempts
-					);
-			//debug
-
-			if (signonAttempts == maxSignonAttempts) {
-				disable();
-				//debug
-				System.out.println("com.yardi.ejb.UserProfileBean authenticate() 000C"
-						+ "\n "
-						+ "  signonAttempts == maxSignonAttempts"  
-						);
-				//debug
-
-				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000C;
-				//debug
-				System.out.println("com.yardi.ejb.UserProfileBean authenticate() 000D"
-						+ "feedback =" + feedback + "\n");
-				//debug
-			}
-		} else {
-
-			if (userIsChangingPassword == false && userProfile.getUpTempPwd() != null) { 
-				System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 003B ");
-			    setUpPwdAttempts((short) 0); 
-			    feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD001B; 
-			    return false; //authenticated but cant login before changing password. Temporary passwords automatically expire if authentication succeeds  
-			} 
-			
-			LocalDateTime now = LocalDateTime.now();
-
-			if (userIsChangingPassword == false && (userProfile.getUpPwdexpd().toLocalDateTime().isBefore(now)   
-					                            ||  userProfile.getUpPwdexpd().toLocalDateTime().isEqual (now))) {
-				/*
-				 * there is pwdPolicy
-				 * there is userProfile
-				 * user profile is active
-				 * user profile is not disabled
-				 * password is valid 
-				 * Password expired. Use chgUserToken() in this class to change it
-				 * They made it this far so give them credit and reset password attempts. 
-				 * Still return false so no session table row is created.
-				 * com.yardi.ejb.UserServicesBean.authenticate() makes an exception for YRD0002 and will commit instead of rollback
-				 */
-				//debug
-				System.out.println("com.yardi.ejb.UserProfileBean authenticate() 0021 ");
-				//debug
-				setUpPwdAttempts((short) 0); //give them credit for successfully authenticating
-				feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0002;
-				//debug
-				System.out.println("com.yardi.ejb.UserProfileBean authenticate() 000E "
-						+ "\n "
-						+ "  userIsChangingPassword =" + userIsChangingPassword   
-						+ "\n "
-						+ "  userProfile.getUpPwdexpd()=" + userProfile.getUpPwdexpd().toString()
-						+ "\n "
-						+ "  now=" + now.toString()
-						+ "\n "
-						+ "  feedback =" + feedback
-						);
-				//debug
-				return false;
-			}
-			
-			if (userIsChangingPassword == false) {
-				/*
-				 * They have successfully logged in at this point only if they are not changing the password so only set 
-				 * last login date when they are not changing the password 
-				 */
-				//debug
-				System.out.println("com.yardi.ejb.UserProfileBean authenticate() 000F"
-						+ "\n "
-						+ "   userIsChangingPassword="
-						+ userIsChangingPassword
-						+ "\n "
-						+ "   feedback="
-						+ feedback
-						);   
-				//debug
-				loginSuccess();
-			}
+					+ "   feedback="
+					+ feedback
+					);   
+			loginSuccess();
 		}
-		return pwdValid;
+		
+		return true;
 	}
 
-    /**
+	/**
 	 * Change the hashed password stored in the User_Profile entity.<p>
 	 * 
 	 * <strong>Steps to change the user's token:</strong>
@@ -368,7 +315,7 @@ public class UserProfileBean implements UserProfile {
 				);
 		//debug
     }
-	
+
 	/**
 	 * Determine whether a row exists in database table USER_PROFILE for the given user ID.<p>
 	 * The entity returned by the query is immediately detached because the only purpose of the entity is to determine whether a row exists. The entity does 
@@ -402,8 +349,8 @@ public class UserProfileBean implements UserProfile {
     public User_Profile find(String userName) {
     	return em.find(User_Profile.class, userName);
     }
-    
-    /**
+
+	/**
 	 * Return the Full_User_Profile entity specified by <i>userID</i>.<p>
 	 * 
 	 * Returns null if the Full_User_Profile entity is not in the persistence context and the USER_PROFILE database table has no row matching userID.<br><br>
@@ -436,7 +383,7 @@ public class UserProfileBean implements UserProfile {
 		//debug
     	return userProfile;
 	}
-    
+
 	/**
 	 * Retrieve the user profile details that will be displayed on the password reset page used by the helpdesk
 	 * @param userID user ID
@@ -451,8 +398,8 @@ public class UserProfileBean implements UserProfile {
 	    utilsBean.isManaged(em, resetPassword); 
 	    return resetPassword;
 	}
-    
-    /**
+	
+	/**
 	 * Return the status of the most recent method call that provides feedback.<p>
 	 * Clients call <i>getFeedback()</i> to determine the status of the most recent method call that provides feedback.
 	 * @return feedback from the most recent method call that provides feedback.
@@ -460,7 +407,7 @@ public class UserProfileBean implements UserProfile {
     public String getFeedback() {
 		return feedback;
 	}
-    
+
     /**
      * Returns the password policy obtained from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()
      * 
@@ -492,20 +439,86 @@ public class UserProfileBean implements UserProfile {
 		return pwdPolicy;
 	}
     
-	/**
+    /**
      * Return the class's reference to the User_Profile entity stored in the <i>userProfile</i> field
      * @return reference to the User_Profile entity
      */
     public User_Profile getUserProfile() {
 		return userProfile;
 	}
-			
+    
 	/**
-	 * Check for anything that would prevent authentication such as a disabled account
+     * Authentication failed. Give feedback, increment signon attempts and disable account if maximum number of signon attempts is reached.<p>
+     * <strong>Feedback provided:</strong><br>
+     * <pre>
+     * YRD000C=Maximum signon attempts exceeded. The user profile has been disabled
+     * YRD000F=Invalid password
+     * </pre>
+	 * @param maxSignonAttempts max signon attempts from password policy
+	 * @param signonAttempts current number of signon attempts 
+	 */
+	private void handleFailedAuthentication(short maxSignonAttempts, short signonAttempts) {
+		System.out.println("com.yardi.ejb.UserProfileBean.handleFailedAuthentication() 0017 ");
+		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000F;
+		signonAttempts++;
+		setUpPwdAttempts(signonAttempts);
+		System.out.println("com.yardi.ejb.UserProfileBean.handleFailedAuthentication() 0012"
+				+ "\n "
+				+ "  feedback =" + feedback  
+				+ "\n "
+				+ "  signonAttempts = " + signonAttempts
+				);
+
+		if (signonAttempts == maxSignonAttempts) {
+			disable();
+			System.out.println("com.yardi.ejb.UserProfileBean.handleFailedAuthentication() 000C"
+					+ "\n "
+					+ "  signonAttempts == maxSignonAttempts"  
+					);
+
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000C;
+			System.out.println("com.yardi.ejb.UserProfileBean.handleFailedAuthentication() 000D"
+					+ "\n    "
+					+ "feedback =" + feedback);
+		}
+	}
+    
+    /**
+     * If user is not changing the password and a temporary password is present on the user profile provide appropriate feedback.<p> 
+     * <strong>Feedback provided:</strong><br>
+     * <pre>
+     * YRD001B=Authenticated with temporary password
+     * </pre>
+	 * @param userIsChangingPassword indicates whether user is changing password 
+	 * @return true if user is authenticating with temporary password 
+	 */
+	private boolean isAuthenticatingWithTemporaryPassword(boolean userIsChangingPassword) {
+		System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticatingWithTemporaryPassword() 0043 ");
+
+		if (userIsChangingPassword == false && userProfile.getUpTempPwd() != null) { 
+			System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticatingWithTemporaryPassword() 003B ");
+		    feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD001B; 
+		    return true; //authenticated but cant login unless password is changed. Temporary passwords automatically expire if authentication succeeds  
+		}
+		return false;
+	}
+    
+    /**
+	 * Check for anything that would prevent authentication such as a disabled account and provide appropriate feedback.<p>
+     * <strong>Feedback provided:</strong><br>
+     * <pre>
+     * YRD0001=Invalid user name or password
+     * YRD0003=This account is disabled
+     * YRD0004=This account is not active
+     * YRD000B=Password policy is missing
+     * YRD001C=Temporary password expired. Contact help desk for a new password
+     * </pre>
 	 * @return false if there are conditions that prevent authentication
 	 */
 	private boolean isAuthenticationPrecheckPassed() {
-		if (pwdPolicy==null) { //get the password policy
+		System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticationPrecheckPassed() 0044 ");
+
+		if (pwdPolicy==null) { 
 			System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticationPrecheckPassed() 0010 pwdPolicy == null");
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
 			return false;
@@ -539,7 +552,7 @@ public class UserProfileBean implements UserProfile {
 		return true;
 	}
     
-    /**
+	/**
 	 * Test whether the instance is an entity.
 	 * 
 	 * @param clazz the instance to test. 
@@ -561,7 +574,7 @@ public class UserProfileBean implements UserProfile {
 		System.out.println("com.yardi.ejb.UserProfileBean isEntity() 002A " + foundEntity);
 	    return foundEntity;
 	}
-	
+			
 	/**
 	 * Test whether the EntityManager is joined to a transaction.
 	 * 
@@ -575,8 +588,8 @@ public class UserProfileBean implements UserProfile {
   				);
 		return em.isJoinedToTransaction();
 	}
-	
-	/**
+    
+    /**
 	 * Test whether the persistence context contains the given Full_User_Profile.<p>
 	 * 
 	 * If <i>userProfile</i> is null return false.<br><br>
@@ -687,7 +700,49 @@ public class UserProfileBean implements UserProfile {
 				);
     	return em.contains(userProfile);
 	}
+	
+	/**
+	 * Check for expired password and provide appropriate feedback.<p>
+	 * <strong>Feedback provided:</strong><br>
+	 * <pre>
+	 * YRD0002=Password expired
+	 * </pre>
+	 * @param userIsChangingPassword indicates whether password is being changed
+	 * @return true if password is expired
+	 */
+	private boolean isPasswordExpired(boolean userIsChangingPassword) {
+		System.out.println("com.yardi.ejb.UserProfileBean.isPasswordExpired() 0021 ");
+		LocalDateTime now = LocalDateTime.now();
 
+		if (userIsChangingPassword == false && (userProfile.getUpPwdexpd().toLocalDateTime().isBefore(now)   
+				                            ||  userProfile.getUpPwdexpd().toLocalDateTime().isEqual (now))) {
+			/*
+			 * there is pwdPolicy
+			 * there is userProfile
+			 * user profile is active
+			 * user profile is not disabled
+			 * password is valid 
+			 * Password expired. Use chgUserToken() in this class to change it
+			 * They made it this far so give them credit and reset password attempts. 
+			 * Still return false so no session table row is created.
+			 * com.yardi.ejb.UserServicesBean.authenticate() makes an exception for YRD0002 and will commit instead of rollback
+			 */
+			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0002;
+			System.out.println("com.yardi.ejb.UserProfileBean.isPasswordExpired() 000E "
+					+ "\n "
+					+ "  userIsChangingPassword =" + userIsChangingPassword   
+					+ "\n "
+					+ "  userProfile.getUpPwdexpd()=" + userProfile.getUpPwdexpd().toString()
+					+ "\n "
+					+ "  now=" + now.toString()
+					+ "\n "
+					+ "  feedback =" + feedback
+					);
+			return true;
+		}
+		return false;
+	}
+	
 	/**
      * Update the user profile to reflect successful login.<p> 
      * 
@@ -735,7 +790,7 @@ public class UserProfileBean implements UserProfile {
 		isJoined();
     	isManaged(managedUserProfile);
     }
-	
+
 	/**
      * Merge the given Full_User_Profile state into the persistence context.
      * 
@@ -769,7 +824,7 @@ public class UserProfileBean implements UserProfile {
 		utilsBean.isManaged(em, mergedTempPassword);
 		return mergedTempPassword;
 	}
-
+	
 	/**
      * Persist a Full_User_Profile 
      * 
@@ -783,7 +838,10 @@ public class UserProfileBean implements UserProfile {
 		em.persist(userProfile);
 		isManaged(userProfile);
 	}
-	
+
+	/**
+	 * Post construct callback
+	 */
 	@PostConstruct
     private void postConstructCallback() {
     	System.out.println("com.yardi.ejb.UserProfileBean postConstructCallback() 0016 ");
@@ -808,7 +866,7 @@ public class UserProfileBean implements UserProfile {
 	}
 	
 	/**
-	 * Remove the given Full_User_Profile entity.<p>
+	 * Remove the given Full_User_Profile entity.
 	 *  
 	 * @param userProfile the entity to remove.
 	 */
@@ -837,10 +895,26 @@ public class UserProfileBean implements UserProfile {
 	}
 	
 	/**
+	 * Choose the token to authenticate with. If the temporary password is present on the user profile return this token 
+	 * otherwise return userProfile.getUptoken()
+	 * @return the appropriate token for authentication
+	 */
+	private String selectAuthenticationToken() {
+		System.out.println("com.yardi.ejb.selectAuthenticationToken() 0045 ");
+
+		if (userProfile.getUpTempPwd()!=null) {
+			System.out.println("com.yardi.ejb.selectAuthenticationToken() 003D ");
+			return userProfile.getUpTempPwd();
+		} else {
+			System.out.println("com.yardi.ejb.selectAuthenticationToken() 003E ");
+			return userProfile.getUptoken();			
+		}
+	}
+	
+	/**
 	 * Obtain a reference to the password policy from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy() and store it in the <i>pwdPolicy</i> field.<p>
 	 * 
-	 * Provides feedback: <pre>YRD000B password policy is missing</pre>
-	 * 
+	 * Provides feedback: <pre>YRD000B password policy is missing</pre>	 * 
 	 */
 	private void setPwdPolicy() {
 		//debug
