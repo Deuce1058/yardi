@@ -244,6 +244,7 @@ public class UserServicesBean implements UserServices {
 
 				if (feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD000C) ||
 					feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD000F) ||
+					feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD001B) ||
 					feedback.equals(com.yardi.shared.rentSurvey.YardiConstants.YRD0002)	) {
 					/*
 					 * Need to distinguish between invalid password and invalid user name. If its invalid password 
