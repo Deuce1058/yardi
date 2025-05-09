@@ -42,16 +42,18 @@ public class LoginHandler extends HttpServlet {
     
     /**
 	 * Ensure that the UserServices object stored in the session is the same object that was originally obtained from JNDI.<p>
-	 * <p>
+	 * 
 	 * When a reference to UserServices is obtained from JNDI, the HTTP session ID is stored on the object.<p>
-	 * <p>
+	 * 
 	 * Get the session<br>
 	 * Get the UserServicesBean either from the session or JNDI<br>
 	 * If UserServicesBean came from JNDI, store the session ID on UserServicesBean<br>
 	 * If the session ID from UserServicesBean does not match <code>HttpServletRequest.getSession()</code> throw InvalidSessionException
-	 * <p>
+	 * 
 	 * @param request {@link HttpServletRequest HttpServletRequest} 
 	 * @return UserServices {@link com.yardi.ejb.UserServicesBean#UserServicesBean() com.yardi.ejb.UserServicesBean} 
+	 * @throws InvalidSessionException {@link com.yardi.userServices.InvalidSessionException#InvalidSessionException(String, String) 
+	 *     com.yardi.userServices.InvalidSessionException}
 	 */
 	private UserServices checkSession(HttpServletRequest request) throws InvalidSessionException {
 		HttpSession session = request.getSession();
@@ -242,7 +244,10 @@ public class LoginHandler extends HttpServlet {
 			return;
 		}
 				
-		if (loginRequest.getChangePwd() || userSvcBean.getFeedback().equals(com.yardi.shared.rentSurvey.YardiConstants.YRD0002)) {
+		if (loginRequest.getChangePwd() || 
+			userSvcBean.getFeedback().equals(com.yardi.shared.rentSurvey.YardiConstants.YRD0002) ||
+			userSvcBean.getFeedback().equals(com.yardi.shared.rentSurvey.YardiConstants.YRD001B)
+			) {
 			//debug
 			System.out.println("com.yardi.userServices.LoginHandler doGet() 0002 "
 					+ "\n "
@@ -365,7 +370,12 @@ public class LoginHandler extends HttpServlet {
 	 *   </li>
 	 *   <li>Respond to yardiLogin.html/changePwd.html</li>
 	 * </ul>
-	 * 
+	 *
+	 * @param loginRequest {@link com.yardi.shared.userServices.LoginRequest#LoginRequest() com.yardi.shared.userServices.LoginRequest }
+	 * @param request {@link HttpServletRequest HttpServletRequest }
+	 * @param response {@link HttpServletResponse HttpServletResponse}
+	 * @param mapper provides functionality for converting between Java objects and matching JSON constructs.
+	 * @param userSvcBean {@link com.yardi.ejb.UserServicesBean#UserServicesBean() com.yardi.ejb.UserServicesBean}
 	 * @throws IOException a general I/O exception
 	 * @throws JsonProcessingException all problems encountered when processing JSON content that are not pure I/O problems
 	 */
