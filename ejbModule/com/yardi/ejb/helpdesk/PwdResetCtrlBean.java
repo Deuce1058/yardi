@@ -203,13 +203,18 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 		    tx.begin();
 		    txStatus(tx);
 		    pwd_Policy = getPwdPolicy(); 
-		    LocalDateTime ldt = LocalDateTime.now();
-		    ldt.plusMinutes((long) pwd_Policy.getPpTempPwdTtl());
-		    userProfileBean.merge(new Update_Temp_Password(resetPwdRequest.getUpUserid(), resetPwdRequest.getNewPassword(), ldt, null, (short)0)); 
+		    LocalDateTime ldt = LocalDateTime.now().plusMinutes((long) pwd_Policy.getPpTempPwdTtl());
+		    Update_Temp_Password update_Temp_Password = 
+	    		new Update_Temp_Password(resetPwdRequest.getUpUserid(), resetPwdRequest.getNewPassword(), ldt, null, (short)0);
+		    userProfileBean.merge(update_Temp_Password); 
 		    String msg[] = feedback.split("="); 
 		    resetPwdRequest.setMsgID(msg[0]);
 		    resetPwdRequest.setMsgDescription(msg[1]);
 		    tx.commit();
+			System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.resetPwd() 0013 "
+					+ "\n    "
+					+ update_Temp_Password.toString()
+					);
 		    return resetPwdRequest;
 		} catch (Exception e) {
 			System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.resetPwd() exception 000A "
@@ -257,6 +262,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 		pwd_Policy = passwordPolicyBean.getPwdPolicy(); 
 		
 		if (pwd_Policy == null) {
+			System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.setPwdPolicy() 0014	");
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
 		} 
 	}  
