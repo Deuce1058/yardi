@@ -204,5 +204,11 @@ public class Update_Temp_Password implements Serializable {
 	public void setUpUserid(String upUserid) {
 		System.out.println("com.yardi.ejb.model.Update_Temp_Password.setUpUserid() 0007");
 		this.upUserid = upUserid;
+	}
+
+	@Override
+	public String toString() {
+		return "Update_Temp_Password [upUserid=" + upUserid + ", upTempPwd=" + upTempPwd + ", upPwdexpd=" + upPwdexpd
+				+ ", upDisabledDate=" + upDisabledDate + ", upPwdAttempts=" + upPwdAttempts + "]";
 	}  
 }
