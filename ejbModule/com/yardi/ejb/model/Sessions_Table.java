@@ -227,4 +227,11 @@ public class Sessions_Table implements Serializable {
 		/*debug*/
 		this.stUserId = stUserId;
 	}
+
+	@Override
+	public String toString() {
+		return "Sessions_Table [stUserId=" + stUserId + ", stSesssionId=" + stSesssionId + ", stSessionToken="
+				+ stSessionToken + ", stLastRequest=" + stLastRequest + ", stLastActive=" + stLastActive + ", stRrn="
+				+ stRrn + ", stUserGroups=" + stUserGroups + "]";
+	}
 }
