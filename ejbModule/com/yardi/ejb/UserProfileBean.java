@@ -768,23 +768,8 @@ public class UserProfileBean implements UserProfile {
     	//debug
 		System.out.println("com.yardi.ejb.UserProfileBean loginSuccess() 0003 "
 				+ "\n "
-				+ "   userName=" 
-				+ managedUserProfile.getUpUserid()
-				+ "\n "
-				+ "   upPwdAttempts="
-				+ managedUserProfile.getUpPwdAttempts()
-				+ "\n "
-				+ "   upDisabledDate="
-				+ managedUserProfile.getUpDisabledDate().toString()
-				+ "\n "
-				+ "   loginDate=" 
-				+ managedUserProfile.getUpLastLoginDate().toString()
-				+ "\n "
-				+ "   upTempPwd=" 
-				+ managedUserProfile.getUpTempPwd()
-				+ "\n "
-				+ "   isManaged(managedUserProfile)="
-				+ isManaged(managedUserProfile)
+				+ "   managedUserProfile.toString()=" 
+				+ managedUserProfile.toString()
 				);
 		//debug
 		isJoined();
