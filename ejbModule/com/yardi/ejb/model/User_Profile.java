@@ -35,7 +35,7 @@ public class User_Profile implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
+
 	/**
 	 * Column: UP_ACTIVE_YN<p> 
 	 * Indicates whether the User_Profile entity is active. An admin must clear this flag before the user is able to login. 
@@ -49,14 +49,14 @@ public class User_Profile implements Serializable {
 	 */
 	@Column(name="UP_DISABLED_DATE")
 	private java.sql.Timestamp upDisabledDate;
-
+	
 	/**
 	 * Column: UP_LAST_LOGIN_DATE<p>
 	 * Date and time of the most recent successful login 
 	 */
 	@Column(name="UP_LAST_LOGIN_DATE")
 	private java.sql.Timestamp upLastLoginDate;
-	
+
 	/**
 	 * Reference to User_Groups entity.
 	 * <pre>
@@ -69,7 +69,7 @@ public class User_Profile implements Serializable {
 	 */
 	@OneToMany(mappedBy = "ugUserProfile")
 	private List<User_Groups> upLoginUserGroups;
-
+	
 	/**
 	 * Column: UP_PWD_ATTEMPTS<p>
 	 * The number of invalid password attempts since the most recent successful login 
@@ -95,14 +95,14 @@ public class User_Profile implements Serializable {
 	 */
 	@Column(name="UPTOKEN")
 	private String uptoken;
-	
+
 	/**
 	 * Column: UP_USERID User ID primary key 
 	 */
 	@Id
 	@Column(name="UP_USERID")
 	private String upUserid;
-
+	
 	public User_Profile() {
 		System.out.println("com.yardi.ejb.model.User_Profile.User_Profile() 0000");
 	}
@@ -233,7 +233,7 @@ public class User_Profile implements Serializable {
 		System.out.println("com.yardi.ejb.model.setUpTempPwd() 0006");
 		this.upTempPwd = upTempPwd;
 	}
-	
+
 	/**
 	 * The hashed password is set to the given String.
 	 * @param uptoken hashed password
@@ -243,5 +243,13 @@ public class User_Profile implements Serializable {
 		System.out.println("com.yardi.ejb.model.User_Profile.setUptoken() 0004");
 		/*debug*/
 		this.uptoken = uptoken;
+	}
+	
+	@Override
+	public String toString() {
+		return "User_Profile [upActiveYn=" + upActiveYn + ", upDisabledDate=" + upDisabledDate + ", upLastLoginDate="
+				+ upLastLoginDate + ", upLoginUserGroups=" + upLoginUserGroups + ", upPwdAttempts=" + upPwdAttempts
+				+ ", upPwdexpd=" + upPwdexpd + ", upTempPwd=" + upTempPwd + ", uptoken=" + uptoken + ", upUserid="
+				+ upUserid + "]";
 	}
 }
