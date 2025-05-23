@@ -72,7 +72,8 @@ public class LoginHandler extends HttpServlet {
 		System.out.println("com.yardi.userServices.LoginHandler.doGet() 0008 ");
 		UserServices userSvcBean = lookupUserServicesBean(request);
 	    String formdata = readRawBufferedLine(request);
-	    LoginRequest loginRequest = mapRequestStringToLoginRequest(formdata);
+	    LoginRequest loginRequest = mapRequestStringToLoginRequest(request.getSession().getId());
+	    loginRequest.setSessionID(formdata);
 		/*
 		 * About change password request and authenticate request:
 		 * 
