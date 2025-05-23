@@ -466,14 +466,6 @@ public class UserServicesBean implements UserServices {
 		return pwdPolicy;
 	}
 	
-	/**
-	 * Returns the session ID which is equivalent to HttpServletRequest.getSession().getId().
-	 * @return the value of field <i>sessionID</i>
-	 */
-	public String getSessionID() {
-		return sessionID;
-	}
-
     /**
 	 * Handle authorization failure.<p>
 	 * <strong>Commit if user is not changing the password and feedback is:</strong><pre>
@@ -681,12 +673,12 @@ public class UserServicesBean implements UserServices {
 	private void loginSuccess() throws JsonProcessingException {
 		System.out.println("com.yardi.ejb.UserServicesBean.loginSuccess() 0005 ");
         txStatus();
-        Sessions_Table sessionsTable = sessionsBean.find(sessionID); 
+        Sessions_Table sessionsTable = sessionsBean.find(loginRequest.getSessionID()); 
 
 		if (sessionsTable == null) {
 			sessionsBean.persist(
 					loginRequest.getUserName(), 
-					sessionID, 
+					loginRequest.getSessionID(), 
 					initialPage, 
 					new java.sql.Timestamp(new java.util.Date().getTime()));
 			System.out.println("com.yardi.ejb.UserServicesBean.loginSuccess() 001D"
@@ -700,7 +692,7 @@ public class UserServicesBean implements UserServices {
 		} else {
 			sessionsBean.update(
 					sessionsTable,
-					sessionID, 
+					loginRequest.getSessionID(), 
 					initialPage, 
 					new java.sql.Timestamp(new java.util.Date().getTime()));
 			System.out.println("com.yardi.ejb.UserServicesBean.loginSuccess() 001E  "
@@ -840,15 +832,6 @@ public class UserServicesBean implements UserServices {
 			+ "\n"
 			+ "   feedback="
 			+ feedback);
-	}
-	
-	/** 
-	 * Set field <i>sessionID</i>.
-	 * 
-	 * @param sessionID the value to set. Equivalent to HttpServletRequest.getSession().getId().
-	 */
-	public void setSessionID(String sessionID) {
-		this.sessionID = sessionID;
 	}
 	
 	@Override
