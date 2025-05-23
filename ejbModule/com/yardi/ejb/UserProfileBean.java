@@ -876,7 +876,7 @@ public class UserProfileBean implements UserProfile {
 	 */
 	@Remove
 	public void removeBean() {
-		System.out.println("com.yardi.ejb.UserProfileBean removeBean() 0007 ");
+		System.out.println("com.yardi.ejb.UserProfileBean.removeBean() 0007 ");
 	}
 	
 	/**
@@ -885,13 +885,13 @@ public class UserProfileBean implements UserProfile {
 	 * @return the appropriate token for authentication
 	 */
 	private String selectAuthenticationToken() {
-		System.out.println("com.yardi.ejb.selectAuthenticationToken() 0045 ");
+		System.out.println("com.yardi.ejb.UserProfileBean.selectAuthenticationToken() 0045 ");
 
 		if (userProfile.getUpTempPwd()!=null) {
-			System.out.println("com.yardi.ejb.selectAuthenticationToken() 003D ");
+			System.out.println("com.yardi.ejb.UserProfileBean.selectAuthenticationToken() 003D ");
 			return userProfile.getUpTempPwd();
 		} else {
-			System.out.println("com.yardi.ejb.selectAuthenticationToken() 003E ");
+			System.out.println("com.yardi.ejb.UserProfileBean.selectAuthenticationToken() 003E ");
 			return userProfile.getUptoken();			
 		}
 	}
