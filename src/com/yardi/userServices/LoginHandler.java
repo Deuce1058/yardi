@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpSession;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.UserServices;
-import com.yardi.shared.helpdesk.ResetPwdRequest;
 import com.yardi.shared.userServices.LoginRequest;
 import com.yardi.shared.userServices.LoginResponse;
 
@@ -72,8 +71,8 @@ public class LoginHandler extends HttpServlet {
 		System.out.println("com.yardi.userServices.LoginHandler.doGet() 0008 ");
 		UserServices userSvcBean = lookupUserServicesBean(request);
 	    String formdata = readRawBufferedLine(request);
-	    LoginRequest loginRequest = mapRequestStringToLoginRequest(request.getSession().getId());
-	    loginRequest.setSessionID(formdata);
+	    LoginRequest loginRequest = mapRequestStringToLoginRequest(formdata);
+	    loginRequest.setSessionID(request.getSession().getId());
 		/*
 		 * About change password request and authenticate request:
 		 * 
