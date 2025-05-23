@@ -92,11 +92,6 @@ public interface UserServices {
 	 */
 	LoginResponse getLoginResponse();
 	/**
-	 * Returns the session ID which is equivalent to HttpServletRequest.getSession().getId().
-	 * @return the value of field <i>sessionID</i>
-	 */
-	String getSessionID();
-	/**
 	 * Stateful session bean remove method.
 	 */
 	void remove();
@@ -105,10 +100,4 @@ public interface UserServices {
 	 * @param loginRequest POJO representation of the web request to login
 	 */
 	void setLoginRequest(LoginRequest loginRequest);
-	/** 
-	 * Set field <code>sessionID</code>.
-	 * 
-	 * @param sessionID the value to set. Equivalent to HttpServletRequest.getSession().getId().
-	 */
-	void setSessionID(String sessionID);
 }
