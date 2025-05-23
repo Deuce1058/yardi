@@ -51,6 +51,7 @@ public class LoginRequest {
 	 * Default constructor
 	 */
 	public LoginRequest() {
+		System.out.println("com.yardi.shared.userServices.LoginRequest() 0000 ");
 	}
 
 	/**
@@ -124,10 +125,13 @@ public class LoginRequest {
 	 * @param s value of <code>getChgPwd()</code>
 	 */
 	public void setChangePwd(String s) {
+		System.out.println("com.yardi.shared.userServices.LoginRequest.setChangePwd() 0001 ");
 
 		if (s.equalsIgnoreCase("true") || s.equalsIgnoreCase("false")) {
+			System.out.println("com.yardi.shared.userServices.LoginRequest.setChangePwd() 0002 ");
 			changePwd = Boolean.parseBoolean(s);
 		} else {
+			System.out.println("com.yardi.shared.userServices.LoginRequest.setChangePwd() 0003 ");
 			changePwd = false;
 		}
 	}
@@ -137,6 +141,7 @@ public class LoginRequest {
 	 * @param chgPwd value to set
 	 */
 	public void setChgPwd(String chgPwd) {
+		System.out.println("com.yardi.shared.userServices.LoginRequest.setChgPwd() 0004 ");
 		this.chgPwd = chgPwd;
 	}
 	
@@ -145,6 +150,7 @@ public class LoginRequest {
 	 * @param msgDescription message description value
 	 */
 	public void setMsgDescription(String msgDescription) {
+		System.out.println("com.yardi.shared.userServices.LoginRequest.setMsgDescription() 0005 ");
 		this.msgDescription = msgDescription;
 	}
 	
@@ -153,6 +159,7 @@ public class LoginRequest {
 	 * @param msgID message ID value 
 	 */
 	public void setMsgID(String msgID) {
+		System.out.println("com.yardi.shared.userServices.LoginRequest.setMsgID() 0006 ");
 		this.msgID = msgID;
 	}
 	
@@ -161,6 +168,7 @@ public class LoginRequest {
 	 * @param newPassword new password value
 	 */
 	public void setNewPassword(String newPassword) {
+		System.out.println("com.yardi.shared.userServices.LoginRequest.setNewPassword() 0007 ");
 		this.newPassword = newPassword;
 	}
 	
@@ -169,6 +177,7 @@ public class LoginRequest {
 	 * @param password password value
 	 */
 	public void setPassword(String password) {
+		System.out.println("com.yardi.shared.userServices.LoginRequest.setPassword() 0008 ");
 		this.password = password;
 	}	
 	
@@ -178,6 +187,7 @@ public class LoginRequest {
 	 * @param sessionID session ID 
 	 */
 	public void setSessionID(String sessionID) {
+		System.out.println("com.yardi.shared.userServices.LoginRequest.setSessionID() 0009 ");
 		this.sessionID = sessionID;
 	}
 
@@ -186,6 +196,7 @@ public class LoginRequest {
 	 * @param userName user name
 	 */
 	public void setUserName(String userName) {
+		System.out.println("com.yardi.shared.userServices.LoginRequest.setUserName() 000A ");
 		this.userName = userName;
 	}
 
