@@ -3,6 +3,17 @@ package com.yardi.ejb;
 import java.util.Arrays;
 import java.util.Vector;
 
+import org.eclipse.persistence.Version;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yardi.ejb.model.Pwd_Policy;
+import com.yardi.ejb.model.Sessions_Table;
+import com.yardi.shared.userServices.LoginInitialPage;
+import com.yardi.shared.userServices.LoginRequest;
+import com.yardi.shared.userServices.LoginResponse;
+
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Remove;
@@ -11,14 +22,6 @@ import jakarta.ejb.TransactionManagement;
 import jakarta.ejb.TransactionManagementType;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
-
-import com.yardi.ejb.model.Sessions_Table;
-import com.yardi.ejb.model.Pwd_Policy;
-import com.yardi.shared.userServices.LoginInitialPage;
-import com.yardi.shared.userServices.LoginRequest;
-import com.yardi.shared.userServices.LoginResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 /**
@@ -60,10 +63,6 @@ public class UserServicesBean implements UserServices {
 	 * If the user belongs to multiple groups the field initialPage is set to views/selectGroup.html.
 	 */
 	private String initialPage = "";
-	/**
-	 * The value returned by HttpServletRequest.getSession().getId()
-	 */
-	private String sessionID = "";
 	/**
 	 * Injected reference to com.yardi.ejb.UserProfileBean
 	 */
@@ -396,7 +395,7 @@ public class UserServicesBean implements UserServices {
 			txStatus();
 			return true;
 		} catch (Exception e) {
-			System.out.println("com.yardi.ejb.UserServicesBean chgpwd() 0034"
+			System.out.println("com.yardi.ejb.UserServicesBean.chgpwd() 0034"
 					+ "\n"
 					+ "   exception="
 					+ e
@@ -404,7 +403,7 @@ public class UserServicesBean implements UserServices {
 			e.printStackTrace();
 			rollback(tx);
 		}
-		System.out.println("com.yardi.ejb.UserServicesBean chgpwd() 0031");
+		System.out.println("com.yardi.ejb.UserServicesBean.chgpwd() 0031");
 		return true;
 	}
 
@@ -453,13 +452,13 @@ public class UserServicesBean implements UserServices {
 	 * @return reference to Pwd_Policy entity
 	 */
 	private Pwd_Policy getPwdPolicy() {
-		System.out.println("com.yardi.ejb.UserServicesBean getPwdPolicy 0021 ");
+		System.out.println("com.yardi.ejb.UserServicesBean.getPwdPolicy 0021 ");
 		
 		if (pwdPolicy == null) {
 			setPwdPolicy();
 		}
 		
-		System.out.println("com.yardi.ejb.UserServicesBean getPwdPolicy 0017 "
+		System.out.println("com.yardi.ejb.UserServicesBean.getPwdPolicy 0017 "
 			+ "\n"
 			+ "   pwdPolicy="
 			+ pwdPolicy);
@@ -733,13 +732,23 @@ public class UserServicesBean implements UserServices {
 	}
 
 	/**
+	 * Post construct callback
+	 */
+	@PostConstruct
+	private void postConstructCallback() {
+        System.out.println("com.yardi.ejb.UserServicesBean.postConstructCallback() 001A "
+        		+ "\n"
+        		+ "    JPA provider version: " + Version.getVersion());
+    }
+
+	/**
 	 * Stateful session bean remove method.<p>
 	 * Clients call this method so that com.yardi.ejb.UserServicesBean can release resources it has before being removed.
 	 */
 	@Override
 	@Remove
 	public void remove() {
-		System.out.println("com.yardi.ejb.UserServicesBean remove() 0000");
+		System.out.println("com.yardi.ejb.UserServicesBean.remove() 0000");
 		userGroupsBean.removeBean();
 		userProfileBean.removeBean();
 		pwdCompRulesBean.removeBean();
@@ -750,12 +759,12 @@ public class UserServicesBean implements UserServices {
 	 * @param tx - The transaction to roll back
 	 */
 	private void rollback(UserTransaction tx) {
-		System.out.println("com.yardi.ejb.UserServicesBean rollback() 0011");
+		System.out.println("com.yardi.ejb.UserServicesBean.rollback() 0011");
 
 		try {
 			tx.rollback();
 		} catch (Exception e) {
-			System.out.println("com.yardi.ejb.UserServicesBean rollback() 0001"
+			System.out.println("com.yardi.ejb.UserServicesBean.rollback() 0001"
 					+ "\n"
 					+ "   exception="
 					+ e
@@ -771,11 +780,11 @@ public class UserServicesBean implements UserServices {
 	 */
 	public void setLoginRequest(LoginRequest loginRequest) {
 		this.loginRequest = loginRequest;
-		System.out.println("com.yardi.ejb.UserServicesBean setLoginRequest() 001B " 
+		System.out.println("com.yardi.ejb.UserServicesBean.setLoginRequest() 001B " 
 				+ "\n   "
 				+ toString());
 	}
-
+	
 	/**
 	 * Construct the POJO response to the request to login.<p>
 	 * 
@@ -825,7 +834,7 @@ public class UserServicesBean implements UserServices {
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
 		}
 
-		System.out.println("com.yardi.ejb.UserServicesBean setPwdPolicy 001F"
+		System.out.println("com.yardi.ejb.UserServicesBean.setPwdPolicy() 001F"
 			+ "\n"
 			+ "   pwdPolicy="
 			+ pwdPolicy
@@ -833,7 +842,7 @@ public class UserServicesBean implements UserServices {
 			+ "   feedback="
 			+ feedback);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "UserServicesBean [feedback=" + feedback + ", today=" + today + ", pwdPolicy=" + pwdPolicy + ", User_Profile="
@@ -843,7 +852,7 @@ public class UserServicesBean implements UserServices {
 				+ passwordPolicyBean + ", userGroupsBean=" + userGroupsBean + ", sessionsBean=" + sessionsBean + ", tx="
 				+ tx + "]";
 	}
-
+	
 	/**
 	 * Log the transaction status
 	 */
@@ -886,11 +895,11 @@ public class UserServicesBean implements UserServices {
 				status = "undefined";
 			}
 		} catch (SystemException e) {
-			System.out.println("com.yardi.ejb.UserServicesBean txStatus() SystemException 0003 ");
+			System.out.println("com.yardi.ejb.UserServicesBean.txStatus() SystemException 0003 ");
 			e.printStackTrace();
 		}
 		
-		System.out.println("com.yardi.ejb.UserServicesBean txStatus() 0002 "
+		System.out.println("com.yardi.ejb.UserServicesBean.txStatus() 0002 "
   				+ "\n"
   				+ "   tx status="
   				+ status
