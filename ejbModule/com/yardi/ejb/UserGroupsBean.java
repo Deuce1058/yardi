@@ -112,19 +112,13 @@ public class UserGroupsBean implements UserGroups {
 		Query qry = em.createNativeQuery(
 				  "select t0.UG_USER_ID, t0.UG_GROUP, t0.UG_RRN "
 			    + "from DB2ADMIN.USER_GROUPS t0 "
-			    + "left outer join DB2ADMIN.SESSIONS_TABLE t3 on t3.ST_USER_ID = t0.UG_USER_ID  "
-			    + "     and t0.UG_USER_ID = ? "
-			    + "     and t3.ST_USER_ID = ? "
-			    + "join DB2ADMIN.USER_PROFILE t2 on t0.UG_USER_ID = t2.UP_USERID "    
-			    + "     and t0.UG_USER_ID = ? "
-			    + "     and t2.UP_USERID = ? "
-			    + "join DB2ADMIN.GROUPS_MASTER t1 on t0.UG_GROUP = t1.GM_TYPE " 
+			    + "left outer join DB2ADMIN.SESSIONS_TABLE t3 on t3.ST_USER_ID = t0.UG_USER_ID "
+			    + "join DB2ADMIN.USER_PROFILE t2              on t2.UP_USERID  = t0.UG_USER_ID "    
+			    + "join DB2ADMIN.GROUPS_MASTER t1             on t1.GM_TYPE    = t0.UG_GROUP "
+			    + "where t0.UG_USER_ID = ? "
 			      , User_Groups.class);
 		userGroupsList = qry
 				.setParameter(1, userID)
-				.setParameter(2, userID)
-				.setParameter(3, userID)
-				.setParameter(4, userID)
 				.getResultList();
 	
 		/*
