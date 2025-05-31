@@ -201,7 +201,7 @@ public class UserProfileBean implements UserProfile {
 			 * They have successfully logged in at this point only if they are not changing the password so only set 
 			 * last login date when they are not changing the password 
 			 */
-			System.out.println("com.yardi.ejb.UserProfileBean authenticate() 000F"
+			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 000F"
 					+ "\n "
 					+ "   userIsChangingPassword="
 					+ userIsChangingPassword
@@ -229,9 +229,7 @@ public class UserProfileBean implements UserProfile {
 	 * @param newPassword the new plain text password 
 	 */
 	public void changeUserToken(final char [] newPassword) {
-    	//debug
-    	System.out.println("com.yardi.ejb.UserProfileBean changeUserToken() 0002 ");
-    	//debug
+    	System.out.println("com.yardi.ejb.UserProfileBean.changeUserToken() 0002 ");
 		isJoined();
 		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
 		String userToken="";
@@ -241,9 +239,7 @@ public class UserProfileBean implements UserProfile {
 			e.printStackTrace();
 		} 
 		
-		
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean changeUserToken() 0004 "
+		System.out.println("com.yardi.ejb.UserProfileBean.changeUserToken() 0004 "
 				+ "\n "
 				+ "  userName=" + userProfile.getUpUserid()
 				+ "\n "
@@ -252,7 +248,6 @@ public class UserProfileBean implements UserProfile {
 				+ "\n "
 				+ "  check USER PROFILE"
 				);
-		//debug
 		userProfile.setUptoken(userToken);
 		userProfile.setUpPwdexpd(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		isJoined();
@@ -290,9 +285,7 @@ public class UserProfileBean implements UserProfile {
 	 * The state in the <i>userProfile</i> field is merged into the persistence context. 
 	 */
 	private void disable() {
-    	//debug
-    	System.out.println("com.yardi.ejb.UserProfileBean disable() 001A ");
-    	//debug
+    	System.out.println("com.yardi.ejb.UserProfileBean.disable() 001A ");
 		isJoined();
     	userProfile.setUpPwdAttempts(pwdPolicy.getPpMaxSignonAttempts());
     	userProfile.setUpDisabledDate(new java.sql.Timestamp(new java.util.Date().getTime()));
@@ -301,8 +294,7 @@ public class UserProfileBean implements UserProfile {
     	managedUserProfile.setUpDisabledDate(userProfile.getUpDisabledDate());
 		isJoined();
     	isManaged(managedUserProfile);
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean disable() 001B "
+		System.out.println("com.yardi.ejb.UserProfileBean.disable() 001B "
 				+ "\n "
 				+ "  userName=" 
 				+ userProfile.getUpUserid()
@@ -313,7 +305,6 @@ public class UserProfileBean implements UserProfile {
 				+ "  pwdAttempts=" 
 				+ userProfile.getUpPwdAttempts()
 				);
-		//debug
     }
 
 	/**
@@ -324,9 +315,7 @@ public class UserProfileBean implements UserProfile {
 	 * @return boolean indicating whether a row exists in database table USER_PROFILE for the given user ID
 	 */
 	public boolean doesUserExist(String userId) {
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean doesUserExist() 0034 ");
-		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean.doesUserExist() 0034 ");
 		isJoined();
 		Long count = em.createQuery("SELECT COUNT(u) FROM User_Profile_Existence_Check u WHERE u.upUserid = :userId", Long.class)
 				.setParameter("userId", userId)
@@ -363,15 +352,12 @@ public class UserProfileBean implements UserProfile {
 	 * @return Full_User_Profile that matches <i>userID</i>
 	 */
 	public Full_User_Profile findFullUserProfile(String userID) {
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean findFullUserProfile() 0022 ");
-		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean.findFullUserProfile() 0022 ");
 		isJoined();
     	Full_User_Profile userProfile = em.find(Full_User_Profile.class, userID);
    		isManaged(userProfile);
     	
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean findFullUserProfile() 0023 "
+		System.out.println("com.yardi.ejb.UserProfileBean.findFullUserProfile() 0023 "
 				+ "\n "
 				+ "  userName=" + userID
 				+ "\n "
@@ -380,7 +366,6 @@ public class UserProfileBean implements UserProfile {
 				+ "  em="
 				+ em
 				);
-		//debug
     	return userProfile;
 	}
 
@@ -390,9 +375,7 @@ public class UserProfileBean implements UserProfile {
 	 * @return entity that holds user profile details to be displayed on the password reset page
 	 */
 	public Reset_Password findUserProfileForPwdReset(String userID) {
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean findUserProfileForPwdReset() 0039 ");
-		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean.findUserProfileForPwdReset() 0039 ");
 		utilsBean.isJoined(em);
 		Reset_Password resetPassword = em.find(Reset_Password.class, userID);
 	    utilsBean.isManaged(em, resetPassword); 
@@ -414,27 +397,21 @@ public class UserProfileBean implements UserProfile {
      * @return Pwd_Policy entity 
      */
     private Pwd_Policy getPwdPolicy() {
-    	//debug
-    	System.out.println("com.yardi.ejb.UserProfileBean getPwdPolicy() 001C ");
-    	//debug
+    	System.out.println("com.yardi.ejb.UserProfileBean.getPwdPolicy() 001C ");
     	isJoined();
 		
 		if (pwdPolicy==null) {
-	    	//debug
-	    	System.out.println("com.yardi.ejb.UserProfileBean getPwdPolicy() 0020 ");
-	    	//debug
+	    	System.out.println("com.yardi.ejb.UserProfileBean.getPwdPolicy() 0020 ");
 			setPwdPolicy();
 		}
 		
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean getPwdPolicy() 000A "
+		System.out.println("com.yardi.ejb.UserProfileBean.getPwdPolicy() 000A "
 			+ "\n"
 			+ "   pwdPolicy="
 			+ pwdPolicy.toString()
 			);
 
-		System.out.println("com.yardi.ejb.UserProfileBean getPwdPolicy() 001E ");
-		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean.getPwdPolicy() 001E ");
     	isManaged(pwdPolicy);
 		return pwdPolicy;
 	}
@@ -571,7 +548,7 @@ public class UserProfileBean implements UserProfile {
 	        }
 	    }
 	    
-		System.out.println("com.yardi.ejb.UserProfileBean isEntity() 002A " + foundEntity);
+		System.out.println("com.yardi.ejb.UserProfileBean.isEntity() 002A " + foundEntity);
 	    return foundEntity;
 	}
 			
@@ -581,7 +558,7 @@ public class UserProfileBean implements UserProfile {
 	 * @return boolean indicating whether the EntityManager is joined to the current transaction.
 	 */
     private boolean isJoined() {
-  		System.out.println("com.yardi.ejb.UserProfileBean isJoined() 0019 "
+  		System.out.println("com.yardi.ejb.UserProfileBean.isJoined() 0019 "
   				+ "\n"
   				+ "   isJoined="
   				+ em.isJoinedToTransaction()
@@ -751,9 +728,7 @@ public class UserProfileBean implements UserProfile {
      * Merges the state in the <i>userProfile</i> field into the persistence context.
      */
     public void loginSuccess() {
-    	//debug
-    	System.out.println("com.yardi.ejb.UserProfileBean loginSuccess() 0000 ");
-    	//debug
+    	System.out.println("com.yardi.ejb.UserProfileBean.loginSuccess() 0000 ");
 		isJoined();
     	isManaged(userProfile);
     	userProfile.setUpPwdAttempts((short) 0);
@@ -765,13 +740,11 @@ public class UserProfileBean implements UserProfile {
     	managedUserProfile.setUpDisabledDate( userProfile.getUpDisabledDate());
     	managedUserProfile.setUpLastLoginDate(userProfile.getUpLastLoginDate());
     	managedUserProfile.nullifyUpTempPwd();
-    	//debug
-		System.out.println("com.yardi.ejb.UserProfileBean loginSuccess() 0003 "
+		System.out.println("com.yardi.ejb.UserProfileBean.loginSuccess() 0003 "
 				+ "\n "
 				+ "   managedUserProfile.toString()=" 
 				+ managedUserProfile.toString()
 				);
-		//debug
 		isJoined();
     	isManaged(managedUserProfile);
     }
@@ -783,9 +756,7 @@ public class UserProfileBean implements UserProfile {
      * @return the managed Full_User_Profile that the state was merged to
      */
     public Full_User_Profile merge(Full_User_Profile userProfile) {
-    	/*debug*/
-    	System.out.println("com.yardi.ejb.UserProfileBean merge() 0026 ");
-    	/*debug*/
+    	System.out.println("com.yardi.ejb.UserProfileBean.merge() 0026 ");
     	isJoined();
     	isManaged(userProfile);
     	Full_User_Profile mergedUserProfile = em.merge(userProfile);
@@ -800,9 +771,7 @@ public class UserProfileBean implements UserProfile {
 	 * @return a reference to the managed Update_Temp_Password entity 
 	 */
 	public Update_Temp_Password merge(Update_Temp_Password updateTempPassword) {
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean merge() 003C ");
-		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean.merge() 003C ");
 		utilsBean.isJoined(em);
 		utilsBean.isManaged(em, updateTempPassword);
 		Update_Temp_Password mergedTempPassword = em.merge(updateTempPassword);
@@ -816,9 +785,7 @@ public class UserProfileBean implements UserProfile {
      * @param userProfile the Full_User_Profile to persist.
      */
 	public void persist(Full_User_Profile userProfile) {
-		/*debug*/
     	System.out.println("com.yardi.ejb.UserProfileBean.persist() 0028 ");
-		/*debug*/
 		isJoined();
 		em.persist(userProfile);
 		isManaged(userProfile);
@@ -829,7 +796,7 @@ public class UserProfileBean implements UserProfile {
 	 */
 	@PostConstruct
     private void postConstructCallback() {
-    	System.out.println("com.yardi.ejb.UserProfileBean postConstructCallback() 0016 ");
+    	System.out.println("com.yardi.ejb.UserProfileBean.postConstructCallback() 0016 ");
     	getPwdPolicy();
     }
 	
@@ -856,15 +823,11 @@ public class UserProfileBean implements UserProfile {
 	 * @param userProfile the entity to remove.
 	 */
 	public void remove(com.yardi.ejb.model.Full_User_Profile userProfile) {
-		/*debug*/
     	System.out.println("com.yardi.ejb.UserProfileBean.remove() 0024 ");
-		/*debug*/
 		isJoined();
 		
 		if (userProfile!=null) {
-			/*debug*/
 	    	System.out.println("com.yardi.ejb.UserProfileBean.remove() 0025 ");
-			/*debug*/
 			em.remove(userProfile);			
 		}
 		
@@ -902,26 +865,22 @@ public class UserProfileBean implements UserProfile {
 	 * Provides feedback: <pre>YRD000B password policy is missing</pre>	 * 
 	 */
 	private void setPwdPolicy() {
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean setPwdPolicy() 0014 ");
-		//debug
+		System.out.println("com.yardi.ejb.UserProfileBean.setPwdPolicy() 0014 ");
 		isJoined();
 		pwdPolicy = passwordPolicyBean.getPwdPolicy();
 		
 		if (pwdPolicy == null) {
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
-			System.out.println("com.yardi.ejb.UserProfileBean setPwdPolicy() pwdPolicy==null 0011 ");
+			System.out.println("com.yardi.ejb.UserProfileBean.setPwdPolicy().pwdPolicy==null 0011 ");
 			return;
 		}
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean setPwdPolicy() 000B "
+		System.out.println("com.yardi.ejb.UserProfileBean.setPwdPolicy() 000B "
 			+ "\n"
 			+ "   pwdPolicy="
 			+ pwdPolicy.toString()
 			+ "\n"
 			+ "   feedback="
 			+ feedback);
-		//debug
 		isManaged(pwdPolicy);
 	}
 	
@@ -932,23 +891,19 @@ public class UserProfileBean implements UserProfile {
 	 * @param pwdAttempts the value to set
 	 */
 	public void setUpPwdAttempts(short pwdAttempts) {
-    	//debug
-    	System.out.println("com.yardi.ejb.UserProfileBean setUpPwdAttempts() 0005 ");
-    	//debug
+    	System.out.println("com.yardi.ejb.UserProfileBean.setUpPwdAttempts() 0005 ");
 		isJoined();
     	userProfile.setUpPwdAttempts(pwdAttempts);
     	User_Profile managedUserProfile = em.merge(userProfile);
     	managedUserProfile.setUpPwdAttempts(pwdAttempts);
 		isJoined();
     	isManaged(managedUserProfile);
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean setUpPwdAttempts() 0001 "
+		System.out.println("com.yardi.ejb.UserProfileBean.setUpPwdAttempts() 0001 "
 				+ "\n "
 				+ "  userName=" + userProfile.getUpUserid()
 				+ "\n "
 				+ "  pwdAttempts=" + userProfile.getUpPwdAttempts()
 				);
-		//debug
     }
 	
 	/**
@@ -959,11 +914,13 @@ public class UserProfileBean implements UserProfile {
 	 * @param userProfile the User_Profile entity to inject. 
 	 */
 	public void setUserProfile(User_Profile userProfile) {
-		//debug
-		System.out.println("com.yardi.ejb.UserProfileBean setUserProfile() 001F ");
-		//debug
 		isJoined();
 		this.userProfile = userProfile;
+		System.out.println("com.yardi.ejb.UserProfileBean.setUserProfile() 001F "
+				+ "\n"
+				+ "    this.userProfile="
+				+ this.userProfile
+				);
 		isManaged(this.userProfile);
 	}
 }
