@@ -9,6 +9,8 @@ package com.yardi.ejb.model;
 import java.io.Serializable;
 import java.util.List;
 
+import org.eclipse.persistence.annotations.Customizer;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -25,6 +27,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name="USER_PROFILE", schema="DB2ADMIN")
+@Customizer(NoCacheCustomizer.class)
 public class User_Profile implements Serializable {
 	private static final long serialVersionUID = 1L;
 
