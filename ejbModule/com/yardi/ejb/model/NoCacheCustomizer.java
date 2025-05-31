@@ -9,6 +9,10 @@ import org.eclipse.persistence.internal.identitymaps.NoIdentityMap;
  */
 public class NoCacheCustomizer implements DescriptorCustomizer {
 
+	/**
+	 * Customize a ClassDescriptor 
+	 * @param descriptor Abstract descriptor class for defining persistence information on a class
+	 */
 	@Override
 	public void customize(ClassDescriptor descriptor) throws Exception {
         // Disable 2nd level caching entirely for this entity
