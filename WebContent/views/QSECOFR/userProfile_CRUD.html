@@ -357,6 +357,11 @@
 							</div>
 						</div>
 
+            <div class="d-flex flex-row align-items-center pb-sm-1 pl-sm-4 pr-sm-2">
+              <label for="nullDisabledDateCheckbox" class="control-label pr-sm-2"><strong>Null</strong></label>
+              <input type="checkbox" id="nullDisabledDateChkbox" name="nullDisabledDateChkbox" />
+            </div>
+
             <div class="d-sm-flex pl-sm-2 pb-sm-1 date">            
               <label class="pr-sm-2">Time disabled</label>
               <select class="disabledHour roundedCorners" id="disabledHour" name="disabledHour">
@@ -1131,6 +1136,10 @@
                          + ':'                 
                          + $('#loginSec')     .val()
       }
+
+      if ($("#nullDisabledDateChkbox").is(":checked")) { 
+        formItems.disabledDate = "null";
+      }
     }
 
     if (action === 'ajaxSuccess') {
@@ -1182,6 +1191,10 @@
         
         "lastLogin"      : data.lastLogin,
         "lastLoginTime"  : data.lastLoginTime
+      }
+
+      if (data.disabledDate=="null") {
+        $("#nullDisabledDateChkbox").prop('checked', true);
       }
     }
   }
@@ -1389,7 +1402,7 @@
       $('#disabledHour') .val('00');
       $('#disabledMin')  .val('00');
       $('#disabledSec')  .val('00');
-
+      $('#nullDisabledDateChkbox').prop('checked', false);
 
 
 
