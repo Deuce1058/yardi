@@ -447,7 +447,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 		editRequest.setAddress1          (user_Profile.getUpAddress1());
 
 		if (user_Profile.getUpAddress2()==null) {
-			editRequest.setAddress2      ("");
+			editRequest.setAddress2      ("null");
 		} else {
 			editRequest.setAddress2      (user_Profile.getUpAddress2());
 		}
@@ -457,7 +457,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 		editRequest.setZip               (user_Profile.getUpZip());
 
 		if (user_Profile.getUpZip4()==null) {
-			editRequest.setZip4          ("");
+			editRequest.setZip4          ("null");
 		} else {
 			editRequest.setZip4          (user_Profile.getUpZip4());
 		}
@@ -465,13 +465,13 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 		editRequest.setPhone             (user_Profile.getUpPhone());
 
 		if (user_Profile.getUpFax()==null) {
-			editRequest.setFax           ("");
+			editRequest.setFax           ("null");
 		} else {
 			editRequest.setFax           (user_Profile.getUpFax());
 		} 
 
 		if (user_Profile.getUpEmail()==null) {
-			editRequest.setEmail         ("");
+			editRequest.setEmail         ("null");
 		} else {
 			editRequest.setEmail         (user_Profile.getUpEmail());
 		}
@@ -485,7 +485,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 		editRequest.setPwdExpTime        (dateTime[1]);		
 		
 		if (user_Profile.getUpDisabledDate()==null) {
-			editRequest.setDisabledDate  ("");
+			editRequest.setDisabledDate  ("null");
 			editRequest.setDisabledTime  ("");
 		} else {
 			dateTime = editRequest.stringify(user_Profile.getUpDisabledDate()).split(" ");
@@ -496,6 +496,11 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 		editRequest.setPwdAttempts       (Short.toString(user_Profile.getUpPwdAttempts()));
 		editRequest.setCurrentToken      (user_Profile.getUptoken());
 		editRequest.setUpTempPwd         (user_Profile.getUpTempPwd()); 
+		
+		if (user_Profile.getUpTempPwd()==null) {
+			editRequest.setUpTempPwd("null");
+		}
+		
 		dateTime = (editRequest.stringify(user_Profile.getUpLastLoginDate())).split(" ");
 		editRequest.setLastLogin         (dateTime[0]);
 		editRequest.setLastLoginTime     (dateTime[1]);
@@ -732,7 +737,7 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 			Full_User_Profile existingUserProfile = findFullUserProfile(editRequest.getFindUser());
 			String disabledDateString = editRequest.getDisabledDate() + " " + editRequest.getDisabledTime();
 
-			if (editRequest.getDisabledDate().isEmpty() && editRequest.getDisabledTime().equalsIgnoreCase("00:00:00")) {
+			if (editRequest.getDisabledDate().equalsIgnoreCase("null")) {
 		        disabledDateString = "null";
 		    } 
 
