@@ -359,7 +359,7 @@ public class LoginHandler extends HttpServlet {
 											  "", 
 											  "", 
 											  msg[0], 
-											  view
+											  "views/changePwd.html"
 									));
 				}
 				
