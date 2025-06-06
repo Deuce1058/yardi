@@ -208,7 +208,7 @@
                 });
               }
           
-              if (data.msgID === 'YRD0002') {
+              if (data.msgID === 'YRD0002' || data.msgID === 'YRD001B') {
                 $('html').html(data.msgDescription);
                 console.log('nextFrame ' + data.msgDescription);
                 parent.frame = data.msgDescription;
