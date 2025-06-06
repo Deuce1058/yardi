@@ -294,6 +294,26 @@ public class Full_User_Profile implements Serializable {
 		this.upEmail         = upEmail;
 		this.upssn           = upssn;
 		
+		if (upTempPwd.equalsIgnoreCase("null")) {
+			this.upTempPwd=null;
+		}
+		
+		if (upAddress2.equalsIgnoreCase("null")) {
+			this.upAddress2=null;
+		}
+		
+		if (upZip4.equalsIgnoreCase("null")) {
+			this.upZip4=null;
+		}
+		
+		if (upFax.equalsIgnoreCase("null")) {
+			this.upFax=null;
+		}
+		
+		if (upEmail.equalsIgnoreCase("null")) {
+			this.upEmail=null;
+		}		
+		
 		LocalDate ld = LocalDate.parse(dobString, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 		this.updob = Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		
