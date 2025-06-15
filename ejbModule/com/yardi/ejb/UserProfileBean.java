@@ -249,7 +249,7 @@ public class UserProfileBean implements UserProfile {
 				+ "  check USER PROFILE"
 				);
 		userProfile.setUptoken(userToken);
-		userProfile.setUpPwdexpd(java.sql.Timestamp.valueOf(LocalDateTime.now()));
+		userProfile.setUpPwdexpd(java.sql.Timestamp.valueOf(LocalDateTime.now().plusDays((long) pwdPolicy.getPpDays())));
 		isJoined();
 		User_Profile managedUserProfile = em.merge(userProfile);
 		managedUserProfile.setUptoken(userProfile.getUptoken());
