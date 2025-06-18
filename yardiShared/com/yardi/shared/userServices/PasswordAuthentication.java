@@ -87,8 +87,7 @@ public class PasswordAuthentication {
 	   */
 	  public PasswordAuthentication(int cost)
 	  {
-		//debug
-		System.out.println("com.yardi.shared.userServices PasswordAuthentication(int) 0000 "
+		System.out.println("com.yardi.shared.userServices.PasswordAuthentication(int) 0002 "
 				+ "\n"
 				+ "DEFAULT_COST="
 				+ DEFAULT_COST
@@ -96,7 +95,6 @@ public class PasswordAuthentication {
 				+ "cost="
 				+ cost
 		);
-		//debug
 	    iterations(cost); /* Validate cost */
 	    this.cost = cost;
 	  }
@@ -108,8 +106,7 @@ public class PasswordAuthentication {
 	   */
 	  public boolean authenticate(char[] password, String token)
 	  {
-		//debug
-		System.out.println("com.yardi.shared.userServices PasswordAuthentication authenticate() 0000"
+		System.out.println("com.yardi.shared.userServices.PasswordAuthentication.authenticate() 0001 "
 			+ "\n"
 			+ "   password="
 			+ new String(password)
@@ -117,7 +114,6 @@ public class PasswordAuthentication {
 			+ "   token="
 			+ token
 			);
-		//debug
 		String t1 = token.substring(0, 2); 
 		String t2 = token.substring(3);
 	    int iterations = iterations(Integer.parseInt(t1));
@@ -155,8 +151,7 @@ public class PasswordAuthentication {
 		//   salt size = 64  bytes
 		//   PBEKeySpec key size is 512 bits
 		//   dk size = 64 bytes
-		//debug
-		System.out.println("com.yardi.shared.userServices.PasswordAuthentication hash() 0000 "
+		System.out.println("com.yardi.shared.userServices.PasswordAuthentication.hash() 0000 "
 					+ "\n"
 					+ "    DEFAULT_COST="
 					+ DEFAULT_COST
@@ -165,9 +160,8 @@ public class PasswordAuthentication {
 					+ cost
 					+ "\n"
 					+ "    password="
-					+ password.toString()
+					+ new String(password)
 		);
-		//debug
 	    byte[] salt = new byte[SIZE / 8];
 	    SecureRandom random = SecureRandom.getInstanceStrong();
 	    random.nextBytes(salt);
@@ -176,6 +170,11 @@ public class PasswordAuthentication {
 	    System.arraycopy(salt, 0, hash, 0, salt.length);
 	    System.arraycopy(dk, 0, hash, salt.length, dk.length);
 	    Base64.Encoder enc = Base64.getUrlEncoder().withoutPadding();
+		System.out.println("com.yardi.shared.userServices.PasswordAuthentication.hash() 0003 "
+				+ "\n    "
+				+ "hash="
+				+ new String(cost + "$" + enc.encodeToString(hash))
+				);
 	    return cost + "$" + enc.encodeToString(hash);
 	  }
 
