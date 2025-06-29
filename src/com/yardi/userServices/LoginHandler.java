@@ -212,7 +212,7 @@ public class LoginHandler extends HttpServlet {
 	 * @param response {@link HttpServletResponse HttpServletResponse}
 	 */
 	private void resetBuffer(HttpServletResponse response) {
-		System.out.println("com.yardi.userServices.LoginHandler.resetBuffer() 000E headerNames is empty");
+		System.out.println("com.yardi.userServices.LoginHandler.resetBuffer() 000E ");
 		Collection<String> headerNames = response.getHeaderNames();
 		if (headerNames.isEmpty()) {
 		System.out.println("com.yardi.userServices.LoginHandler.resetBuffer() 0020 headerNames is empty");
@@ -236,9 +236,7 @@ public class LoginHandler extends HttpServlet {
 					);
 			}
 		}
-		//debug
         response.resetBuffer();
-        //debug
 		headerNames = response.getHeaderNames();
 		if (headerNames.isEmpty()) {
 			System.out.println("com.yardi.userServices.LoginHandler.resetBuffer() 0023 headerNames is empty");
@@ -262,7 +260,6 @@ public class LoginHandler extends HttpServlet {
 					);
 			}
 		}
-		//debug
 	}
 	
 	/**
@@ -307,6 +304,9 @@ public class LoginHandler extends HttpServlet {
 				+ "    userServicesBean.getFeedback()="
 				+ userServicesBean.getFeedback()
 				+ "\n"
+				+ "loginRequest.getChangePwd()="
+				+ loginRequest.getChangePwd()
+				+ "\n"
 				+ "    loginRequest.getUserName()="
 				+ loginRequest.getUserName()
 				+ "\n"
@@ -315,6 +315,9 @@ public class LoginHandler extends HttpServlet {
 				+ "\n"
 				+ "    loginRequest.getNewPassword()="
 				+ loginRequest.getNewPassword()
+				+ "\n"
+				+ "    msg[0]="
+				+ msg[0]
 				+ "\n"
 				+ "    msg[1]="
 				+ msg[1]
@@ -346,10 +349,14 @@ public class LoginHandler extends HttpServlet {
 					userServicesBean.getFeedback().equals(com.yardi.shared.rentSurvey.YardiConstants.YRD0002) ||
 					userServicesBean.getFeedback().equals(com.yardi.shared.rentSurvey.YardiConstants.YRD001B)
 					) {
+				view = loginRequest.getChangePwd() ? msg[1] : "views/changePwd.html";
 				System.out.println("com.yardi.userServices.LoginHandler.serializeLoginResponse() 0002 "
 						+ "\n"
 						+ "    userServicesBean.getFeedback()="
 						+ userServicesBean.getFeedback()
+						+ "\n"
+						+ "    view="
+						+ view
 						);
 				
 				if (!loginRequest.getChangePwd()) { //expired password or authenticating with temp pwd
@@ -359,7 +366,7 @@ public class LoginHandler extends HttpServlet {
 											  "", 
 											  "", 
 											  msg[0], 
-											  "views/changePwd.html"
+											  view
 									));
 				}
 				
