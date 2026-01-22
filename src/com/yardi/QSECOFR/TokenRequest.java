@@ -6,30 +6,41 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
- * Represents a request for a new token. 
+ * A request for a new token. 
  * @author Jim
  */
 
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
-@JsonPropertyOrder({"msgID", "msgDescription", "password"})
+@JsonPropertyOrder({"msgID", "msgDescription", "action", "password", "hash", "verifiedYn"})
 public class TokenRequest {
 	/**
 	 * New password
 	 */
-	private String password;
-	/**
-	 * Saved password for checking that the password was changed
-	 */
-	@JsonIgnore
-	private String passwordSave;
+	private String password="";
 	/**
 	 * Message ID
 	 */
-	private String msgID;
+	private String msgID="";
 	/**
 	 * Message description
 	 */
-	private String msgDescription;
+	private String msgDescription="";
+	
+	/*
+	 * Requested action "hash": hash the given password
+	 * Requested action "verify": given a password and a hash verify that the given password generates the same hash as the given hash
+	 */
+	private String action="";
+	
+	/**
+	 * base64 hash value 
+	 */
+	private String hash="";
+	
+	/**
+	 * Indicates whether the verify request succeeded or failed. y=yes, n=no.
+	 */
+	private String verifiedYn="";
 	
 	/**
 	 * Default constructor
@@ -38,15 +49,37 @@ public class TokenRequest {
 	}
 
 	/**
-	 * Constructor using new password, message ID and message description
+	 * Constructor using all fields
 	 * @param password new password
 	 * @param msgID message ID
 	 * @param msgDescription message description
+	 * @param action requested action: "hash" hash a password, "verify" verify that the given password generates the given hash
+	 * @param hash when verifying a password this is the hash to compare to
+	 * @param verifiedYn indicates whether the verify request succeeded or failed
 	 */
-	public TokenRequest(String password, String msgID, String msgDescription) {
+	public TokenRequest(String password, String msgID, String msgDescription, String action, String hash, String verifiedYn) {
 		this.password = password;
 		this.msgID = msgID;
 		this.msgDescription = msgDescription;
+		this.action=action;
+		this.hash=hash;
+		this.verifiedYn=verifiedYn;
+	}
+
+	/**
+	 * Return the requested action. "hash" to hash the given password. "verify" to verify that the given password generates the given hash.
+	 * @return requested action
+	 */
+	public String getAction() {
+		return action;
+	}
+
+	/**
+	 * Get the requested action. "hash" to hash the given password. "verify" to verify that the given password generates the given hash.
+	 * @return requested action
+	 */
+	public String getHash() {
+		return hash;
 	}
 
 	/**
@@ -56,7 +89,7 @@ public class TokenRequest {
 	public String getMsgDescription() {
 		return msgDescription;
 	}
-
+	
 	/**
 	 * Return message ID
 	 * @return message ID
@@ -72,13 +105,12 @@ public class TokenRequest {
 	public String getPassword() {
 		return password;
 	}
-
+	
 	/**
-	 * Return saved password
-	 * @return saved password
+	 * Get the flag which indicates whether the verify request succeeded or failed  
 	 */
-	public String getPasswordSave() {
-		return passwordSave;
+	public String getVerifiedYn() {
+		return verifiedYn;
 	}
 
 	/**
@@ -88,6 +120,23 @@ public class TokenRequest {
 	public char[] passwordToChar() {
 		return password.toCharArray();
 	}
+
+	/**
+	 * Set the requested action. "hash" to hash the given password. "verify" to verify that the given password generates the given hash.
+	 * @param action action to set
+	 */
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+	/**
+	 * Set the hash value resulting from hashing the given password
+	 * @param hash hash value to set
+	 */
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
+
 
 	/**
 	 * Set message description
@@ -104,7 +153,7 @@ public class TokenRequest {
 	public void setMsgID(String msgID) {
 		this.msgID = msgID;
 	}
-	
+
 	/**
 	 * Set new password
 	 * @param password new password
@@ -112,20 +161,21 @@ public class TokenRequest {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	/**
-	 * Set saved password
-	 * @param passwordSave saved password
-	 */
-	public void setPasswordSave(String passwordSave) {
-		this.passwordSave = passwordSave;
-	}
 	
+	/**
+	 * Set the flag which indicates whether the verify request succeeded or failed
+	 * @param verifiedYn "y"=verify request was successful. "n"=verify request failed
+	 */
+	public void setVerifiedYn(String verifiedYn) {
+		this.verifiedYn = verifiedYn;
+	}
+
 	/**
 	 * Return string containing all fields of this container
 	 */
+	@Override
 	public String toString() {
-		return "TokenRequest [password=" + password + ", passwordSave=" + passwordSave + ", msgID="
-				+ msgID + ", msgDescription=" + msgDescription + "]";
+		return "TokenRequest [password=" + password + ", msgID=" + msgID + ", msgDescription=" + msgDescription
+				+ ", action=" + action + ", hash=" + hash + ", verifiedYn=" + verifiedYn + "]";
 	}
 }
