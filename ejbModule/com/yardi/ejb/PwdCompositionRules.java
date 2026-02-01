@@ -28,13 +28,13 @@ public interface PwdCompositionRules {
      * <span style="font-family:consolas;">  YRD0018 Password must contain at least %n upper case characters</span><br>
      * <span style="font-family:consolas;">  YRD0019 Password must contain at least %n lower case characters</span><br>
      * <span style="font-family:consolas;">  YRD001A Password must contain at least %n special characters</span>
-     * @param password new password in plain text
+     * @param password current password in plain text
+     * @param newPassword new password in plain text
      * @param userName user ID
-     * @param userToken current hashed password 
      * @param userTokens all of the stored tokens for the user
      * @return boolean indicating whether new password conforms to password policy
      */
-	boolean enforce(final String password, final String userName, final String userToken, final Vector<Unique_Tokens> userTokens);
+	boolean enforce(String password, final String newPassword, final String userName, final Vector<Unique_Tokens> userTokens);
 	/**
 	 * Returns the status of the most recent method call that provides feedback.<p>
 	 * Clients call <i>getFeedback()</i> to determine the status of the most recent method call that provides feedback.
