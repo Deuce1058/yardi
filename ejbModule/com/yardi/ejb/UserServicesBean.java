@@ -609,9 +609,9 @@ public class UserServicesBean implements UserServices {
 				);
 
 		if (!pwdCompRulesBean.enforce(
+				loginRequest.getPassword(), 
 				loginRequest.getNewPassword(), 
 				loginRequest.getUserName(), 
-				userProfileBean.getUserProfile().getUptoken(), 
 				userTokens)) {
 			System.out.println("com.yardi.ejb.UserServicesBean.isPwdValidated() 0010 ");
 			feedback = pwdCompRulesBean.getFeedback();
