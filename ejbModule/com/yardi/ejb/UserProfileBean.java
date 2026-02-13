@@ -4,6 +4,14 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import com.yardi.ejb.crypto.Jargon2Bean;
+import com.yardi.ejb.model.Full_User_Profile;
+import com.yardi.ejb.model.Pwd_Policy;
+import com.yardi.ejb.model.Reset_Password;
+import com.yardi.ejb.model.Update_Temp_Password;
+import com.yardi.ejb.model.User_Profile;
+import com.yardi.ejb.util.Utils;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Remove;
@@ -12,14 +20,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceContextType;
 import jakarta.persistence.metamodel.EntityType;
-
-import com.yardi.ejb.model.User_Profile;
-import com.yardi.ejb.util.Utils;
-import com.yardi.ejb.model.Full_User_Profile;
-import com.yardi.ejb.model.Pwd_Policy;
-import com.yardi.ejb.model.Reset_Password;
-import com.yardi.ejb.model.Update_Temp_Password;
-import com.yardi.shared.userServices.PasswordAuthentication;
 
 /**
  * Session Bean implementation of methods for working with User_Pofile entity 
@@ -56,11 +56,15 @@ public class UserProfileBean implements UserProfile {
 	/**
 	 * EJB com.yardi.ejb.PasswordPolicyBean
 	 */
-	@EJB PasswordPolicy passwordPolicyBean;
+	@EJB private PasswordPolicy passwordPolicyBean;
 	/**
 	 * EJB com.yardi.ejb.util.UtilsBean
 	 */
-	@EJB Utils utilsBean;
+	@EJB private Utils utilsBean;
+	/**
+	 * Injected reference to com.yadri.ejb.crypto.Jargon2Bean
+	 */
+	@EJB private Jargon2Bean jargon2Bean;
 
 	/**
 	 * Default constructor
@@ -102,7 +106,7 @@ public class UserProfileBean implements UserProfile {
      *   <li>If a temporary password has been assigned, the temporary password has not expired</li>
      * </ul><br>
 	 *
-     * If these conditions are satisfied then <code>com.yardi.shared.userServices.PasswordAuthentication.athenticate()</code> checks that the hash of the 
+     * If these conditions are satisfied then <code>com.yardi.ejb.crypto.JargonBean.verify()</code> checks that the hash of the 
      * plain text password matches the hashed password stored in User_Profile entity.<br><br><br>
      * 
      * 
@@ -166,14 +170,13 @@ public class UserProfileBean implements UserProfile {
 		isJoined();
 		isManaged(userProfile);
 		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
-		PasswordAuthentication passwordAuthentication = new PasswordAuthentication(); 
 		
 	    if (!isAuthenticationPrecheckPassed()) {
 			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 003F ");
 	        return false;
 	    }
 
-		if (!passwordAuthentication.authenticate(password.toCharArray(), selectAuthenticationToken())) {
+		if (!jargon2Bean.verify(password, selectAuthenticationToken())) {
 			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 0040 ");
 			handleFailedAuthentication(pwdPolicy.getPpMaxSignonAttempts(), userProfile.getUpPwdAttempts());
 			return false;
@@ -231,10 +234,9 @@ public class UserProfileBean implements UserProfile {
 	public void changeUserToken(final char [] newPassword) {
     	System.out.println("com.yardi.ejb.UserProfileBean.changeUserToken() 0002 ");
 		isJoined();
-		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
 		String userToken="";
 		try {
-			userToken = passwordAuthentication.hash(newPassword); //hash new password
+			userToken = jargon2Bean.hash(newPassword.toString()); //hash new password
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} 
