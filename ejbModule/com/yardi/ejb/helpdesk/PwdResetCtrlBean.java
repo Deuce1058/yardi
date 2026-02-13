@@ -1,17 +1,17 @@
 package com.yardi.ejb.helpdesk;
 
-import com.yardi.shared.helpdesk.ResetPwdRequest;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.PasswordPolicy;
 import com.yardi.ejb.UniqueTokens;
 import com.yardi.ejb.UserProfile;
+import com.yardi.ejb.crypto.Jargon2Bean;
 import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.ejb.model.Reset_Password;
 import com.yardi.ejb.model.Update_Temp_Password;
 import com.yardi.ejb.util.Utils;
-import com.yardi.shared.userServices.PasswordAuthentication;
+import com.yardi.shared.helpdesk.ResetPwdRequest;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
@@ -32,14 +32,15 @@ import jakarta.transaction.UserTransaction;
 @TransactionManagement(TransactionManagementType.BEAN)
 public class PwdResetCtrlBean implements PwdResetCtrl {
 	private String feedback;
-	@EJB PasswordPolicy passwordPolicyBean;
+	@EJB private PasswordPolicy passwordPolicyBean;
 	private Pwd_Policy pwd_Policy = null;
 	private Reset_Password reset_Password;
 	private ResetPwdRequest resetPwdRequest;
 	@Resource UserTransaction tx;
-	@EJB UniqueTokens uniqueTokensBean; 
-	@EJB UserProfile userProfileBean;
-	@EJB Utils utilsBean;
+	@EJB private UniqueTokens uniqueTokensBean; 
+	@EJB private UserProfile userProfileBean;
+	@EJB private Utils utilsBean;
+	@EJB private Jargon2Bean jargon2Bean;
 
     /**
      * Default constructor. 
@@ -198,8 +199,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 	    feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
 
 	    try {
-		    PasswordAuthentication pwdAuthentication = new PasswordAuthentication(); 
-		    resetPwdRequest.setNewPassword(pwdAuthentication.hash(resetPwdRequest.getNewPassword().toCharArray())); 
+		    resetPwdRequest.setNewPassword(jargon2Bean.hash(resetPwdRequest.getNewPassword())); 
 		    tx.begin();
 		    txStatus(tx);
 		    pwd_Policy = getPwdPolicy(); 
