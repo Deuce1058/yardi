@@ -24,45 +24,35 @@ import jakarta.transaction.UserTransaction;
 public class PwdTesterBean implements PwdTester {
 	private String feedback = "";
 	private PwdTestRequest pwdTestRequest = null;
-	@EJB UserGroups userGroupsBean;
-	@EJB UniqueTokens uniqueTokensBean;
-	@EJB PwdCompositionRules pwdCompositionRulesBean;
-	@Resource UserTransaction tx;
+	@EJB private UserGroups userGroupsBean;
+	@EJB private UniqueTokens uniqueTokensBean;
+	@EJB private PwdCompositionRules pwdCompositionRulesBean;
+	@Resource private UserTransaction tx;
 	
 	public PwdTesterBean() {
-		//debug
 		System.out.println("com.yardi.ejb.test.PwdTesterBean() ");
-		//debug
 	}
 
 	public void enforce() {
-		//debug
 		System.out.println("com.yardi.ejb.test.PwdTesterBean enforce() 0004 ");
-		//debug
 		try {
 			tx.begin();
 			txStatus(tx);
 			String s[] = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("=");
 
 			if (!userGroupsBean.find(pwdTestRequest.getUserName()).isEmpty()) {
-				//debug
 				System.out.println("com.yardi.ejb.test.PwdTesterBean enforce() 0005 ");
-				//debug
 				uniqueTokensBean.removeExtraTokens(uniqueTokensBean.findTokens(pwdTestRequest.getUserName()));
 				
 				if (pwdCompositionRulesBean.enforce(
-						pwdTestRequest.getPassword(), 
+						pwdTestRequest.getPassword(),
+						pwdTestRequest.getNewPassword(),
 						pwdTestRequest.getUserName(), 
-						userGroupsBean.getLoginUserProfile().getUptoken(), 
 						uniqueTokensBean.findTokens(pwdTestRequest.getUserName()))) {
-					//debug
 					System.out.println("com.yardi.ejb.test.PwdTesterBean enforce() 0006 ");
-					//debug
 					pwdTestRequest.setPwdCompositionRulesBeanStatus("TRUE ");
 				} else {
-					//debug
 					System.out.println("com.yardi.ejb.test.PwdTesterBean enforce() 0007 ");
-					//debug
 					pwdTestRequest.setPwdCompositionRulesBeanStatus("FALSE ");
 					feedback = pwdCompositionRulesBean.getFeedback();
 					s = pwdCompositionRulesBean.getFeedback().split("=");
@@ -70,9 +60,7 @@ public class PwdTesterBean implements PwdTester {
 					pwdTestRequest.setMsgDescription(s[1]);
 				}
 			} else {
-				//debug
 				System.out.println("com.yardi.ejb.test.PwdTesterBean enforce() 0008 ");
-				//debug
 				pwdTestRequest.setPwdCompositionRulesBeanStatus("FALSE ");
 				feedback = userGroupsBean.getFeedback();
 				s = userGroupsBean.getFeedback().split("=");
@@ -83,9 +71,7 @@ public class PwdTesterBean implements PwdTester {
 			tx.commit();
 			txStatus(tx);
 		} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
-			//debug
 			System.out.println("com.yardi.ejb.test.PwdTesterBean enforce() exception 0003 ");
-			//debug
 			e.printStackTrace();
 		}
 	}
@@ -100,25 +86,24 @@ public class PwdTesterBean implements PwdTester {
 
 	@PostConstruct
     private void postConstructCallback() {
-		//debug
     	System.out.println("com.yardi.ejb.test.PwdTesterBean postConstructCallback() ");
-		//debug
     	feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
     }
 	
 	@Remove
 	public void removeBean() {
-		//debug
 		System.out.println("com.yardi.ejb.test.PwdTesterBean removeBean() 0000 ");
-		//debug
 		userGroupsBean.removeBean();
 		pwdCompositionRulesBean.removeBean();
 	} 
 			
 	public void setPwdTestRequest(PwdTestRequest r) {
-		//debug
-		System.out.println("com.yardi.ejb.test.PwdTesterBean setPwdTestRequest() 0009 ");
-		//debug
+		System.out.println(
+				  "com.yardi.ejb.test.PwdTesterBean setPwdTestRequest() 0009 "
+				+ "\n    "
+				+ "r="
+				+ r
+				);
 		pwdTestRequest = r;
 	}
 
