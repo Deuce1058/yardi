@@ -193,11 +193,15 @@
     <form>
       <div>
 				<div id="section3">
-          <h4>Password/Token Generator</h4>
+          <h4>Enforce Password Policy on New Password</h4>
           <div class="d-sm-flex pb-sm-1">
-            <label for="password" class="control-label pr-sm-2" pwdFn>Password</label>
-            <input	type="text" class="roundedCorners form-control-sm border" name="password" id="password" placeholder="Password" pwdFn/>
+            <label for="password" class="control-label pr-sm-2" pwdFn>Current Password</label>
+            <input	type="text" class="roundedCorners form-control-sm border" name="password" id="password" placeholder="Curent password" pwdFn/>
             <button type="button" class="btn btn-success pl-sm-2 ml-sm-2" id="enforceBtn" pwdFn>Enforce</button>
+          </div>
+          <div class="d-sm-flex pb-sm-1">
+            <label for="newPassword" class="control-label pr-sm-2" pwdFn>New Password</label>
+            <input	type="text" class="roundedCorners form-control-sm border" name="newPassword" id="newPassword" placeholder="New password" pwdFn/>
           </div>
           <div class="d-sm-flex pb-sm-1">
 						<label pwdFn style="font-weight: bold">New token=</label>
@@ -416,48 +420,73 @@
     }
 
     if (pwdPolicyAction==='') {
-      doPost(pwdPolicyRequest('find', ''), '../PwdPolicy');
+      loadPwdPolicy();
     }
 
-    $('#enforceBtn').click(function (e) {
+    $('#enforceBtn').click(async function (e) {
 			e.preventDefault();
       if (validateTestPwdRequest()) {
-        doPost(testPwdRequest(), '../TestPwd');
-      } 
+        try {
+          const ajaxData = await doPost(testPwdRequest(), '../TestPwd');
+          testPwdResponse(ajaxData);
+        } catch (error) {
+          console.log('Enforce password policy error:', error);
+      }
+      }
     });
     
-    $('#submitBtn').click(function (e) {
+    $('#submitBtn').click(async function (e) {
       if(validatePwdPolicyRequest(e)) {
-        doPost(pwdPolicyRequest(pwdPolicyAction, ajaxData), '../PwdPolicy');
+        try {
+          const ajaxData = await doPost(pwdPolicyRequest(pwdPolicyAction, ajaxData), '../PwdPolicy');
+          pwdPolicyAction = ajaxData.action;
+          pwdPolicyResponse(pwdPolicyRequest('ajaxSuccess', ajaxData));
+        } catch (error) {
+          console.log('Submit password policy error:', error);
+        }
       };
     });
 
-    $('#findTokensBtn').click(function (e) {
+    $('#findTokensBtn').click(async function (e) {
       $('#editTokensTimeAndDate').text(timeStampString());
       editTokens = true;
       viewTokens = false;
       console.log('pwdTester 0000 editTokens=' + editTokens + ' viewTokens=' + viewTokens);
-      doPost(editTokensRequest('find', ''),'../editUniqueTokens');
+      try {
+        const ajaxData = await doPost(editTokensRequest('find', ''),'../editUniqueTokens');
+        editTokensResponse(editTokensRequest('ajaxSuccess', ajaxData));
+      } catch (error) {
+        console.log('Edit unique tokens find error:', error);
+      }
     });
 
-    $('#viewTokensButton').click(function () {
+    $('#viewTokensButton').click(async function () {
       $('#viewTokensTimeAndDate').text(timeStampString());
       editTokens = false;
       viewTokens = true;
-      doPost(editTokensRequest('find', ''),'../editUniqueTokens');
+      try { 
+        const ajaxData = await doPost(editTokensRequest('find', ''),'../editUniqueTokens');
+        viewTokensResponse(editTokensRequest('ajaxSuccess', ajaxData));
+      } catch (error) {
+        console.log('View tokens error:', error);
+      }
     });
 
-		$('#updateTokensButton').click(function() {
+		$('#updateTokensButton').click(async function() {
       editTokens = true;
       viewTokens = false;
       console.log('pwdTester 0008 editTokens=' + editTokens +' viewTokens=' + viewTokens);
 			if (validateEditTokensTable()) {
         $('#editTokensTimeAndDate').text(timeStampString());
-      	doPost(editTokensRequest('update', eachTokensTableRow()),'../editUniqueTokens');
-				$('#username').val('');
-				$('#form-feedback').text('');
-				$('#tokensTable').html('');
-			}
+        try {
+          const ajaxData = await doPost(editTokensRequest('update', eachTokensTableRow()),'../editUniqueTokens');
+          editTokensResponse(editTokensRequest('ajaxSuccess', ajaxData));
+          $('#username').val('');
+          $('#form-feedback').text('');
+          $('#tokensTable').html('');
+        } catch (error) {
+          console.log('Edit unique tokens update error:', error);
+        }
 		});
 
     $('#cancelButon').click(function () {
@@ -470,6 +499,15 @@
     });
   });
 
+async function loadPwdPolicy() {
+  try {
+    const ajaxData = await doPost(pwdPolicyRequest('find', ''), '../PwdPolicy');
+    pwdPolicyAction = ajaxData.action;
+    pwdPolicyResponse(pwdPolicyRequest('ajaxSuccess', ajaxData));
+  } catch (error) {
+    console.error('PwdPolicy error:', error);
+  }} 
+
   function testPwdRequest() {
     var formItems = {
         "msgID"                         : '',
@@ -477,6 +515,7 @@
         "pwdCompositionRulesBeanStatus" : '',
         "userName"                      : $('#username').val(),
         "password"                      : $("#password").val(),
+        "newPassword"                   : $("#newPassword").val(),
         "token"                         : ''
     }
 
@@ -484,41 +523,24 @@
   }
 
   function doPost(formItems, url) {
-    var ajaxData;
     console.log('pwdTester 0002 editTokens=' + editTokens + ' viewTokens=' + viewTokens);
-
-    $.ajax({
-      type:     'POST',
-      url:      url,
-      data:     JSON.stringify(formItems),
-      async:    false,
-      dataType: "json", 
-      success:  function (ajaxData) {
-                  if (url==='../TestPwd') {
-                    console.log('pwdTester 0003');
-                    testPwdResponse(ajaxData);
-                  }
-                  if (url==='../PwdPolicy') {
-                    console.log('pwdTester 0004');
-                    pwdPolicyAction = ajaxData.action;
-                    pwdPolicyResponse(pwdPolicyRequest('ajaxSuccess', ajaxData));
-                  }
-                  if (editTokens && url==='../editUniqueTokens') {
-                    console.log('pwdTester 0005');
-                    editTokensResponse(editTokensRequest('ajaxSuccess', ajaxData));
-                  }
-                  if (viewTokens && url==='../editUniqueTokens') {
-                    console.log('pwdTester 0006');
-                    viewTokensResponse(editTokensRequest('ajaxSuccess', ajaxData));
-                  }
-                }
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formItems)
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error(`Network fail. Response status: ${response.status}`);
+      }
+      return response.json();
     });
-  }
+  }   
   
   function validateTestPwdRequest() {
     var formValid = true;
-    $('#username').removeClass('error-border');
-    $('#password').removeClass('error-border');
+    $('#username')   .removeClass('error-border');
+    $('#password')   .removeClass('error-border');
+    $('#newPassword').removeClass('error-border');
 
     if ($('#username').val()==='') {
       formValid = false;
@@ -528,8 +550,14 @@
 
     if ($('#password').val()==='') {
       formValid = false;
-      $('#form-feedback').text('Password is required');
+      $('#form-feedback').text('Current password is required');
       $('#password').addClass('error-border');
+    }
+
+    if ($('#newPassword').val()==='') {
+      formValid = false;
+      $('#form-feedback').text('New password is required');
+      $('#newPassword').addClass('error-border');
     }
 
     return formValid;
@@ -552,6 +580,7 @@
   function clearScreen() {
     $('#form-feedback').text('');
     $('#password')     .val(''); 
+    $('#newPassword')  .val(''); 
     $("#currentToken") .val('');
   } 
 
