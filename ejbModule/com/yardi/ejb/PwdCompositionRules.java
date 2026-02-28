@@ -2,6 +2,8 @@ package com.yardi.ejb;
 
 import java.util.Vector;
 
+import com.yardi.ejb.userServices.PasswordValidationException;
+
 import jakarta.ejb.Local;
 
 /**
@@ -34,16 +36,5 @@ public interface PwdCompositionRules {
      * @param userTokens all of the stored tokens for the user
      * @return boolean indicating whether new password conforms to password policy
      */
-	boolean enforce(String password, final String newPassword, final String userName, final Vector<Unique_Tokens> userTokens);
-	/**
-	 * Returns the status of the most recent method call that provides feedback.<p>
-	 * Clients call <i>getFeedback()</i> to determine the status of the most recent method call that provides feedback.
-	 * @return feedback from the most recent method call that provides feedback.
-	 */
-	String getFeedback();
-	/**
-	 * Stateful session bean remove method.<p>
-	 * Clients call this method so that com.yardi.ejb.PwdCompositionRulesBean can release resources it has before being removed.
-	 */
-	void removeBean();
+	void enforce(String password, final String newPassword, final String userName, final Vector<Unique_Tokens> userTokens) throws PasswordValidationException;
 }
