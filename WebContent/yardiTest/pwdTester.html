@@ -306,7 +306,7 @@
     <div class="d-flex flex-row actionButtons" id="actionButtons">
       <h4 style="padding-left: 16px;" class="mb-sm-3">Edit Tokens</h4>
       <button type="button" class="btn btn-success ml-sm-3 mt-sm-2 mb-sm-2" id="updateTokensButton" style="background-color: darkturquoise;">Update</button>
-      <button type="button" class="btn btn-success ml-sm-1 mt-sm-2 mb-sm-2" id="cancelButon" style="background-color: red;">Cancel</button>
+      <button type="button" class="btn btn-success ml-sm-1 mt-sm-2 mb-sm-2" id="cancelButton" style="background-color: red;">Cancel</button>
       <button type="submit" class="btn btn-success ml-sm-1 mt-sm-2 mb-sm-2" id="findTokensBtn">Find</button>
       <div class="ml-sm-3" id="editTokensTimeAndDate">12:59:59 mm/dd/yyyy</div>
     </div>
@@ -431,8 +431,8 @@
           testPwdResponse(ajaxData);
         } catch (error) {
           console.log('Enforce password policy error:', error);
-      }
-      }
+        }
+	  }
     });
     
     $('#submitBtn').click(async function (e) {
@@ -472,30 +472,31 @@
       }
     });
 
-		$('#updateTokensButton').click(async function() {
+	$('#updateTokensButton').click(async function() {
       editTokens = true;
       viewTokens = false;
       console.log('pwdTester 0008 editTokens=' + editTokens +' viewTokens=' + viewTokens);
-			if (validateEditTokensTable()) {
-        $('#editTokensTimeAndDate').text(timeStampString());
-        try {
+	  if (validateEditTokensTable()) {
+        $('#editTokensTimeAndDate').text(timeStampString());		
+		try {
           const ajaxData = await doPost(editTokensRequest('update', eachTokensTableRow()),'../editUniqueTokens');
           editTokensResponse(editTokensRequest('ajaxSuccess', ajaxData));
           $('#username').val('');
           $('#form-feedback').text('');
           $('#tokensTable').html('');
-        } catch (error) {
+		} catch (error) {
           console.log('Edit unique tokens update error:', error);
-        }
-		});
+		}		
+	  }	  
+	});
 
-    $('#cancelButon').click(function () {
+    $('#cancelButton').click(function () {
       $('#editTokensTimeAndDate').text(timeStampString());
       editTokens = false;
       viewTokens = false;
-			$('#username').val('');
-			$('#form-feedback').text('');
-			$('#tokensTable').html('');
+	  $('#username').val('');
+	  $('#form-feedback').text('');
+	  $('#tokensTable').html('');
     });
   });
 
