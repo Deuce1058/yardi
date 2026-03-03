@@ -223,6 +223,11 @@
       <label class="pl-sm-2" for="PPDays">Password life in days</label>
     </div>
     <div class="form-group m-sm-3">
+      <input type="text" class="roundedCorners form-control-sm numeric gtzero" id="PPTempPwdMins" name="PPTempPwdMins"
+      maxlength="2" size="1" required>
+      <label class="pl-sm-2" for="PPTempPwdMins">Temporary password life mins</label>
+    </div>
+    <div class="form-group m-sm-3">
       <input type="text" class="roundedCorners form-control-sm numeric gezero pwdPolicy" id="PPNbrUnique" name="PPNbrUnique"
         maxlength="3" size="1" required>
       <label class="pl-sm-2" for="PPNbrUnique">Number of unique tokens</label>
@@ -427,7 +432,7 @@
 			e.preventDefault();
       if (validateTestPwdRequest()) {
         try {
-          const ajaxData = await doPost(testPwdRequest(), '../TestPwd');
+          ajaxData = await doPost(testPwdRequest(), '../TestPwd');
           testPwdResponse(ajaxData);
         } catch (error) {
           console.log('Enforce password policy error:', error);
@@ -438,7 +443,7 @@
     $('#submitBtn').click(async function (e) {
       if(validatePwdPolicyRequest(e)) {
         try {
-          const ajaxData = await doPost(pwdPolicyRequest(pwdPolicyAction, ajaxData), '../PwdPolicy');
+          ajaxData = await doPost(pwdPolicyRequest(pwdPolicyAction, ajaxData), '../PwdPolicy');
           pwdPolicyAction = ajaxData.action;
           pwdPolicyResponse(pwdPolicyRequest('ajaxSuccess', ajaxData));
         } catch (error) {
@@ -453,7 +458,7 @@
       viewTokens = false;
       console.log('pwdTester 0000 editTokens=' + editTokens + ' viewTokens=' + viewTokens);
       try {
-        const ajaxData = await doPost(editTokensRequest('find', ''),'../editUniqueTokens');
+        ajaxData = await doPost(editTokensRequest('find', ''),'../editUniqueTokens');
         editTokensResponse(editTokensRequest('ajaxSuccess', ajaxData));
       } catch (error) {
         console.log('Edit unique tokens find error:', error);
@@ -465,7 +470,7 @@
       editTokens = false;
       viewTokens = true;
       try { 
-        const ajaxData = await doPost(editTokensRequest('find', ''),'../editUniqueTokens');
+        ajaxData = await doPost(editTokensRequest('find', ''),'../editUniqueTokens');
         viewTokensResponse(editTokensRequest('ajaxSuccess', ajaxData));
       } catch (error) {
         console.log('View tokens error:', error);
@@ -479,7 +484,7 @@
 	  if (validateEditTokensTable()) {
         $('#editTokensTimeAndDate').text(timeStampString());		
 		try {
-          const ajaxData = await doPost(editTokensRequest('update', eachTokensTableRow()),'../editUniqueTokens');
+          ajaxData = await doPost(editTokensRequest('update', eachTokensTableRow()),'../editUniqueTokens');
           editTokensResponse(editTokensRequest('ajaxSuccess', ajaxData));
           $('#username').val('');
           $('#form-feedback').text('');
@@ -502,7 +507,7 @@
 
 async function loadPwdPolicy() {
   try {
-    const ajaxData = await doPost(pwdPolicyRequest('find', ''), '../PwdPolicy');
+    ajaxData = await doPost(pwdPolicyRequest('find', ''), '../PwdPolicy');
     pwdPolicyAction = ajaxData.action;
     pwdPolicyResponse(pwdPolicyRequest('ajaxSuccess', ajaxData));
   } catch (error) {
@@ -613,47 +618,49 @@ async function loadPwdPolicy() {
     } else {
       if (action === 'ajaxSuccess') {
         formItems = {
-            "action"           : data.action,
-            "msgId"            : data.msgId,
-            "msgDescription"   : data.msgDescription,
-            "pwdLifeInDays"    : data.pwdLifeInDays,
-            "nbrUnique"        : data.nbrUnique,
-            "maxSignonAttempts": data.maxSignonAttempts,
-            "pwdMinLen"        : data.pwdMinLen,
-            "upperRqd"         : data.upperRqd,
-            "lowerRqd"         : data.lowerRqd,
-            "nbrRqd"           : data.nbrRqd,
-            "specialRqd"       : data.specialRqd,
-            "maxPwdLen"        : data.maxPwdLen,
-            "maxRepeatChar"    : data.maxRepeatChar,
-            "nbrDigits"        : data.nbrDigits,
-            "nbrUpper"         : data.nbrUpper,
-            "nbrLower"         : data.nbrLower,
-            "nbrSpecial"       : data.nbrSpecial,
-            "cantContainId"    : data.cantContainId,
-            "cantContainPwd"   : data.cantContainPwd
+            "action"              : data.action,
+            "msgId"               : data.msgId,
+            "msgDescription"      : data.msgDescription,
+            "pwdLifeInDays"       : data.pwdLifeInDays,
+            "temporaryPwdLifeMins": data.temporaryPwdLifeMins,
+            "nbrUnique"           : data.nbrUnique,
+            "maxSignonAttempts"   : data.maxSignonAttempts,
+            "pwdMinLen"           : data.pwdMinLen,
+            "upperRqd"            : data.upperRqd,
+            "lowerRqd"            : data.lowerRqd,
+            "nbrRqd"              : data.nbrRqd,
+            "specialRqd"          : data.specialRqd,
+            "maxPwdLen"           : data.maxPwdLen,
+            "maxRepeatChar"       : data.maxRepeatChar,
+            "nbrDigits"           : data.nbrDigits,
+            "nbrUpper"            : data.nbrUpper,
+            "nbrLower"            : data.nbrLower,
+            "nbrSpecial"          : data.nbrSpecial,
+            "cantContainId"       : data.cantContainId,
+            "cantContainPwd"      : data.cantContainPwd
         }
       } else {
         formItems = {
-            "action"           : action,
-            "msgId"            : "",
-            "msgDescription"   : "",
-            "pwdLifeInDays"    : $('#PPDays').val(),
-            "nbrUnique"        : $('#PPNbrUnique').val(),
-            "maxSignonAttempts": $('#PPMaxLoginTries').val(),
-            "pwdMinLen"        : $('#PPPwdMinLen').val(),
-            "upperRqd"         : "n",
-            "lowerRqd"         : "n",
-            "nbrRqd"           : "n",
-            "specialRqd"       : "n",
-            "maxPwdLen"        : $('#PPPwdMaxLen').val(),
-            "maxRepeatChar"    : $('#PPNbrRepeats').val(),
-            "nbrDigits"        : $('#PPNbrNbr').val(),
-            "nbrUpper"         : $('#PPNbrUpper').val(),
-            "nbrLower"         : $('#PPNbrLower').val(),
-            "nbrSpecial"       : $('#PPNbrSpecial').val(),
-            "cantContainId"    : "n",
-            "cantContainPwd"   : "n"
+            "action"              : action,
+            "msgId"               : "",
+            "msgDescription"      : "",
+            "pwdLifeInDays"       : $('#PPDays').val(),
+            "temporaryPwdLifeMins": $('#PPTempPwdMins').val(),
+            "nbrUnique"           : $('#PPNbrUnique').val(),
+            "maxSignonAttempts"   : $('#PPMaxLoginTries').val(),
+            "pwdMinLen"           : $('#PPPwdMinLen').val(),
+            "upperRqd"            : "n",
+            "lowerRqd"            : "n",
+            "nbrRqd"              : "n",
+            "specialRqd"          : "n",
+            "maxPwdLen"           : $('#PPPwdMaxLen').val(),
+            "maxRepeatChar"       : $('#PPNbrRepeats').val(),
+            "nbrDigits"           : $('#PPNbrNbr').val(),
+            "nbrUpper"            : $('#PPNbrUpper').val(),
+            "nbrLower"            : $('#PPNbrLower').val(),
+            "nbrSpecial"          : $('#PPNbrSpecial').val(),
+            "cantContainId"       : "n",
+            "cantContainPwd"      : "n"
         }
 
         if ($('#PPUpperRqd').is(':checked')) {
@@ -923,6 +930,7 @@ async function loadPwdPolicy() {
 
   function pwdPolicyResponse(formItems) {
     $('#PPDays')         .val(formItems.pwdLifeInDays);
+    $('#PPTempPwdMins')  .val(formItems.temporaryPwdLifeMins);
     $('#PPNbrUnique')    .val(formItems.nbrUnique);
     $('#PPMaxLoginTries').val(formItems.maxSignonAttempts);
     $('#PPPwdMinLen')    .val(formItems.pwdMinLen);
