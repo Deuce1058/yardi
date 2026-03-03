@@ -9,35 +9,27 @@ public enum PasswordRule {
         public void validate(PasswordValidationContext ctx)
                 throws PasswordValidationException {
         	
-        	if (ctx.getPwdPolicy().getPpNbrUnique()==0 || ctx.getUserTokens().isEmpty()) return;
+       if (ctx.getPwdPolicy().getPpNbrUnique()==0 || ctx.getUserTokens().isEmpty()) return;
         	
-			for (Unique_Tokens u : ctx.getUserTokens()) {
-				System.out.println(
-					  "\n"
-					+ "   userTokens="
-					+ u
-					);
-			}
+			System.out.println("com.yardi.ejb.userServices.PasswordRule 0000 " 
+			      + getMsgId()  
+				  +"\n    "
+				  + "   userTokens.size()="
+				  + ctx.getUserTokens().size()
+				  +"\n    "
+				  + "userTokens=" 
+			      + ctx.getUserTokens().toString()
+			      );
 			
-			System.out.println("com.yardi.ejb.userServices.PasswordRule YRD000A "
-					+ "\n"
-					+ "   userTokens.size()="
-					+ ctx.getUserTokens().size()
-					);
-
 			for (Unique_Tokens uniqueToken : ctx.getUserTokens()) {
-				System.out.println(
-					  "\n"
-					+ "   userTokens="
-					+ uniqueToken
-					);
 				
 				if (ctx.getJargon2Bean().verify(ctx.getNewPassword(), uniqueToken.getUp1Token())) {
-					System.out.println("com.yardi.ejb.userServices.PasswordRule YRD000A  "
-							+ "\n "
+					System.out.println("com.yardi.ejb.userServices.PasswordRule  0001 " 
+				            + getMsgId() 
+							+ "\n    "
 							+ "  newPassword="
 							+ ctx.getNewPassword()
-							+ "\n "
+							+ "\n    "
 							+ "  uniqueToken.getUp1Token()="
 							+ uniqueToken.getUp1Token()
 							);
@@ -53,6 +45,15 @@ public enum PasswordRule {
                 throws PasswordValidationException {
 
             if (ctx.getStats().getPwdLength() < ctx.getPwdPolicy().getPpPwdMinLen()) {
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0002 "
+            			+ getMsgId() 
+            			+ "\n    "
+            			+ "ctx.getStats().getPwdLength()="
+            			+ ctx.getStats().getPwdLength()
+            			+ "\n    "
+            			+ "ctx.getPwdPolicy().getPpPwdMinLen()="
+            			+ctx.getPwdPolicy().getPpPwdMinLen()
+            			);
             	throwValidation(ctx.getPwdPolicy().getPpPwdMinLen());
             }
         }
@@ -66,6 +67,14 @@ public enum PasswordRule {
             if (ctx.getPwdPolicy().getPpNbrUpper()==null) return;
 
             if (ctx.getStats().getPwdNbrUpper() < ctx.getPwdPolicy().getPpNbrUpper()) {
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0003 "
+            			+ getMsgId() 
+            			+ "\n    "
+            			+ "ctx.getStats().getPwdNbrUpper()="
+            			+ ctx.getStats().getPwdNbrUpper()
+            			+ "ctx.getPwdPolicy().getPpNbrUpper()="
+            			+ ctx.getPwdPolicy().getPpNbrUpper()
+            			);
             	throwValidation(ctx.getPwdPolicy().getPpNbrUpper());
             }
         }
@@ -79,7 +88,12 @@ public enum PasswordRule {
             if (!ctx.getPwdPolicy().getPpUpperRqd()) return;
 
             if (ctx.getStats().getPwdNbrUpper() <= 0) {            	
-            	throwValidation(com.yardi.shared.rentSurvey.YardiConstants.YRD0006);
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0004 "
+            			+ getMsgId() 
+            			+ "\n    "
+            			+ "ctx.getStats().getPwdNbrUpper()="
+            			+ ctx.getStats().getPwdNbrUpper()
+            			);
             }
         }
     },
@@ -92,6 +106,14 @@ public enum PasswordRule {
     		if (ctx.getPwdPolicy().getPpNbrLower()==null) return;
     		
     		if (ctx.getStats().getPwdNbrLower() < ctx.getPwdPolicy().getPpNbrLower()) {
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0005 "
+            			+ getMsgId() 
+            			+ "\n    "
+            			+ "ctx.getStats().getPwdNbrLower()="
+            			+ ctx.getStats().getPwdNbrLower()
+            			+ "ctx.getPwdPolicy().getPpNbrLower()="
+            			+ ctx.getPwdPolicy().getPpNbrLower()
+            			);
             	throwValidation(ctx.getPwdPolicy().getPpNbrLower());
     		}    		
     	}
@@ -105,6 +127,12 @@ public enum PasswordRule {
     		if (!ctx.getPwdPolicy().getPpLowerRqd()) return;
     		
     		if (ctx.getStats().getPwdNbrLower()<=0) {
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0006 "
+            			+ getMsgId() 
+            			+ "\n    "
+            			+ "ctx.getStats().getPwdNbrLower()="
+            			+ ctx.getStats().getPwdNbrLower()
+            			);
             	throwValidation(com.yardi.shared.rentSurvey.YardiConstants.YRD0007);
     		}
     	}
@@ -118,6 +146,14 @@ public enum PasswordRule {
     		if (ctx.getPwdPolicy().getPpNbrDigits()==null) return;
     		
     		if (ctx.getStats().getPwdNbrNbr() < ctx.getPwdPolicy().getPpNbrDigits()) {
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0007 "
+            			+ getMsgId() 
+            			+ "\n    "
+            			+ "ctx.getStats().getPwdNbrNbr()="
+            			+ ctx.getStats().getPwdNbrNbr()
+            			+ "ctx.getPwdPolicy().getPpNbrDigits()="
+            			+ ctx.getPwdPolicy().getPpNbrDigits()
+            			);
             	throwValidation(ctx.getPwdPolicy().getPpNbrDigits());
     		}
     	}    	
@@ -131,6 +167,12 @@ public enum PasswordRule {
     		if (!ctx.getPwdPolicy().getPpNumberRqd()) return;
     		
     		if (ctx.getStats().getPwdNbrNbr()<=0) {
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0008 "
+            			+ getMsgId() 
+            			+ "\n    "
+            			+ "ctx.getStats().getPwdNbrNbr()="
+            			+ ctx.getStats().getPwdNbrNbr()
+            			);
             	throwValidation(com.yardi.shared.rentSurvey.YardiConstants.YRD0008);
     		}
     	}
@@ -144,6 +186,15 @@ public enum PasswordRule {
     		if (ctx.getPwdPolicy().getPpNbrSpecial()==null) return;
     		
     		if (ctx.getStats().getPwdNbrSpecial() < ctx.getPwdPolicy().getPpNbrSpecial()) {
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0009 "
+            			+ getMsgId() 
+            			+ "\n    "
+            			+ "ctx.getStats().getPwdNbrSpecial()="
+            			+ ctx.getStats().getPwdNbrSpecial()
+            			+ "\n    "
+            			+ "ctx.getPwdPolicy().getPpNbrSpecial()="
+            			+ ctx.getPwdPolicy().getPpNbrSpecial()
+            			);
             	throwValidation(ctx.getPwdPolicy().getPpNbrSpecial());
     		}
     	}
@@ -157,6 +208,12 @@ public enum PasswordRule {
     		if (!ctx.getPwdPolicy().getPpSpecialRqd()) return;
     		
     		if (ctx.getStats().getPwdNbrSpecial()<=0) {
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule 000A "
+            			+ getMsgId() 
+            			+ "\n    "
+            			+ "ctx.getStats().getPwdNbrSpecial()="
+            			+ ctx.getStats().getPwdNbrSpecial()
+            			);
             	throwValidation(com.yardi.shared.rentSurvey.YardiConstants.YRD0009);
     		} 
     	}
@@ -170,6 +227,14 @@ public enum PasswordRule {
     		if (ctx.getPwdPolicy().getPpMaxPwdLen()==null) return;
     		
     		if (ctx.getStats().getPwdLength() > ctx.getPwdPolicy().getPpMaxPwdLen()) {
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule 000B "
+            			+ getMsgId() 
+            			+ "\n    "
+            			+ "ctx.getStats().getPwdLength()="
+            			+ ctx.getStats().getPwdLength()
+            			+ "ctx.getPwdPolicy().getPpMaxPwdLen()="
+            			+ ctx.getPwdPolicy().getPpMaxPwdLen()
+            			);
             	throwValidation(ctx.getPwdPolicy().getPpMaxPwdLen());
     		}
     	}
@@ -183,6 +248,14 @@ public enum PasswordRule {
     		if (ctx.getPwdPolicy().getPpMaxRepeatChar()==null) return;
     		
     		if (ctx.getStats().getPwdNbrRepeatedChar() > ctx.getPwdPolicy().getPpMaxRepeatChar()) {
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule 000C "
+            			+ getMsgId() 
+            			+ "\n    "
+            			+ "ctx.getStats().getPwdNbrRepeatedChar()="
+            			+ ctx.getStats().getPwdNbrRepeatedChar()
+            			+ "ctx.getPwdPolicy().getPpMaxRepeatChar()="
+            			+ ctx.getPwdPolicy().getPpMaxRepeatChar()
+            			);
             	throwValidation(ctx.getPwdPolicy().getPpMaxRepeatChar());
     		}
     	}    	
@@ -194,7 +267,6 @@ public enum PasswordRule {
                 throws PasswordValidationException {
 
         	if (ctx.getUserName()==null || ctx.getNewPassword()==null) {
-    	    	System.out.println("com.yardi.ejb.userServices.PaswordRule ");
         		return; //new password does not contain user ID
         	} 
 
@@ -202,6 +274,15 @@ public enum PasswordRule {
             if (!ctx.getPwdPolicy().isPpCantContainId()) return;
 
             if (ctx.getNewPassword().contains(ctx.getUserName())) {
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule 000D "
+            			+ getMsgId() 
+            			+ "\n    "
+            			+ "ctx.getNewPassword()="
+            			+ ctx.getNewPassword()
+            			+ "\n    "
+            			+ "ctx.getUserName()="
+            			+ ctx.getUserName()
+            			);
             	throwValidation(com.yardi.shared.rentSurvey.YardiConstants.YRD0011);
             }
         }
@@ -215,6 +296,15 @@ public enum PasswordRule {
         	if (!ctx.getPwdPolicy().isPpCantContainPwd()) return;
 
         	if (ctx.getNewPassword().contains(ctx.getCurrentPassword())) {
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule 000E "
+            			+ getMsgId() 
+            			+ "\n    "
+            			+ "ctx.getNewPassword()="
+            			+ ctx.getNewPassword()
+            			+ "\n    "
+            			+ "ctx.getCurrentPassword()="
+            			+ ctx.getCurrentPassword()
+            			);
             	throwValidation(com.yardi.shared.rentSurvey.YardiConstants.YRD0010);
         	}
         }
@@ -224,6 +314,7 @@ public enum PasswordRule {
 
     PasswordRule(String msg) {
         this.msg = msg;
+    	System.out.println("com.yardi.ejb.userServices.PasswordRule 000F " + getMsgId());
     }
 
     public String getMsg() {
@@ -236,6 +327,14 @@ public enum PasswordRule {
     }
     
     private static String resolveMessage(String constant, Object... params) {
+    	System.out.println("com.yardi.ejb.userServices.PasswordRule 0010 "
+    			+ "\n    "
+    			+ "constant="
+    			+ constant
+    			+ "\n    "
+    			+ "params="
+    			+ params.toString()
+    			);
         int idx = constant.indexOf("=");
         String message = (idx >= 0) ? constant.substring(idx + 1) : constant;
 
@@ -243,14 +342,19 @@ public enum PasswordRule {
             message = message.replaceFirst("%n", String.valueOf(param));
         }
 
+    	System.out.println("com.yardi.ejb.userServices.PasswordRule 0011 "
+    			+ "\n    "
+    			+ "message="
+    			+ message
+    			);
         return message;
     }
     
     protected void throwValidation(Object... params) throws PasswordValidationException {
+    	System.out.println("com.yardi.ejb.userServices.PasswordRule 0012 ");
         throw new PasswordValidationException(this, resolveMessage(msg, params));
     }
     
     public abstract void validate(PasswordValidationContext ctx)
-            throws PasswordValidationException;
-    
+            throws PasswordValidationException;    
 }
