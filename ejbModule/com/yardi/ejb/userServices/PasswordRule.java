@@ -30,6 +30,9 @@ public enum PasswordRule {
 							+ "  newPassword="
 							+ ctx.getNewPassword()
 							+ "\n    "
+							+ "  uniqueToken.getUp1Rrn()="
+							+ uniqueToken.getUp1Rrn()
+							+ "\n    "
 							+ "  uniqueToken.getUp1Token()="
 							+ uniqueToken.getUp1Token()
 							);
