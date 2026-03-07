@@ -1,5 +1,7 @@
 package com.yardi.ejb.userServices;
 
+import java.util.Arrays;
+
 import com.yardi.ejb.Unique_Tokens;
 
 public enum PasswordRule {
@@ -11,7 +13,7 @@ public enum PasswordRule {
         	
        if (ctx.getPwdPolicy().getPpNbrUnique()==0 || ctx.getUserTokens().isEmpty()) return;
         	
-			System.out.println("com.yardi.ejb.userServices.PasswordRule 0000 " 
+			System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 0000 " 
 			      + getMsgId()  
 				  +"\n    "
 				  + "   userTokens.size()="
@@ -24,7 +26,7 @@ public enum PasswordRule {
 			for (Unique_Tokens uniqueToken : ctx.getUserTokens()) {
 				
 				if (ctx.getJargon2Bean().verify(ctx.getNewPassword(), uniqueToken.getUp1Token())) {
-					System.out.println("com.yardi.ejb.userServices.PasswordRule  0001 " 
+					System.out.println("com.yardi.ejb.userServices.PasswordRule.validate()  0001 " 
 				            + getMsgId() 
 							+ "\n    "
 							+ "  newPassword="
@@ -48,7 +50,7 @@ public enum PasswordRule {
                 throws PasswordValidationException {
 
             if (ctx.getStats().getPwdLength() < ctx.getPwdPolicy().getPpPwdMinLen()) {
-            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0002 "
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 0002 "
             			+ getMsgId() 
             			+ "\n    "
             			+ "ctx.getStats().getPwdLength()="
@@ -70,11 +72,12 @@ public enum PasswordRule {
             if (ctx.getPwdPolicy().getPpNbrUpper()==null) return;
 
             if (ctx.getStats().getPwdNbrUpper() < ctx.getPwdPolicy().getPpNbrUpper()) {
-            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0003 "
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 0003 "
             			+ getMsgId() 
             			+ "\n    "
             			+ "ctx.getStats().getPwdNbrUpper()="
             			+ ctx.getStats().getPwdNbrUpper()
+            			+ "\n    "
             			+ "ctx.getPwdPolicy().getPpNbrUpper()="
             			+ ctx.getPwdPolicy().getPpNbrUpper()
             			);
@@ -91,12 +94,13 @@ public enum PasswordRule {
             if (!ctx.getPwdPolicy().getPpUpperRqd()) return;
 
             if (ctx.getStats().getPwdNbrUpper() <= 0) {            	
-            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0004 "
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 0004 "
             			+ getMsgId() 
             			+ "\n    "
             			+ "ctx.getStats().getPwdNbrUpper()="
             			+ ctx.getStats().getPwdNbrUpper()
             			);
+            	throwValidation(com.yardi.shared.rentSurvey.YardiConstants.YRD0006);
             }
         }
     },
@@ -109,11 +113,12 @@ public enum PasswordRule {
     		if (ctx.getPwdPolicy().getPpNbrLower()==null) return;
     		
     		if (ctx.getStats().getPwdNbrLower() < ctx.getPwdPolicy().getPpNbrLower()) {
-            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0005 "
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 0005 "
             			+ getMsgId() 
             			+ "\n    "
             			+ "ctx.getStats().getPwdNbrLower()="
             			+ ctx.getStats().getPwdNbrLower()
+            			+ "\n    "
             			+ "ctx.getPwdPolicy().getPpNbrLower()="
             			+ ctx.getPwdPolicy().getPpNbrLower()
             			);
@@ -130,7 +135,7 @@ public enum PasswordRule {
     		if (!ctx.getPwdPolicy().getPpLowerRqd()) return;
     		
     		if (ctx.getStats().getPwdNbrLower()<=0) {
-            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0006 "
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 0006 "
             			+ getMsgId() 
             			+ "\n    "
             			+ "ctx.getStats().getPwdNbrLower()="
@@ -149,11 +154,12 @@ public enum PasswordRule {
     		if (ctx.getPwdPolicy().getPpNbrDigits()==null) return;
     		
     		if (ctx.getStats().getPwdNbrNbr() < ctx.getPwdPolicy().getPpNbrDigits()) {
-            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0007 "
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 0007 "
             			+ getMsgId() 
             			+ "\n    "
             			+ "ctx.getStats().getPwdNbrNbr()="
             			+ ctx.getStats().getPwdNbrNbr()
+            			+ "\n    "
             			+ "ctx.getPwdPolicy().getPpNbrDigits()="
             			+ ctx.getPwdPolicy().getPpNbrDigits()
             			);
@@ -170,7 +176,7 @@ public enum PasswordRule {
     		if (!ctx.getPwdPolicy().getPpNumberRqd()) return;
     		
     		if (ctx.getStats().getPwdNbrNbr()<=0) {
-            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0008 "
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 0008 "
             			+ getMsgId() 
             			+ "\n    "
             			+ "ctx.getStats().getPwdNbrNbr()="
@@ -189,7 +195,7 @@ public enum PasswordRule {
     		if (ctx.getPwdPolicy().getPpNbrSpecial()==null) return;
     		
     		if (ctx.getStats().getPwdNbrSpecial() < ctx.getPwdPolicy().getPpNbrSpecial()) {
-            	System.out.println("com.yardi.ejb.userServices.PasswordRule 0009 "
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 0009 "
             			+ getMsgId() 
             			+ "\n    "
             			+ "ctx.getStats().getPwdNbrSpecial()="
@@ -211,7 +217,7 @@ public enum PasswordRule {
     		if (!ctx.getPwdPolicy().getPpSpecialRqd()) return;
     		
     		if (ctx.getStats().getPwdNbrSpecial()<=0) {
-            	System.out.println("com.yardi.ejb.userServices.PasswordRule 000A "
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 000A "
             			+ getMsgId() 
             			+ "\n    "
             			+ "ctx.getStats().getPwdNbrSpecial()="
@@ -230,11 +236,12 @@ public enum PasswordRule {
     		if (ctx.getPwdPolicy().getPpMaxPwdLen()==null) return;
     		
     		if (ctx.getStats().getPwdLength() > ctx.getPwdPolicy().getPpMaxPwdLen()) {
-            	System.out.println("com.yardi.ejb.userServices.PasswordRule 000B "
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 000B "
             			+ getMsgId() 
             			+ "\n    "
             			+ "ctx.getStats().getPwdLength()="
             			+ ctx.getStats().getPwdLength()
+            			+ "\n    "
             			+ "ctx.getPwdPolicy().getPpMaxPwdLen()="
             			+ ctx.getPwdPolicy().getPpMaxPwdLen()
             			);
@@ -251,11 +258,12 @@ public enum PasswordRule {
     		if (ctx.getPwdPolicy().getPpMaxRepeatChar()==null) return;
     		
     		if (ctx.getStats().getPwdNbrRepeatedChar() > ctx.getPwdPolicy().getPpMaxRepeatChar()) {
-            	System.out.println("com.yardi.ejb.userServices.PasswordRule 000C "
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 000C "
             			+ getMsgId() 
             			+ "\n    "
             			+ "ctx.getStats().getPwdNbrRepeatedChar()="
             			+ ctx.getStats().getPwdNbrRepeatedChar()
+            			+ "\n    "
             			+ "ctx.getPwdPolicy().getPpMaxRepeatChar()="
             			+ ctx.getPwdPolicy().getPpMaxRepeatChar()
             			);
@@ -277,7 +285,7 @@ public enum PasswordRule {
             if (!ctx.getPwdPolicy().isPpCantContainId()) return;
 
             if (ctx.getNewPassword().contains(ctx.getUserName())) {
-            	System.out.println("com.yardi.ejb.userServices.PasswordRule 000D "
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 000D "
             			+ getMsgId() 
             			+ "\n    "
             			+ "ctx.getNewPassword()="
@@ -299,7 +307,7 @@ public enum PasswordRule {
         	if (!ctx.getPwdPolicy().isPpCantContainPwd()) return;
 
         	if (ctx.getNewPassword().contains(ctx.getCurrentPassword())) {
-            	System.out.println("com.yardi.ejb.userServices.PasswordRule 000E "
+            	System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 000E "
             			+ getMsgId() 
             			+ "\n    "
             			+ "ctx.getNewPassword()="
@@ -317,7 +325,7 @@ public enum PasswordRule {
 
     PasswordRule(String msg) {
         this.msg = msg;
-    	System.out.println("com.yardi.ejb.userServices.PasswordRule 000F " + getMsgId());
+    	System.out.println("com.yardi.ejb.userServices.PasswordRule.PasswordRule() 000F " + getMsgId());
     }
 
     public String getMsg() {
@@ -330,13 +338,13 @@ public enum PasswordRule {
     }
     
     private static String resolveMessage(String constant, Object... params) {
-    	System.out.println("com.yardi.ejb.userServices.PasswordRule 0010 "
+    	System.out.println("com.yardi.ejb.userServices.PasswordRule.resolveMessage() 0010 "
     			+ "\n    "
     			+ "constant="
     			+ constant
     			+ "\n    "
     			+ "params="
-    			+ params.toString()
+    			+ Arrays.toString(params)
     			);
         int idx = constant.indexOf("=");
         String message = (idx >= 0) ? constant.substring(idx + 1) : constant;
@@ -345,7 +353,7 @@ public enum PasswordRule {
             message = message.replaceFirst("%n", String.valueOf(param));
         }
 
-    	System.out.println("com.yardi.ejb.userServices.PasswordRule 0011 "
+    	System.out.println("com.yardi.ejb.userServices.PasswordRule.resolveMessage( 0011 "
     			+ "\n    "
     			+ "message="
     			+ message
@@ -354,7 +362,7 @@ public enum PasswordRule {
     }
     
     protected void throwValidation(Object... params) throws PasswordValidationException {
-    	System.out.println("com.yardi.ejb.userServices.PasswordRule 0012 ");
+    	System.out.println("com.yardi.ejb.userServices.PasswordRule.throwValidation() 0012 ");
         throw new PasswordValidationException(this, resolveMessage(msg, params));
     }
     
