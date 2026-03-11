@@ -19,8 +19,6 @@ import jakarta.persistence.*;
 @Table(name="PWD_POLICY", schema="DB2ADMIN")
 @NamedQuery(name="Pwd_Policy.findAll", query="SELECT p FROM Pwd_Policy p")
 public class Pwd_Policy implements Serializable {
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Column: PP_DAYS<p>
 	 * 
@@ -54,12 +52,12 @@ public class Pwd_Policy implements Serializable {
 	 */
 	@Column(name="PP_PWD_MIN_LEN")
 	private short ppPwdMinLen;
-	
+
 	/**
 	 * Boolean representation of field <i>pp_upper_rqd</i> provided for convenience.<p> Field <i>ppUpperRqd</i> is tested to determine whether at 
 	 * least one upper case character is required in the new password. Not stored in PWD_POLICY database table.
 	 */
-	@Transient private Boolean ppUpperRqd; 
+	@Transient private Boolean ppUpperRqd;
 	
 	/**
 	 * Column: PP_UPPER_RQD<p>
@@ -68,7 +66,7 @@ public class Pwd_Policy implements Serializable {
 	 * that is provided for convenience.
 	 */
 	@Column(name = "PP_UPPER_RQD")
-	private String pp_upper_rqd;
+	private String pp_upper_rqd; 
 	
 	/**
 	 * Boolean representation of field <i>pp_lower_rqd</i> provided for convenience.<p> Field <i>ppLowerRqd</i> is tested to determine whether 
@@ -89,8 +87,8 @@ public class Pwd_Policy implements Serializable {
 	 * Boolean representation of field <i>pp_number_rqd</i> provided for convenience.<p> Field <i>ppNumberRqd</i> is tested to determine whether at least 
 	 * one number is required in the new password. Not stored in PWD_POLICY database table.
 	 */
-	@Transient private Boolean ppNumberRqd; 
-
+	@Transient private Boolean ppNumberRqd;
+	
 	/**
 	 * Column: PP_NUMBER_RQD<p>
 	 * 
@@ -98,8 +96,8 @@ public class Pwd_Policy implements Serializable {
 	 * The y/n value of this field has a Boolean representation, <i>ppNumberRqd</i>, that is provided for convenience.
 	 */
 	@Column(name = "PP_NUMBER_RQD")
-	private String pp_number_rqd;
-	
+	private String pp_number_rqd; 
+
 	/**
 	 * Boolean representation of field <i>pp_special_rqd</i> provided for convenience.<p> Field <i>ppSpecialRqd</i> is tested to determine whether 
 	 * at least one special character is required in the new password. Not stored in PWD_POLICY database table.
@@ -114,7 +112,7 @@ public class Pwd_Policy implements Serializable {
 	 */
 	@Column(name = "PP_SPECIAL_RQD")
 	private String pp_special_rqd;
-
+	
 	/**
 	 * Column: PP_MAX_PWD_LEN<p>
 	 * 
@@ -122,7 +120,7 @@ public class Pwd_Policy implements Serializable {
 	 */
 	@Column(name="PP_MAX_PWD_LEN")
 	private Short ppMaxPwdLen;
-	
+
 	/**
 	 * Column: PP_MAX_REPEAT_CHAR<p>
 	 * 
@@ -130,7 +128,7 @@ public class Pwd_Policy implements Serializable {
 	 */
 	@Column(name="PP_MAX_REPEAT_CHAR")
 	private Short ppMaxRepeatChar;
-
+	
 	/**
 	 * Column: PP_NBR_DIGITS<p>
 	 * 
@@ -139,7 +137,7 @@ public class Pwd_Policy implements Serializable {
 	 */
 	@Column(name="PP_NBR_DIGITS")
 	private Short ppNbrDigits;
-	
+
 	/**
 	 * Column: PP_NBR_UPPER<p>
 	 * 
@@ -180,8 +178,8 @@ public class Pwd_Policy implements Serializable {
 	 * Boolean representation of field <i>pp_cant_contain_id</i> provided for convenience. Field <i>ppCantContainId</i> is tested to determine whether 
 	 * the new password may contain the user ID in any case. Not stored in PWD_POLICY database table.
 	 */
-	@Transient private boolean ppCantContainId; 
-
+	@Transient private boolean ppCantContainId;
+	
 	/**
 	 * Column: PP_CANT_CONTAIN_PWD<p>
 	 * 
@@ -189,20 +187,20 @@ public class Pwd_Policy implements Serializable {
 	 * that is provided for convenience.
 	 */
 	@Column(name="PP_CANT_CONTAIN_PWD")
-	private String pp_cant_contain_pwd;
-	
+	private String pp_cant_contain_pwd; 
+
 	/**
 	 * Boolean representation of field <i>pp_cant_contain_pwd</i> provided for convenience. Field <i>ppCantContainPwd</i> is tested to determine whether 
 	 * the new password may contain the current password. Not stored in PWD_POLICY database table.
 	 */
 	@Transient private boolean ppCantContainPwd;
-
+	
 	/**
 	 * Column: PP_TEMP_PWD_TTL<p>
 	 * Temporary password time to live in minutes.
 	 */
 	@Column(name="PP_TEMP_PWD_TTL") 
-	private short ppTempPwdTtl; 
+	private short ppTempPwdTtl;
 
 	/**
 	 * Column: PP_RRN<p>
@@ -212,7 +210,9 @@ public class Pwd_Policy implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="PP_RRN")
-	private Long ppRrn;
+	private Long ppRrn; 
+
+	private static final long serialVersionUID = 1L;
 
 	public Pwd_Policy() {
 		//debug
@@ -1080,14 +1080,15 @@ public class Pwd_Policy implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Pwd_Policy [ppDays=" + ppDays + ", ppNbrUnique=" + ppNbrUnique + ", ppMaxSignonAttempts=" + ppMaxSignonAttempts 
-				+ ", ppPwdMinLen=" + ppPwdMinLen + ", pp_upper_rqd=" + pp_upper_rqd + ", pp_lower_rqd=" + pp_lower_rqd 
-				+ ", pp_number_rqd=" + pp_number_rqd + ", pp_special_rqd=" + pp_special_rqd	+ ", ppUpperRqd=" + ppUpperRqd 
-				+ ", ppLowerRqd=" + ppLowerRqd + ", ppNumberRqd=" + ppNumberRqd + ", ppSpecialRqd=" + ppSpecialRqd 
-				+ ", ppPwdMaxLen=" + ppMaxPwdLen + ", ppMaxRepeatChar=" + ppMaxRepeatChar + ", ppNbrDigits=" + ppNbrDigits 
-				+ ", ppNbrUpper=" + ppNbrUpper + ", ppNbrLower=" + ppNbrLower + ", ppNbrSpecial=" + ppNbrSpecial 
-				+ ", ppCantContainID=" + ppCantContainId + ", ppCantContainPwd=" + ppCantContainPwd + ", ppTempPwdTtl=" + ppTempPwdTtl
-				+ ", ppRrn=" + ppRrn 
+		return "Pwd_Policy [ppDays=" + ppDays + ", ppNbrUnique=" + ppNbrUnique + ", ppMaxSignonAttempts="
+				+ ppMaxSignonAttempts + ", ppPwdMinLen=" + ppPwdMinLen + ", ppUpperRqd=" + ppUpperRqd
+				+ ", pp_upper_rqd=" + pp_upper_rqd + ", ppLowerRqd=" + ppLowerRqd + ", pp_lower_rqd=" + pp_lower_rqd
+				+ ", ppNumberRqd=" + ppNumberRqd + ", pp_number_rqd=" + pp_number_rqd + ", ppSpecialRqd=" + ppSpecialRqd
+				+ ", pp_special_rqd=" + pp_special_rqd + ", ppMaxPwdLen=" + ppMaxPwdLen + ", ppMaxRepeatChar="
+				+ ppMaxRepeatChar + ", ppNbrDigits=" + ppNbrDigits + ", ppNbrUpper=" + ppNbrUpper + ", ppNbrLower="
+				+ ppNbrLower + ", ppNbrSpecial=" + ppNbrSpecial + ", pp_cant_contain_id=" + pp_cant_contain_id
+				+ ", ppCantContainId=" + ppCantContainId + ", pp_cant_contain_pwd=" + pp_cant_contain_pwd
+				+ ", ppCantContainPwd=" + ppCantContainPwd + ", ppTempPwdTtl=" + ppTempPwdTtl + ", ppRrn=" + ppRrn
 				+ "]";
 	}
 }
