@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
@@ -12,6 +13,7 @@ import jakarta.persistence.metamodel.EntityType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import com.yardi.ejb.crypto.Jargon2Bean;
 import com.yardi.ejb.model.Full_Sessions_Table;
 import com.yardi.ejb.model.Sessions_Table;
 import com.yardi.shared.userServices.PasswordAuthentication;
@@ -21,13 +23,18 @@ import com.yardi.shared.userServices.PasswordAuthentication;
  */
 @Stateless
 public class SessionsTableBean implements SessionsTable {
+	/**
+	 * Injected reference to com.yardi.ejb.crypto.Jargon2Bean.
+	 */
+	@EJB Jargon2Bean jargon2Bean;	
+	/**
+	 * EntityManager injected from the "yardi" persistence unit.
+	 */
 	@PersistenceContext(unitName="yardi")
 	private EntityManager em;
 
     public SessionsTableBean() {
-    	//debug
     	System.out.println("com.yardi.ejb.SessionsTableBean.SessionsTableBean() 0000 ");
-    	//debug
     }
 	
 	/**
@@ -65,9 +72,7 @@ public class SessionsTableBean implements SessionsTable {
 	 * entities matching the given user ID and the SESSIONS_TABLE database table has no rows matching the given user ID.
 	 */
 	public Vector<Full_Sessions_Table> findFull_Sessions_Table(String userID) {
-		/*debug*/
 		System.out.println("com.yardi.ejb.SessionsTableBean.findFull_Sessions_Table() 000B ");
-		/*debug*/
 		isJoined();
 		Vector<Full_Sessions_Table> userSessions = new Vector<Full_Sessions_Table> ();
 		TypedQuery<Full_Sessions_Table> qry = em.createQuery( 
@@ -80,12 +85,9 @@ public class SessionsTableBean implements SessionsTable {
 				.getResultList();
 		
 		if (userSessions.size() > 0) {
-			/*debug*/
 			System.out.println("com.yardi.ejb.SessionsTableBean.findFull_Sessions_Table() 000F ");
-			/*debug*/
 
 			for (Full_Sessions_Table s : userSessions ) {
-				/*debug*/
 				System.out.println("com.yardi.ejb.SessionsTableBean.findFull_Sessions_Table() 0010 "
 					+ "\n"
 					+ "    Full_Sessions_Table=["
@@ -103,16 +105,13 @@ public class SessionsTableBean implements SessionsTable {
 					+ s.getStRrn()
 					+ "]"
 				);
-				/*debug*/
 				isManaged(s);			
 			}
 		} else {
-			/*debug*/
 			System.out.println("com.yardi.ejb.SessionsTableBean.findFull_Sessions_Table() 0011 "
 				+ "\n"
 				+ "    userSessions is empty"
 			);
-			/*debug*/			
 		}
 		
 		return userSessions;
@@ -244,14 +243,11 @@ public class SessionsTableBean implements SessionsTable {
 			String lastRequest, 
 			java.sql.Timestamp lastActive
 			) {
-		//debug
 		System.out.println("com.yardi.ejb.SessionsTableBean.persist() 0005 ");
 		isJoined();
-		//debug
-		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
 		String sessionToken="";
 		try {
-			sessionToken = passwordAuthentication.hash(sessionID.toCharArray());
+			sessionToken = jargon2Bean.hash(sessionID);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
@@ -294,15 +290,11 @@ public class SessionsTableBean implements SessionsTable {
 	 * @param sessionsTable the Full_Sessions_Table entity to remove.
 	 */
 	public void remove(Full_Sessions_Table sessionsTable) {
-		/*debug*/
 		System.out.println("com.yardi.ejb.SessionsTableBean.remove() 000D ");
-		/*debug*/
 		isJoined();
 		
 		if (sessionsTable!=null) {
-			/*debug*/
 			System.out.println("com.yardi.ejb.SessionsTableBean.remove() 000E ");
-			/*debug*/
 			em.remove(sessionsTable);
 			isManaged(sessionsTable);
 		}
@@ -339,7 +331,6 @@ public class SessionsTableBean implements SessionsTable {
 			String lastRequest, 
 			java.sql.Timestamp lastActive
 			) {
-		//debug
 		System.out.println("com.yardi.ejb.SessionsTableBean.update() 000A "
 				+ "\n"
 				+ "    sessionID="
@@ -351,12 +342,10 @@ public class SessionsTableBean implements SessionsTable {
 				+ "    lastActive="
 				+ lastActive
 		);
-		//debug
 		isJoined();
-		PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
 		String sessionToken="";
 		try {
-			sessionToken = passwordAuthentication.hash(sessionID.toCharArray());
+			sessionToken = jargon2Bean.hash(sessionID);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
