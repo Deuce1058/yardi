@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.ejb.model.Sessions_Table;
+import com.yardi.ejb.userServices.PasswordValidationException;
 import com.yardi.shared.userServices.LoginInitialPage;
 import com.yardi.shared.userServices.LoginRequest;
 import com.yardi.shared.userServices.LoginResponse;
@@ -608,13 +609,15 @@ public class UserServicesBean implements UserServices {
 				+ userTokens
 				);
 
-		if (!pwdCompRulesBean.enforce(
-				loginRequest.getPassword(), 
-				loginRequest.getNewPassword(), 
-				loginRequest.getUserName(), 
-				userTokens)) {
+		try {
+			pwdCompRulesBean.enforce(
+					loginRequest.getPassword(), 
+					loginRequest.getNewPassword(), 
+					loginRequest.getUserName(), 
+					userTokens);
+		} catch (PasswordValidationException e) {
 			System.out.println("com.yardi.ejb.UserServicesBean.isPwdValidated() 0010 ");
-			feedback = pwdCompRulesBean.getFeedback();
+			feedback = e.getMsgId() + "=" + e.getMessage();
 			rollback(tx);
 			return false;
 		}
@@ -751,7 +754,6 @@ public class UserServicesBean implements UserServices {
 		System.out.println("com.yardi.ejb.UserServicesBean.remove() 0000");
 		userGroupsBean.removeBean();
 		userProfileBean.removeBean();
-		pwdCompRulesBean.removeBean();
 	}
 
 	/**
