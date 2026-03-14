@@ -1,5 +1,9 @@
 package com.yardi.ejb;
 
+import com.yardi.ejb.model.PwdPolicyMapper;
+import com.yardi.ejb.model.Pwd_Policy;
+import com.yardi.shared.model.PasswordPolicyCopy;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
@@ -7,8 +11,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-
-import com.yardi.ejb.model.Pwd_Policy;
 
 /**
  * Session Bean implementation of methods for working with password policy.<p>
@@ -66,6 +68,7 @@ public class PasswordPolicyBean implements PasswordPolicy {
 	 * @param rrn the relative record number to find in the PWD_POLICY database table
 	 * @return a Pwd_Policy entity
 	 */
+    @Override
 	public Pwd_Policy find(Long rrn) {
 		Pwd_Policy pwdPolicy = null;
 		TypedQuery<Pwd_Policy> qry = emgr.createQuery(
@@ -77,7 +80,7 @@ public class PasswordPolicyBean implements PasswordPolicy {
 				.setParameter("rrn", rrn)
 				.getSingleResult();
 		} catch (NoResultException e) {
-			System.out.println("com.yardi.ejb.PasswordPolicyBean find() exception 0016 ");
+			System.out.println("com.yardi.ejb.PasswordPolicyBean.find() exception 0016 ");
 			e.printStackTrace();
 		}
 		if (!(pwdPolicy==null)) {
@@ -125,7 +128,7 @@ public class PasswordPolicyBean implements PasswordPolicy {
 			pwdPolicy.setPp_cant_contain_pwd(pwdPolicy.getPp_cant_contain_pwd());
 		}
 		//debug
-		System.out.println("com.yardi.ejb.PasswordPolicyBean find() 0000 "
+		System.out.println("com.yardi.ejb.PasswordPolicyBean.find() 0000 "
 				+ "\n "
 				+ "  rrn=" + rrn
 				+ "\n "
@@ -139,41 +142,54 @@ public class PasswordPolicyBean implements PasswordPolicy {
 	 * Return the status of the most recent method call that provides feedback.
 	 * @return status of the most recent method call that provides feedback
 	 */
+    @Override
 	public String getFeedback() {
 		return feedback;
 	}
 	
 	/**
+     * Get an immutable copy of password policy
+     * @return immutable copy of {@link com.yardi.ejb.model.Pwd_Policy Pwd_Policy} 
+     */
+    @Override
+    public PasswordPolicyCopy getPasswordPolicyCopy() {
+    	return PwdPolicyMapper.toCopy(pwdPolicy);
+    }
+	
+
+    /**
 	 * Return a reference to the Pwd_Policy entity.
 	 * @return reference to the Pwd_Policy entity
 	 */
+    @Override
     public Pwd_Policy getPwdPolicy() {
 		//debug
-		System.out.println("com.yardi.ejb.PasswordPolicyBean getPwdPolicy() 000C ");
+		System.out.println("com.yardi.ejb.PasswordPolicyBean.getPwdPolicy() 000C ");
 		//debug
 		
 		if (pwdPolicy == null) {
 			//debug
-			System.out.println("com.yardi.ejb.PasswordPolicyBean getPwdPolicy() 0014 ");
+			System.out.println("com.yardi.ejb.PasswordPolicyBean.getPwdPolicy() 0014 ");
 			//debug
 			setPwdPolicy();
 		}
 		
-		//debug
-		System.out.println("com.yardi.ejb.PasswordPolicyBean getPwdPolicy() 000F "
-			+ "\n"
+		System.out.println("com.yardi.ejb.PasswordPolicyBean.getPwdPolicy() 000F "
+			+ "\n    "
 			+ "   pwdPolicy="
-			+ pwdPolicy);
-		//debug
+			+ pwdPolicy
+			+ "\n    "
+			+ PwdPolicyMapper.toCopy(pwdPolicy).toString()
+			);
 		return pwdPolicy;
-	}
-	
+	}     
+    
     /**
      * Initialize this class by calling the getter for field <i>pwdPolicy</i>.
      */
 	@PostConstruct
     private void postConstructCallback() {
-    	System.out.println("com.yardi.ejb.PasswordPolicyBean postConstructCallback() ");
+    	System.out.println("com.yardi.ejb.PasswordPolicyBean.postConstructCallback() ");
     	getPwdPolicy();
     }
 	
@@ -186,18 +202,18 @@ public class PasswordPolicyBean implements PasswordPolicy {
 	 */
 	private void setPwdPolicy() {
 		//debug
-		System.out.println("com.yardi.ejb.PasswordPolicyBean setPwdPolicy() 0010 ");
+		System.out.println("com.yardi.ejb.PasswordPolicyBean.setPwdPolicy() 0010 ");
 		//debug
 		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
 		pwdPolicy = find(1L);
 		
 		if (pwdPolicy == null) {
-			System.out.println("com.yardi.ejb.PasswordPolicyBean setPwdPolicy() 000E ");
+			System.out.println("com.yardi.ejb.PasswordPolicyBean.setPwdPolicy() 000E ");
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
 			return;
 		}
 		//debug
-		System.out.println("com.yardi.ejb.PasswordPolicyBean setPwdPolicy() 000D "
+		System.out.println("com.yardi.ejb.PasswordPolicyBean.setPwdPolicy() 000D "
 			+ "\n"
 			+ "   pwdPolicy="
 			+ pwdPolicy.toString()
@@ -207,6 +223,7 @@ public class PasswordPolicyBean implements PasswordPolicy {
 		//debug
 	}
 	
+	@Override
 	public String stringify() {
 		return "PasswordPolicyBean [emgr=" + emgr + "]"
 				+ "\n  "
