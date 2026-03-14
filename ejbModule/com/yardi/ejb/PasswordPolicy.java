@@ -1,8 +1,9 @@
 package com.yardi.ejb;
 
-import jakarta.ejb.Local;
-
 import com.yardi.ejb.model.Pwd_Policy;
+import com.yardi.shared.model.PasswordPolicyCopy;
+
+import jakarta.ejb.Local;
 
 /**
  * Template for working with password policy.
@@ -50,9 +51,15 @@ public interface PasswordPolicy {
 	 */
 	String getFeedback();
 	/**
+     * Get an immutable copy of password policy
+     * @return immutable copy of {@link com.yardi.ejb.model.Pwd_Policy Pwd_Policy} 
+     */
+    public PasswordPolicyCopy getPasswordPolicyCopy();
+	/**
 	 * Return a reference to the Pwd_Policy entity.
 	 * @return reference to the Pwd_Policy entity
 	 */
 	Pwd_Policy getPwdPolicy();
 	String stringify();
+
 }
