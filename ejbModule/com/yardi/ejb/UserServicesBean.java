@@ -97,7 +97,7 @@ public class UserServicesBean implements UserServices {
 	 * Default constructor
 	 */
 	public UserServicesBean() {
-		System.out.println("com.yardi.ejb.UserServicesBean UserServicesBean() 0006");
+		System.out.println("com.yardi.ejb.UserServicesBean.UserServicesBean() 0006");
 	}
 	
 	/**
@@ -238,7 +238,17 @@ public class UserServicesBean implements UserServices {
 	 * @param newPassword char array containing the new password in plain text
 	 */
 	private void changeUserToken(final String userName, final char [] newPassword) {
-		System.out.println("com.yardi.ejb.UserServicesBean.changeUserToken() 0004  ");
+		System.out.println("com.yardi.ejb.UserServicesBean.changeUserToken() 0004  "
+				+ "\n    "
+				+ "userName="
+				+ userName
+				+ "\n    "
+				+ "String(newPassword)="
+				+ new String(newPassword)
+				+ "\n    "
+				+ "Arrays.toString(newPassword)="
+				+ Arrays.toString(newPassword)
+				);
 		txStatus();
 		userProfileBean.changeUserToken(newPassword); //store new token in user profile
 		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
@@ -388,6 +398,17 @@ public class UserServicesBean implements UserServices {
 					+ userTokens
 					);
 			persistUserToken();
+			System.out.println("com.yardi.ejb.UserServicesBean.chgpwd() 0022 "
+					+ "\n    "
+					+ "loginRequest.getUserName()="
+					+ loginRequest.getUserName()
+					+ "\n    "
+					+ "loginRequest.getNewPassword()="
+					+ loginRequest.getNewPassword()
+					+ "\n    "
+					+ "Arrays.toString(loginRequest.getNewPassword().toCharArray())="
+					+ Arrays.toString(loginRequest.getNewPassword().toCharArray())
+					);
 			changeUserToken(loginRequest.getUserName(), loginRequest.getNewPassword().toCharArray());
 			userProfileBean.loginSuccess();
 			loginSuccess();
