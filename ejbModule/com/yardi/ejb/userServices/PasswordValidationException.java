@@ -19,4 +19,8 @@ public class PasswordValidationException extends Exception {
     public String getMsgId() {
         return failedRule.getMsgId();
     }
+    
+    public String getFullMessage() {
+    	return failedRule.getMsg();
+    }
 }
