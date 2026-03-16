@@ -2,6 +2,7 @@ package com.yardi.ejb;
 
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Set;
 
 import com.yardi.ejb.crypto.Jargon2Bean;
@@ -70,7 +71,7 @@ public class UserProfileBean implements UserProfile {
 	 * Default constructor
 	 */
     public UserProfileBean() {
-    	System.out.println("com.yardi.ejb.UserProfileBean UserProfileBean() 0015 ");
+    	System.out.println("com.yardi.ejb.UserProfileBean.UserProfileBean() 0015 ");
     }
 
 	/*
@@ -232,11 +233,18 @@ public class UserProfileBean implements UserProfile {
 	 * @param newPassword the new plain text password 
 	 */
 	public void changeUserToken(final char [] newPassword) {
-    	System.out.println("com.yardi.ejb.UserProfileBean.changeUserToken() 0002 ");
+    	System.out.println("com.yardi.ejb.UserProfileBean.changeUserToken() 0002 "
+    			+ "\n    "
+    			+ "Arrays.toString(newPassword)="
+    			+ Arrays.toString(newPassword)
+    			+ "\n    "
+    			+ "String(newPassword)="
+    			+ new String(newPassword)
+    			);
 		isJoined();
 		String userToken="";
 		try {
-			userToken = jargon2Bean.hash(newPassword.toString()); //hash new password
+			userToken = jargon2Bean.hash(new String(newPassword)); //hash new password
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} 
