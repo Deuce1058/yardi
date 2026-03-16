@@ -127,14 +127,12 @@ public class PasswordPolicyBean implements PasswordPolicy {
 			 */
 			pwdPolicy.setPp_cant_contain_pwd(pwdPolicy.getPp_cant_contain_pwd());
 		}
-		//debug
 		System.out.println("com.yardi.ejb.PasswordPolicyBean.find() 0000 "
 				+ "\n "
 				+ "  rrn=" + rrn
 				+ "\n "
 				+ "  pwdPolicy=" + pwdPolicy
 				);
-		//debug
 		return pwdPolicy;
 	}
 
@@ -153,7 +151,155 @@ public class PasswordPolicyBean implements PasswordPolicy {
      */
     @Override
     public PasswordPolicyCopy getPasswordPolicyCopy() {
-    	return PwdPolicyMapper.toCopy(pwdPolicy);
+		System.out.println("com.yardi.ejb.PasswordPolicyBean.getPasswordPolicyCopy() 0001 ");
+    	PasswordPolicyCopy copy = PwdPolicyMapper.toCopy(pwdPolicy);
+		System.out.println("com.yardi.ejb.PasswordPolicyBean.getPasswordPolicyCopy() 0002 "
+				+ "\n    PasswordPolicyCopy"
+				+ "copy.getPp_cant_contain_id()="
+				+ copy.getPp_cant_contain_id()
+				+ ", "
+				+ "copy.getPp_cant_contain_pwd()="
+				+ copy.getPp_cant_contain_pwd()
+				+ ", "
+				+ "copy.getPp_lower_rqd()="
+				+ copy.getPp_lower_rqd()
+				+ ", "
+				+ "copy.getPp_number_rqd()="
+				+ copy.getPp_number_rqd()
+				+ ", "
+				+ "copy.getPp_special_rqd()="
+				+ copy.getPp_special_rqd()
+				+ ", "
+				+ "copy.getPp_upper_rqd()="
+				+ copy.getPp_upper_rqd()
+				+ ", "
+				+ "copy.getPpDays()="
+				+ copy.getPpDays()
+				+ ", "
+				+ "copy.getPpLowerRqd()="
+				+ copy.getPpLowerRqd()
+				+ ", "
+				+ "copy.getPpMaxPwdLen()="
+				+ copy.getPpMaxPwdLen()
+				+ ", "
+				+ "copy.getPpMaxRepeatChar()="
+				+ copy.getPpMaxRepeatChar()
+				+ ", "
+				+ "copy.getPpMaxSignonAttempts()="				
+				+ copy.getPpMaxSignonAttempts()
+				+ ", "
+				+ "copy.getPpNbrDigits()="
+				+ copy.getPpNbrDigits()
+				+ ", "
+				+ "copy.getPpNbrLower()="
+				+ copy.getPpNbrLower()
+				+ ", "
+				+ "copy.getPpNbrSpecial()="
+				+ copy.getPpNbrSpecial()
+				+ ", "
+				+ "copy.getPpNbrUnique()="
+				+ copy.getPpNbrUnique()
+				+ ", "
+				+ "copy.getPpNbrUpper()="
+				+ copy.getPpNbrUpper()
+				+ ", "
+				+ "copy.getPpNumberRqd()="
+				+ copy.getPpNumberRqd()
+				+ ", "
+				+ "copy.getPpPwdMinLen()="
+				+ copy.getPpPwdMinLen()
+				+ ", "
+				+ "copy.getPpRrn()="
+				+ copy.getPpRrn()
+				+ ", "
+				+ "copy.getPpSpecialRqd()="
+				+ copy.getPpSpecialRqd()
+				+ ", "
+				+ "copy.getPpTempPwdTtl()="
+				+ copy.getPpTempPwdTtl()				
+				+ ", "
+				+ "copy.getPpUpperRqd()="
+				+ copy.getPpUpperRqd()
+				+ ", "
+				+ "copy.isPpCantContainId()="
+				+ copy.isPpCantContainId()
+				+ ", "
+				+ "copy.isPpCantContainPwd()="
+				+ copy.isPpCantContainPwd()
+				+ "\n    Pwd_Policy"
+				+ "pwdPolicy.getPp_cant_contain_id()="
+				+ pwdPolicy.getPp_cant_contain_id()
+				+ ", "
+				+ "pwdPolicy.getPp_cant_contain_pwd()="
+				+ pwdPolicy.getPp_cant_contain_pwd()
+				+ ", "
+				+ "pwdPolicy.getPp_lower_rqd()="
+				+ pwdPolicy.getPp_lower_rqd()
+				+ ", "
+				+ "pwdPolicy.getPp_number_rqd()="
+				+ pwdPolicy.getPp_number_rqd()
+				+ ", "
+				+ "pwdPolicy.getPp_special_rqd()="
+				+ pwdPolicy.getPp_special_rqd()
+				+ ", "
+				+ "pwdPolicy.getPp_upper_rqd()="
+				+ pwdPolicy.getPp_upper_rqd()
+				+ ", "
+				+ "pwdPolicy.getPpDays()="
+				+ pwdPolicy.getPpDays()
+				+ ", "
+				+ "pwdPolicy.getPpLowerRqd()="
+				+ pwdPolicy.getPpLowerRqd()
+				+ ", "
+				+ "pwdPolicy.getPpMaxPwdLen()="
+				+ pwdPolicy.getPpMaxPwdLen()
+				+ ", "
+				+ "pwdPolicy.getPpMaxRepeatChar()="
+				+ pwdPolicy.getPpMaxRepeatChar()
+				+ ", "
+				+ "pwdPolicy.getPpMaxSignonAttempts()="				
+				+ pwdPolicy.getPpMaxSignonAttempts()
+				+ ", "
+				+ "pwdPolicy.getPpNbrDigits()="
+				+ pwdPolicy.getPpNbrDigits()
+				+ ", "
+				+ "pwdPolicy.getPpNbrLower()="
+				+ pwdPolicy.getPpNbrLower()
+				+ ", "
+				+ "pwdPolicy.getPpNbrSpecial()="
+				+ pwdPolicy.getPpNbrSpecial()
+				+ ", "
+				+ "pwdPolicy.getPpNbrUnique()="
+				+ pwdPolicy.getPpNbrUnique()
+				+ ", "
+				+ "pwdPolicy.getPpNbrUpper()="
+				+ pwdPolicy.getPpNbrUpper()
+				+ ", "
+				+ "pwdPolicy.getPpNumberRqd()="
+				+ pwdPolicy.getPpNumberRqd()
+				+ ", "
+				+ "pwdPolicy.getPpPwdMinLen()="
+				+ pwdPolicy.getPpPwdMinLen()
+				+ ", "
+				+ "pwdPolicy.getPpRrn()="
+				+ pwdPolicy.getPpRrn()
+				+ ", "
+				+ "pwdPolicy.getPpSpecialRqd()="
+				+ pwdPolicy.getPpSpecialRqd()
+				+ ", "
+				+ "pwdPolicy.getPpTempPwdTtl()="
+				+ pwdPolicy.getPpTempPwdTtl()				
+				+ ", "
+				+ "pwdPolicy.getPpUpperRqd()="
+				+ pwdPolicy.getPpUpperRqd()
+				+ ", "
+				+ "pwdPolicy.isPpCantContainId()="
+				+ pwdPolicy.isPpCantContainId()
+				+ ", "
+				+ "pwdPolicy.isPpCantContainPwd()="
+				+ pwdPolicy.isPpCantContainPwd()
+				);
+    	return copy;
     }
 	
 
@@ -163,14 +309,10 @@ public class PasswordPolicyBean implements PasswordPolicy {
 	 */
     @Override
     public Pwd_Policy getPwdPolicy() {
-		//debug
 		System.out.println("com.yardi.ejb.PasswordPolicyBean.getPwdPolicy() 000C ");
-		//debug
 		
 		if (pwdPolicy == null) {
-			//debug
 			System.out.println("com.yardi.ejb.PasswordPolicyBean.getPwdPolicy() 0014 ");
-			//debug
 			setPwdPolicy();
 		}
 		
@@ -201,9 +343,7 @@ public class PasswordPolicyBean implements PasswordPolicy {
    	 * <span style="font-family:consolas;">YRD000B Password policy is missing</span>  
 	 */
 	private void setPwdPolicy() {
-		//debug
 		System.out.println("com.yardi.ejb.PasswordPolicyBean.setPwdPolicy() 0010 ");
-		//debug
 		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
 		pwdPolicy = find(1L);
 		
@@ -212,7 +352,6 @@ public class PasswordPolicyBean implements PasswordPolicy {
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
 			return;
 		}
-		//debug
 		System.out.println("com.yardi.ejb.PasswordPolicyBean.setPwdPolicy() 000D "
 			+ "\n"
 			+ "   pwdPolicy="
@@ -220,7 +359,6 @@ public class PasswordPolicyBean implements PasswordPolicy {
 			+ "\n"
 			+ "   feedback="
 			+ feedback);
-		//debug
 	}
 	
 	@Override
