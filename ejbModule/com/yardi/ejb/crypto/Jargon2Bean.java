@@ -27,7 +27,11 @@ public class Jargon2Bean {
 	}
 
 	public String hash(String password) throws NoSuchAlgorithmException {
-		System.out.println("com.yardi.ejb.crypto.Jargon2Bean.hash() 0001 ");
+		System.out.println("com.yardi.ejb.crypto.Jargon2Bean.hash() 0001 "
+				+ "\n    "
+				+ "password="
+				+ password
+				);
 	    Jargon2.Hasher hasher = Jargon2.jargon2Hasher()
 	            .type(Jargon2.Type.ARGON2id) // Argon2i or Argon2id
 	            .memoryCost(65536)           // 64 MB try 131072 128mb, 262144 256mb
@@ -46,7 +50,14 @@ public class Jargon2Bean {
     }
 	
 	public boolean verify(String password, String encodedHash) {
-		System.out.println("com.yardi.ejb.crypto.Jargon2Bean.verify() 0003 ");
+		System.out.println("com.yardi.ejb.crypto.Jargon2Bean.verify() 0003 "
+				+ "/n    "
+				+ "password="
+				+ password
+				+ "/n    "
+				+ "encodedHash="
+				+ encodedHash
+				);
         return Jargon2.jargon2Verifier()
                 .hash(encodedHash)
                 .password(password.getBytes())
