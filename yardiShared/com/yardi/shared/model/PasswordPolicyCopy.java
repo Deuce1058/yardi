@@ -30,52 +30,51 @@ public record PasswordPolicyCopy(
 		short ppTempPwdTtl,
 		Long ppRrn
 ) {
+	public String getPp_cant_contain_id() { return pp_cant_contain_id; }
 
-	public short ppDays() { return ppDays; }
-
-	public short ppNbrUnique() { return ppNbrUnique; }
-
-	public short ppMaxSignonAttempts() { return ppMaxSignonAttempts; }
-
-	public short ppPwdMinLen() { return ppPwdMinLen; }
-
-	public Boolean ppUpperRqd() { return ppUpperRqd; }
-
-	public String pp_upper_rqd() { return pp_upper_rqd; }
-
-	public Boolean ppLowerRqd() { return ppLowerRqd; }
-
-	public String pp_lower_rqd() { return pp_lower_rqd; }
-
-	public Boolean ppNumberRqd() { return ppNumberRqd; }
-
-	public String pp_number_rqd() { return pp_number_rqd; }
-
-	public Boolean ppSpecialRqd() { return ppSpecialRqd; }
-
-	public String pp_special_rqd() { return pp_special_rqd; }
-
-	public Short ppMaxPwdLen() { return ppMaxPwdLen; }
-
-	public Short ppMaxRepeatChar() { return ppMaxRepeatChar; }
-
-	public Short ppNbrDigits() { return ppNbrDigits; }
-
-	public Short ppNbrUpper() { return ppNbrUpper; }
-
-	public Short ppNbrLower() { return ppNbrLower; }
-
-	public Short ppNbrSpecial() { return ppNbrSpecial; }
-
-	public String pp_cant_contain_id() { return pp_cant_contain_id; }
-
-	public boolean ppCantContainId() { return ppCantContainId; }
-
-	public String pp_cant_contain_pwd() { return pp_cant_contain_pwd; }
-
-	public boolean ppCantContainPwd() { return ppCantContainPwd; }
-
-	public short ppTempPwdTtl() { return ppTempPwdTtl; }
-
-	public Long ppRrn() { return ppRrn; }
+	public String getPp_cant_contain_pwd() { return pp_cant_contain_pwd; }
+	
+	public String getPp_lower_rqd() { return pp_lower_rqd; }
+	
+	public String getPp_number_rqd() { return pp_number_rqd; }
+	
+	public String getPp_special_rqd() { return pp_special_rqd; }
+	
+	public String getPp_upper_rqd() { return pp_upper_rqd; }
+	
+	public short getPpDays() { return ppDays; }
+	
+	public Boolean getPpLowerRqd() { return ppLowerRqd; }
+	
+	public Short getPpMaxPwdLen() { return ppMaxPwdLen; }
+	
+	public Short getPpMaxRepeatChar() { return ppMaxRepeatChar; }
+	
+	public short getPpMaxSignonAttempts() { return ppMaxSignonAttempts; }
+	
+	public Short getPpNbrDigits() { return ppNbrDigits; }
+	
+	public Short getPpNbrLower() { return ppNbrLower; }
+	
+	public Short getPpNbrSpecial() { return ppNbrSpecial; }
+	
+	public short getPpNbrUnique() { return ppNbrUnique; }
+	
+	public Short getPpNbrUpper() { return ppNbrUpper; }
+	
+	public Boolean getPpNumberRqd() { return ppNumberRqd; }
+	
+	public short getPpPwdMinLen() { return ppPwdMinLen; }
+	
+	public Long getPpRrn() { return ppRrn; }
+	
+	public Boolean getPpSpecialRqd() { return ppSpecialRqd; }
+	
+	public short getPpTempPwdTtl() { return ppTempPwdTtl; }
+	
+	public Boolean getPpUpperRqd() { return ppUpperRqd; }
+	
+	public boolean isPpCantContainId() { return ppCantContainId; }
+	
+	public boolean isPpCantContainPwd() { return ppCantContainPwd; }
 }
