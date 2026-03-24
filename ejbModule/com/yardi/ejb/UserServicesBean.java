@@ -638,7 +638,12 @@ public class UserServicesBean implements UserServices {
 					userTokens);
 		} catch (PasswordValidationException e) {
 			System.out.println("com.yardi.ejb.UserServicesBean.isPwdValidated() 0010 ");
-			feedback = e.getFullMessage();
+			feedback = e.getFailedRule().getMsgId() + "=" + e.getMessage();
+			System.out.println("com.yardi.ejb.UserServicesBean.isPwdValidated() 0023 "
+					+ "\n    "
+					+ "feedback="
+					+ feedback
+					);
 			rollback(tx);
 			return false;
 		}
