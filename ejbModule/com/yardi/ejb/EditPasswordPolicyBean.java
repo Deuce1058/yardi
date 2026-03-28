@@ -1,15 +1,17 @@
 package com.yardi.ejb;
 
+import com.yardi.ejb.model.Pwd_Policy;
+import com.yardi.shared.QSECOFR.EditPwdPolicyRequest;
+import com.yardi.shared.model.PasswordPolicyCopy;
+import com.yardi.shared.model.PasswordPolicyLike;
+
 import jakarta.annotation.PostConstruct;
-//import jakarta.ejb.EJB;
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-
-import com.yardi.ejb.model.Pwd_Policy;
-import com.yardi.shared.QSECOFR.EditPwdPolicyRequest;
 
 /**
  * Session Bean implementation of methods for editing password policy  
@@ -22,6 +24,8 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
 	@PersistenceContext(unitName="yardi")
 	private EntityManager em;
 
+	@EJB private PasswordPolicyBean passwordPolicyBean; 
+	
 	/**
 	 * Default constructor 
 	 */
@@ -51,9 +55,7 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
 				.setParameter("rrn", rrn)
 				.getSingleResult();
 		} catch (NoResultException e) {
-			///debug
 			System.out.println("com.yardi.ejb.EditPasswordPolicyBean find() exception 000A ");
-			//debug
 			e.printStackTrace();
 		}
 		/* if the password policy was found init password policy entity fields using the values from the database */
@@ -65,27 +67,34 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
 			pwdPolicy.setPp_cant_contain_id(pwdPolicy.getPp_cant_contain_id());
 			pwdPolicy.setPp_cant_contain_pwd(pwdPolicy.getPp_cant_contain_pwd());
 		}
-		//debug
+
 		System.out.println("com.yardi.ejb.EditPasswordPolicyBean find() 0009 "
 				+ "\n "
 				+ "  rrn=" + rrn
 				+ "\n "
 				+ "  pwdPolicy=" + pwdPolicy
 				);
-		//debug
 		return pwdPolicy;
+	} 
+	
+	
+	/**
+	 * A factory that produces an {@link com.yardi.shared.QSECOFR.EditPwdPolicyRequest EditPwdPolicyRequest} using {@link com.yardi.shared.model.PasswordPolicyCopy PasswordPolicyCopy} 
+	 * as the source
+	 * @return {@link com.yardi.shared.QSECOFR.EditPwdPolicyRequest EditPwdPolicyRequest} container which holds all of the password policy elements that can be edited
+	 */
+	@Override 
+	public EditPwdPolicyRequest fromPolicyCopy() {
+		PasswordPolicyCopy copy = passwordPolicyBean.getPasswordPolicyCopy();
+		return newEditPwdPolicyRequest(copy);
 	}
 
     /**
-     * Return a {@link com.yardi.shared.QSECOFR.EditPwdPolicyRequest com.yardi.shared.QSECOFR.EditPwdPolicyRequest} container.<p>
-     * 
-     * Clients use this method to obtain a container which holds all of the password policy elements that can be modified by the user. 
-     * The {@link com.yardi.ejb.model.Pwd_Policy com.yardi.ejb.model.Pwd_Policy} entity is found and then mapped to the <code>EditPwdPolicyRequest</code> container 
-     * which is then returned.
-     * 
-     * @return a container which holds all of the password policy elements that can be modified by the user.
+     * A factory that produces a {@link com.yardi.shared.QSECOFR.EditPwdPolicyRequest EditPwdPolicyRequest} using {@link com.yardi.ejb.model.Pwd_Policy Pwd_Policy} as the source
+     * @return {@link com.yardi.shared.QSECOFR.EditPwdPolicyRequest EditPwdPolicyRequest} container which holds all of the password policy elements that can be modified by the user.
      */
-	public EditPwdPolicyRequest getPwd_Policy() {
+    @Override
+	public EditPwdPolicyRequest fromPwd_Policy() {
     	System.out.println("com.yardi.ejb.EditPasswordPolicyBean getPwd_Policy() 0007 ");
     	Pwd_Policy pwdPolicy = find(1L);
     	System.out.println("com.yardi.ejb.EditPasswordPolicyBean getPwd_Policy() 0003 "
@@ -105,10 +114,8 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
      * @param pwdPolicy The password policy returned from the {@link com.yardi.ejb.PasswordPolicyBean#getPwdPolicy() com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()}
      * @return a container which holds all of the password policy elements that can be modified by the user.
      */
-    private EditPwdPolicyRequest newEditPwdPolicyRequest(Pwd_Policy pwdPolicy) {
-    	//debug
+    private EditPwdPolicyRequest newEditPwdPolicyRequest(PasswordPolicyLike pwdPolicy) {
     	System.out.println("com.yardi.ejb.EditPasswordPolicyBean newEditPwdPolicyReqest() 0005 ");
-    	//debug
     	EditPwdPolicyRequest editPwdPolicyRequest = new EditPwdPolicyRequest();
     	String s[] = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("=");
     	editPwdPolicyRequest.setMsgId(s[0]);
@@ -167,14 +174,12 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
     		editPwdPolicyRequest.setCantContainId(pwdPolicy.getPp_cant_contain_id());
     		editPwdPolicyRequest.setCantContainPwd(pwdPolicy.getPp_cant_contain_pwd());
     	}
-    	
-    	//debug
+
     	System.out.println("com.yardi.ejb.EditPasswordPolicyBean newEditPwdPolicyRequest() 0006 "
     			+ "\n "
     			+ "   editPwdPolicyRequest="
     			+ editPwdPolicyRequest.toString()
     			);
-    	//debug
     	return editPwdPolicyRequest;	
     }
     
@@ -189,7 +194,7 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
 	 * @param editPwdPolicyRequest a container that holds all the password policy elements which can be modified by the user. 	  
 	 * @return password policy entity
 	 */	
-	public Pwd_Policy newPwdPolicy(EditPwdPolicyRequest editPwdPolicyRequest) {
+	private Pwd_Policy newPwdPolicy(EditPwdPolicyRequest editPwdPolicyRequest) {
 		System.out.println("com.yardi.ejb.EditPasswordPolicyBean newPwdPolicy() 0002 ");
 		Pwd_Policy newPwdPolicy = new Pwd_Policy();
 		newPwdPolicy.setPpDays             (Short.parseShort(editPwdPolicyRequest.getPwdLifeInDays()));
@@ -258,6 +263,7 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
 	 * @param editPwdPolicyRequest a container which holds all the password policy elements that can be modified
 	 * by the user. 
 	 */ 
+    @Override
 	public void persist(EditPwdPolicyRequest editPwdPolicyRequest) {
     	System.out.println("com.yardi.ejb.EditPasswordPolicyBean persist() 0001 ");
     	Pwd_Policy newPwdPolicy = newPwdPolicy(editPwdPolicyRequest);
@@ -285,6 +291,7 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
 	 * @param editPwdPolicyRequest an <code>EditPwdPolicyRequest</code> container which holds all the password policy elements that can be modified
 	 * by the user. 
      */
+    @Override
 	public void updateAll(EditPwdPolicyRequest editPwdPolicyRequest) {
     	System.out.println("com.yardi.ejb.EditPasswordPolicyBean updateAll() 0000 ");
     	em.merge(newPwdPolicy(editPwdPolicyRequest));
