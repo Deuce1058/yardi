@@ -51,6 +51,7 @@ public class YardiConstants {
 	public static final String REQUEST_SESSION_INFO = "sessionInfo";
 	public static final String UPDATE_SESSION_INFO = "updateSession";
 	public static final int DEFAULT_USER_GROUP = 11;
+	public static final String PASSWORD_POLICY_COPY = "passwordPolicyCopy";
 	
 	public void testPassword(String pwd) {
 		// useful for testing password rules
