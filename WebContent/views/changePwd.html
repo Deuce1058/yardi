@@ -151,6 +151,8 @@
     </div>
   </div>
 <script>
+  var ajaxData = '';
+
   $(function () {
     $('#username').val(parent.userName);
     window.parent.document.title = 'Yardi Change Password';
@@ -164,8 +166,10 @@
     https://www.codeply.com/go/bp/ICbHgauH3Y working example for above question
     http://www.java2s.com/example/html-css/bootstrap/creating-custom-template-for-popovers.html another working example
     */
-    doPost(rqsPwdPolicy(), '../PwdPolicy');
-    $('#login').click(function (e) {
+    loadPwdPolicy();
+
+    $('#login').click(async function (e) {
+      e.preventDefault();
 
       if (navigator.cookieEnabled == false) {
         $('#jsCookiesAlert').modal('show');
@@ -174,40 +178,47 @@
       $('#form-feedback').text('');
       
       if (validityCheck() && relationshipCheck()) {
-        var ajaxData = {
+        var rqsdta = {
           "userName"       : $('#username').val(),
           "password"       : $('#oldPassword').val(),
           "newPassword"    : $('#newPassword').val(),
           "msgID"          : '',
           "msgDescription" : '',
           "chgPwd"         : 'true'
-        } // ajaxData =
-
-        doPost(ajaxData, '../doLogin');
-      }
-      
-      e.preventDefault();
-    }); //#login click
-  }); //document ready
+        }
+        
+        try {
+          ajaxData = await doPost(rqsdta, '../doLogin');
+          console.log('chgPwd 0002');
+          loginResponse(ajaxData);
+        } catch {
+          console.log('Login error:', error);
+        }        
+      }      
+    }); 
+  }); 
   
 function doPost(ajaxData, url) {
-  $.ajax({
-    type:     'POST',
-    url:      url,
-    data:     JSON.stringify(ajaxData),
-    dataType: "json", 
-    success:  function (responseData) {
-                if (url==='../PwdPolicy') {
-                  console.log('chgPwd 0001');
-                  pwdPolicyResponse(responseData);
-                }
-                if (url==='../doLogin') {
-                  console.log('chgPwd 0002');
-                  loginResponse(responseData);
-                }
-              }
-    });
-  }
+  console.log('chgPwd 0001');
+  return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formItems)
+  }).then(response => {
+      if (!response.ok) {
+        throw new Error(`Network fail. Response status: ${response.status}`);
+      }
+      return response.json();
+  });
+}
+
+async function loadPwdPolicy() {
+  try {
+    ajaxData = await doPost(rqsPwdPolicy(), '../PwdPolicy');
+    pwdPolicyResponse(ajaxData);
+  } catch (error) {
+    console.error('PwdPolicy error:', error);
+  }} 
 
 function validityCheck() {
   //iterate over all the input controls and perform basic validiity checking
@@ -321,7 +332,7 @@ function addAndRemoveClasses (
 
 function rqsPwdPolicy() {
   var ajaxData = {
-        "action"           : "find",
+        "action"           : "passwordPolicyCopy",
         "msgId"            : "",
         "msgDescription"   : "",
         "pwdLifeInDays"    : "",
