@@ -4,7 +4,7 @@ package com.yardi.shared.model;
  * Replacement for entity Pwd_Policy
  */
 
-public record PasswordPolicyCopy(
+public record PasswordPolicyCopy (
 		short ppDays,
 		short ppNbrUnique,
 		short ppMaxSignonAttempts,
@@ -29,7 +29,7 @@ public record PasswordPolicyCopy(
 		boolean ppCantContainPwd,
 		short ppTempPwdTtl,
 		Long ppRrn
-) {
+) implements PasswordPolicyLike {
 	public String getPp_cant_contain_id() { return pp_cant_contain_id; }
 
 	public String getPp_cant_contain_pwd() { return pp_cant_contain_pwd; }
@@ -66,7 +66,7 @@ public record PasswordPolicyCopy(
 	
 	public short getPpPwdMinLen() { return ppPwdMinLen; }
 	
-	public Long getPpRrn() { return ppRrn; }
+	public long getPpRrn() { return ppRrn; }
 	
 	public Boolean getPpSpecialRqd() { return ppSpecialRqd; }
 	
