@@ -3,6 +3,18 @@ package com.yardi.ejb.test;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yardi.ejb.PasswordPolicy;
+import com.yardi.ejb.UniqueTokens;
+import com.yardi.ejb.Unique_Tokens;
+import com.yardi.ejb.UserGroups;
+import com.yardi.ejb.UserProfile;
+import com.yardi.ejb.UserServices;
+import com.yardi.shared.model.PasswordPolicyCopy;
+import com.yardi.shared.test.LoginStateRequest;
+import com.yardi.shared.userServices.LoginInitialPage;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJB;
@@ -17,45 +29,29 @@ import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 
-import com.yardi.ejb.UserGroups;
-import com.yardi.ejb.UserProfile;
-import com.yardi.ejb.PasswordPolicy;
-import com.yardi.ejb.UniqueTokens;
-import com.yardi.ejb.Unique_Tokens;
-import com.yardi.ejb.model.Pwd_Policy;
-import com.yardi.shared.test.LoginStateRequest;
-import com.yardi.shared.userServices.LoginInitialPage;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Stateful
 @TransactionManagement(TransactionManagementType.BEAN)
 public class LoginStateBean implements LoginState {
 	private LoginStateRequest loginStateRequest;
-	private Pwd_Policy pwdPolicy = null;
+	private PasswordPolicyCopy pwdPolicy = null;
 	private String feedback;
 	@EJB UserProfile userProfileBean; 
 	@EJB UniqueTokens uniqueTokensBean;
 	@EJB PasswordPolicy passwordPolicyBean;
 	@EJB UserGroups userGroupsBean;
 	@Resource UserTransaction tx;
+	@EJB UserServices userServicesBean;
 	
     public LoginStateBean() {
-		//debug
     	System.out.println("com.yardi.ejb.test.LoginStateBean LoginStateBean() ");
-		//debug
     }
 
 	private boolean findUserID() {
-		//debug
     	System.out.println("com.yardi.ejb.test.LoginStateBean findUserID() 0000 ");
-		//debug
   		userGroupsBean.find(loginStateRequest.getUserName());
 		
 		if (userGroupsBean.getLoginUserProfile()==null) {
-			//debug
 	    	System.out.println("com.yardi.ejb.test.LoginStateBean findUserID() 0001 ");
-			//debug
 			String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD000D.split("=");
 			loginStateRequest.setMsgid(s[0]);
 			loginStateRequest.setMsgd(s[1]);
@@ -65,30 +61,28 @@ public class LoginStateBean implements LoginState {
 		userProfileBean.setUserProfile(userGroupsBean.getLoginUserProfile());
 		return true;
 	}
-	
+
+	@Override
 	public String getFeedback() {
 		return feedback;
 	}
 
+	@Override
 	public LoginStateRequest getLoginStateRequest() {
 		return loginStateRequest;
 	}
 
-	private Pwd_Policy getPwdPolicy() {
-		//debug
+	private PasswordPolicyCopy getPwdPolicy() {
 		System.out.println("com.yardi.ejb.test.LoginStateBean getPwpolicy() 0002 ");
-		//debug
 		
 		if (pwdPolicy == null) {
 			setPwdPolicy();
 		}
 		
-		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean getPwdPolicy 0003 "
 			+ "\n"
 			+ "   pwdPolicy="
 			+ pwdPolicy);
-		//debug
 		return pwdPolicy;
 	}
 
@@ -96,10 +90,9 @@ public class LoginStateBean implements LoginState {
 		return userProfileBean.doesUserExist(loginStateRequest.getUserName());
 	}
 	
+	@Override
 	public void mapEntities() {
-		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0004 ");
-		//debug
 		try {
 			tx.begin();
 			String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD0000.split("=");
@@ -121,47 +114,31 @@ public class LoginStateBean implements LoginState {
 
 			tx.commit();
 		} catch (NotSupportedException e) {
-			//debug
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0012 ");
-			//debug
 			e.printStackTrace();
 		} catch (SystemException e) {
-			//debug
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0013 ");
-			//debug
 			e.printStackTrace();
 		} catch (SecurityException e) {
-			//debug
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0014 ");
-			//debug
 			e.printStackTrace();
 		} catch (IllegalStateException e) {
-			//debug
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0015 ");
-			//debug
 			e.printStackTrace();
 		} catch (RollbackException e) {
-			//debug
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0016 ");
-			//debug
 			e.printStackTrace();
 		} catch (HeuristicMixedException e) {
-			//debug
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0017 ");
-			//debug
 			e.printStackTrace();
 		} catch (HeuristicRollbackException e) {
-			//debug
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapEntities() 0018 ");
-			//debug
 			e.printStackTrace();
 		}
 	}
 	
 	private void mapPwdPolicy() {
-		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean mapPwdPolicy() 0005 ");
-		//debug
 		loginStateRequest.setPpDays             (Short.toString(pwdPolicy.getPpDays()));
 		loginStateRequest.setPpTempPwdTtl       (Short.toString(pwdPolicy.getPpTempPwdTtl()));
 		loginStateRequest.setPpNbrUnique        (Short.toString(pwdPolicy.getPpNbrUnique()));
@@ -230,26 +207,20 @@ public class LoginStateBean implements LoginState {
 	}
 
 	private void mapSessionsTable() {
-		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean mapSessionsTable() 0006 ");
-		//debug
 		loginStateRequest.setStSesssionId("");
 		loginStateRequest.setStSessionToken("");
 		loginStateRequest.setStLastRequest("");
 		loginStateRequest.setStLastActiveDate("");
-		/*debug*/
 		if (userGroupsBean==null) {
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapSessionsTable() 0010 ");
 		}
 		if (userGroupsBean.getLoginSessionTable()==null) {
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapSessionsTable() 0011 ");
 		}
-		/*debug*/
 		
 		if (userGroupsBean.getLoginSessionTable() != null) {
-			//debug
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapSessionsTable() 000F ");
-			//debug
 			loginStateRequest.setStSesssionId    (userGroupsBean.getLoginSessionTable().getStSessionId());
 			loginStateRequest.setStSessionToken  (userGroupsBean.getLoginSessionTable().getStSessionToken());
 			loginStateRequest.setStLastRequest   (userGroupsBean.getLoginSessionTable().getStLastRequest());
@@ -258,15 +229,11 @@ public class LoginStateBean implements LoginState {
 	}
 
 	private void mapUniqueTokens() {
-		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean mapUniqueTokens() 0007 ");
-		//debug
 		Vector<Unique_Tokens> uniqueTokens = uniqueTokensBean.findTokens(loginStateRequest.getUserName());
 		
 		if (uniqueTokens == null) {
-			//debug
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapUniqueTokens() 0008 ");
-			//debug
 			uniqueTokens = new Vector<Unique_Tokens>(); 
 		}
 		
@@ -279,9 +246,7 @@ public class LoginStateBean implements LoginState {
 	}
 	
 	private void mapUserGroups() {
-		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean mapUserGroups() 0009 ");
-		//debug
 		Vector<LoginInitialPage> initialPageList = userGroupsBean.getInitialPageList();
         ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -292,9 +257,7 @@ public class LoginStateBean implements LoginState {
 	}			
 	
 	private void mapUserProfile() {
-		//debug 
 		System.out.println("com.yardi.ejb.test.LoginStateBean mapUserProfile() 000A ");
-		//debug
 		loginStateRequest.setUptoken        (userGroupsBean.getLoginUserProfile().getUptoken());
 		loginStateRequest.setUpTempPwd      (userGroupsBean.getLoginUserProfile().getUpTempPwd());
 		loginStateRequest.setUpPwdexpd      (stringifyDate(userGroupsBean.getLoginUserProfile().getUpPwdexpd()));
@@ -314,38 +277,32 @@ public class LoginStateBean implements LoginState {
 	
 	@PostConstruct
     private void postConstructCallback() {
-		//debug
     	System.out.println("com.yardi.ejb.test.LoginStateBean postConstructCallback() ");
-		//debug
     	getPwdPolicy();
+    	userServicesBean.toString();
     }
 
 	@Remove
+	@Override
 	public void removeBean() {
-		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean removeBean() 000B ");
-		//debug
 		userProfileBean.removeBean();
 		userGroupsBean.removeBean();
 	}
 
+	@Override
 	public void setLoginStateRequest(LoginStateRequest loginStsteRequest) {
-		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean setLoginStateRequest() 000E ");
-		//debug
 		this.loginStateRequest = loginStsteRequest;
 	}
 
 	private void setPwdPolicy() {
-		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean setPwdPolicy() 000C ");
-		//debug
-		pwdPolicy = passwordPolicyBean.getPwdPolicy();
+		pwdPolicy = passwordPolicyBean.getPasswordPolicyCopy();
 		
 		if (pwdPolicy == null) {
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
 		}
-		//debug
 		System.out.println("com.yardi.ejb.test.LoginStateBean setPwdPolicy() 000D "
 			+ "\n"
 			+ "   pwdPolicy="
@@ -353,7 +310,6 @@ public class LoginStateBean implements LoginState {
 			+ "\n"
 			+ "   feedback="
 			+ feedback);
-		//debug
 	}
 	
 	private String stringifyDate(java.sql.Timestamp ts) {
