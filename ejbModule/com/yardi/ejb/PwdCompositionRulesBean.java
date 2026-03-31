@@ -7,11 +7,11 @@ import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.ejb.userServices.PasswordRule;
 import com.yardi.ejb.userServices.PasswordValidationContext;
 import com.yardi.ejb.userServices.PasswordValidationException;
+import com.yardi.shared.model.PasswordPolicyCopy;
 import com.yardi.shared.userServices.PasswordStatistics;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
-import jakarta.ejb.Remove;
 import jakarta.ejb.Stateless;
 
 /**
@@ -31,7 +31,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 	/**
 	 * Reference to Pwd_Policy entity obtained from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy().
 	 */
-	private Pwd_Policy pwdPolicy;
+	private PasswordPolicyCopy pwdPolicy;
 	/**
 	 * Injected reference to com.yardi.ejb.PasswordPolicyBean.
 	 */
@@ -104,7 +104,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 	 * Returns the password policy obtained from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy().
 	 * @return reference to Pwd_Policy entity
 	 */
-    private Pwd_Policy getPwdPolicy() {
+    private PasswordPolicyCopy getPwdPolicy() {
     	System.out.println("com.yardi.ejb.PwdCompositionRulesBean.getPwdPolicy() 001A ");
 		
 		if (pwdPolicy==null) {
@@ -139,7 +139,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 	 */
 	private void setPwdPolicy() {
 		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.setPwdPolicy() 002D ");
-		pwdPolicy = passwordPolicyBean.getPwdPolicy();
+		pwdPolicy = passwordPolicyBean.getPasswordPolicyCopy();
 		
 		if (pwdPolicy == null) {
 			System.out.println("com.yardi.ejb.PwdCompositionRulesBean.setPwdPolicy() pwdPolicy==null 002E ");
