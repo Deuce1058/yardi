@@ -7,11 +7,11 @@ import java.util.Set;
 
 import com.yardi.ejb.crypto.Jargon2Bean;
 import com.yardi.ejb.model.Full_User_Profile;
-import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.ejb.model.Reset_Password;
 import com.yardi.ejb.model.Update_Temp_Password;
 import com.yardi.ejb.model.User_Profile;
 import com.yardi.ejb.util.Utils;
+import com.yardi.shared.model.PasswordPolicyCopy;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
@@ -49,7 +49,7 @@ public class UserProfileBean implements UserProfile {
 	/**
 	 * The password policy obtained from com.yardi.ejb.PasswordPolicyBean.
 	 */
-	private Pwd_Policy pwdPolicy;
+	private PasswordPolicyCopy pwdPolicy;
 	/**
 	 * The User_Profile entity injected by clients
 	 */
@@ -166,6 +166,7 @@ public class UserProfileBean implements UserProfile {
      * @param userIsChangingPassword boolean indicating whether user is in the process of changing their password
      * @return boolean indicating whether authentication was successful 
      */
+    @Override
 	public boolean authenticate(String userName, String password, boolean userIsChangingPassword) {
 		System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 0013 ");
 		isJoined();
@@ -232,6 +233,7 @@ public class UserProfileBean implements UserProfile {
 	 * 
 	 * @param newPassword the new plain text password 
 	 */
+    @Override
 	public void changeUserToken(final char [] newPassword) {
     	System.out.println("com.yardi.ejb.UserProfileBean.changeUserToken() 0002 "
     			+ "\n    "
@@ -273,6 +275,7 @@ public class UserProfileBean implements UserProfile {
 	 * @param <T> generic type
 	 * @param entity the entity to detach
 	 */
+    @Override
 	public <T> void detachEntity(T entity) {
         System.out.println("com.yardi.ejb.UserProfileBean.detachEntity() 0035");
         
@@ -324,6 +327,7 @@ public class UserProfileBean implements UserProfile {
 	 * @param userId user ID
 	 * @return boolean indicating whether a row exists in database table USER_PROFILE for the given user ID
 	 */
+    @Override
 	public boolean doesUserExist(String userId) {
 		System.out.println("com.yardi.ejb.UserProfileBean.doesUserExist() 0034 ");
 		isJoined();
@@ -345,6 +349,7 @@ public class UserProfileBean implements UserProfile {
      * @param userName the entity to find.
      * @return User_Profile entity that matches <i>userName</i>.
      */
+    @Override
     public User_Profile find(String userName) {
     	return em.find(User_Profile.class, userName);
     }
@@ -361,6 +366,7 @@ public class UserProfileBean implements UserProfile {
 	 * @param userID the Full_User_Profile to find
 	 * @return Full_User_Profile that matches <i>userID</i>
 	 */
+    @Override
 	public Full_User_Profile findFullUserProfile(String userID) {
 		System.out.println("com.yardi.ejb.UserProfileBean.findFullUserProfile() 0022 ");
 		isJoined();
@@ -384,6 +390,7 @@ public class UserProfileBean implements UserProfile {
 	 * @param userID user ID
 	 * @return entity that holds user profile details to be displayed on the password reset page
 	 */
+    @Override
 	public Reset_Password findUserProfileForPwdReset(String userID) {
 		System.out.println("com.yardi.ejb.UserProfileBean.findUserProfileForPwdReset() 0039 ");
 		utilsBean.isJoined(em);
@@ -397,6 +404,7 @@ public class UserProfileBean implements UserProfile {
 	 * Clients call <i>getFeedback()</i> to determine the status of the most recent method call that provides feedback.
 	 * @return feedback from the most recent method call that provides feedback.
 	 */
+    @Override
     public String getFeedback() {
 		return feedback;
 	}
@@ -406,7 +414,7 @@ public class UserProfileBean implements UserProfile {
      * 
      * @return Pwd_Policy entity 
      */
-    private Pwd_Policy getPwdPolicy() {
+    private PasswordPolicyCopy getPwdPolicy() {
     	System.out.println("com.yardi.ejb.UserProfileBean.getPwdPolicy() 001C ");
     	isJoined();
 		
@@ -422,7 +430,6 @@ public class UserProfileBean implements UserProfile {
 			);
 
 		System.out.println("com.yardi.ejb.UserProfileBean.getPwdPolicy() 001E ");
-    	isManaged(pwdPolicy);
 		return pwdPolicy;
 	}
     
@@ -430,6 +437,7 @@ public class UserProfileBean implements UserProfile {
      * Return the class's reference to the User_Profile entity stored in the <i>userProfile</i> field
      * @return reference to the User_Profile entity
      */
+    @Override
     public User_Profile getUserProfile() {
 		return userProfile;
 	}
@@ -614,44 +622,6 @@ public class UserProfileBean implements UserProfile {
 	}
 	
 	/**
-	 * Test whether the persistence context contains the given Pwd_Policy.<p>
-	 * 
-	 * If <i>pwdPolicy</i> is null return false.<br><br>
-	 * 
-	 * If <i>pwdPolicy</i> is not an entity return false
-	 * 
-	 * 
-	 * @param pwdPolicy the Pwd_Policy entity to test
-	 * @return boolean indicating whether the persistence context contains the given Pwd_Policy 
-	 */
-	private boolean isManaged(Pwd_Policy pwdPolicy) {
-	  	System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 002E ");
-
-  		if (pwdPolicy==null) {
-  	  		System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 002F "
-  	  				+ "\n"
-	  				+ "   em.contains(Pwd_Policy)=false"
-	  				);
-	  		return false;
-  		} 
-  		
-  		if (isEntity(pwdPolicy.getClass())==false) {
-  	  		System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 0030 "
-	  				+ "\n"
-	  				+ "   em.contains(Pwd_Policy)=false"
-	  				);
-	  		return false;
-  		}
-
-		System.out.println("com.yardi.ejb.UserProfileBean.isManaged() 001D "
-				+ "\n "
-				+ "   em.contains(Pwd_Policy)="
-				+ em.contains(pwdPolicy)
-				);
-    	return em.contains(pwdPolicy);
-	}
-	
-	/**
 	 * Test whether the persistence context contains the given User_Profile.<p>
 	 * 
 	 * If <i>userProfile</i> is null return false.<br><br>
@@ -737,6 +707,7 @@ public class UserProfileBean implements UserProfile {
      * 
      * Merges the state in the <i>userProfile</i> field into the persistence context.
      */
+    @Override
     public void loginSuccess() {
     	System.out.println("com.yardi.ejb.UserProfileBean.loginSuccess() 0000 ");
 		isJoined();
@@ -765,6 +736,7 @@ public class UserProfileBean implements UserProfile {
      * @param userProfile entity containing the state to be merged
      * @return the managed Full_User_Profile that the state was merged to
      */
+    @Override
     public Full_User_Profile merge(Full_User_Profile userProfile) {
     	System.out.println("com.yardi.ejb.UserProfileBean.merge() 0026 ");
     	isJoined();
@@ -780,6 +752,7 @@ public class UserProfileBean implements UserProfile {
 	 * @param updateTempPassword entity used to assign a temporary password
 	 * @return a reference to the managed Update_Temp_Password entity 
 	 */
+    @Override
 	public Update_Temp_Password merge(Update_Temp_Password updateTempPassword) {
 		System.out.println("com.yardi.ejb.UserProfileBean.merge() 003C ");
 		utilsBean.isJoined(em);
@@ -794,6 +767,7 @@ public class UserProfileBean implements UserProfile {
      * 
      * @param userProfile the Full_User_Profile to persist.
      */
+    @Override
 	public void persist(Full_User_Profile userProfile) {
     	System.out.println("com.yardi.ejb.UserProfileBean.persist() 0028 ");
 		isJoined();
@@ -815,6 +789,7 @@ public class UserProfileBean implements UserProfile {
 	 * @param <T> Generic type
 	 * @param entity the entity to refresh. 
 	 */
+    @Override
 	public <T> void refreshEntity(T entity) {
         System.out.println("com.yardi.ejb.UserProfileBean.refreshEntity() 0037 ");
         
@@ -832,6 +807,7 @@ public class UserProfileBean implements UserProfile {
 	 *  
 	 * @param userProfile the entity to remove.
 	 */
+    @Override
 	public void remove(com.yardi.ejb.model.Full_User_Profile userProfile) {
     	System.out.println("com.yardi.ejb.UserProfileBean.remove() 0024 ");
 		isJoined();
@@ -848,6 +824,7 @@ public class UserProfileBean implements UserProfile {
 	 *  Stateful session bean remove method. Called by clients to release resources used by com.yardi.ejb.UserProfileBean.
 	 */
 	@Remove
+    @Override
 	public void removeBean() {
 		System.out.println("com.yardi.ejb.UserProfileBean.removeBean() 0007 ");
 	}
@@ -877,7 +854,7 @@ public class UserProfileBean implements UserProfile {
 	private void setPwdPolicy() {
 		System.out.println("com.yardi.ejb.UserProfileBean.setPwdPolicy() 0014 ");
 		isJoined();
-		pwdPolicy = passwordPolicyBean.getPwdPolicy();
+		pwdPolicy = passwordPolicyBean.getPasswordPolicyCopy();
 		
 		if (pwdPolicy == null) {
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
@@ -891,7 +868,6 @@ public class UserProfileBean implements UserProfile {
 			+ "\n"
 			+ "   feedback="
 			+ feedback);
-		isManaged(pwdPolicy);
 	}
 	
 	/**
@@ -900,6 +876,7 @@ public class UserProfileBean implements UserProfile {
 	 * The state stored in the <i>userProfile</i> field is merged into the persistence context.
 	 * @param pwdAttempts the value to set
 	 */
+    @Override
 	public void setUpPwdAttempts(short pwdAttempts) {
     	System.out.println("com.yardi.ejb.UserProfileBean.setUpPwdAttempts() 0005 ");
 		isJoined();
@@ -923,6 +900,7 @@ public class UserProfileBean implements UserProfile {
 	 * 
 	 * @param userProfile the User_Profile entity to inject. 
 	 */
+    @Override
 	public void setUserProfile(User_Profile userProfile) {
 		isJoined();
 		this.userProfile = userProfile;
