@@ -7,11 +7,11 @@ import com.yardi.ejb.PasswordPolicy;
 import com.yardi.ejb.UniqueTokens;
 import com.yardi.ejb.UserProfile;
 import com.yardi.ejb.crypto.Jargon2Bean;
-import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.ejb.model.Reset_Password;
 import com.yardi.ejb.model.Update_Temp_Password;
 import com.yardi.ejb.util.Utils;
 import com.yardi.shared.helpdesk.ResetPwdRequest;
+import com.yardi.shared.model.PasswordPolicyCopy;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
@@ -33,7 +33,7 @@ import jakarta.transaction.UserTransaction;
 public class PwdResetCtrlBean implements PwdResetCtrl {
 	private String feedback;
 	@EJB private PasswordPolicy passwordPolicyBean;
-	private Pwd_Policy pwd_Policy = null;
+	private PasswordPolicyCopy pwd_Policy = null;
 	private Reset_Password reset_Password;
 	private ResetPwdRequest resetPwdRequest;
 	@Resource UserTransaction tx;
@@ -63,6 +63,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
      *  YRD000D No such user name,<br>
      *  YRD001F placeholder for java.lang.Exception.getMessage()
      */
+	@Override
     public ResetPwdRequest findUserDetails() {
     	System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.findUserDetails() 0003 "
     			+ "\n    "
@@ -141,6 +142,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 	 * Return feedback from the most recent operation that provides feedback
 	 * @return feedback from the most recent operation that provides feedback
 	 */
+	@Override
     public String getFeedback() {
     	return feedback;
     }
@@ -150,7 +152,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
     * {@link com.yardi.ejb.PasswordPolicyBean#getPwdPolicy() com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()}
     * @return reference to Pwd_Policy entity 
     */
-    private Pwd_Policy getPwdPolicy() {
+    private PasswordPolicyCopy getPwdPolicy() {
     	System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.getPwdPolicy() 0006	");
     	
     	if (pwd_Policy == null) {
@@ -172,6 +174,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 	 * Remove bean
 	 */
 	@Remove
+	@Override
 	public void remove() {
 		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.remove() 000B ");
 		//userProfileBean.detachEntity(reset_Password);
@@ -194,6 +197,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 	 * Feedback provided:<br>
 	 * YRD0000 Process completed normally<p>
 	 */
+	@Override
 	public ResetPwdRequest resetPwd() {
 		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.resetPwd() 0009 ");
 	    feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
@@ -259,7 +263,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 	 */ 
 	private void setPwdPolicy() {
 		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.setPwdPolicy() 0007	");
-		pwd_Policy = passwordPolicyBean.getPwdPolicy(); 
+		pwd_Policy = passwordPolicyBean.getPasswordPolicyCopy(); 
 		
 		if (pwd_Policy == null) {
 			System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.setPwdPolicy() 0014	");
@@ -270,6 +274,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 	/**
 	 * Inject the {@link com.yardi.shared.helpdesk.ResetPwdRequest reset password request}  
 	 */
+	@Override
 	public  void setResetPwdRequest(ResetPwdRequest resetPwdRequest) {
 		this.resetPwdRequest = resetPwdRequest;
 		System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.setResetPwdRequest() 0008 "
