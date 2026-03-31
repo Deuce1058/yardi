@@ -4,7 +4,7 @@ import java.util.Vector;
 
 import com.yardi.ejb.Unique_Tokens;
 import com.yardi.ejb.crypto.Jargon2Bean;
-import com.yardi.ejb.model.Pwd_Policy;
+import com.yardi.shared.model.PasswordPolicyCopy;
 import com.yardi.shared.userServices.PasswordStatistics;
 
 public class PasswordValidationContext {
@@ -13,7 +13,7 @@ public class PasswordValidationContext {
     private final String userName;
     private final Vector<Unique_Tokens> userTokens;
     private final PasswordStatistics stats;
-    private final Pwd_Policy pwdPolicy;
+    private final PasswordPolicyCopy pwdPolicy;
     private final Jargon2Bean jargon2Bean;
     
     
@@ -28,7 +28,7 @@ public class PasswordValidationContext {
 	 */
 	public PasswordValidationContext(String currentPassword, String newPassword, String userName,
 			Vector<Unique_Tokens> userTokens, PasswordStatistics stats,
-			Pwd_Policy pwdPolicy, Jargon2Bean jargon2Bean) {
+			PasswordPolicyCopy pwdPolicy, Jargon2Bean jargon2Bean) {
 		this.currentPassword = currentPassword;
 		this.newPassword = newPassword;
 		this.userName = userName;
@@ -54,7 +54,7 @@ public class PasswordValidationContext {
 	}
 
 
-	public Pwd_Policy getPwdPolicy() {
+	public PasswordPolicyCopy getPwdPolicy() {
 		return pwdPolicy;
 	}
 
