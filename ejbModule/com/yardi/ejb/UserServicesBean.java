@@ -7,9 +7,9 @@ import org.eclipse.persistence.Version;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.ejb.model.Sessions_Table;
 import com.yardi.ejb.userServices.PasswordValidationException;
+import com.yardi.shared.model.PasswordPolicyCopy;
 import com.yardi.shared.userServices.LoginInitialPage;
 import com.yardi.shared.userServices.LoginRequest;
 import com.yardi.shared.userServices.LoginResponse;
@@ -37,7 +37,7 @@ public class UserServicesBean implements UserServices {
 	/**
 	 * Reference to the password policy obtained from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()
 	 */
-	private Pwd_Policy pwdPolicy = null;
+	private PasswordPolicyCopy pwdPolicy = null;
 	/**
 	 * Status of the most recent method call that provides feedback<p> 
 	 * Clients can read this field to determine the status of the most recent method call that provides feedback.
@@ -159,6 +159,7 @@ public class UserServicesBean implements UserServices {
 	 * 
 	 * @return true if authentication was successful
 	 */
+	@Override
 	public boolean authenticate() {
 		try {
 			System.out.println("com.yardi.ejb.UserServicesBean.authenticate() 0028  ");
@@ -357,6 +358,7 @@ public class UserServicesBean implements UserServices {
 	 * 
 	 * @return true if change password process was successful 
 	 */
+	@Override
 	public boolean chgPwd() {
 		System.out.println("com.yardi.ejb.UserServicesBean.chgPwd() 0032"
 				+ "\n"
@@ -434,6 +436,7 @@ public class UserServicesBean implements UserServices {
 	 * Clients call <i>getFeedback()</i> to determine the status of the most recent method call that provides feedback.
 	 * @return feedback from the most recent method call that provides feedback.
 	 */
+	@Override
 	public String getFeedback() {
 		return feedback;
 	}
@@ -445,6 +448,7 @@ public class UserServicesBean implements UserServices {
      * by the user from a list of initial page names and descriptions representing each group they belong to.<br><br> 
      * @return the user's initial page.
      */
+	@Override
 	public String getInitialPage() {
 		return initialPage;
 	}
@@ -455,6 +459,7 @@ public class UserServicesBean implements UserServices {
 	 * equivalent to HttpServletRequest.getSession().getId().
 	 * @return POJO representation of the web request to login.
 	 */
+	@Override
 	public LoginRequest getLoginRequest() {
 		return loginRequest;
 	}
@@ -465,6 +470,7 @@ public class UserServicesBean implements UserServices {
 	 * responding to the web request.
 	 * @return POJO representation of the response to the web request to login.
 	 */
+	@Override
 	public LoginResponse getLoginResponse() {
 		return loginResponse;
 	}
@@ -473,7 +479,7 @@ public class UserServicesBean implements UserServices {
 	 * Returns the password policy obtained from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy().
 	 * @return reference to Pwd_Policy entity
 	 */
-	private Pwd_Policy getPwdPolicy() {
+	private PasswordPolicyCopy getPwdPolicy() {
 		System.out.println("com.yardi.ejb.UserServicesBean.getPwdPolicy 0021 ");
 		
 		if (pwdPolicy == null) {
@@ -806,6 +812,7 @@ public class UserServicesBean implements UserServices {
 	 * Inject the request from the web to login.
 	 * @param loginRequest POJO representation of the web request to login
 	 */
+	@Override
 	public void setLoginRequest(LoginRequest loginRequest) {
 		this.loginRequest = loginRequest;
 		System.out.println("com.yardi.ejb.UserServicesBean.setLoginRequest() 001B " 
@@ -856,7 +863,7 @@ public class UserServicesBean implements UserServices {
 	 * <span style="font-family:consolas;">YRD000B Password policy is missing</span>
 	 */
 	private void setPwdPolicy() {
-		pwdPolicy = passwordPolicyBean.getPwdPolicy();
+		pwdPolicy = passwordPolicyBean.getPasswordPolicyCopy();
 		
 		if (pwdPolicy == null) {
 			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
