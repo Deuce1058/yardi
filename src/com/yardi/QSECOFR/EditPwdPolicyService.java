@@ -59,7 +59,7 @@ public class EditPwdPolicyService extends HttpServlet implements Serializable {
 	 * Obtain an instance of {@link com.yardi.ejb.EditPasswordPolicyBean#EditPasswordPolicyBean() com.yardi.ejb.EditPasswordPolicyBean} from JNDI. 
 	 * Read the edit request from the input stream and map it to {@link com.yardi.shared.QSECOFR.EditPwdPolicyRequest#EditPwdPolicyRequest() 
 	 * com.yardi.shared.QSECOFR.EditPwdPolicyRequest}.
-	 * Determine the requested action (find, add or update) and call the appropriate method on EditPasswordPolicyBean to handle the request.
+	 * Determine the requested action (copy, find, add or update) and call the appropriate method on EditPasswordPolicyBean to handle the request.
 	 * 
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -85,7 +85,7 @@ public class EditPwdPolicyService extends HttpServlet implements Serializable {
 	}
 
 	/**
-	 * Lookup {@link com.yardi.ejb.EditPasswordPolicyBean EditPasswordPolicyBean} 
+	 * Get a reference to {@link com.yardi.ejb.EditPasswordPolicyBean EditPasswordPolicyBean} using JNDI Lookup  
 	 * @return reference to com.yardi.ejb.EditPasswordPolicyBean
 	 */
 	private EditPasswordPolicy getEditPasswordPolicyBean() {
