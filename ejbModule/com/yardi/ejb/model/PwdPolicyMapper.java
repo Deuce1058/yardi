@@ -2,8 +2,22 @@ package com.yardi.ejb.model;
 
 import com.yardi.shared.model.PasswordPolicyCopy;
 
+/**
+ * Maps {@link com.yardi.ejb.model.Pwd_Policy Pwd_Policy} entities to immutable {@link com.yardi.shared.model.PasswordPolicyCopy PasswordPolicyCopy} instances.<p>
+ * 
+ * This mapper creates a defensive, read-only representation of the password policy, suitable for use outside the persistence layer.
+ */
 public class PwdPolicyMapper {
 
+    private PwdPolicyMapper() {
+        // Prevent instantiation
+    }
+	
+	/**
+     * Convert the given {@link com.yardi.ejb.model.Pwd_Policy Pwd_Policy} entity into an immutable {@link com.yardi.shared.model.PasswordPolicyCopy PasswordPolicyCopy}.
+     * @param p an instance of Pwd_Policy. May be <i>null</i>
+	 * @return immutable copy {@link com.yardi.shared.model.PasswordPolicyCopy PasswordPolicyCopy} or <i>null</i> if the input is <i>null</i>
+	 */
 	public static PasswordPolicyCopy toCopy(Pwd_Policy p) {
 		if (p == null) return null;
 		
@@ -34,5 +48,4 @@ public class PwdPolicyMapper {
 				p.getPpRrn()
 		);		
 	}
-
 }
