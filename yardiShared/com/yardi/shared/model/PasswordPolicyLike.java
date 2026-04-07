@@ -1,9 +1,13 @@
 package com.yardi.shared.model;
 
 /**
- * Interface that can be used by methods that need to work with either com.yardi.ejb.model.Pwd_Policy or com.yardi.shared.model.PasswordPolicyCopy  
+ * Abstraction for password policy data used by business logic that operates on both persistent entities and detached/copy representations.<p>
+ *
+ * Implementations of this interface provide a unified view of password policy attributes and allow service-layer code such as 
+ * {@link com.yardi.ejb.EditPasswordPolicyBean#newEditPwdPolicyRequest(PasswordPolicyLike) EditPasswordPolicyBean.newEditPwdPolicyRequest(PasswordPolicyLike)} to map password policy request/response objects such as 
+ * {@link com.yardi.shared.QSECOFR.EditPwdPolicyRequest EditPwdPolicyRequest} without depending on a specific implementation type.
  */
-public interface PasswordPolicyLike {
+ public interface PasswordPolicyLike {
 	/**
 	 * Return password cant contain user ID indicator
 	 * @return value of password cant contain user ID
