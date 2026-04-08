@@ -31,15 +31,45 @@ import jakarta.transaction.UserTransaction;
 @Stateful
 @TransactionManagement(TransactionManagementType.BEAN)
 public class PwdResetCtrlBean implements PwdResetCtrl {
+	/** 
+	 * Clients may use this field to get feedback from the most recent method call that provides feedback
+	 */
 	private String feedback;
+	/**
+	 * Injected reference to {@link com.yardi.ejb.PasswordPolicyBean com.yardi.ejb.PasswordPolicyBean}
+	 */
 	@EJB private PasswordPolicy passwordPolicyBean;
+	/**
+	 * The immutable copy of password policy from {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy() PasswordPoilcyBean.getPasswordPolicyCopy()}  
+	 */
 	private PasswordPolicyCopy pwd_Policy = null;
+	/**
+	 * Entity for user profile details. These details are displayed on the password reset page used by the help desk.
+	 */
 	private Reset_Password reset_Password;
+	/**
+	 * A request to reset the user's password
+	 */
 	private ResetPwdRequest resetPwdRequest;
+	/**
+	 * see {@link jakarta.transaction.UserTransaction jakarta.transaction.UserTransaction}
+	 */
 	@Resource UserTransaction tx;
+	/**
+	 * Injected reference to {@link com.yardi.ejb.UniqueTokensBean com.yardi.ejb.UniqueTokensBean} 
+	 */
 	@EJB private UniqueTokens uniqueTokensBean; 
+	/**
+	 * Injected reference to {@link com.yardi.ejb.UserProfileBean com.yardi.ejb.UserProfileBean}
+	 */
 	@EJB private UserProfile userProfileBean;
+	/**
+	 * Injected reference to EntityManager utilities bean
+	 */
 	@EJB private Utils utilsBean;
+	/**
+	 * Injected reference to Argon2 implementation {@link com.yardi.ejb.crypto.Jargon2Bean com.yardi.ejb.crypto.Jargon2Bean}
+	 */
 	@EJB private Jargon2Bean jargon2Bean;
 
     /**
@@ -148,9 +178,9 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
     }
 	
    /**
-    * Returns the password policy obtained from
-    * {@link com.yardi.ejb.PasswordPolicyBean#getPwdPolicy() com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()}
-    * @return reference to Pwd_Policy entity 
+     * If field <code>pwdPolicy</code> is not null returns this.pwdPolicy otherwise return the immutable password policy from 
+     * {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy() PasswordPoilcyBean.getPasswordPolicyCopy()}. 
+     * @return the immutable password policy
     */
     private PasswordPolicyCopy getPwdPolicy() {
     	System.out.println("com.yardi.ejb.helpdesk.PwdResetCtrlBean.getPwdPolicy() 0006	");
@@ -256,7 +286,7 @@ public class PwdResetCtrlBean implements PwdResetCtrl {
 	}
 
 	/** 
-	 * Obtain a reference to password policy from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy().<p> 
+	 * Sets password policy to the immutable copy obtained from {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy() PasswordPoilcyBean.getPasswordPolicyCopy()}.<p>
 	 * 
 	 * <strong>The following feedback is provided:</strong><br> 
 	 * <span style="font-family:consolas;">YRD000B Password policy is missing</span>
