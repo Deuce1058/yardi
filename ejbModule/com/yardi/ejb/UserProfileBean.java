@@ -410,9 +410,9 @@ public class UserProfileBean implements UserProfile {
 	}
 
     /**
-     * Returns the password policy obtained from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()
-     * 
-     * @return Pwd_Policy entity 
+     * If field pwdPolicy is not null returns this.pwdPolicy otherwise return the immutable password policy from 
+     * {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy() PasswordPoilcyBean.getPasswordPolicyCopy()}. 
+     * @return the immutable password policy
      */
     private PasswordPolicyCopy getPwdPolicy() {
     	System.out.println("com.yardi.ejb.UserProfileBean.getPwdPolicy() 001C ");
@@ -847,9 +847,9 @@ public class UserProfileBean implements UserProfile {
 	}
 	
 	/**
-	 * Obtain a reference to the password policy from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy() and store it in the <i>pwdPolicy</i> field.<p>
-	 * 
-	 * Provides feedback: <pre>YRD000B password policy is missing</pre>	 * 
+	 * Sets password policy to the immutable copy obtained from {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy() PasswordPoilcyBean.getPasswordPolicyCopy()}.<p>
+	 *
+	 * Provides feedback: <code>YRD000B password policy is missing</code>
 	 */
 	private void setPwdPolicy() {
 		System.out.println("com.yardi.ejb.UserProfileBean.setPwdPolicy() 0014 ");
