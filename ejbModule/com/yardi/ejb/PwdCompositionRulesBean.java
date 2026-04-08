@@ -3,7 +3,6 @@ package com.yardi.ejb;
 import java.util.Vector;
 
 import com.yardi.ejb.crypto.Jargon2Bean;
-import com.yardi.ejb.model.Pwd_Policy;
 import com.yardi.ejb.userServices.PasswordRule;
 import com.yardi.ejb.userServices.PasswordValidationContext;
 import com.yardi.ejb.userServices.PasswordValidationException;
@@ -15,16 +14,19 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 
 /**
- * Implementation of password policy rules for password composition.<p>
- * 
- * When the user changes their password either on demand or because the password expired, the <i>enforce()</i> method of this class tests the new
- * password to make sure that it conforms to the password policy rules on complexity and reuse. Note that com.yardi.ejb.PasswordPolicyBean is a 
- * singleton. Enforcing the password policy in PasswordPolicyBean may not be thread safe. Instead, the password policy rules for complexity and 
- * reuse are enforced here where the state is easier to manage.<p>
- * 
- * Helper classes:<br>
- * com.yardi.shared.userServices.PasswordAuthentication hashes the new password.<br>
- * com.yardi.shared.userServices.PasswordStatistics scans the new password and compiles statistics such as number of repeated characters.
+ * Stateless service responsible for enforcing password policy.<p>
+ *
+ * Acts as an orchestrator for password validation by delegating rule checks to {@link com.yardi.ejb.userServices.PasswordRule PasswordRule} enum. Each rule encapsulates a single
+ * validation concern (e.g., minimum length, password reuse, content restrictions).<p>
+ *
+ * {@link #enforce(String, String, String, Vector)} builds a {@link com.yardi.ejb.userServices.PasswordValidationContext PasswordValidationContext} and applies all configured rules by iterating
+ * over {@link com.yardi.ejb.userServices.PasswordRule#values() PasswordRule.values()}. Any rule may throw a
+ * {@link com.yardi.ejb.userServices.PasswordValidationException PasswordValidationException} to indicate validation failure.<p>
+ *
+ * An immutable copy of the password policy is obtained from {@link com.yardi.ejb.PasswordPolicyBean#getPwdPolicy() PasswordPolicyBean.getPwdPolicy()} at initialization time to ensure thread 
+ * safety and consistent validation behavior.<p>
+ *
+ * <strong>Note:</strong> Validation is delegated to and all rule-specific behavior resides in <code>PasswordRule<code>.<p>
  */
 @Stateless 
 public class PwdCompositionRulesBean implements PwdCompositionRules {
@@ -45,13 +47,20 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
     }
 
     /**
-     * Enforce the password policy on the new password<p>
+     * Validates the new password against password policy.<p>
+     * 
+     * Constructs a {@link com.yardi.ejb.userServices.PasswordValidationContext PasswordValidationContext} containing the objects needed to enforce password policy. It then iterates over all 
+     * {@link com.yardi.ejb.userServices.PasswordRule PasswordRule} values.<p>
+     * 
+     * Validation is performed in declaration order of <code>PasswordRule</code>. The process is <i>fail-fast</i>: the first rule violation throws 
+     * {@link com.yardi.ejb.userServices.PasswordValidationContext PasswordValidationException}, and no further rules are evaluated.<p>
+     * 
+     * @implNote Callers are expected non-null arguments. This method does not perform null checks on inputs.
      * @param password current password in plain text
      * @param newPassword new password in plain text
      * @param userName user ID
-     * @param userTokens all of the stored tokens for the user
-     * @throws PasswordValidationException new password does not conform to password policy
-     * @return boolean indicating whether new password conforms to password policy
+     * @param userTokens all previously used hashed passwords for the user
+     * @throws PasswordValidationException if new password does not conform to password policy
      */
     @Override
 	public void enforce(String password, final String newPassword, final String userName, final Vector<Unique_Tokens> userTokens) 
@@ -101,7 +110,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 	}
 
 	/**
-	 * Returns the password policy obtained from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy().
+	 * Returns an immutable copy of password policy obtained from {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy() PasswordPolicyBean.getPasswordPolicyCopy()}.
 	 * @return reference to Pwd_Policy entity
 	 */
     private PasswordPolicyCopy getPwdPolicy() {
@@ -123,7 +132,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 	}	
 	
 	/**
-	 * Initialize the bean by obtaining a reference to password policy.
+	 * Initialize the bean by getting an immutable copy of password policy.
 	 */
 	@PostConstruct
 	private void postConstructCallback() {
@@ -132,10 +141,7 @@ public class PwdCompositionRulesBean implements PwdCompositionRules {
 	}
 
 	/**
-	 * Obtain a reference to password policy from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy().<p>
-	 * 
-	 * <strong>The following feedback is provided:</strong><br>
-	 * <span style="font-family:consolas;">YRD000B Password policy is missing</span>
+	 * Get an immutable copy of password policy from {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy() PasswordPolicyBean.getPasswordPolicyCopy()}.<p>
 	 */
 	private void setPwdPolicy() {
 		System.out.println("com.yardi.ejb.PwdCompositionRulesBean.setPwdPolicy() 002D ");
