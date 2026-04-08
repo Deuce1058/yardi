@@ -31,7 +31,7 @@ import jakarta.ejb.Stateless;
 @Stateless 
 public class PwdCompositionRulesBean implements PwdCompositionRules {
 	/**
-	 * Reference to Pwd_Policy entity obtained from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy().
+	 * Immutable copy of password policy from {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy() PasswordPolicyBean.getPasswordPolicyCopy()}  
 	 */
 	private PasswordPolicyCopy pwdPolicy;
 	/**
