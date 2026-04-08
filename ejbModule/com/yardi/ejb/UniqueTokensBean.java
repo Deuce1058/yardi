@@ -129,12 +129,9 @@ public class UniqueTokensBean implements UniqueTokens {
 	}
 			
 	/**
-     * Returns a reference to the Pwd_Policy entity from com.yardi.ejb.PasswordPolicyBean.<p>
-     * 
-     * postConstructCallback() calls this method. On the initial call the <i>pwdPolicy</i> field is null so setPwdPolicy() is called to obtain a
-     * reference to password policy from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy().
-     * 
-     * @return reference to Pwd_Policy entity.
+     * If field pwdPolicy is not null returns this.pwdPolicy otherwise return the immutable password policy from 
+     * {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy() PasswordPoilcyBean.getPasswordPolicyCopy()}. 
+     * @return the immutable password policy
      */
 	private PasswordPolicyCopy getPwdPolicy() {
 		System.out.println("com.yerdi.ejb.UniqieTokensBean getPwdPolicy() 0017 ");
@@ -419,7 +416,7 @@ public class UniqueTokensBean implements UniqueTokens {
 	}
 	
 	/**
-	 * Set Pwd_Policy entity to the reference obtained from com.yardi.ejb.PasswordPoilcyBean
+	 * Sets password policy to the immutable copy obtained from {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy() PasswordPoilcyBean.getPasswordPolicyCopy()}.
 	 */
 	private void setPwdPolicy() {
 		System.out.println("com.yardi.ejb.UniqueTokensBean setPwdPolicy() 0012 ");
