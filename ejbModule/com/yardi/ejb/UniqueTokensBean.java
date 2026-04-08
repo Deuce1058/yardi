@@ -23,8 +23,7 @@ public class UniqueTokensBean implements UniqueTokens {
 	@PersistenceContext(unitName="yardi")
 	private EntityManager em;
 	/**
-	 * Reference to com.yardi.ejb.model.Pwd_Policy entity. Although com.yardi.ejb.UniqueTokensBean is stateless, Pwd_Policy is a singleton 
-	 * so it can be safely stored on the bean.
+	 * The immutable copy of password policy from {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy() PasswordPoilcyBean.getPasswordPolicyCopy()}  
 	 */
 	private PasswordPolicyCopy pwdPolicy;
 	/**
