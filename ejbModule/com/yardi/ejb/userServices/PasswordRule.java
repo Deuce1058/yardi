@@ -4,46 +4,56 @@ import java.util.Arrays;
 
 import com.yardi.ejb.Unique_Tokens;
 
+/**
+ * A password validation engine that validates the new password against a set of defined rules. Password policy determines which rules are enforced. Validation halts at the first failed rule and 
+ * throws {@link com.yardi.ejb.userServices.PasswordValidationException PasswordValidationException}. All objects needed to validate the new password are stored in container 
+ * {@link com.yardi.ejb.userServices.PasswordValidationContext PasswordValidationContext}.   
+ */
 public enum PasswordRule {
 
+	/**
+	 * Ensure passwords are unique. The new password must not match any of the last <i>n</i> used passwords. Password policy defines how many unique passwords are stored in password history.
+	 */
 	REUSED_PWD(com.yardi.shared.rentSurvey.YardiConstants.YRD000A) {
         @Override
         public void validate(PasswordValidationContext ctx)
                 throws PasswordValidationException {
         	
-       if (ctx.getPwdPolicy().getPpNbrUnique()==0 || ctx.getUserTokens().isEmpty()) return;
-        	
-			System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 0000 " 
-			      + getMsgId()  
-				  +"\n    "
-				  + "   userTokens.size()="
-				  + ctx.getUserTokens().size()
-				  +"\n    "
-				  + "userTokens=" 
-			      + ctx.getUserTokens().toString()
-			      );
-			
+			if (ctx.getPwdPolicy().getPpNbrUnique() == 0 || ctx.getUserTokens().isEmpty())
+				return;
+
+			System.out.println("com.yardi.ejb.userServices.PasswordRule.validate() 0000 "
+					+ getMsgId() 
+					+ "\n    "
+					+ "   userTokens.size()=" 
+					+ ctx.getUserTokens().size() 
+					+ "\n    " 
+					+ "userTokens="
+					+ ctx.getUserTokens().toString());
+
 			for (Unique_Tokens uniqueToken : ctx.getUserTokens()) {
-				
+
 				if (ctx.getJargon2Bean().verify(ctx.getNewPassword(), uniqueToken.getUp1Token())) {
-					System.out.println("com.yardi.ejb.userServices.PasswordRule.validate()  0001 " 
-				            + getMsgId() 
+					System.out.println("com.yardi.ejb.userServices.PasswordRule.validate()  0001 "
+							+ getMsgId()
+							+ "\n    " 
+							+ "  newPassword=" 
+							+ ctx.getNewPassword() 
 							+ "\n    "
-							+ "  newPassword="
-							+ ctx.getNewPassword()
+							+ "  uniqueToken.getUp1Rrn()=" 
+							+ uniqueToken.getUp1Rrn() 
 							+ "\n    "
-							+ "  uniqueToken.getUp1Rrn()="
-							+ uniqueToken.getUp1Rrn()
-							+ "\n    "
-							+ "  uniqueToken.getUp1Token()="
-							+ uniqueToken.getUp1Token()
-							);
+							+ "  uniqueToken.getUp1Token()=" 
+							+ uniqueToken.getUp1Token());
 					throwValidation(com.yardi.shared.rentSurvey.YardiConstants.YRD000A);
 				}
 			}
-        }
+		}
 	}, 
-	
+
+	/**
+	 * Ensure password length is not shorter than the minimum length defined in password policy
+	 */
     MIN_LENGTH(com.yardi.shared.rentSurvey.YardiConstants.YRD0005) {
         @Override
         public void validate(PasswordValidationContext ctx)
@@ -64,6 +74,9 @@ public enum PasswordRule {
         }
     },
 
+    /**
+     * Ensure password contains at least <i>n</i> upper case characters. 
+     */
     N_UPPERCASE_REQUIRED(com.yardi.shared.rentSurvey.YardiConstants.YRD0018) {
         @Override
         public void validate(PasswordValidationContext ctx)
@@ -86,6 +99,9 @@ public enum PasswordRule {
         }
     },
     
+    /**
+     * Ensure password contains at least one upper case character.
+     */
     UPPERCASE_REQUIRED(com.yardi.shared.rentSurvey.YardiConstants.YRD0006) {
         @Override
         public void validate(PasswordValidationContext ctx)
@@ -104,7 +120,10 @@ public enum PasswordRule {
             }
         }
     },
-    
+
+    /**
+     * Ensure password contains at least <i>n</i> lower case characters.
+     */
     N_LOWER_CASE_REQUIRED(com.yardi.shared.rentSurvey.YardiConstants.YRD0019) {
     	@Override
     	public void validate(PasswordValidationContext ctx)
@@ -126,7 +145,10 @@ public enum PasswordRule {
     		}    		
     	}
     },
-
+    
+    /**
+     * Ensure password has at least one lower case character.
+     */
     LOWER_CASE_REQUIRED(com.yardi.shared.rentSurvey.YardiConstants.YRD0007) {
     	@Override
     	public void validate(PasswordValidationContext ctx)
@@ -146,6 +168,9 @@ public enum PasswordRule {
     	}
     },
     
+    /**
+     * Ensure password has at least <i>n</i> digits.
+     */
     N_DIGITS_REQUIRED(com.yardi.shared.rentSurvey.YardiConstants.YRD0017) {
     	@Override
     	public void validate(PasswordValidationContext ctx)
@@ -167,7 +192,10 @@ public enum PasswordRule {
     		}
     	}    	
     }, 
-    
+
+    /**
+     * Ensure password has at least one digit.
+     */
     DIGIT_REQUIRED(com.yardi.shared.rentSurvey.YardiConstants.YRD0008) {
     	@Override
     	public void validate(PasswordValidationContext ctx)
@@ -186,7 +214,10 @@ public enum PasswordRule {
     		}
     	}
     },
-    
+
+    /**
+     * Ensure password has at least <i>n</i> special characters.
+     */
     N_SPECIAL_CHAR_REQUIRED(com.yardi.shared.rentSurvey.YardiConstants.YRD001A) {
     	@Override
     	public void validate(PasswordValidationContext ctx)
@@ -209,6 +240,9 @@ public enum PasswordRule {
     	}
     },
     
+    /**
+     * Ensure password has at least one special character.
+     */
     SPECIAL_CHAR_REQUIRED(com.yardi.shared.rentSurvey.YardiConstants.YRD0009) {
     	@Override
     	public void validate(PasswordValidationContext ctx)
@@ -228,6 +262,9 @@ public enum PasswordRule {
     	}
     },
     
+    /**
+     * Ensure password is not longer than the maximum length defined in password policy.
+     */
     MAX_LENGTH(com.yardi.shared.rentSurvey.YardiConstants.YRD0015) {
     	@Override
     	public void validate(PasswordValidationContext ctx)
@@ -249,7 +286,10 @@ public enum PasswordRule {
     		}
     	}
     },
-    
+
+    /**
+     * Ensure the number of repeated characters in the password does not exceed the maximum number of repeated characters defined in password policy.  
+     */
     TOO_MANY_REPEAT_CHARS(com.yardi.shared.rentSurvey.YardiConstants.YRD0016) {
     	@Override
     	public void validate(PasswordValidationContext ctx)
@@ -271,7 +311,10 @@ public enum PasswordRule {
     		}
     	}    	
     },
-    
+
+    /**
+     * Ensure the password does not contain the user ID.
+     */
     PASSWORD_CONTAINS_ID(com.yardi.shared.rentSurvey.YardiConstants.YRD0011) {
         @Override
         public void validate(PasswordValidationContext ctx)
@@ -299,6 +342,10 @@ public enum PasswordRule {
         }
     },
     
+    /**
+     * Ensures that the new password is not derived from the current password. Specifically, the new password must not contain the current password as a substring or trivial 
+     * modification thereof, preventing incremental changes such as suffixing or prefixing characters.
+     */
     PASSWORD_CONTAINS_PWD(com.yardi.shared.rentSurvey.YardiConstants.YRD0010) {
         @Override
         public void validate(PasswordValidationContext ctx)
@@ -321,22 +368,46 @@ public enum PasswordRule {
         }
     };
 
+	/**
+	 * Message template associated with the rule.
+	 * Format: "CODE=Message with %n placeholders"
+	 */
 	private final String msg;
 
-    PasswordRule(String msg) {
+	/**
+	 * Creates a password rule with the given message template.
+	 *
+	 * @param msg the validation message constant
+	 */
+	PasswordRule(String msg) {
         this.msg = msg;
     	System.out.println("com.yardi.ejb.userServices.PasswordRule.PasswordRule() 000F " + getMsgId());
     }
 
+	/**
+	 * Return the validation message constant
+	 * @return validation message constant
+	 */
     public String getMsg() {
         return msg;
     }
     
+    /**
+     * Returns the message id. This is the substring of the message constant starting at index 0 and ending at index of "=", exclusively.
+     * @return message id
+     */
     public String getMsgId() {
     	String m[] = msg.split("=");
     	return m[0];
     }
     
+    /**
+     * Resolves a message template by replacing %n placeholders with parameters.
+     *
+     * @param constant the message template
+     * @param params values to inject into the template
+     * @return resolved message string
+     */
     private static String resolveMessage(String constant, Object... params) {
     	System.out.println("com.yardi.ejb.userServices.PasswordRule.resolveMessage() 0010 "
     			+ "\n    "
@@ -361,11 +432,30 @@ public enum PasswordRule {
         return message;
     }
     
+    /**
+     * Causes a {@link com.yardi.ejb.userServices.PasswordValidationException PasswordValidationException} to be thrown while injecting values into the message template 
+     * @param params values to inject into the message template 
+     * @throws PasswordValidationException
+     */
     protected void throwValidation(Object... params) throws PasswordValidationException {
     	System.out.println("com.yardi.ejb.userServices.PasswordRule.throwValidation() 0012 ");
         throw new PasswordValidationException(this, resolveMessage(msg, params));
     }
     
+    /**
+     * Validates the password against this specific rule.<p>
+     *
+     * Each enum constant provides its own implementation of this method
+     * to enforce a particular password policy constraint.<p>
+     *
+     * If the validation fails, a {@link com.yardi.ejb.userServices.PasswordValidationException PasswordValidationException}
+     * must be thrown using {@link #throwValidation(Object...)}.<p>
+     *
+     * @param ctx the {@link com.yardi.ejb.userServices.PasswordValidationContext PasswordValidationContext} containing the current password, new password, user name, the hashed 
+     * password history, computed statistics, password policy and a reference to {@link com.yardi.ejb.crypto.Jargon2Bean Jargon2Bean}.
+     *
+     * @throws PasswordValidationException if the password violates this rule
+     */
     public abstract void validate(PasswordValidationContext ctx)
             throws PasswordValidationException;    
 }
