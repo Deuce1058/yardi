@@ -35,7 +35,7 @@ import jakarta.transaction.UserTransaction;
 @TransactionManagement(TransactionManagementType.BEAN)
 public class UserServicesBean implements UserServices {
 	/**
-	 * Reference to the password policy obtained from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()
+	 * The immutable password policy from {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy()} 
 	 */
 	private PasswordPolicyCopy pwdPolicy = null;
 	/**
@@ -476,8 +476,9 @@ public class UserServicesBean implements UserServices {
 	}
 
 	/**
-	 * Returns the password policy obtained from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy().
-	 * @return reference to Pwd_Policy entity
+	 * Returns the password policy associated with this instance.
+	 * If no policy has been set, the immutable policy from {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy() PasswordPolicyBean.getPasswordPolicyCopy()} is returned.
+	 * @return the immutable password policy
 	 */
 	private PasswordPolicyCopy getPwdPolicy() {
 		System.out.println("com.yardi.ejb.UserServicesBean.getPwdPolicy 0021 ");
@@ -857,7 +858,7 @@ public class UserServicesBean implements UserServices {
 	}
 	
 	/**
-	 * Obtain a reference to password policy from com.yardi.ejb.PasswordPolicyBean.getPwdPolicy().<p>
+	 * Sets password policy to the immutable copy obtained from {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy() PasswordPoilcyBean.getPasswordPolicyCopy()}.<p>
 	 * 
 	 * <strong>The following feedback is provided:</strong><br>
 	 * <span style="font-family:consolas;">YRD000B Password policy is missing</span>
