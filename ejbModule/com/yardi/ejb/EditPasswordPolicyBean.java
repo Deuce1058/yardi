@@ -105,13 +105,13 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
     }
 
     /**
-     * Map a {@link com.yardi.ejb.model.Pwd_Policy com.yardi.ejb.model.Pwd_Policy} entity to 
+     * Map a {@link com.yardi.shared.model.PasswordPolicyLike PasswordPolicyLike} to 
      * {@link com.yardi.shared.QSECOFR.EditPwdPolicyRequest com.yardi.shared.QSECOFR.EditPwdPolicyRequest}.<p>
      * 
      * <code>EditPwdPolicyRequest</code> is a container which holds all of the password policy elements that can be 
      * modified by the user. <code>EditPwdPolicyRequest</code> serves as the DTO between the browser and the application. 
      * 
-     * @param pwdPolicy The password policy returned from the {@link com.yardi.ejb.PasswordPolicyBean#getPwdPolicy() com.yardi.ejb.PasswordPolicyBean.getPwdPolicy()}
+     * @param pwdPolicy an abstraction of the current password policy provided as a {@link com.yardi.shared.model.PasswordPolicyLike PasswordPolicyLike}, used to build an EditPwdPolicyRequest 
      * @return a container which holds all of the password policy elements that can be modified by the user.
      */
     private EditPwdPolicyRequest newEditPwdPolicyRequest(PasswordPolicyLike pwdPolicy) {
@@ -288,7 +288,7 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
 	 * com.yardi.ejb.EditPasswordPolicyBean.newPwdPolicy(EditPwdPolicyRequest)} before merging the state to 
 	 * the persistence context.
 	 * 
-	 * @param editPwdPolicyRequest an <code>EditPwdPolicyRequest</code> container which holds all the password policy elements that can be modified
+	 * @param editPwdPolicyRequest an {@link com.yardi.shared.QSECOFR.EditPwdPolicyRequest EditPwdPolicyRequest} container which holds all the password policy elements that can be modified
 	 * by the user. 
      */
     @Override
