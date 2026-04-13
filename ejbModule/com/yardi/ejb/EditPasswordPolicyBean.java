@@ -24,7 +24,7 @@ public class EditPasswordPolicyBean implements EditPasswordPolicy {
 	@PersistenceContext(unitName="yardi")
 	private EntityManager em;
 
-	@EJB private PasswordPolicyBean passwordPolicyBean; 
+	@EJB private PasswordPolicy passwordPolicyBean; 
 	
 	/**
 	 * Default constructor 
