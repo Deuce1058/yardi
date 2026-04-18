@@ -188,10 +188,10 @@
         }
         
         try {
-          ajaxData = await doPost(rqsdta, '../doLogin');
+          const ajaxData = await doPost(rqsdta, '../doLogin');
           console.log('chgPwd 0002');
           loginResponse(ajaxData);
-        } catch {
+        } catch (error) {
           console.log('Login error:', error);
         }        
       }      
@@ -203,7 +203,7 @@ function doPost(ajaxData, url) {
   return fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formItems)
+      body: JSON.stringify(ajaxData)
   }).then(response => {
       if (!response.ok) {
         throw new Error(`Network fail. Response status: ${response.status}`);
@@ -214,7 +214,7 @@ function doPost(ajaxData, url) {
 
 async function loadPwdPolicy() {
   try {
-    ajaxData = await doPost(rqsPwdPolicy(), '../PwdPolicy');
+    const ajaxData = await doPost(rqsPwdPolicy(), '../PwdPolicy');
     pwdPolicyResponse(ajaxData);
   } catch (error) {
     console.error('PwdPolicy error:', error);
