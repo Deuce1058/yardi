@@ -1202,6 +1202,7 @@
   function newToken() {
     /*convert password to a token*/
     var tokenRequest = {
+      "action"         : 'hash',
       "msgID"          : '',
       "msgDescription" : '',
       "password"       : $("#password").val()
@@ -1215,7 +1216,7 @@
       async:    false,
       dataType: "json", 
       success:  function (data) {
-                  $('#newToken').text(data.password);
+                  $('#newToken').text(data.hash);
                 }
     });
   }
