@@ -31,8 +31,9 @@ public final class UserProfileBeanFeedback {
      * @param feedback feedback message
      */
    private UserProfileBeanFeedback(boolean success, String feedback) {
-        this.success = success;
-        this.feedback = feedback;
+	   System.out.println("com.yardi.shared.userServices.UserProfileBeanFeedback.UserProfileBeanFeedback()");
+       this.success = success;
+       this.feedback = feedback;
     }
 
    /**
@@ -86,6 +87,7 @@ public final class UserProfileBeanFeedback {
      * @return UserProfileBeanFeedback object
      */
     public static UserProfileBeanFeedback fail(String feedback) {
+    	System.out.println("com.yardi.shared.userServices.UserProfileBeanFeedback.fail() 0000)");
         return new UserProfileBeanFeedback(false, feedback);
     }
 
@@ -96,6 +98,7 @@ public final class UserProfileBeanFeedback {
      * @return UserProfileBeanFeedback object
      */
     public static UserProfileBeanFeedback ok(String feedback) {
+    	System.out.println("com.yardi.shared.userServices.UserProfileBeanFeedback.ok() 0001)");
         return new UserProfileBeanFeedback(true, feedback);
     }
 }
