@@ -31,7 +31,12 @@ public final class UserProfileBeanFeedback {
      * @param feedback feedback message
      */
    private UserProfileBeanFeedback(boolean success, String feedback) {
-	   System.out.println("com.yardi.shared.userServices.UserProfileBeanFeedback.UserProfileBeanFeedback()");
+	   System.out.println("com.yardi.shared.userServices.UserProfileBeanFeedback.UserProfileBeanFeedback() "
+			   + "\n    "
+			   + success
+			   + "\n    "
+			   + feedback
+			   );
        this.success = success;
        this.feedback = feedback;
     }
@@ -80,25 +85,29 @@ public final class UserProfileBeanFeedback {
     	return success; 
     }
   
-    // return UserProfileBeanFeedback.fail(YardiConstants.YRD0000)
     /**
      * Factory method to construct a UserProfileBeanFeedback object with the success flag set to false and the given feedback.  
      * @param feedback message string describing why the operation failed 
      * @return UserProfileBeanFeedback object
      */
     public static UserProfileBeanFeedback fail(String feedback) {
-    	System.out.println("com.yardi.shared.userServices.UserProfileBeanFeedback.fail() 0000)");
+    	System.out.println("com.yardi.shared.userServices.UserProfileBeanFeedback.fail() 0000 "
+    			+ "\n    "
+    			+ feedback
+    			);
         return new UserProfileBeanFeedback(false, feedback);
     }
 
-    //return UserProfileBeanFeedback.ok(YardiConstants.YRD0000)
     /**
      * Factory method to construct a UserProfileBeanFeedback object with the success flag set to true and the given feedback.
      * @param feedback message string that indicates the operation was a success
      * @return UserProfileBeanFeedback object
      */
     public static UserProfileBeanFeedback ok(String feedback) {
-    	System.out.println("com.yardi.shared.userServices.UserProfileBeanFeedback.ok() 0001)");
+    	System.out.println("com.yardi.shared.userServices.UserProfileBeanFeedback.ok() 0001 "
+    			+ "\n    "
+    			+ feedback
+    			);
         return new UserProfileBeanFeedback(true, feedback);
     }
 }
