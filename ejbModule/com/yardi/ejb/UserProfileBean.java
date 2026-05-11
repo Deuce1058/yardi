@@ -12,11 +12,11 @@ import com.yardi.ejb.model.Update_Temp_Password;
 import com.yardi.ejb.model.User_Profile;
 import com.yardi.ejb.util.Utils;
 import com.yardi.shared.model.PasswordPolicyCopy;
+import com.yardi.shared.userServices.UserProfileBeanFeedback;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
-import jakarta.ejb.Remove;
-import jakarta.ejb.Stateful;
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceContextType;
@@ -25,7 +25,7 @@ import jakarta.persistence.metamodel.EntityType;
 /**
  * Session Bean implementation of methods for working with User_Pofile entity 
  */
-@Stateful
+@Stateless
 public class UserProfileBean implements UserProfile {
 	/*
 	 * In the case of a RESOURCE_LOCAL, EntityManager.getTransaction().begin() and EntityManager.getTransaction().comit() 
@@ -42,10 +42,6 @@ public class UserProfileBean implements UserProfile {
 	 */
 	@PersistenceContext(unitName = "yardi", type=PersistenceContextType.TRANSACTION)	
 	private EntityManager em;
-	/**
-	 * Clients can read this field to obtain the status after calling a method that provides feedback. 
-	 */
-	private String feedback = "";
 	/**
 	 * The password policy obtained from com.yardi.ejb.PasswordPolicyBean.
 	 */
@@ -167,24 +163,26 @@ public class UserProfileBean implements UserProfile {
      * @return boolean indicating whether authentication was successful 
      */
     @Override
-	public boolean authenticate(String userName, String password, boolean userIsChangingPassword) {
+	public UserProfileBeanFeedback authenticate(String userName, String password, boolean userIsChangingPassword) {
 		System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 0013 ");
 		isJoined();
 		isManaged(userProfile);
-		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
+		UserProfileBeanFeedback[] f={UserProfileBeanFeedback.ok(com.yardi.shared.rentSurvey.YardiConstants.YRD0000)}; 
+		UserProfileBeanFeedback feedback = UserProfileBeanFeedback.ok(com.yardi.shared.rentSurvey.YardiConstants.YRD0000);
 		
-	    if (!isAuthenticationPrecheckPassed()) {
+	    if (!isAuthenticationPrecheckPassed(f)) {
 			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 003F ");
-	        return false;
+			feedback=f[0];
+	        return feedback;
 	    }
 
 		if (!jargon2Bean.verify(password, selectAuthenticationToken())) {
 			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 0040 ");
-			handleFailedAuthentication(pwdPolicy.getPpMaxSignonAttempts(), userProfile.getUpPwdAttempts());
-			return false;
+			feedback=handleFailedAuthentication(pwdPolicy.getPpMaxSignonAttempts(), userProfile.getUpPwdAttempts());			
+			return feedback;
 		} 
 		
-		if (isAuthenticatingWithTemporaryPassword(userIsChangingPassword)) {
+		if (isAuthenticatingWithTemporaryPassword(userIsChangingPassword, f)) {
 			/*
 			 * They have successfully authenticated at this point but need to change the password to login.
 			 * Set password attempts to zero. 
@@ -192,13 +190,15 @@ public class UserProfileBean implements UserProfile {
 			 */
 			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 0041 ");
 		    setUpPwdAttempts((short) 0); 
-			return false;
+			feedback=f[0];
+			return feedback;
 		} 
 		
-		if (isPasswordExpired(userIsChangingPassword)) {
+		if (isPasswordExpired(userIsChangingPassword, f)) {
 			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 0042 ");
 			setUpPwdAttempts((short) 0); //give them credit for successfully authenticating
-			return false;
+			feedback=f[0];
+			return feedback;
 		}
 		
 		if (userIsChangingPassword == false) {
@@ -217,7 +217,7 @@ public class UserProfileBean implements UserProfile {
 			loginSuccess();
 		}
 		
-		return true;
+		return feedback;
 	}
 
 	/**
@@ -399,16 +399,6 @@ public class UserProfileBean implements UserProfile {
 	    return resetPassword;
 	}
 	
-	/**
-	 * Return the status of the most recent method call that provides feedback.<p>
-	 * Clients call <i>getFeedback()</i> to determine the status of the most recent method call that provides feedback.
-	 * @return feedback from the most recent method call that provides feedback.
-	 */
-    @Override
-    public String getFeedback() {
-		return feedback;
-	}
-
     /**
      * If field pwdPolicy is not null returns this.pwdPolicy otherwise return the immutable password policy from 
      * {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy() PasswordPoilcyBean.getPasswordPolicyCopy()}. 
@@ -451,15 +441,16 @@ public class UserProfileBean implements UserProfile {
      * </pre>
 	 * @param maxSignonAttempts max signon attempts from password policy
 	 * @param signonAttempts current number of signon attempts 
+     * @return An immutable value object that encapsulates the outcome of handleFailedAuthentication
 	 */
-	private void handleFailedAuthentication(short maxSignonAttempts, short signonAttempts) {
+	private UserProfileBeanFeedback handleFailedAuthentication(short maxSignonAttempts, short signonAttempts) {
 		System.out.println("com.yardi.ejb.UserProfileBean.handleFailedAuthentication() 0017 ");
-		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000F;
+		UserProfileBeanFeedback feedback = UserProfileBeanFeedback.fail(com.yardi.shared.rentSurvey.YardiConstants.YRD000F);
 		signonAttempts++;
 		setUpPwdAttempts(signonAttempts);
 		System.out.println("com.yardi.ejb.UserProfileBean.handleFailedAuthentication() 0012"
 				+ "\n "
-				+ "  feedback =" + feedback  
+				+ "  feedback =" + feedback.getFeedback()  
 				+ "\n "
 				+ "  signonAttempts = " + signonAttempts
 				);
@@ -471,11 +462,12 @@ public class UserProfileBean implements UserProfile {
 					+ "  signonAttempts == maxSignonAttempts"  
 					);
 
-			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000C;
+			feedback = UserProfileBeanFeedback.fail(com.yardi.shared.rentSurvey.YardiConstants.YRD000C);
 			System.out.println("com.yardi.ejb.UserProfileBean.handleFailedAuthentication() 000D"
 					+ "\n    "
 					+ "feedback =" + feedback);
 		}
+		return feedback;
 	}
     
     /**
@@ -485,16 +477,19 @@ public class UserProfileBean implements UserProfile {
      * YRD001B=Authenticated with temporary password
      * </pre>
 	 * @param userIsChangingPassword indicates whether user is changing password 
+	 * @param feedback An immutable value object that encapsulates the outcome of isAuthenticatingWithTemporaryPassword
 	 * @return true if user is authenticating with temporary password 
 	 */
-	private boolean isAuthenticatingWithTemporaryPassword(boolean userIsChangingPassword) {
+	private boolean isAuthenticatingWithTemporaryPassword(boolean userIsChangingPassword, UserProfileBeanFeedback[] feedback) {
 		System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticatingWithTemporaryPassword() 0043 ");
 
 		if (userIsChangingPassword == false && userProfile.getUpTempPwd() != null) { 
 			System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticatingWithTemporaryPassword() 003B ");
-		    feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD001B; 
+		    feedback[0] = UserProfileBeanFeedback.fail(com.yardi.shared.rentSurvey.YardiConstants.YRD001B); 
 		    return true; //authenticated but cant login unless password is changed. Temporary passwords automatically expire if authentication succeeds  
 		}
+
+	    feedback[0] = UserProfileBeanFeedback.ok(com.yardi.shared.rentSurvey.YardiConstants.YRD0000); 
 		return false;
 	}
     
@@ -508,42 +503,44 @@ public class UserProfileBean implements UserProfile {
      * YRD000B=Password policy is missing
      * YRD001C=Temporary password expired. Contact help desk for a new password
      * </pre>
+	 * @param feedback an immutable value object that encapsulates the outcome of authentication prechecks.
 	 * @return false if there are conditions that prevent authentication
 	 */
-	private boolean isAuthenticationPrecheckPassed() {
+	private boolean isAuthenticationPrecheckPassed(UserProfileBeanFeedback[] feedback) {
 		System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticationPrecheckPassed() 0044 ");
 
 		if (pwdPolicy==null) { 
 			System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticationPrecheckPassed() 0010 pwdPolicy == null");
-			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
+			feedback[0] = UserProfileBeanFeedback.fail(com.yardi.shared.rentSurvey.YardiConstants.YRD000B);
 			return false;
 		}
 
 		if (userProfile == null) {
 			System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticationPrecheckPassed() 0006 userProfile == null");
-			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0001;
+			feedback[0] = UserProfileBeanFeedback.fail(com.yardi.shared.rentSurvey.YardiConstants.YRD0001);
 			return false;
 		}
 
 		if (userProfile.getUpDisabledDate() != null) {
 			System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticationPrecheckPassed() 0008 userProfile.getUpDisabledDate() != null\n");
-			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0003;
+			feedback[0] = UserProfileBeanFeedback.fail(com.yardi.shared.rentSurvey.YardiConstants.YRD0003);
 			return false;
 		}
 
 		if (userProfile.getUpActiveYn().equals("N")) {
 			System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticationPrecheckPassed() 0009 userProfile.getUpActiveYn().equals(N)");
-			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0004;
+			feedback[0] = UserProfileBeanFeedback.fail(com.yardi.shared.rentSurvey.YardiConstants.YRD0004);
 			return false;
 		}
 		
 		if (userProfile.getUpTempPwd() != null && (userProfile.getUpPwdexpd().toLocalDateTime().isBefore(LocalDateTime.now())  
 				                               ||  userProfile.getUpPwdexpd().toLocalDateTime().isEqual (LocalDateTime.now())) ) { 
 			System.out.println("com.yardi.ejb.UserProfileBean.isAuthenticationPrecheckPassed() 003A ");
-			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD001C;
+			feedback[0] = UserProfileBeanFeedback.fail(com.yardi.shared.rentSurvey.YardiConstants.YRD001C);
 			return false; 
 		}
 		
+		feedback[0]=UserProfileBeanFeedback.ok(com.yardi.shared.rentSurvey.YardiConstants.YRD0000);
 		return true;
 	}
     
@@ -664,10 +661,11 @@ public class UserProfileBean implements UserProfile {
 	 * <pre>
 	 * YRD0002=Password expired
 	 * </pre>
+	 * @param feedback An immutable value object that encapsulates the outcome of isPasswordExpired
 	 * @param userIsChangingPassword indicates whether password is being changed
 	 * @return true if password is expired
 	 */
-	private boolean isPasswordExpired(boolean userIsChangingPassword) {
+	private boolean isPasswordExpired(boolean userIsChangingPassword, UserProfileBeanFeedback[] feedback) {
 		System.out.println("com.yardi.ejb.UserProfileBean.isPasswordExpired() 0021 ");
 		LocalDateTime now = LocalDateTime.now();
 
@@ -684,7 +682,7 @@ public class UserProfileBean implements UserProfile {
 			 * Still return false so no session table row is created.
 			 * com.yardi.ejb.UserServicesBean.authenticate() makes an exception for YRD0002 and will commit instead of rollback
 			 */
-			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0002;
+			feedback[0] = UserProfileBeanFeedback.fail(com.yardi.shared.rentSurvey.YardiConstants.YRD0002);
 			System.out.println("com.yardi.ejb.UserProfileBean.isPasswordExpired() 000E "
 					+ "\n "
 					+ "  userIsChangingPassword =" + userIsChangingPassword   
@@ -693,10 +691,12 @@ public class UserProfileBean implements UserProfile {
 					+ "\n "
 					+ "  now=" + now.toString()
 					+ "\n "
-					+ "  feedback =" + feedback
+					+ "  feedback =" + feedback[0].getFeedback()
 					);
 			return true;
 		}
+
+		feedback[0] = UserProfileBeanFeedback.ok(com.yardi.shared.rentSurvey.YardiConstants.YRD0000);
 		return false;
 	}
 	
@@ -821,15 +821,6 @@ public class UserProfileBean implements UserProfile {
 	}
 	
 	/**
-	 *  Stateful session bean remove method. Called by clients to release resources used by com.yardi.ejb.UserProfileBean.
-	 */
-	@Remove
-    @Override
-	public void removeBean() {
-		System.out.println("com.yardi.ejb.UserProfileBean.removeBean() 0007 ");
-	}
-	
-	/**
 	 * Choose the token to authenticate with. If the temporary password is present on the user profile return this token 
 	 * otherwise return userProfile.getUptoken()
 	 * @return the appropriate token for authentication
@@ -848,8 +839,6 @@ public class UserProfileBean implements UserProfile {
 	
 	/**
 	 * Sets password policy to the immutable copy obtained from {@link com.yardi.ejb.PasswordPolicyBean#getPasswordPolicyCopy() PasswordPoilcyBean.getPasswordPolicyCopy()}.<p>
-	 *
-	 * Provides feedback: <code>YRD000B password policy is missing</code>
 	 */
 	private void setPwdPolicy() {
 		System.out.println("com.yardi.ejb.UserProfileBean.setPwdPolicy() 0014 ");
@@ -857,7 +846,6 @@ public class UserProfileBean implements UserProfile {
 		pwdPolicy = passwordPolicyBean.getPasswordPolicyCopy();
 		
 		if (pwdPolicy == null) {
-			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000B;
 			System.out.println("com.yardi.ejb.UserProfileBean.setPwdPolicy().pwdPolicy==null 0011 ");
 			return;
 		}
@@ -865,9 +853,7 @@ public class UserProfileBean implements UserProfile {
 			+ "\n"
 			+ "   pwdPolicy="
 			+ pwdPolicy.toString()
-			+ "\n"
-			+ "   feedback="
-			+ feedback);
+			);
 	}
 	
 	/**
