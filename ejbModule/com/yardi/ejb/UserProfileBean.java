@@ -16,7 +16,8 @@ import com.yardi.shared.userServices.UserProfileBeanFeedback;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
-import jakarta.ejb.Stateless;
+import jakarta.ejb.Remove;
+import jakarta.ejb.Stateful;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceContextType;
@@ -25,7 +26,7 @@ import jakarta.persistence.metamodel.EntityType;
 /**
  * Session Bean implementation of methods for working with User_Pofile entity 
  */
-@Stateless
+@Stateful
 public class UserProfileBean implements UserProfile {
 	/*
 	 * In the case of a RESOURCE_LOCAL, EntityManager.getTransaction().begin() and EntityManager.getTransaction().comit() 
@@ -168,9 +169,9 @@ public class UserProfileBean implements UserProfile {
 		isJoined();
 		isManaged(userProfile);
 		UserProfileBeanFeedback[] f={UserProfileBeanFeedback.ok(com.yardi.shared.rentSurvey.YardiConstants.YRD0000)}; 
-		UserProfileBeanFeedback feedback = UserProfileBeanFeedback.ok(com.yardi.shared.rentSurvey.YardiConstants.YRD0000);
+		UserProfileBeanFeedback feedback = UserProfileBeanFeedback.ok(com.yardi.shared.rentSurvey.YardiConstants.YRD0000);		
 		
-	    if (!isAuthenticationPrecheckPassed(f)) {
+		if (!isAuthenticationPrecheckPassed(f)) {
 			System.out.println("com.yardi.ejb.UserProfileBean.authenticate() 003F ");
 			feedback=f[0];
 	        return feedback;
@@ -821,6 +822,15 @@ public class UserProfileBean implements UserProfile {
 	}
 	
 	/**
+	 *  Stateful session bean remove method. Called by clients to release resources used by com.yardi.ejb.UserProfileBean.
+	 */
+	@Remove
+	@Override
+	public void removeBean() {
+		System.out.println("com.yardi.ejb.UserProfileBean.removeBean() 0007 ");
+	}
+	
+	/**
 	 * Choose the token to authenticate with. If the temporary password is present on the user profile return this token 
 	 * otherwise return userProfile.getUptoken()
 	 * @return the appropriate token for authentication
@@ -878,7 +888,7 @@ public class UserProfileBean implements UserProfile {
 				+ "  pwdAttempts=" + userProfile.getUpPwdAttempts()
 				);
     }
-	
+
 	/**
 	 * Inject the given User_Profile entity.<p>
 	 * 
