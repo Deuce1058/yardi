@@ -6,6 +6,7 @@ import com.yardi.ejb.model.Full_User_Profile;
 import com.yardi.ejb.model.Reset_Password;
 import com.yardi.ejb.model.Update_Temp_Password;
 import com.yardi.ejb.model.User_Profile;
+import com.yardi.shared.userServices.UserProfileBeanFeedback;
 
 /**
  * Template for classes that work with User_Profie entity
@@ -72,7 +73,7 @@ public interface UserProfile {
      * @param userIsChangingPassword boolean indicating whether user is in the process of changing their password
      * @return boolean indicating whether authentication was successful 
      */
-	boolean authenticate(String userName, String password, boolean userIsChangingPassword);	
+	UserProfileBeanFeedback authenticate(String userName, String password, boolean userIsChangingPassword);	
 	/**
 	 * Change the hashed password stored in the User_Profile entity.<p>
 	 * 
@@ -133,12 +134,6 @@ public interface UserProfile {
      * @return entity that holds user profile details to be displayed on the password reset page
      */
     Reset_Password findUserProfileForPwdReset(String userID);
-	/**
-	 * Return the status of the most recent method call that provides feedback.<p>
-	 * Clients call <i>getFeedback()</i> to determine the status of the most recent method call that provides feedback.
-	 * @return feedback from the most recent method call that provides feedback.
-	 */
-    String getFeedback();
     /**
      * Return the class's reference to the User_Profile entity stored in the <i>userProfile</i> field
      * @return reference to the User_Profile entity
@@ -179,7 +174,7 @@ public interface UserProfile {
 	 */
     <T> void refreshEntity(T entity);
     /**
-	 * Remove the given Full_User_Profile entity.<p>
+	 * Remove the given Full_User_Profile entity.
 	 *  
 	 * @param userProfile the entity to remove.
 	 */
@@ -188,15 +183,15 @@ public interface UserProfile {
 	 *  Stateful session bean remove method. Called by clients to release resources used by com.yardi.ejb.UserProfileBean.
 	 */
 	void removeBean();
-    /**
+    
+	/**
 	 * Update the number of invalid password attempts since the last successful login in the User_Profile entity.<p>
 	 * 
 	 * The state stored in the <i>userProfile</i> field is merged into the persistence context.
 	 * @param pwdAttempts the value to set
 	 */
 	void setUpPwdAttempts(short pwdAttempts);
-    
-	/**
+    /**
 	 * Inject the given User_Profile entity.<p>
 	 * 
 	 * During login clients inject the User_Profile entity because a reference has been obtained prior to this point and the class should use that reference
