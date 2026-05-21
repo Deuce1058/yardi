@@ -13,6 +13,7 @@ import com.yardi.shared.model.PasswordPolicyCopy;
 import com.yardi.shared.userServices.LoginInitialPage;
 import com.yardi.shared.userServices.LoginRequest;
 import com.yardi.shared.userServices.LoginResponse;
+import com.yardi.shared.userServices.UserProfileBeanFeedback;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
@@ -596,10 +597,10 @@ public class UserServicesBean implements UserServices {
 	 */
 	private boolean isAuthenticated() {
 		System.out.println("com.yardi.ejb.UserServicesBean.isAuthenticated() 000A ");
-		boolean authenticated = userProfileBean.authenticate(loginRequest.getUserName(),
+		UserProfileBeanFeedback f = userProfileBean.authenticate(loginRequest.getUserName(),
 				loginRequest.getPassword(), loginRequest.getChangePwd());
-		feedback = userProfileBean.getFeedback();
-		return authenticated;
+		feedback = f.getFeedback();
+		return f.isSuccess();
 	}
 
 	/**
@@ -785,8 +786,8 @@ public class UserServicesBean implements UserServices {
 	@Remove
 	public void remove() {
 		System.out.println("com.yardi.ejb.UserServicesBean.remove() 0000");
-		userGroupsBean.removeBean();
 		userProfileBean.removeBean();
+		userGroupsBean.removeBean();
 	}
 
 	/**
