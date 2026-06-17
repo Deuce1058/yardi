@@ -8,7 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.PasswordPolicy;
 import com.yardi.ejb.UniqueTokens;
 import com.yardi.ejb.Unique_Tokens;
-import com.yardi.ejb.UserGroups;
+import com.yardi.ejb.UserGroups2;
+import com.yardi.ejb.UserGroupsResult;
 import com.yardi.ejb.UserProfile;
 import com.yardi.ejb.UserServices;
 import com.yardi.shared.model.PasswordPolicyCopy;
@@ -35,10 +36,11 @@ public class LoginStateBean implements LoginState {
 	private LoginStateRequest loginStateRequest;
 	private PasswordPolicyCopy pwdPolicy = null;
 	private String feedback;
+	private UserGroupsResult userGroupsResult; 
 	@EJB UserProfile userProfileBean; 
 	@EJB UniqueTokens uniqueTokensBean;
 	@EJB PasswordPolicy passwordPolicyBean;
-	@EJB UserGroups userGroupsBean;
+	@EJB UserGroups2 userGroupsBean;
 	@Resource UserTransaction tx;
 	@EJB UserServices userServicesBean;
 	
@@ -48,9 +50,9 @@ public class LoginStateBean implements LoginState {
 
 	private boolean findUserID() {
     	System.out.println("com.yardi.ejb.test.LoginStateBean findUserID() 0000 ");
-  		userGroupsBean.find(loginStateRequest.getUserName());
+  		userGroupsResult = userGroupsBean.find(loginStateRequest.getUserName());
 		
-		if (userGroupsBean.getLoginUserProfile()==null) {
+		if (userGroupsResult.getLoginUserProfile()==null) {
 	    	System.out.println("com.yardi.ejb.test.LoginStateBean findUserID() 0001 ");
 			String [] s = com.yardi.shared.rentSurvey.YardiConstants.YRD000D.split("=");
 			loginStateRequest.setMsgid(s[0]);
@@ -58,7 +60,7 @@ public class LoginStateBean implements LoginState {
 	    	return false;
 		}
 		
-		userProfileBean.setUserProfile(userGroupsBean.getLoginUserProfile());
+		userProfileBean.setUserProfile(userGroupsResult.getLoginUserProfile());
 		return true;
 	}
 
@@ -215,16 +217,16 @@ public class LoginStateBean implements LoginState {
 		if (userGroupsBean==null) {
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapSessionsTable() 0010 ");
 		}
-		if (userGroupsBean.getLoginSessionTable()==null) {
+		if (userGroupsResult.getLoginSessionTable()==null) {
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapSessionsTable() 0011 ");
 		}
 		
-		if (userGroupsBean.getLoginSessionTable() != null) {
+		if (userGroupsResult.getLoginSessionTable() != null) {
 			System.out.println("com.yardi.ejb.test.LoginStateBean mapSessionsTable() 000F ");
-			loginStateRequest.setStSesssionId    (userGroupsBean.getLoginSessionTable().getStSessionId());
-			loginStateRequest.setStSessionToken  (userGroupsBean.getLoginSessionTable().getStSessionToken());
-			loginStateRequest.setStLastRequest   (userGroupsBean.getLoginSessionTable().getStLastRequest());
-			loginStateRequest.setStLastActiveDate(stringifyDate(userGroupsBean.getLoginSessionTable().getStLastActive()));
+			loginStateRequest.setStSesssionId    (userGroupsResult.getLoginSessionTable().getStSessionId());
+			loginStateRequest.setStSessionToken  (userGroupsResult.getLoginSessionTable().getStSessionToken());
+			loginStateRequest.setStLastRequest   (userGroupsResult.getLoginSessionTable().getStLastRequest());
+			loginStateRequest.setStLastActiveDate(stringifyDate(userGroupsResult.getLoginSessionTable().getStLastActive()));
 		}
 	}
 
@@ -247,7 +249,7 @@ public class LoginStateBean implements LoginState {
 	
 	private void mapUserGroups() {
 		System.out.println("com.yardi.ejb.test.LoginStateBean mapUserGroups() 0009 ");
-		Vector<LoginInitialPage> initialPageList = userGroupsBean.getInitialPageList();
+		Vector<LoginInitialPage> initialPageList = userGroupsResult.getInitialPageList();
         ObjectMapper mapper = new ObjectMapper();
 		try {
 			loginStateRequest.setUserGroups(mapper.writeValueAsString(initialPageList));
@@ -258,20 +260,20 @@ public class LoginStateBean implements LoginState {
 	
 	private void mapUserProfile() {
 		System.out.println("com.yardi.ejb.test.LoginStateBean mapUserProfile() 000A ");
-		loginStateRequest.setUptoken        (userGroupsBean.getLoginUserProfile().getUptoken());
-		loginStateRequest.setUpTempPwd      (userGroupsBean.getLoginUserProfile().getUpTempPwd());
-		loginStateRequest.setUpPwdexpd      (stringifyDate(userGroupsBean.getLoginUserProfile().getUpPwdexpd()));
-		loginStateRequest.setUpPwdAttempts  (Short.toString(userGroupsBean.getLoginUserProfile().getUpPwdAttempts()));
+		loginStateRequest.setUptoken        (userGroupsResult.getLoginUserProfile().getUptoken());
+		loginStateRequest.setUpTempPwd      (userGroupsResult.getLoginUserProfile().getUpTempPwd());
+		loginStateRequest.setUpPwdexpd      (stringifyDate(userGroupsResult.getLoginUserProfile().getUpPwdexpd()));
+		loginStateRequest.setUpPwdAttempts  (Short.toString(userGroupsResult.getLoginUserProfile().getUpPwdAttempts()));
 		loginStateRequest.setUpDisabledDate ("");
 		loginStateRequest.setUpLastLoginDate("");
-		loginStateRequest.setUpActiveYn     (userGroupsBean.getLoginUserProfile().getUpActiveYn());
+		loginStateRequest.setUpActiveYn     (userGroupsResult.getLoginUserProfile().getUpActiveYn());
 		
-		if (!(userGroupsBean.getLoginUserProfile().getUpDisabledDate() == null)) {
-			loginStateRequest.setUpDisabledDate(stringifyDate(userGroupsBean.getLoginUserProfile().getUpDisabledDate()));
+		if (!(userGroupsResult.getLoginUserProfile().getUpDisabledDate() == null)) {
+			loginStateRequest.setUpDisabledDate(stringifyDate(userGroupsResult.getLoginUserProfile().getUpDisabledDate()));
 		}
 		
-		if (!(userGroupsBean.getLoginUserProfile().getUpLastLoginDate() == null)) {
-			loginStateRequest.setUpLastLoginDate(stringifyDate(userGroupsBean.getLoginUserProfile().getUpLastLoginDate()));
+		if (!(userGroupsResult.getLoginUserProfile().getUpLastLoginDate() == null)) {
+			loginStateRequest.setUpLastLoginDate(stringifyDate(userGroupsResult.getLoginUserProfile().getUpLastLoginDate()));
 		}
 	}
 	
@@ -287,7 +289,6 @@ public class LoginStateBean implements LoginState {
 	public void removeBean() {
 		System.out.println("com.yardi.ejb.test.LoginStateBean removeBean() 000B ");
 		userProfileBean.removeBean();
-		userGroupsBean.removeBean();
 	}
 
 	@Override
