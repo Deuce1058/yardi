@@ -140,6 +140,7 @@ public final class UserGroupsResult implements OperationResult {
 	 * @return sorted vector containing all columns from {@link User_Groups} and {@link com.yardi.ejb.model.Groups_Master Groups_Master}
 	 */
 	private Vector<LoginUserGroupsGraph> buildUserGroupsVector(List<User_Groups> userGroupsList) {
+		System.out.println("com.yardi.ejb.UserGroupsResult.buildUserGroupsVector() 0011 ");
 		Vector<LoginUserGroupsGraph> userGroupsVector = new Vector<LoginUserGroupsGraph>();
 		/* 
 		 * Map each java.util.List element to a new com.yardi.shared.userServices.LoginUserGroupsGraph
@@ -164,7 +165,11 @@ public final class UserGroupsResult implements OperationResult {
     	}
     	
     	Collections.sort(userGroupsVector);
-		System.out.println("com.yardi.ejb.UserGroupsResult.buildUserGroupsVector() 0006 ");
+		System.out.println("com.yardi.ejb.UserGroupsResult.buildUserGroupsVector() 0006 "
+				+ "\n    "
+				+ "userGroupsVector="
+				+ userGroupsVector
+				);
     	return userGroupsVector;
 	}
 
