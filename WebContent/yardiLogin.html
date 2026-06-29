@@ -237,7 +237,7 @@
                 });
               }
               
-              if (data.msgID === 'YRD000E' || data.msgID === 'YRD000') {
+              if (data.msgID === 'YRD000E' || data.msgID === 'YRD0000') {
 
                 if (data.msgID === 'YRD000E') {
                   /**
@@ -256,65 +256,6 @@
             } //end of function inside ajax
           }); //end of ajax
           var x = 1;
-          /*******
-          $.post('doLogin', 
-          {
-              formData : JSON.stringify(formItems)
-          })
-          .done(function(data) {
-            $('#form-feedback').text(data.msgDescription);
-            
-            if (data.msgID === 'YRD0001') {
-              $('input').each(function () {
-                formValid = false;
-                var formGroup = $(this).parents('.form-group');
-                var glyphIcon = formGroup.find('.glyph_icon');
-                var obj = $(this);
-                // show red, remove green
-                formGroup.addClass('has-error').removeClass('has-success');
-                // show x, remove check
-                glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
-              });
-            }
-          
-            if (data.msgID === 'YRD0003' || data.msgID === 'YRD0004') {
-              formValid = false;
-              var formGroup = $('[name="username"]').parent('.form-group');
-              var glyphIcon = formGroup.find('.glyph_icon');
-              var obj = $(this);
-              // show red, remove green
-              formGroup.addClass('has-error').removeClass('has-success');
-              // show x, remove check
-              glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
-            }
-                    
-            if (data.msgID === 'YRD0005' || data.msgID === 'YRD0006' 
-                || data.msgID === 'YRD0007' || data.msgID === 'YRD0008' 
-                || data.msgID === 'YRD0009' || data.msgID === 'YRD000A'  ) {
-                formValid = false;
-                var formGroup = $('[name="password"]').parent('.form-group');
-                var glyphIcon = formGroup.find('.glyph_icon');
-                var obj = $(this);
-                // show red, remove green
-                formGroup.addClass('has-error').removeClass('has-success');
-                // show x, remove check
-                glyphIcon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
-            }
-
-            if (data.msgID === 'YRD000B' || data.msgID === 'YRD000C') {
-              $('input').each(function () {
-                formValid = false;
-                var formGroup = $(this).parents('.form-group');
-                var glyphIcon = formGroup.find('.glyph_icon');
-                var obj = $(this);
-                formGroup.removeClass('has-error');
-                formGroup.removeClass('has-success');
-                glyphIcon.removeClass('glyphicon-ok');
-                glyphIcon.removeClass('glyphicon-remove');
-              });
-            }
-          });  //end of done
-          ********/
         } //end form is valid
         e.preventDefault();
       });
