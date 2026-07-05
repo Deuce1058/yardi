@@ -1,4 +1,4 @@
-package com.yardi.ejb;
+package com.yardi.shared.userServices;
 
 /**
  * Common contract for classes that represent the outcome
