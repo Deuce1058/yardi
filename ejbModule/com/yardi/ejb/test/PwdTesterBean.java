@@ -1,6 +1,7 @@
 package com.yardi.ejb.test;
 
 import com.yardi.ejb.UserGroups;
+import com.yardi.ejb.UserGroupsResult;
 import com.yardi.ejb.userServices.PasswordValidationException;
 import com.yardi.ejb.PwdCompositionRules;
 import com.yardi.ejb.UniqueTokens;
@@ -44,8 +45,10 @@ public class PwdTesterBean implements PwdTester {
 			feedback = s[1];
 			pwdTestRequest.setMsgID(s[0]);
 			pwdTestRequest.setMsgDescription(s[1]);
+			
+			UserGroupsResult userGroupsResult=userGroupsBean.find(pwdTestRequest.getUserName()); 
 
-			if (!userGroupsBean.find(pwdTestRequest.getUserName()).isEmpty()) {
+			if (!userGroupsResult.getFeedback().equals(com.yardi.shared.rentSurvey.YardiConstants.YRD000D)) {
 				System.out.println("com.yardi.ejb.test.PwdTesterBean enforce() 0005 ");
 				uniqueTokensBean.removeExtraTokens(uniqueTokensBean.findTokens(pwdTestRequest.getUserName()));
 				
@@ -67,8 +70,8 @@ public class PwdTesterBean implements PwdTester {
 			} else {
 				System.out.println("com.yardi.ejb.test.PwdTesterBean enforce() 0008 ");
 				pwdTestRequest.setPwdCompositionRulesBeanStatus("FALSE ");
-				feedback = userGroupsBean.getFeedback();
-				s = userGroupsBean.getFeedback().split("=");
+				feedback = userGroupsResult.getFeedback();
+				s = userGroupsResult.getFeedback().split("=");
 				pwdTestRequest.setMsgID(s[0]);
 				pwdTestRequest.setMsgDescription(s[1]);
 			}
