@@ -566,7 +566,6 @@ public class EditUserProfileCTRLBean implements EditUserProfileCTRL {
 		/*debug*/
 		//userProfileBean.detachEntity(user_Profile);
 		userProfileBean.removeBean();
-		userGroupsBean.removeBean();
 	}
     	
     /**
