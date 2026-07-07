@@ -1,10 +1,10 @@
 package com.yardi.ejb.test;
 
+import com.yardi.ejb.PwdCompositionRules;
+import com.yardi.ejb.UniqueTokens;
 import com.yardi.ejb.UserGroups;
 import com.yardi.ejb.UserGroupsResult;
 import com.yardi.ejb.userServices.PasswordValidationException;
-import com.yardi.ejb.PwdCompositionRules;
-import com.yardi.ejb.UniqueTokens;
 import com.yardi.shared.test.PwdTestRequest;
 
 import jakarta.annotation.PostConstruct;
@@ -104,7 +104,6 @@ public class PwdTesterBean implements PwdTester {
 	@Override
 	public void removeBean() {
 		System.out.println("com.yardi.ejb.test.PwdTesterBean removeBean() 0000 ");
-		userGroupsBean.removeBean();
 	} 
 			
 	@Override
