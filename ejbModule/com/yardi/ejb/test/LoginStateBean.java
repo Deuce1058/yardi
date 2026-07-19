@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yardi.ejb.PasswordPolicy;
 import com.yardi.ejb.UniqueTokens;
 import com.yardi.ejb.Unique_Tokens;
-import com.yardi.ejb.UserGroups2;
+import com.yardi.ejb.UserGroups;
 import com.yardi.ejb.UserGroupsResult;
 import com.yardi.ejb.UserProfile;
 import com.yardi.ejb.UserServices;
@@ -40,7 +40,7 @@ public class LoginStateBean implements LoginState {
 	@EJB UserProfile userProfileBean; 
 	@EJB UniqueTokens uniqueTokensBean;
 	@EJB PasswordPolicy passwordPolicyBean;
-	@EJB UserGroups2 userGroupsBean;
+	@EJB UserGroups userGroupsBean;
 	@Resource UserTransaction tx;
 	@EJB UserServices userServicesBean;
 	
