@@ -15,7 +15,7 @@ package com.yardi.shared.userServices;
  *
  * <p>Instances are created exclusively through the static factory methods {@link #ok(String)} and {@link #fail(String)}.
  */
-public final class UserProfileBeanFeedback {
+public final class UserProfileBeanFeedback implements OperationResult {
 	/**
 	 * success/fail flag indicates whether the operation succeeded or failed 
 	 */
