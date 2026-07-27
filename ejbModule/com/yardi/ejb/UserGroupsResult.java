@@ -9,6 +9,7 @@ import com.yardi.ejb.model.User_Groups;
 import com.yardi.ejb.model.User_Profile;
 import com.yardi.shared.userServices.LoginInitialPage;
 import com.yardi.shared.userServices.LoginUserGroupsGraph;
+import com.yardi.shared.userServices.OperationResult;
 
 /**
  * Immutable result object carrying the outcome of a user-groups lookup operation.
@@ -33,11 +34,6 @@ public final class UserGroupsResult implements OperationResult {
 	 * or a plain message if no delimiter is present.
 	 */
 	private final String feedback; 
-	/**
-	 * Specific feedback indicating whether user is a member of multiple groups. {@link com.yardi.shared.rentSurvey.YardiConstants#YRD000E} indicates user belongs to multiple groups. 
-	 * Otherwise {@link com.yardi.shared.rentSurvey.YardiConstants#YRD0000}.  
-	 */
-	private final String initialPageFeedback;
 	/**
 	 * {@code true} if the operation completed successfully, {@code false} otherwise.
 	 */
@@ -68,12 +64,10 @@ public final class UserGroupsResult implements OperationResult {
 	 * sets {@link #initialPageFeedback} based on whether the user belongs to multiple groups.
 	 * 
 	 * @param success general success or failure of the operation
-	 * @param feedback the outcome of the operation
 	 * @param userGroupsList the list of groups that the user belongs to
 	 */
-	private UserGroupsResult(boolean success, String feedback, List<User_Groups> userGroupsList) {
+	private UserGroupsResult(boolean success, List<User_Groups> userGroupsList) {
 		System.out.println("com.yardi.ejb.UserGroupsResult.UserGroupsResult() 0004 ");
-		this.feedback = feedback;
 		this.success = success;
 		userGroupsVector = buildUserGroupsVector(userGroupsList);
 		user_Groups = userGroupsList.get(0);
@@ -82,10 +76,10 @@ public final class UserGroupsResult implements OperationResult {
     	
     	if (userGroupsVector.size()>1) {
     		System.out.println("com.yardi.ejb.UserGroupsResult.UserGroupsResult() 0005 ");
-        	initialPageFeedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000E;
+        	feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000E;
     	} else {
     		System.out.println("com.yardi.ejb.UserGroupsResult.UserGroupsResult() 0007 ");
-        	initialPageFeedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;    		
+        	feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
     	}
 	} 
 
@@ -103,7 +97,6 @@ public final class UserGroupsResult implements OperationResult {
 		this.userGroupsVector = new Vector<LoginUserGroupsGraph>();
 		this.user_Groups=null;
 		this.loginSessionTable=null;
-		initialPageFeedback=null;
 	}
 
 	/**
@@ -177,6 +170,7 @@ public final class UserGroupsResult implements OperationResult {
 	 * Return the raw feedback string
 	 * @return raw feedback string 
 	 */
+	@Override
 	public String  getFeedback() { 
 		return feedback; 
 	}
@@ -218,15 +212,6 @@ public final class UserGroupsResult implements OperationResult {
 		return initialPage;
 	}
 
-	/**
-	 * Return feedback that indicates whether user belongs to multiple groups.
-	 * 
-	 * @return {@link com.yardi.shared.rentSurvey.YardiConstants#YRD000E} if the user belongs to
-	 * multiple groups, otherwise {@link com.yardi.shared.rentSurvey.YardiConstants#YRD0000}
-	 */
-    public String getInitialPageFeedback() {
-		return initialPageFeedback;
-	}
 	
 	/**
 	 * When user belongs to multiple groups returns the data needed to render {@code views/selectGroup.html}.<br>
@@ -259,6 +244,7 @@ public final class UserGroupsResult implements OperationResult {
 	 * Return the message description which is the String on the right side of the delimiter of the raw feedback String. Return the entire raw feedback String of no delimiter is present  
 	 * @return message description
 	 */
+	@Override
 	public String getMsgDescription() {
 		int i = feedback.indexOf("=");
 
@@ -273,6 +259,7 @@ public final class UserGroupsResult implements OperationResult {
 	 * Return the message ID which is the string on the left side of the delimiter of the raw feedback String. Return the entire raw feedback String of no delimiter is present.
 	 * @return message ID
 	 */
+	@Override
 	public String getMsgid() {
 		int i = feedback.indexOf("=");
 
@@ -298,6 +285,7 @@ public final class UserGroupsResult implements OperationResult {
 	 * Return the success flag which indicates whether the operation succeeded or failed
 	 * @return {@code true} if the operation completed successfully, {@code false} otherwise
 	 */
+	@Override
 	public boolean isSuccess() { 
 		return success; 
 	}
@@ -338,11 +326,10 @@ public final class UserGroupsResult implements OperationResult {
 	
 	@Override
 	public String toString() {
-		return "UserGroupsResult [feedback=" + feedback + ", initialPageFeedback=" + initialPageFeedback + ", success="
-				+ success + ", loginUserProfile=" + loginUserProfile + ", user_Groups=" + user_Groups
-				+ ", loginSessionTable=" + loginSessionTable + "]";
+		return "UserGroupsResult [feedback=" + feedback + ", success=" + success + ", loginUserProfile="
+				+ loginUserProfile + ", user_Groups=" + user_Groups + ", loginSessionTable=" + loginSessionTable + "]";
 	}
-	
+
 	/**
 	 * Factory method for a successful result.<p> 
 	 * Use when the user groups lookup finds one or more groups for the user.
@@ -353,7 +340,7 @@ public final class UserGroupsResult implements OperationResult {
 	 */
 	public static UserGroupsResult foundUserGroups(List<User_Groups> userGroupsList) {
 		System.out.println("com.yardi.ejb.UserGroupsResult.foundUserGroups() 000D ");
-		return new UserGroupsResult(true, com.yardi.shared.rentSurvey.YardiConstants.YRD0000, userGroupsList);
+		return new UserGroupsResult(true, userGroupsList);
 	}
 
 	/**
