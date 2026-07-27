@@ -1,208 +1,81 @@
 package com.yardi.ejb;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.ejb.Remove;
-import jakarta.ejb.Stateful;
-import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceContextType;
-import jakarta.persistence.metamodel.EntityType;
 import com.yardi.ejb.model.Sessions_Table;
 import com.yardi.ejb.model.User_Groups;
 import com.yardi.ejb.model.User_Groups2;
 import com.yardi.ejb.model.User_Profile;
-import com.yardi.shared.userServices.LoginInitialPage;
-import com.yardi.shared.userServices.LoginUserGroupsGraph;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContextType;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.metamodel.EntityType;
 
 /**
- * Session Bean implementation of methods for working with User_Groups entity
+ * Session Bean implementation of methods for working with User_Groups entity.<p> Uses a transaction-scoped persistence context.
  */
-@Stateful
+@Stateless
 public class UserGroupsBean implements UserGroups {
-	@PersistenceContext(unitName="yardi", type=PersistenceContextType.EXTENDED)
+	@PersistenceContext(unitName="yardi", type=PersistenceContextType.TRANSACTION)
 	private EntityManager em;
-	/**
-	 * The initial page of the description and the URL of the group the user belongs to.
-	 */
-	private String initialPage = "";
-	/**
-	 * Clients can read this field to determine the status of the most recent method call that provides feedback.
-	 */
-	private String feedback = "";
-	/**
-	 * Vector containing the initial page description and the URL for each group the user belongs to. This will be converted to JSON as part of the web response.
-	 */
-	private Vector<LoginInitialPage> initialPageList = new Vector<LoginInitialPage>();
-	/**
-	 * Contains the groups the user belongs to along with the description of the group and the group's initial page.
-	 */
-	private Vector<LoginUserGroupsGraph> userGroups;
-	/**
-	 * A reference to the User_Groups entity. This exists to allow easier access to embeded entities and other elements within the User_Groups entity 
-	 */
-	private User_Groups userGroupsEntity=null;
-	/**
-	 * A reference to the User_Profile entity embeded within User_Groups entity. This exists for the convenience of other components that may 
-	 * need a reference to User_Profile.
-	 */
-	private User_Profile loginUserProfile;
-	/**
-	 * A reference to the Sessions_Table entity embeded within User_Groups entity. This exists for the convenience of other components that may 
-	 * need a reference to Sessions_Table.
-	 */
-	private Sessions_Table loginSessionTable;
 
+	/**
+	 * Default constructor
+	 */
 	public UserGroupsBean() {
-		//debug
 		System.out.println("com.yardi.ejb.UserGroupsBean UserGroupsBean() 0007 ");
-		//debug
     }
 	
 	/**
-	 * Find User_Groups entities by userID.<p>
+	 * Finds the groups that the given user belongs to.
+	 * <p>
+	 * Executes a native query joining USER_GROUPS, USER_PROFILE, SESSIONS_TABLE, and GROUPS_MASTER.
+	 * USER_PROFILE and GROUPS_MASTER are inner joined, so the query returns results only when the
+	 * user exists in both tables. SESSIONS_TABLE is outer joined because there may not be an active session.
+	 * <p>
+	 * A native query via {@link jakarta.persistence.EntityManager#createNativeQuery(String, Class) EntityManager}
+	 * is required here. EclipseLink throws an exception when this query is executed as a
+	 * {@link jakarta.persistence.TypedQuery TypedQuery}.
 	 * 
-	 * Native query joins database tables: USER_GROUPS, SESSIONS_TABLE, USER_PROFILE and GROUPS_MASTER.<br><br>
+	 * @param userID the user ID to search for.
+	 * @return a {@link UserGroupsResult} containing the list of {@link User_Groups} entities
+	 *         matching the given user ID, or a no-such-user result if none are found.<p>
+	 *         
+	 *         {@link UserGroupsResult#noSuchUserName()} if no rows are found, which typically
+	 *         indicates the user does not exist in USER_PROFILE or USER_GROUPS.<p>
 	 * 
-	 * Only the columns needed for login are used.<br><br>
-	 * 
-	 * A new com.yardi.shared.userServices.LoginUserGroupsGraph is constructed from all columns of USER_GROUPS database table and all columns of
-	 * GROUPS_MASTER database table.<br><br>
-	 * 
-	 * The new com.yardi.shared.userServices.LoginUserGroupsGraph is added to a Vector of com.yardi.shared.userServices.LoginUserGroupsGraph.<br><br>
-	 * 
-	 * com.yardi.shared.userServices.LoginUserGroupsGraph implements Comparable so it can be sorted.<br><br>
-	 * 
-	 * Set the field <i>userGroupsEntity</i> to refer to the first User_Groups entity in query result list for convenience.<br> 
-	 * This will allow easier access to elements embeded within the User_Groups entity.<br><br> 
-	 * 
-   	 * Set field <i>userGroups</i>. <i>userGroups</i> is a Vector of groups that the user belongs to along with a description and the path to the initial screen.<br>  
-   	 * <i>userGroups</i> exists for the convenience of other components that might need this reference.<br><br>
-   	 * 
-  	 * Set field <i>loginSessionsTable</i>. <i>loginSessionsTable</i> is a reference to the Sessions_Table entity embeded within the User_Groups entity.<br>
-   	 * It exists for the convenience of other components that may need this reference.<br><br>
-   	 * 
-  	 * Set field <i>loginUserProfile</i>. <i>loginUserProfile</i> is a reference to the User_Profile entity embebed within the User_Groups entity.<br>
-   	 * It exists for the convenience of other components that may need this reference.<br>
-   	 * <i>loginUserProfile</i> is null if the userId is not found in the USER_PROFILE database table.<br><br>
-   	 * 
-   	 * <strong>Feedback from this method:</strong>
-   	 * <pre>YRD000D if the userId is not in the USER_PROFILE database table</pre><br><br>  
-   	 * 
-   	 * @param userID the user to find.
-   	 * @return vector of groups that the user belongs to along with a description and the path to the initial screen for the group.
+	 *         {@link UserGroupsResult#foundUserGroups(List)} if rows are found.
 	 */
-	public Vector<LoginUserGroupsGraph> find(String userID) {
-    	//debug
+	@Override
+	public UserGroupsResult find(String userID) {
 		System.out.println("com.yardi.ejb.UserGroupsBean find() 0000 ");
-		//debug
-		Vector<LoginUserGroupsGraph> userGroupsVector = new Vector<LoginUserGroupsGraph>();
 		List<User_Groups> userGroupsList;
-		/*
-		 * No typed query works no matter how its defined
-		 * Must be native query with numbered parms
-		 * Eclipselink does not seem to bind named parms in a native query
-		 */
 		Query qry = em.createNativeQuery(
-				  "select t0.UG_USER_ID, t0.UG_GROUP, t0.UG_RRN "
-			    + "from DB2ADMIN.USER_GROUPS t0 "
-			    + "left outer join DB2ADMIN.SESSIONS_TABLE t3 on t3.ST_USER_ID = t0.UG_USER_ID "
-			    + "join DB2ADMIN.USER_PROFILE t2              on t2.UP_USERID  = t0.UG_USER_ID "    
-			    + "join DB2ADMIN.GROUPS_MASTER t1             on t1.GM_TYPE    = t0.UG_GROUP "
-			    + "where t0.UG_USER_ID = ? "
-			      , User_Groups.class);
+				"select t0.UG_USER_ID, t0.UG_GROUP, t0.UG_RRN "
+						+ "from DB2ADMIN.USER_GROUPS t0 "
+						+ "left outer join DB2ADMIN.SESSIONS_TABLE t3 on t3.ST_USER_ID = t0.UG_USER_ID "
+						+ "join DB2ADMIN.USER_PROFILE t2              on t2.UP_USERID  = t0.UG_USER_ID "    
+						+ "join DB2ADMIN.GROUPS_MASTER t1             on t1.GM_TYPE    = t0.UG_GROUP "
+						+ "where t0.UG_USER_ID = ? "
+						, User_Groups.class);
 		userGroupsList = qry
 				.setParameter(1, userID)
 				.getResultList();
-	
-		/*
-		 * does not return sessions table row
-		 * eclipselink insists on adding a where clause which probably causes the sessions table not to be selected
-  		TypedQuery<User_Groups> qry = em.createQuery(
-    			  "SELECT ug "
-    			+ "from User_Groups ug "
-    			+ "join ug.ugGroupsMaster gm "
-    			+ "    on  ug.ugGroup = gm.gmType "
-     			+ "join ug.ugUserProfile up "
-    			+ "    on  ug.ugUserId = up.upUserid "
-    			+ "    and ug.ugUserId = :userID "
-    			+ "    and up.upUserid = :userID "
-    			+ "left join ug.ugSessionsTable st "
-    			+ "    on  ug.ugUserId = st.stUserId "
-    			+ "    and ug.ugUserId = :userID "
-    			+ "    and st.stUserId = :userID "
-    			, User_Groups.class);
-    	userGroupsList = qry
-    			.setParameter("userID", userID)
-    			.getResultList();
-    	*/
 
-    	if (userGroupsList.isEmpty()) {
-        	//debug
-    		System.out.println("com.yardi.ejb.UserGroupsBean find() 000C ");
-    		//debug
-    		loginUserProfile = null;
-    		feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000D;
-    		return userGroupsVector;
-    	}
-    	
-		/* 
-		 * Map each java.util.List element to a new com.yardi.shared.userServices.LoginUserGroupsGraph
-		 * 
-		 * The new com.yardi.shared.userServices.LoginUserGroupsGraph is added to a Vector of com.yardi.shared.userServices.LoginUserGroupsGraph
-		 * 
-		 * com.yardi.shared.userServices.LoginUserGroupsGraph implements Comparable so it can be sorted
-		 * 
-		 * Set the field userGroupsEntity to refer to the first User_Groups entity in thejava.util.List for convenience. 
-		 * This will allow easier access to elements embeded within the User_Groups entity    
-		 */
-    	for (User_Groups userGroup : userGroupsList) {
-    		userGroupsVector.add(new LoginUserGroupsGraph(
-    			userGroup.getUgUserId(), 
-    			userGroup.getUgGroup(), 
-    			userGroup.getUgRrn(), 
-    			userGroup.getUgGroupsMaster().getGmType(), 
-    			userGroup.getUgGroupsMaster().getGmDescription(), 
-    			userGroup.getUgGroupsMaster().getGmInitialPage(), 
-    			userGroup.getUgGroupsMaster().getGmRrn())
-    		);
-    		
-    		if(userGroupsEntity==null) {
-    			//field userGroupsEntity refers to one User_Groups entity in the List. It exists for easier access to other embeded entities in User_Groups
-    			userGroupsEntity = userGroup.getLoginUserGroups();
-    		}
+		if (userGroupsList.isEmpty()) {
+			System.out.println("com.yardi.ejb.UserGroupsBean find() 000C ");
+			return UserGroupsResult.noSuchUserName();
+		}
 
-    		System.out.println("com.yardi.ejb.UserGroupsBean find() 0006 ");
-    		isJoined();
-    		isManaged(userGroup);
-    	}
-    	
-    	//debug
-		System.out.println("com.yardi.ejb.UserGroupsBean find() 000D ");
-		//debug
-    	Collections.sort(userGroupsVector);
-    	/*
-    	 * userGroupsVector is a Vector of groups that the user belongs to along with a description and the path to the initial screen for the group 
-    	 * field userGroups refers to local Vector userGroupsVector. It exists for the convenience of other components that might need this reference
-    	 */
-    	setUserGroups(userGroupsVector);
-    	/*
-    	 * Field loginSessionsTable is a reference to the Sessions_Table entity embeded within the User_Groups entity.
-    	 * It exists for the convenience of other components that may need this reference
-    	 */
-    	setLoginSessionTable();
-    	/*
-    	 * Field loginUserProfile is a reference to the User+Profile entity embebed within the User_Groups entity.
-    	 * It exists for the convenience of other components that may need this reference  
-    	 */
-    	setLoginUserProfile();
-    	return userGroupsVector;
+		System.out.println("com.yardi.ejb.UserGroupsBean find() 0006 ");
+		return UserGroupsResult.foundUserGroups(userGroupsList);
 	}
 	
 	/**
@@ -212,10 +85,9 @@ public class UserGroupsBean implements UserGroups {
 	 * @return Vector containing User_Groups2 entities matching the given userName. Returns an empty Vector if the persistence context contains 
 	 * no User_Groups2 entities matching the given userName and the USER_GROUPS database table has no rows matching userName.
 	 */
+	@Override
 	public Vector<User_Groups2> find2(String userName) {
-		/*debug*/
 		System.out.println("com.yqrdi.ejb.UserGroupsBean.find2() 0013 ");
-		/*debug*/
 		isJoined();
 		Vector<User_Groups2> userGroups = new Vector<User_Groups2>();
 		TypedQuery<User_Groups2> qry = em.createQuery(
@@ -225,7 +97,7 @@ public class UserGroupsBean implements UserGroups {
 		);
 		userGroups = (Vector<User_Groups2>) qry.setParameter("userName", userName)
 						.getResultList();
-		/*debug*/
+
 		if (userGroups.isEmpty()) {
 			System.out.println("com.yqrdi.ejb.UserGroupsBean.find2() 0014 "
 					+ "\n    "
@@ -246,115 +118,10 @@ public class UserGroupsBean implements UserGroups {
 					);
 				isManaged(group);
 			}
-		/*debug*/
 		}
 		return userGroups;
 	}
 	
-	/**
-	 * Clients use this method to determine the status of the most recent method call that provides feedback.<p>
-	 * @return the status of the most recent method call that provides feedback.
-	 */
-    public String getFeedback() {
-		return feedback;
-	}
-
-    /**
-     * Returns the URL of the page for the group the user belongs to.<p>
-     * 
-     * If the user belongs to multiple groups the field <i>initialPage</i> is set to <i>views/selectGroup.html</i>. The initial page is selected 
-     * by the user from a list of initial page names and descriptions representing each group they belong to.<br><br> 
-     * 
-     * <strong>The following feedback is provided:</strong>
-     * <pre>YRD0000 the process completed normally
-     *YRD000E If the user is in multiple groups</pre>
-     * 
-     * @param userName specifies the user whose initial page is returned.
-     * @return the user's initial page.
-     */
-	public String getInitialPage(String userName) {
-    	feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD0000;
-		initialPage = userGroups.get(0).getGmInitialPage(); //GM_INITIAL_PAGE from GROUPS_MASTER
-		//debug
-		System.out.println("com.yardi.ejb.UserGroupsBean 0001 getInitialPage()  " 
-				+ "\n"
-				+ "   initialPage="
-				+ initialPage
-				);
-		System.out.println("com.yardi.ejb.UserGroupsBean 0002 getInitialPage()  ");
-		for (LoginUserGroupsGraph u : userGroups) {
-			System.out.println(
-				  "\n"
-				+ "   UserGroupsGraph=" 
-				+ u.toString()
-				);
-		}
-		//debug
-
-		if (userGroups.size()>1) {
-			// user is in multiple groups. Set ST_LAST_REQUEST to the html select group page. User picks the initial page
-			feedback = com.yardi.shared.rentSurvey.YardiConstants.YRD000E;
-			initialPage = com.yardi.shared.rentSurvey.YardiConstants.USER_SELECT_GROUP_PAGE;
-			//debug
-			System.out.println("com.yardi.ejb.UserGroupsBean getInitialPage() 0003 " 
-					+ "\n"
-					+ "   initialPage="
-					+ initialPage
-					);
-			//debug
-		}
-		
-		return initialPage;
-	}
-
-	/**
-	 * Return a Vector containing the description and URL of each group the user belongs to.<p> 
-	 * 
-	 * Clients call getInitialPageList() to get the data for <i>views/selectGroup.html</i> when the user belongs to multiple groups.<br><br>
-	 * 
-	 * @return Vector containing the short description for a button, a label for a button and a URL.
-	 */
-	public Vector<LoginInitialPage> getInitialPageList() {
-		setInitialPageList();
-		return initialPageList;
-	}
-
-	/**
-	 * Return a reference to the field <i>loginSessionTable</i>.<p>
-	 * 
-	 * <i>loginSessionTable</i> is a reference to the Sessions_Table entity embeded within the User_Groups entity.<br>
-	 * It exists for the convenience of other components that may need this reference.<br>
-	 * 
-	 * @return a reference to the Sessions_Table entity embeded within the User_Groups entity. 
-	 */
-	public Sessions_Table getLoginSessionTable() {
-		return loginSessionTable;
-	}
-
-	/**
-	 * Return a reference to the field <i>loginUserProfile</i>.<p>
-	 * 
-	 * <i>loginUserProfile</i> is a reference to the User_Profile entity embebed within the User_Groups entity.<br>
-	 * It exists for the convenience of other components that may need this reference.<br>
-	 * 
-	 * @return a reference to the User_Profile entity embebed within the User_Groups entity. 
-	 */
-	public User_Profile getLoginUserProfile() {
-		return loginUserProfile;
-	}
-
-	/**
-	 * Returns a reference to the field <i>userGroups</i>.<p>
-	 * 
-	 * <i>userGroups</i> contains every column from database tables USER_GROUPS and GROUPS_MASTER.<br> 
-	 * 
-	 * @return reference to the field <i>userGroups</i>.
-	 */
-	@Override
-	public Vector<LoginUserGroupsGraph> getUserGroups() {
-		return userGroups;
-	}
-
 	/**
 	 * Test whether the given instance is an entity.<p>
 	 * 
@@ -401,27 +168,24 @@ public class UserGroupsBean implements UserGroups {
   		System.out.println("com.yardi.ejb.UserGroupsBean isManaged() 0011 ");
 
   		if (sessionsTable==null) {
-  	  		System.out.println(
-  	  				  "com.yardi.ejb.UserGroupsBean isManaged() 001A "
-  	  				+ "\n"
-	  				+ "   em.contains(Sessions_Table)=false"
+  	  		System.out.println("com.yardi.ejb.UserGroupsBean isManaged() 001A "
+  	  				+ "\n    "
+	  				+ "em.contains(Sessions_Table)=false"
 	  				);
 	  		return false;
   		} 
   		
   		if (isEntity(sessionsTable.getClass())==false) {
-  	  		System.out.println(
-	  				  "com.yardi.ejb.UserGroupsBean isManaged() 0020 "
-	  				+ "\n"
-	  				+ "   em.contains(Sessions_Table)=false"
+  	  		System.out.println("com.yardi.ejb.UserGroupsBean isManaged() 0020 "
+	  				+ "\n    "
+	  				+ "em.contains(Sessions_Table)=false"
 	  				);
 	  		return false;
   		}
 
-  		System.out.println(
-  				  "com.yardi.ejb.UserGroupsBean isManaged() 001B "
-  				+ "\n"
-  				+ "    em.contains(Sessions_Table)="
+  		System.out.println("com.yardi.ejb.UserGroupsBean isManaged() 001B "
+  				+ "\n    "
+  				+ "em.contains(Sessions_Table)="
   				+ em.contains(sessionsTable)
   				);
 		return em.contains(sessionsTable);  			
@@ -436,26 +200,24 @@ public class UserGroupsBean implements UserGroups {
   		System.out.println("com.yardi.ejb.UserGroupsBean isManaged() 0021 ");
 		
   		if (userGroups==null) {
-  	  		System.out.println(
-  	  				  "com.yardi.ejb.UserGroupsBean isManaged() 0022 "
-  	  				+ "\n"
-	  				+ "   em.contains(User_Groups)=false"
+  	  		System.out.println("com.yardi.ejb.UserGroupsBean isManaged() 0022 "
+  	  				+ "\n    "
+	  				+ "Sem.contains(User_Groups)=false"
 	  				);
 	  		return false;
   		} 
   		
   		if (isEntity(userGroups.getClass())==false) {
-  	  		System.out.println(
-	  				  "com.yardi.ejb.UserGroupsBean isManaged() 0023 "
-	  				+ "\n"
-	  				+ "   em.contains(User_Groups)=false"
+  	  		System.out.println("com.yardi.ejb.UserGroupsBean isManaged() 0023 "
+	  				+ "\n    "
+	  				+ "em.contains(User_Groups)=false"
 	  				);
 	  		return false;
   		}
 
   		System.out.println("com.yardi.ejb.UserGroupsBean isManaged() 0004 "
-  				+ "\n"
-  				+ "   em.contains(User_Groups)="
+  				+ "\n    "
+  				+ "em.contains(User_Groups)="
   				+ em.contains(userGroups)
   				);
 		return em.contains(userGroups);
@@ -470,26 +232,24 @@ public class UserGroupsBean implements UserGroups {
 		System.out.println("com.yardi.ejb.UserGroupsBean isManaged() 001C ");
   		
 		if (userGroups2==null) {
-			System.out.println(
-					  "com.yardi.ejb.UserGroupsBean isManaged() 001D "
-					+ "\n"
-	  				+ "   em.contains(User_Groups2)=false"
+			System.out.println("com.yardi.ejb.UserGroupsBean isManaged() 001D "
+					+ "\n    "
+	  				+ "em.contains(User_Groups2)=false"
 					);
 			return false;
 		}
 		
   		if (isEntity(userGroups2.getClass())==false) {
-  	  		System.out.println(
-	  				  "com.yardi.ejb.UserGroupsBean isManaged() 0024 "
-	  				+ "\n"
-	  				+ "   em.contains(User_Groups2)=false"
+  	  		System.out.println("com.yardi.ejb.UserGroupsBean isManaged() 0024 "
+	  				+ "\n    "
+	  				+ "em.contains(User_Groups2)=false"
 	  				);
 	  		return false;
   		}
 
   		System.out.println("com.yardi.ejb.UserGroupsBean isManaged() 0015 "
-  				+ "\n"
-  				+ "   em.contains(User_Groups2)="
+  				+ "\n    "
+  				+ "em.contains(User_Groups2)="
   				+ em.contains(userGroups2)
   				);
 		return em.contains(userGroups2);
@@ -504,19 +264,17 @@ public class UserGroupsBean implements UserGroups {
   		System.out.println("com.yardi.ejb.UserGroupsBean isManaged() 0012 ");
   		
   		if (userProfile==null) {
-  	  		System.out.println(
-  	  				  "com.yardi.ejb.UserGroupsBean isManaged() 0025 "
-  	  				+ "\n"
-	  				+ "   em.contains(User_Profile)=false"
+  	  		System.out.println("com.yardi.ejb.UserGroupsBean isManaged() 0025 "
+  	  				+ "\n    "
+	  				+ "em.contains(User_Profile)=false"
 	  				);
 	  		return false;
   		} 
   		
   		if (isEntity(userProfile.getClass())==false) {
-  	  		System.out.println(
-	  				  "com.yardi.ejb.UserGroupsBean isManaged() 0026 "
-	  				+ "\n"
-	  				+ "   em.contains(User_Profile)=false"
+  	  		System.out.println("com.yardi.ejb.UserGroupsBean isManaged() 0026 "
+	  				+ "\n    "
+	  				+ "em.contains(User_Profile)=false"
 	  				);
 	  		return false;
   		}
@@ -534,10 +292,9 @@ public class UserGroupsBean implements UserGroups {
 	 * 
 	 * @param group the entity to persist.
 	 */ 
+	@Override
 	public void persist(User_Groups2 group) {
-		/*debug*/
 		System.out.println("com.yardi.ejb.UserGroupsBean.persist() 0018 ");
-		/*debug*/
 		isJoined();
 		em.persist(group);
 		isManaged(group);
@@ -555,94 +312,15 @@ public class UserGroupsBean implements UserGroups {
 	 * 
 	 * @param group the entity to remove.
 	 */
+	@Override
 	public void remove(User_Groups2 group) {
-		/*debug*/
 		System.out.println("com.yardi.ejb.UserGroupsBean.remove() 0017 ");
-		/*debug*/
 		isJoined();
 
 		if (group!=null) {
-			/*debug*/
 			System.out.println("com.yardi.ejb.UserGroupsBean.remove() 0019 ");
-			/*debug*/
 			em.remove(group);
 			isManaged(group);
 		}
-	}
-	
-	/**
-	 * Remove the stateful session bean and release resources it holds. 	
-	 */
-	@Override
-	@Remove
-	public void removeBean() {
-		System.out.println("com.yardi.ejb.UserGroupsBean removeBean() 0008 ");
-	}
-	
-	/**
-	 * Construct the Vector of initial pages for the groups the user belongs to.<p>
-	 * 
-	 * <i>views/selectGroup.html</i> uses the initialPageList. For each group the user belongs to, the Vector contains a short description for a button,
-	 * a label for a button and URL of the group's initial page.<br><br> 
-	 * 
-	 * Field <i>initialPageList</i> exists for the convenience of other components that may need a reference to the initial page list.
-	 */
-	private void setInitialPageList() {
-		initialPageList = new Vector<LoginInitialPage>();
-
-		for (LoginUserGroupsGraph g : userGroups) {
-			//getGmDescription returns a string containing the short description for the button and a label for the button
-			//getGmInitialPage() returns the url value for url= attribute
-			initialPageList.add(new LoginInitialPage(g.getGmDescription(),
-				g.getGmInitialPage()));
-		}
-	}
-	
-	/**
-	 * Field <i>loginSessionsTable</i> is a reference to the Sessions_Table entity embeded within the User_Groups entity.<p>
-	 * It exists for the convenience of other components that may need this reference.
-	 */
-	private void setLoginSessionTable() {
-		/*debug*/
-		System.out.println("com.yardi.ejb.UserGroupsBean.setLoginSessionTable() 000E ");
-		
-		if (userGroupsEntity==null) {
-			System.out.println("com.yardi.ejb.UserGroupsBean.setLoginSessionTable() 000B ");
-		}
-		if (userGroupsEntity.getUgSessionsTable()==null) {
-			System.out.println("com.yardi.ejb.UserGroupsBean.setLoginSessionTable() 000A ");
-		}
-		/*debug*/
-		loginSessionTable = userGroupsEntity.getUgSessionsTable();
-		isJoined();
-		isManaged(loginSessionTable);
-	}
-
-	/**
-	 * Field <i>loginUserProfile</i> is a reference to the User_Profile entity embebed within the User_Groups entity.<p>
-	 * It exists for the convenience of other components that may need this reference.  
-	 */
-	private void setLoginUserProfile() {
-		/*debug*/
-		System.out.println("com.yardi.ejb.UserGroupsBean.setLoginUserProfile() 000F ");
-		
-		if (userGroupsEntity.getUgUserProfile()==null) {
-			System.out.println("com.yardi.ejb.UserGroupsBean.setLoginUserProfile() 0009 ");
-		}
-		/*debug*/
-		loginUserProfile = userGroupsEntity.getUgUserProfile();
-		isJoined();
-		isManaged(loginUserProfile);
-	}
-	
-	/**
-	 * Set a Vector containing every column from USER_GROUPS database table and every column from GROUPS_MASTER database table.<p> 
-	 * There is one element in this Vector for each group the user belongs to.<br>
-	 * Field userGroups exists for the convenience of other components that might need this reference.<br>
-	 * 
-	 * @param userGroups Vector containing every column from USER_GROUPS database table and every column from GROUPS_MASTER database table.
-	 */
-	private void setUserGroups(Vector<LoginUserGroupsGraph> userGroups) {
-		this.userGroups = userGroups;
 	}
 }
